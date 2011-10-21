@@ -1,0 +1,624 @@
+#################################################################################################
+#	 	NTUSER (formerly userassist)
+#################################################################################################
+# this script reads the user registry file (NTUSER.DAT) and parses it.  It then further extracts
+# the user assist part of the registry and produces a bodyfile containing the timeline information
+# that can be used directly with the script mactime from TSK collection.  
+#
+# The specification of the body file can be found here:
+#	http://wiki.sleuthkit.org/index.php?title=Body_file
+# 
+# This script was originally based on the userassist.pl from the RegRipper (regripper.net),
+# written by H. Carvey.  The script consists of most parts of the function pluginmain from
+# that file.  Since the structure of log2timeline is different from that of RegRipper, that 
+# function had to be split up into several functions and some changes made to the function
+# (some features taken out while others added in).  But essentially for the Windows XP 
+# part this is the same code.
+# The code was taken from the 20080726 version of userassist.pl.
+#
+# Support for the Windows 7/Vista UserAssist keys was added by me after reading the 
+# article "Windows 7 UserAssist Registry keys" by Didier Stevens in the Into The Boxes
+# magazine, q1 2009
+#
+# For ShellBags read: http://www.dfrws.org/2009/proceedings/p69-zhu.pdf
+#
+# The code was then further expanded to read more keys from the NTUSER.DAT file, so that
+# it does not only include entries from the UserAssist key but various keys that are commonly
+# found within the NTUSER.DAT file.
+#
+# Author: Kristinn Gudjonsson
+# Version : 1.0
+# Date : 05/05/11
+#
+# Copyright 2009-2011 Kristinn Gudjonsson (kristinn ( a t ) log2timeline (d o t) net)
+#
+#  This file is part of log2timeline.
+#
+#    log2timeline is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    log2timeline is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with log2timeline.  If not, see <http://www.gnu.org/licenses/>.
+#
+#-----------------------------------------------------------
+# userassist.pl
+# Plugin for Registry Ripper, NTUSER.DAT edition - gets the 
+# UserAssist values 
+#
+# Change history
+#  20080726 - added reference to help examiner understand Control
+#             Panel entries found in output
+#  20080301 - updated to include run count along with date
+#
+# 
+# 
+# copyright 2008 H. Carvey
+#-----------------------------------------------------------
+package Log2t::input::ntuser;
+
+use strict;
+use Log2t::base::input; 	# the SUPER class or parent
+use Log2t::WinReg::Ntuser;	# class containing all the parsing subroutines
+use Parse::Win32Registry qw(:REG_);
+use Log2t::Common ':binary';
+#use Log2t::Time;
+use Log2t::BinRead;
+#use Log2t::Win;
+use vars qw($VERSION @ISA);
+
+# inherit the base input module, or the super class.
+@ISA = ( "Log2t::base::input", "Log2t::WinReg::Ntuser" );
+
+# version number
+$VERSION = '1.0';
+
+# hvernig gera:
+# byrja ad laga bara til ad "skitvirki", bara eins, taka global breytur og setja i self, og svo taka 
+# self inn i foll, gera thannig ad virki
+# + svo taka oll _parse foll og setja inn i WinReg/Ntuser.pm skranna fjarlaegja ut her
+# + taka svo ut longu og leidinlegu if/elsif/..... setninguna og breyta i code reference
+# + vera med sjalfgefid gildi sem leidir til thess ad nafn se bara prentad ut.... 
+# + aetla ad breyta i recursive fall, sem athugar, get er gert e-d snidugt vid lykil, ja, senda tangad (ntuser.pm), 
+# nei, senda a sjalfgefna (regtime paelingin)
+# 
+# verify - sama og adur, athugar bara UserAssist, ef thad er ekki, tha erum vid ekki med NTUSER hvort ed er
+
+# the constructor
+sub new()
+{
+        my $class = shift;
+
+        # inherit from the base class
+        my $self = $class->SUPER::new();
+
+        # indicate that we would like to parse this file in one attempt, and return it in a single hash
+        $self->{'multi_line'} = 0;
+
+        # TEMPORARY - remove when FH is accepted through Parse::Win32Registry
+        $self->{'file_access'} = 1;     # do we need to parse the actual file or is it enough to get a file handle
+	
+	# set some default variables
+	$self->{'ua_key_base'} = 'Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\UserAssist';
+	$self->{'ua_xp_key_path'} = '{75048700-EF1F-11D0-9888-006097DEACF9}\\Count';
+	$self->{'ua_new_key_path_1'} = '{CEBFF5CD-ACE2-4F4F-9178-9926F41749EA}\\Count';
+	$self->{'ua_new_key_path_2'} = '{F4E57C4B-2036-45F0-A9AB-443BCFE33D9F}\\Count';
+
+        bless($self,$class);
+
+        return $self;
+}
+
+sub init()
+{	
+	# initialize all variables
+	my $self = shift;
+
+	$self->{'vista'} = 0;
+	$self->{'vals_count'} = 0;		# reset the counter of the hash vals
+	$self->{'vals'} = undef;
+
+	return 1;
+}
+
+#       get_version
+# A simple subroutine that returns the version number of the format file
+#
+# @return A version number
+sub get_version()
+{
+	return $VERSION;
+}
+
+#       get_description
+# A simple subroutine that returns a string containing a description of 
+# the funcionality of the format file. This string is used when a list of
+# all available format files is printed out
+#
+# @return A string containing a description of the format file's functionality
+sub get_description()
+{
+	return "Parses the NTUSER.DAT registry file";	
+}
+
+#	get_time
+# This subroutine starts by reading the NTUSER.DAT registry file and parse it
+# using the Win32Registry library.  It then retrives the UserAssist part of the
+# registry and stores it's values in the array @vals (which is global)
+# 
+# It then returns a reference to a hash that stores all the timestamp
+# objects to the main engine for further processing
+sub get_time()
+{
+	my $self = shift;
+	my $key;
+	my $root_key;
+	my @extra;
+	my $path;
+	my @t_array;
+	my %t_hash;
+
+	# set the default values
+	$self->{'no_go'} = 0;
+
+	# get the root key
+	$root_key = $self->{'reg'}->get_root_key;
+
+	eval 
+	{
+		# now we need to traverse through all of the registry keys, check if
+
+		# now we need to test for the existance of the keys in question
+		# get the userassist key
+		# test if this is an XP or Vista (that is new or old format)
+		$key = $root_key->get_subkey( $self->{'ua_key_base'} . '\\' . $self->{'ua_xp_key_path'} );
+		if( defined $key )
+		{
+			$self->{'type'} = 'xp';
+			print STDERR "[UA] We have detected the XP UserAssist key\n" if $self->{'debug'};
+		}
+		else
+		{
+			$key = $root_key->get_subkey( $self->{'ua_key_base'} . '\\' .  $self->{'ua_new_key_path_1'} );
+			$self->{'type'} = 'new' if defined $key;
+			$self->{'type'} = 'none' unless defined $key;
+		}
+
+		# override settings
+		$self->{'type'} = 'new' if $self->{'vista'};
+		print STDERR "[NTUSER] Overriding settings: VISTA\n" if $self->{'vista'};
+
+		if( $self->{'type'} eq 'xp' )
+		{
+			# get all the values
+			@t_array = $key->get_list_of_values();
+		}
+		elsif ( $self->{'type'} eq 'new' )
+		{
+			print STDERR "[NTUSER] This is a Vista/Win7 or later UserAssist key\n" if $self->{'debug'};
+
+			@t_array = $key->get_list_of_values();
+			$key = $root_key->get_subkey( $self->{'ua_key_base'} . '\\' .  $self->{'ua_new_key_path_2'} );
+			
+			# and get the second content
+			@extra = $key->get_list_of_values() if defined $key;
+			push( @t_array, @extra );
+		}
+		else
+		{
+			print STDERR "[NTUSER] We have an unknown an unidentified UserAssist key and no processing will be done\n" if $self->{'debug'};
+			$self->{'no_go'} = 1;
+			return 0;
+		}
+
+		# now to go over the t_array array and push it into a hash
+		foreach( @t_array )
+		{
+			$self->{'vals'}->{$self->{'vals_count'}++} = { 'value' => $_, 'type' => 'UserAssist' };
+		}
+
+		# get the username (if possible)
+		$self->{'username'} = $self->_get_username() unless $self->{'no_go'};
+
+		if( $self->{'username'} eq '0' || $self->{'username'} eq 'unknown' )
+		{
+			$self->{'username'} = Log2t::Common::get_username_from_path( ${$self->{'name'}});
+			print STDERR "[NTUSER] Guessed username '" . $self->{'username'} . "'\n" if $self->{'debug'};
+		}
+
+
+		# now we need to process other keys that belong to the NTUSER.DAT file and include those into the line
+	
+		# start by the recent file extensions
+		# Key:	Software\Microsoft\Windows\CurrentVersion\Explorer\FileExts
+		$key = $root_key->get_subkey( "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\FileExts" );
+		@t_array = $key->get_list_of_subkeys();
+
+		# include this into the vals hash                
+		if (scalar(@t_array) > 0) 
+		{	
+			foreach( @t_array )
+			{
+				$self->{'vals'}->{$self->{'vals_count'}++} = { 'value' => $_, 'type' => 'FileExts' };
+			}
+		}
+
+		# Go to the LastVisitedMRU key
+		# Key: Software\Microsoft\Windows\CurrentVersion\Explorer\ComDlg32\LastVisitedMRU not found.
+		# URL: http://support.microsoft.com/kb/322948/EN-US/
+		if( $key = $root_key->get_subkey( "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\ComDlg32\\LastVisitedMRU" ) )
+		{
+			$self->{'vals'}->{$self->{'vals_count'}++} = { 'value' => $key, 'type' => 'LastVisitedMRU' };
+		}
+
+		# Software\Microsoft\Windows\CurrentVersion\Explorer\ComDlg32\OpenSaveMRU not found.
+		if( $key = $root_key->get_subkey( "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\ComDlg32\\OpenSaveMRU" ) )
+		{
+			$self->{'vals'}->{$self->{'vals_count'}++} = { 'value' => $key, 'type' => 'OpenSaveMRU' };
+		}
+
+		# Software\Microsoft\Windows\CurrentVersion\Explorer\Map Network Drive MRU
+		if( $key = $root_key->get_subkey( "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Map Network Drive MRU" ) )
+		{
+			$self->{'vals'}->{$self->{'vals_count'}++} = { 'value' => $key, 'type' => 'Map Network Drive MRU' };
+		}
+
+		# Software\Microsoft\Windows\CurrentVersion\Explorer\MountPoints2
+		$key = $root_key->get_subkey( "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\MountPoints2" );
+		@t_array = $key->get_list_of_subkeys();
+
+		# include this into the vals hash                
+		if (scalar(@t_array) > 0) 
+		{	
+			foreach( @t_array )
+			{
+				$self->{'vals'}->{$self->{'vals_count'}++} = { 'value' => $_, 'type' => 'MountPoints2' };
+			}
+		}
+		# Software\Microsoft\Windows\CurrentVersion\Explorer\RecentDocs\...
+		$key = $root_key->get_subkey( "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\RecentDocs" );
+		@t_array = $key->get_list_of_subkeys();
+
+		# include this into the vals hash                
+		if (scalar(@t_array) > 0) 
+		{	
+			foreach( @t_array )
+			{
+				$self->{'vals'}->{$self->{'vals_count'}++} = { 'value' => $_, 'type' => 'RecentDocs' };
+			}
+		}
+
+		# Software\Microsoft\Windows\CurrentVersion\Explorer\RunMRU
+		if( $key = $root_key->get_subkey( "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\RunMRU" ) )
+		{
+			$self->{'vals'}->{$self->{'vals_count'}++} = { 'value' => $key,  'type' => 'RunMRU' };
+		}
+
+		# Software\Microsoft\Windows\CurrentVersion\Applets\Regedit
+		if( $key = $root_key->get_subkey( "Software\\Microsoft\\Windows\\CurrentVersion\\Applets\\Regedit" ) )
+		{
+			$self->{'vals'}->{$self->{'vals_count'}++} = { 'value' => $key, 'type' => 'Regedit' };
+		}
+
+		# --- ShellBags ---
+		# Two keys: identical structure
+		
+		# 	VISTA/Win 7 keys
+		#* HKEY_CURRENT_USER\Software\Classes\Local Settings\Software\Microsoft\Windows\Shell\Bags
+		#* HKEY_CURRENT_USER\Software\Classes\Local Settings\Software\Microsoft\Windows\Shell\BagMRU
+		#* HKEY_CURRENT_USER\Software\Classes\Wow6432Node\Local Settings\Software\Microsoft\Windows\Shell\Bags
+		#* HKEY_CURRENT_USER\Software\Classes\Wow6432Node\Local Settings\Software\Microsoft\Windows\Shell\BagMRU
+
+
+		# Shell key is used to store information related to remote folders
+#		if( $key = $root_key->get_subkey( "Software\\Classes\\Local Settings\\Software\\Microsoft\\Windows\\Shell\\BagMRU" ) )
+#		{
+#			print STDERR "[NTUSER] We've got a Shell (shellbag) for remote folders\n" if $self->{'debug'};
+#
+#			# start by the Desktop folder, or the initial key
+#			# then we need to recursively go through the key... and employ the same
+#			# processing to each key (so a new function)
+#		
+#			# so we start by populating the folder structure
+#			$self->_populate_folder( \$key, $self->{'shell_folder'}, undef, "Software\\Classes\\Local Settings\\Software\\Microsoft\\Windows\\Shell\\BagMRU\\0", 0 );
+#
+#			# no we've populated the folder structure, let's process the bag files
+#			$self->_preprocess_shell( \$key, 'Shell' );
+#		}
+		if( $key = $root_key->get_subkey( "Software\\Microsoft\\Windows\\Shell\\BagMRU" ) and $self->{'type'} eq 'xp' )
+		{
+			print STDERR "[NTUSER] We've got a Shell (shellbag) for remote folders\n" if $self->{'debug'};
+
+			# start by the Desktop folder, or the initial key
+			# then we need to recursively go through the key... and employ the same
+			# processing to each key (so a new function)
+		
+			# so we start by populating the folder structure
+#			$self->_populate_folder( \$key, $self->{'shell_folder'}, undef, "Software\\Microsoft\\Windows\\Shell\\BagMRU\\0", 0 );
+
+			# no we've populated the folder structure, let's process the bag files
+#			$self->_preprocess_shell( \$key, 'Shell' );
+		}
+
+		# ShellNoRoam is used to describe local folders' information 
+		if( $key = $root_key->get_subkey( "Software\\Microsoft\\Windows\\ShellNoRoam\\BagMRU\\0" ) and $self->{'type'} eq 'xp' )
+		{
+			print STDERR "[NTUSER] We've got a ShellNoRoam (shellbag) for local folders\n" if $self->{'debug'};
+
+			# start by the Desktop folder, or the initial key
+			# then we need to recursively go through the key... and employ the same
+			# processing to each key (so a new function)
+		
+			# so we start by populating the folder structure
+#			$self->_populate_folder( \$key, $self->{'shell_noroam_folder'}, undef, "Software\\Microsoft\\Windows\\ShellNoRoam\\BagMRU\\0", 0 );
+
+			# no we've populated the folder structure, let's process the bag files
+#			$self->_preprocess_shell( \$key, 'ShellNoRoam' );
+		}
+#		if( $key = $root_key->get_subkey( "Software\\Classes\\Wow6432Node\\Local Settings\\Software\\Microsoft\\Windows\\Shell\\BagMRU\\0" ) )
+#		{
+#			print STDERR "[NTUSER] We've got a ShellNoRoam (shellbag) for local folders\n" if $self->{'debug'};
+#
+#			# start by the Desktop folder, or the initial key
+#			# then we need to recursively go through the key... and employ the same
+#			# processing to each key (so a new function)
+#		
+#			# so we start by populating the folder structure
+#			$self->_populate_folder( \$key, $self->{'shell_noroam_folder'}, undef, "Software\\Classes\\Wow6432Node\\Local Settings\\Software\\Microsoft\\Windows\\Shell\\BagMRU\\0", 0 );
+#
+#			# no we've populated the folder structure, let's process the bag files
+#			$self->_preprocess_shell( \$key, 'ShellNoRoam' );
+#		}
+
+		print STDERR "[UA] The total number of records saved: " . $self->{'vals_count'} . "\n" if $self->{'debug'};
+
+
+	};
+	if( $@ )
+	{
+		$self->{'no_go'} = 1; # indicate that an error occured and we do not have a valid registry file
+		# supress error message
+		print STDERR "[NTUSER - ERROR] There was an error reading the registry file: $@\n" if $self->{'debug'};
+	}
+
+	# initialize
+	$self->{'container'} = undef;
+	$self->{'cont_index'} = 0;
+
+	# if no_go is set, then we just return with no line
+	return undef if $self->{'no_go'};
+
+	foreach my $key ( keys %{$self->{'vals'}} )
+	{
+		if ( (scalar($self->{'vals'}->{$key}->{'value'}) > 0) && ($self->{'vals_count'} > $key ) )
+		{
+			print STDERR "[NTUSER] We are about to load record nr. $key\n" if $self->{'debug'};
+			$self->{'value'} = $self->{'vals'}->{$key}->{'value'};
+			$self->{'key_type'} = $self->{'vals'}->{$key}->{'type'};
+			print STDERR "[NTUSER] The record is of type " . $self->{'key_type'} . "\n" if $self->{'debug'};
+			$self->_parse_line;
+		}
+		else
+		{
+			print STDERR "[NTUSER] Not loading line (record $key " . $self->{'vals_count'} . ") - zero return\n" if $self->{'debug'};
+			print STDERR "[NU] Key type: ", $self->{'vals'}->{$key}->{'type'}, ' and value ' , $self->{'vals'}->{$key}->{'value'}, "\n" if $self->{'debug'};
+			next;
+		}
+	}
+
+	return $self->{'container'};
+}
+
+#       parse_line
+# This is the main "juice" of the format file.  It takes an object from the @vals array
+# and parses it to produce an array containing all the needed values to print a 
+# body file.
+#
+# 
+# @param v. A registry object from the @vals array 
+# @return Returns a array containing the needed values to print a body file
+sub _parse_line()
+{
+	# remove this endless if/elsif/elsi..... sentence
+	my $self = shift;
+	my $key_type = $self->{'key_type'};
+
+	if( $key_type eq 'UserAssist' )
+	{
+		$self->_parse_ua();
+	}
+	elsif( $key_type eq 'FileExts' )
+	{
+		$self->_parse_fe();
+	}
+	elsif( $key_type eq 'LastVisitedMRU' )
+	{
+		$self->_parse_lvm();
+	}
+	elsif( $key_type eq 'OpenSaveMRU' )
+	{
+		$self->_parse_osm();
+	}
+	elsif( $key_type eq 'Map Network Drive MRU' )
+	{
+		$self->_parse_mndm();
+	}
+	elsif( $key_type eq 'MountPoints2' )
+	{
+		$self->_parse_mp2();
+	}
+	elsif( $key_type eq 'RecentDocs' )
+	{
+		$self->_parse_rd();
+	}
+	elsif( $key_type eq 'RunMRU' )
+	{
+		$self->_parse_rm();
+	}
+	elsif( $key_type eq 'Regedit' )
+	{
+		$self->_parse_re();
+	}
+	elsif( $key_type eq 'Shell' )
+	{
+		$self->_parse_shell();
+	}
+	elsif( $key_type eq 'ShellNoRoam' )
+	{
+		$self->_parse_shell();
+	}
+	elsif( $key_type =~ m/^Shell_/ )
+	{
+		$self->_parse_shell_key();
+	}
+	else
+	{
+		print STDERR "[NTUSER] Unkown key type: $key_type\n" if $self->{'debug'};	
+	}
+}
+
+#       get_help
+# A simple subroutine that returns a string containing the help 
+# message for this particular format file.
+# @return A string containing a help file for this format file
+sub get_help()
+{
+	return "This format file reads and parses the user registry file NTUSER.DAT,
+extracts from it the UserAssist key, decodes it and produces a body file.  The body
+file can than be used in a timeline analysis (using tools like mactime from TSK).
+
+The script depends upon the Perl library:
+	Parse::Win32Registry
+
+The parameter to this format file is the NTUSER.DAT file that can be found for instance
+at the following location (win xp):
+	C:\\Documents and Settings\\ MYUSERNAME\\NTUSER.DAT
+
+Description of Control Panel Files in XP - http://support.microsoft.com/kb/313808
+
+This format file accepts the following option
+	--host	 HOST\n";
+
+}
+
+#       verify
+# A subroutine that verifies if we are examining a ntuser file, so it can be further 
+# processed.  
+# @return An array containing an integer and a string.  The integer indicates a success or failure and the
+#       string is the error message (if the file is not correctly formed)
+sub verify
+{
+	my $self = shift;
+	# define an array to keep
+	my %return;
+	my $line;
+	my @words;
+	my $root_key;
+	my $key;
+
+	# start by setting the endian correctly
+	#Log2t::BinRead::set_endian( Log2t::Common::LITTLE_E );
+	#Log2t::BinRead::set_endian( LITTLE_E );
+
+	# default values
+	$return{'success'} = 0;
+	$return{'msg'} = 'not a file';
+	
+	return \%return unless -f ${$self->{'name'}};
+
+	my $ofs = 0;
+
+	# start by checking if this is a file or not
+	if( -f ${$self->{'name'}} )
+	{
+		# this is a file, check further
+		eval
+		{
+			$line = Log2t::BinRead::read_ascii( $self->{'file'},\$ofs,4 );
+		};
+		if ( $@ )
+		{
+			$return{'success'} = 0;
+			$return{'msg'} = "Unable to open the file ($@)";
+			return \%return;
+		}
+
+		# the content of these bytes should be
+		# regf = 7265 6766
+		if( $line eq 'regf' )
+		{
+			# load the array ( or try to at least )
+			eval 
+			{
+				$self->{'reg'} = Parse::Win32Registry->new(${$self->{'name'}});
+			};
+			if( $@ )
+			{
+				# an error occured, return from this mess ;)
+				$return{'msg'} = "[UserAssist] Unable to load registry file";
+				$return{'success'} = 0;
+
+				return \%return;
+			}
+
+                        # sometimes there might be false positives here, so let's try to get the root key
+                        eval
+                        {
+                                # the registry is now loaded, check the existance of a UserAssist key
+                                $root_key = $self->{'reg'}->get_root_key;
+			};
+			if( $@ )
+			{
+                                $return{'msg'} = 'Unable to retrieve the root key, this might not be a registry file (' . ${$self->{'name'}} .')';
+                                $return{'success'} = 0;
+                                return \%return;
+                        }
+
+			eval 
+			{
+				# now we need to test for the existance of the keys in question
+				# one test
+				# get the userassist key
+
+				$key = $root_key->get_subkey($self->{'ua_key_base'});
+				if( defined $key )
+				{
+					$return{'success'} = 1;
+				}
+				else
+				{
+					$return{'success'} = 0;
+					$return{'msg'} = 'The UserAssist key does not exist';
+				}
+			};
+			if( $@ )
+			{
+				$return{'msg'} = 'Unable to load UserAssist key, not a NTUSER.DAT file';
+				$return{'success'} = 0;
+			}
+		}
+		else
+		{
+			$return{'success'} = 0;
+			$return{'msg'} = 'File not a registry file.';
+		}
+	}
+	else
+	{
+		# not a file, so back out
+		$return{'success'} = 0;
+		$return{'msg'} = ${$self->{'name'}} . ' is not a file. ';
+	}
+
+	return \%return;
+}
+
+
+1;
+

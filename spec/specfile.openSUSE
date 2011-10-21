@@ -1,0 +1,112 @@
+Name:       log2timeline
+Version:    0.60
+Release:    0
+Summary:    A framework for timeline creation and analysis
+ 
+Group:      Productivity/Scientific/Other
+License:    GPLv2
+URL:        http://log2timeline.net
+BuildArch:      noarch
+Source:         %{name}_%{version}.tgz
+# pre-GAF Source0:  http://log2timeline.net/files/%{name}_0.34.tgz
+# pre-GAF BuildRoot:    %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+ 
+# Requires: perl-Archive-Zip,perl-DateTime,perl-HTML-Scrubber,perl-Glib,perl-Image-ExifTool,perl-Net-Pcap,perl-DBD-SQLite,perl(Gtk2), perl(NetPacket::Ethernet)
+Requires:   perl-Archive-Zip,perl-DateTime,perl-HTML-Scrubber,perl-Image-ExifTool,perl-Net-Pcap,perl-DBD-SQLite,perl(Gtk2), perl(NetPacket::Ethernet)
+%if 0%{?suse_version} >= 1140
+%perl_requires
+%else
+Requires:     perl = %{perl_version}
+%endif
+ 
+BuildRequires:  perl,perl(CPAN),perl(ExtUtils::MakeMaker)
+BuildRequires:  perl(Glib)
+BuildRequires:  perl(Gtk2)
+BuildRequires:  perl(DBI)
+BuildRequires:  perl(Carp::Assert)
+BuildRequires:  perl(Date::Manip)
+BuildRequires:  perl(Params::Validate)
+BuildRequires:  perl(DateTime::TimeZone)
+BuildRequires:  perl(Net::Pcap)
+BuildRequires:  perl(DBD::SQLite)
+BuildRequires:  perl(HTML::Parser)
+BuildRequires:  perl(LWP::UserAgent)
+BuildRequires:  perl(XML::LibXML)
+BuildRequires:  perl(XML::LibXML::Common)
+BuildRequires:  perl(DateTime::Format::Strptime)
+BuildRequires:  perl(HTML::Scrubber)
+ 
+BuildRequires:  perl-File-Mork >= 0.3
+BuildRequires:  perl-Archive-Zip >= 1.18
+BuildRequires:  perl-DateTime >= 0.41
+BuildRequires:  perl-Digest-CRC >= 0.14
+BuildRequires:  perl-Image-ExifTool
+ 
+BuildRequires:  perl(NetPacket::IP)
+BuildRequires:  perl(NetPacket::TCP)
+BuildRequires:  perl(NetPacket::UDP)
+BuildRequires:  perl(NetPacket::Ethernet)
+BuildRequires:  perl(Parse::Win32Registry)
+BuildRequires:  perl(Data::Hexify)
+BuildRequires:  perl(Mac::PropertyList)
+ 
+%description
+A framework to for timeline creation and analysis.
+ 
+Log2timeline provides a framework to automatically extract timeline
+information out of various log files and artifacts found on various
+operating systems.  The framework then outputs the timeline information
+in the chosen output format that can then be viewed using already
+existing timeline analysis tools, or other tools to inspect the timeline.
+ 
+# %define perl_vendorlib %(eval "`perl -V:installvendorlib`"; echo $installvendorlib)
+# %define perl_vendorarch %(eval "`perl -V:installvendorarch`"; echo $installvendorarch)
+ 
+%prep
+%setup -q -n log2timeline
+ 
+ 
+%build
+CFLAGS="$RPM_OPT_FLAGS" %{__perl} Makefile.PL INSTALLDIRS=vendor
+%{__perl} -pi -e 's/^\tLD_RUN_PATH=[^\s]+\s*/\t/' Makefile
+make %{?_smp_mflags} OPTIMIZE="$RPM_OPT_FLAGS"
+ 
+#perl Makefile.PL INSTALL_BASE=/usr/
+#make
+ 
+%install
+rm -rf $RPM_BUILD_ROOT
+make pure_install PERL_INSTALL_ROOT=$RPM_BUILD_ROOT
+find $RPM_BUILD_ROOT -type f -a \( -name .packlist \
+-o \( -name '*.bs' -a -empty \) \) -exec rm -f {} ';'
+find $RPM_BUILD_ROOT -type d -depth -exec rmdir {} 2>/dev/null ';'
+# I can't find a consistent way to identify the path, so just search for Time.pm.orig everywhere and delete it
+find $RPM_BUILD_ROOT -name Time.pm.orig -print -exec rm {} 2>/dev/null ';'
+chmod -R u+w $RPM_BUILD_ROOT/*
+ 
+# Failed attempts, replaced with find above
+# rm $RPM_BUILD_ROOT/usr/lib/perl5/vendor_perl/5.12.1/Log2t/Time.pm.orig
+# rm ${RPM_BUILD_ROOT}%%perl_vendorarch/../Log2t/Time.pm.orig
+ 
+#make install DESTDIR=$RPM_BUILD_ROOT
+ 
+ 
+%clean
+rm -rf $RPM_BUILD_ROOT
+ 
+ 
+%files
+%defattr(-,root,root,-)
+%doc CHANGELOG LICENSE ROADMAP docs/*
+%{_bindir}/*
+%{_mandir}/man1/*
+%{_mandir}/man3/*
+# This directory and contents belong to this package
+%perl_vendorarch/../Log2t
+# This directory and contents belong to this package
+%perl_vendorarch/../Parse/Evtx
+# This single file belongs to this package
+%perl_vendorarch/../Parse/Evtx.pm
+ 
+ 
+%changelog

@@ -1,0 +1,1675 @@
+
+<data
+	wiki-url="http://simile.mit.edu/shelf/"
+	wikiSection="Timeline produced from log2timeline"
+	>
+	<!-- Sources:
+		log2timeline produced timeline data
+	-->
+
+
+	<event start="Tue Aug 04 2009 15:19:29 GMT"
+		end="Tue Aug 04 2009 15:19:29 GMT"
+		durationEvent="false"
+		title="[Recycle bin] nr: 1 - C:\Documents and Settings\Administrator\My Documents\Not to be seen document.txt (drive C)"
+		>
+	[Recycle bin] nr: 1 - C:\Documents and Settings\Administrator\My Documents\Not to be seen document.txt (drive C)
+	</event>
+
+	<event start="Tue Aug 04 2009 15:21:44 GMT"
+		end="Tue Aug 04 2009 15:21:44 GMT"
+		durationEvent="false"
+		title="[Prefetch] BCRESIDENT.EXE-20A2EAA9.pf created - run 1 times, last run at Tue Aug  4 15:21:34 2009, full path: "
+		>
+	[Prefetch] BCRESIDENT.EXE-20A2EAA9.pf created - run 1 times, last run at Tue Aug  4 15:21:34 2009, full path: 
+	</event>
+
+	<event start="Tue Aug 04 2009 15:21:26 GMT"
+		end="Tue Aug 04 2009 15:21:26 GMT"
+		durationEvent="false"
+		title="[Prefetch] BCWIPE3.EXE-08C9B14D.pf created - run 1 times, last run at Tue Aug  4 15:21:16 2009, full path: "
+		>
+	[Prefetch] BCWIPE3.EXE-08C9B14D.pf created - run 1 times, last run at Tue Aug  4 15:21:16 2009, full path: 
+	</event>
+
+	<event start="Tue Aug 04 2009 15:21:55 GMT"
+		end="Tue Aug 04 2009 15:21:55 GMT"
+		durationEvent="false"
+		title="[Prefetch] BCWIPETM.EXE-18BDB27A.pf created - run 1 times, last run at Tue Aug  4 15:21:53 2009, full path: "
+		>
+	[Prefetch] BCWIPETM.EXE-18BDB27A.pf created - run 1 times, last run at Tue Aug  4 15:21:53 2009, full path: 
+	</event>
+
+	<event start="Tue Apr 28 2009 09:12:24 GMT"
+		end="Tue Apr 28 2009 09:12:24 GMT"
+		durationEvent="false"
+		title="[Prefetch] CIPHER.EXE-0D33B481.pf created - run 2 times, last run at Tue Apr 28 09:12:14 2009, full path: C:/WINDOWS/SYSTEM32/CIPHER.EXE"
+		>
+	[Prefetch] CIPHER.EXE-0D33B481.pf created - run 2 times, last run at Tue Apr 28 09:12:14 2009, full path: C:/WINDOWS/SYSTEM32/CIPHER.EXE
+	</event>
+
+	<event start="Tue Aug 04 2009 15:22:16 GMT"
+		end="Tue Aug 04 2009 15:22:16 GMT"
+		durationEvent="false"
+		title="[Prefetch] CMD.EXE-087B4001.pf created - run 14 times, last run at Tue Aug  4 15:22:16 2009, full path: C:/WINDOWS/SYSTEM32/CMD.EXE"
+		>
+	[Prefetch] CMD.EXE-087B4001.pf created - run 14 times, last run at Tue Aug  4 15:22:16 2009, full path: C:/WINDOWS/SYSTEM32/CMD.EXE
+	</event>
+
+	<event start="Tue Apr 28 2009 07:51:06 GMT"
+		end="Tue Apr 28 2009 07:51:06 GMT"
+		durationEvent="false"
+		title="[Prefetch] COMPACT.EXE-2FDA889E.pf created - run 1 times, last run at Tue Apr 28 07:51:05 2009, full path: C:/WINDOWS/SYSTEM32/COMPACT.EXE"
+		>
+	[Prefetch] COMPACT.EXE-2FDA889E.pf created - run 1 times, last run at Tue Apr 28 07:51:05 2009, full path: C:/WINDOWS/SYSTEM32/COMPACT.EXE
+	</event>
+
+	<event start="Sun Jul 19 2009 14:27:19 GMT"
+		end="Sun Jul 19 2009 14:27:19 GMT"
+		durationEvent="false"
+		title="[Prefetch] CONTROL.EXE-013DBFB5.pf created - run 1 times, last run at Sun Jul 19 14:27:09 2009, full path: C:/WINDOWS/SYSTEM32/CONTROL.EXE"
+		>
+	[Prefetch] CONTROL.EXE-013DBFB5.pf created - run 1 times, last run at Sun Jul 19 14:27:09 2009, full path: C:/WINDOWS/SYSTEM32/CONTROL.EXE
+	</event>
+
+	<event start="Tue Aug 04 2009 15:13:22 GMT"
+		end="Tue Aug 04 2009 15:13:22 GMT"
+		durationEvent="false"
+		title="[Prefetch] CTFMON.EXE-0E17969B.pf created - run 2 times, last run at Tue Aug  4 15:13:12 2009, full path: C:/WINDOWS/SYSTEM32/CTFMON.EXE"
+		>
+	[Prefetch] CTFMON.EXE-0E17969B.pf created - run 2 times, last run at Tue Aug  4 15:13:12 2009, full path: C:/WINDOWS/SYSTEM32/CTFMON.EXE
+	</event>
+
+	<event start="Sun Jul 19 2009 14:42:44 GMT"
+		end="Sun Jul 19 2009 14:42:44 GMT"
+		durationEvent="false"
+		title="[Prefetch] DEFRAG.EXE-273F131E.pf created - run 10 times, last run at Sun Jul 19 14:42:34 2009, full path: C:/WINDOWS/SYSTEM32/DEFRAG.EXE"
+		>
+	[Prefetch] DEFRAG.EXE-273F131E.pf created - run 10 times, last run at Sun Jul 19 14:42:34 2009, full path: C:/WINDOWS/SYSTEM32/DEFRAG.EXE
+	</event>
+
+	<event start="Sun Jul 19 2009 14:42:46 GMT"
+		end="Sun Jul 19 2009 14:42:46 GMT"
+		durationEvent="false"
+		title="[Prefetch] DFRGNTFS.EXE-269967DF.pf created - run 12 times, last run at Sun Jul 19 14:42:36 2009, full path: C:/WINDOWS/SYSTEM32/DFRGNTFS.EXE"
+		>
+	[Prefetch] DFRGNTFS.EXE-269967DF.pf created - run 12 times, last run at Sun Jul 19 14:42:36 2009, full path: C:/WINDOWS/SYSTEM32/DFRGNTFS.EXE
+	</event>
+
+	<event start="Tue Aug 04 2009 15:12:37 GMT"
+		end="Tue Aug 04 2009 15:12:37 GMT"
+		durationEvent="false"
+		title="[Prefetch] EXPLORER.EXE-082F38A9.pf created - run 2 times, last run at Tue Aug  4 15:12:27 2009, full path: C:/WINDOWS/EXPLORER.EXE"
+		>
+	[Prefetch] EXPLORER.EXE-082F38A9.pf created - run 2 times, last run at Tue Aug  4 15:12:27 2009, full path: C:/WINDOWS/EXPLORER.EXE
+	</event>
+
+	<event start="Tue Aug 04 2009 15:16:20 GMT"
+		end="Tue Aug 04 2009 15:16:20 GMT"
+		durationEvent="false"
+		title="[Prefetch] FIREFOX%20SETUP%203.5.2[2].EX-24A00D3A.pf created - run 1 times, last run at Tue Aug  4 15:16:08 2009, full path: "
+		>
+	[Prefetch] FIREFOX%20SETUP%203.5.2[2].EX-24A00D3A.pf created - run 1 times, last run at Tue Aug  4 15:16:08 2009, full path: 
+	</event>
+
+	<event start="Tue Aug 04 2009 15:16:58 GMT"
+		end="Tue Aug 04 2009 15:16:58 GMT"
+		durationEvent="false"
+		title="[Prefetch] FIREFOX.EXE-28641590.pf created - run 3 times, last run at Tue Aug  4 15:16:56 2009, full path: "
+		>
+	[Prefetch] FIREFOX.EXE-28641590.pf created - run 3 times, last run at Tue Aug  4 15:16:56 2009, full path: 
+	</event>
+
+	<event start="Tue Apr 28 2009 07:50:10 GMT"
+		end="Tue Apr 28 2009 07:50:10 GMT"
+		durationEvent="false"
+		title="[Prefetch] HELP.EXE-085DD6F3.pf created - run 2 times, last run at Tue Apr 28 07:50:09 2009, full path: C:/WINDOWS/SYSTEM32/HELP.EXE"
+		>
+	[Prefetch] HELP.EXE-085DD6F3.pf created - run 2 times, last run at Tue Apr 28 07:50:09 2009, full path: C:/WINDOWS/SYSTEM32/HELP.EXE
+	</event>
+
+	<event start="Sun Jul 19 2009 14:46:40 GMT"
+		end="Sun Jul 19 2009 14:46:40 GMT"
+		durationEvent="false"
+		title="[Prefetch] HELPSVC.EXE-2878DDA2.pf created - run 2 times, last run at Sun Jul 19 14:46:30 2009, full path: C:/WINDOWS/PCHEALTH/HELPCTR/BINARIES/HELPSVC.EXE"
+		>
+	[Prefetch] HELPSVC.EXE-2878DDA2.pf created - run 2 times, last run at Sun Jul 19 14:46:30 2009, full path: C:/WINDOWS/PCHEALTH/HELPCTR/BINARIES/HELPSVC.EXE
+	</event>
+
+	<event start="Mon Jul 13 2009 18:52:17 GMT"
+		end="Mon Jul 13 2009 18:52:17 GMT"
+		durationEvent="false"
+		title="[Prefetch] HOTFIXINSTALLER.EXE-33FB012E.pf created - run 1 times, last run at Mon Jul 13 18:52:07 2009, full path: C:/50F4C3A12936313B9E/HOTFIXINSTALLER.EXE"
+		>
+	[Prefetch] HOTFIXINSTALLER.EXE-33FB012E.pf created - run 1 times, last run at Mon Jul 13 18:52:07 2009, full path: C:/50F4C3A12936313B9E/HOTFIXINSTALLER.EXE
+	</event>
+
+	<event start="Tue Aug 04 2009 15:13:05 GMT"
+		end="Tue Aug 04 2009 15:13:05 GMT"
+		durationEvent="false"
+		title="[Prefetch] IE4UINIT.EXE-169A5A39.pf created - run 2 times, last run at Tue Aug  4 15:13:05 2009, full path: C:/WINDOWS/SYSTEM32/IE4UINIT.EXE"
+		>
+	[Prefetch] IE4UINIT.EXE-169A5A39.pf created - run 2 times, last run at Tue Aug  4 15:13:05 2009, full path: C:/WINDOWS/SYSTEM32/IE4UINIT.EXE
+	</event>
+
+	<event start="Mon Jul 13 2009 19:18:44 GMT"
+		end="Mon Jul 13 2009 19:18:44 GMT"
+		durationEvent="false"
+		title="[Prefetch] IE8-WINDOWSXP-X86-ENU.EXE-201EF523.pf created - run 2 times, last run at Mon Jul 13 19:18:43 2009, full path: C:/WINDOWS/SOFTWAREDISTRIBUTION/DOWNLOAD/INSTALL/IE8-WINDOWSXP-X86-ENU.EXE"
+		>
+	[Prefetch] IE8-WINDOWSXP-X86-ENU.EXE-201EF523.pf created - run 2 times, last run at Mon Jul 13 19:18:43 2009, full path: C:/WINDOWS/SOFTWAREDISTRIBUTION/DOWNLOAD/INSTALL/IE8-WINDOWSXP-X86-ENU.EXE
+	</event>
+
+	<event start="Mon Jul 13 2009 18:15:38 GMT"
+		end="Mon Jul 13 2009 18:15:38 GMT"
+		durationEvent="false"
+		title="[Prefetch] IESETUP.EXE-0F66FAAB.pf created - run 1 times, last run at Mon Jul 13 18:15:28 2009, full path: C:/745B53992CDF47A3409AF27FDF/UPDATE/IESETUP.EXE"
+		>
+	[Prefetch] IESETUP.EXE-0F66FAAB.pf created - run 1 times, last run at Mon Jul 13 18:15:28 2009, full path: C:/745B53992CDF47A3409AF27FDF/UPDATE/IESETUP.EXE
+	</event>
+
+	<event start="Mon Jul 13 2009 19:19:03 GMT"
+		end="Mon Jul 13 2009 19:19:03 GMT"
+		durationEvent="false"
+		title="[Prefetch] IESETUP.EXE-18EF8479.pf created - run 1 times, last run at Mon Jul 13 19:18:49 2009, full path: C:/745B53992CDF47A3409AF27FDF/UPDATE/IESETUP.EXE"
+		>
+	[Prefetch] IESETUP.EXE-18EF8479.pf created - run 1 times, last run at Mon Jul 13 19:18:49 2009, full path: C:/745B53992CDF47A3409AF27FDF/UPDATE/IESETUP.EXE
+	</event>
+
+	<event start="Tue Aug 04 2009 15:12:30 GMT"
+		end="Tue Aug 04 2009 15:12:30 GMT"
+		durationEvent="false"
+		title="[Prefetch] IEUDINIT.EXE-054FE003.pf created - run 1 times, last run at Tue Aug  4 15:12:30 2009, full path: C:/WINDOWS/SYSTEM32/IEUDINIT.EXE"
+		>
+	[Prefetch] IEUDINIT.EXE-054FE003.pf created - run 1 times, last run at Tue Aug  4 15:12:30 2009, full path: C:/WINDOWS/SYSTEM32/IEUDINIT.EXE
+	</event>
+
+	<event start="Tue Aug 04 2009 15:13:53 GMT"
+		end="Tue Aug 04 2009 15:13:53 GMT"
+		durationEvent="false"
+		title="[Prefetch] IEXPLORE.EXE-27122324.pf created - run 11 times, last run at Tue Aug  4 15:13:43 2009, full path: C:/PROGRAM FILES/INTERNET EXPLORER/IEXPLORE.EXE"
+		>
+	[Prefetch] IEXPLORE.EXE-27122324.pf created - run 11 times, last run at Tue Aug  4 15:13:43 2009, full path: C:/PROGRAM FILES/INTERNET EXPLORER/IEXPLORE.EXE
+	</event>
+
+	<event start="Tue Aug 04 2009 15:13:23 GMT"
+		end="Tue Aug 04 2009 15:13:23 GMT"
+		durationEvent="false"
+		title="[Prefetch] IMAPI.EXE-0BF740A4.pf created - run 5 times, last run at Tue Aug  4 15:13:16 2009, full path: C:/WINDOWS/SYSTEM32/IMAPI.EXE"
+		>
+	[Prefetch] IMAPI.EXE-0BF740A4.pf created - run 5 times, last run at Tue Aug  4 15:13:16 2009, full path: C:/WINDOWS/SYSTEM32/IMAPI.EXE
+	</event>
+
+	<event start="Sun Jul 19 2009 14:25:53 GMT"
+		end="Sun Jul 19 2009 14:25:53 GMT"
+		durationEvent="false"
+		title="[Prefetch] IPCONFIG.EXE-2395F30B.pf created - run 6 times, last run at Sun Jul 19 14:25:50 2009, full path: C:/WINDOWS/SYSTEM32/IPCONFIG.EXE"
+		>
+	[Prefetch] IPCONFIG.EXE-2395F30B.pf created - run 6 times, last run at Sun Jul 19 14:25:50 2009, full path: C:/WINDOWS/SYSTEM32/IPCONFIG.EXE
+	</event>
+
+	<event start="Tue Aug 04 2009 15:18:35 GMT"
+		end="Tue Aug 04 2009 15:18:35 GMT"
+		durationEvent="false"
+		title="[Prefetch] JAVA.EXE-0C263507.pf created - run 4 times, last run at Tue Aug  4 15:18:35 2009, full path: C:/PROGRAM FILES/JAVA/JRE6/BIN/JAVA.EXE"
+		>
+	[Prefetch] JAVA.EXE-0C263507.pf created - run 4 times, last run at Tue Aug  4 15:18:35 2009, full path: C:/PROGRAM FILES/JAVA/JRE6/BIN/JAVA.EXE
+	</event>
+
+	<event start="Mon Jul 13 2009 19:33:40 GMT"
+		end="Mon Jul 13 2009 19:33:40 GMT"
+		durationEvent="false"
+		title="[Prefetch] JAVAW.EXE-2DC32ABC.pf created - run 2 times, last run at Mon Jul 13 19:33:26 2009, full path: C:/PROGRAM FILES/JAVA/JRE6/BIN/JAVAW.EXE"
+		>
+	[Prefetch] JAVAW.EXE-2DC32ABC.pf created - run 2 times, last run at Mon Jul 13 19:33:26 2009, full path: C:/PROGRAM FILES/JAVA/JRE6/BIN/JAVAW.EXE
+	</event>
+
+	<event start="Mon Jul 13 2009 19:33:35 GMT"
+		end="Mon Jul 13 2009 19:33:35 GMT"
+		durationEvent="false"
+		title="[Prefetch] JAVAWS.EXE-021AC9A9.pf created - run 1 times, last run at Mon Jul 13 19:33:25 2009, full path: C:/PROGRAM FILES/JAVA/JRE6/BIN/JAVAWS.EXE"
+		>
+	[Prefetch] JAVAWS.EXE-021AC9A9.pf created - run 1 times, last run at Mon Jul 13 19:33:25 2009, full path: C:/PROGRAM FILES/JAVA/JRE6/BIN/JAVAWS.EXE
+	</event>
+
+	<event start="Mon Jul 13 2009 19:33:31 GMT"
+		end="Mon Jul 13 2009 19:33:31 GMT"
+		durationEvent="false"
+		title="[Prefetch] JQS.EXE-1D781F77.pf created - run 2 times, last run at Mon Jul 13 19:33:23 2009, full path: C:/PROGRAM FILES/JAVA/JRE6/BIN/JQS.EXE"
+		>
+	[Prefetch] JQS.EXE-1D781F77.pf created - run 2 times, last run at Mon Jul 13 19:33:23 2009, full path: C:/PROGRAM FILES/JAVA/JRE6/BIN/JQS.EXE
+	</event>
+
+	<event start="Tue Aug 04 2009 15:16:58 GMT"
+		end="Tue Aug 04 2009 15:16:58 GMT"
+		durationEvent="false"
+		title="[Prefetch] JQSNOTIFY.EXE-24AE4A36.pf created - run 1 times, last run at Tue Aug  4 15:16:58 2009, full path: "
+		>
+	[Prefetch] JQSNOTIFY.EXE-24AE4A36.pf created - run 1 times, last run at Tue Aug  4 15:16:58 2009, full path: 
+	</event>
+
+	<event start="Mon Jul 13 2009 19:32:26 GMT"
+		end="Mon Jul 13 2009 19:32:26 GMT"
+		durationEvent="false"
+		title="[Prefetch] JRE-6U11-WINDOWS-I586-P.EXE-02A22362.pf created - run 1 times, last run at Mon Jul 13 19:32:21 2009, full path: C:/DOCUME~1/ADMINI~1/LOCALS~1/TEMP/JRE-6U11-WINDOWS-I586-P.EXE"
+		>
+	[Prefetch] JRE-6U11-WINDOWS-I586-P.EXE-02A22362.pf created - run 1 times, last run at Mon Jul 13 19:32:21 2009, full path: C:/DOCUME~1/ADMINI~1/LOCALS~1/TEMP/JRE-6U11-WINDOWS-I586-P.EXE
+	</event>
+
+	<event start="Sun Jul 19 2009 14:30:49 GMT"
+		end="Sun Jul 19 2009 14:30:49 GMT"
+		durationEvent="false"
+		title="[Prefetch] JRE-6U14-WINDOWS-I586-IFTW-RV-168D2E42.pf created - run 1 times, last run at Sun Jul 19 14:30:39 2009, full path: "
+		>
+	[Prefetch] JRE-6U14-WINDOWS-I586-IFTW-RV-168D2E42.pf created - run 1 times, last run at Sun Jul 19 14:30:39 2009, full path: 
+	</event>
+
+	<event start="Tue Aug 04 2009 15:20:56 GMT"
+		end="Tue Aug 04 2009 15:20:56 GMT"
+		durationEvent="false"
+		title="[Prefetch] JRE-6U14-WINDOWS-I586-IFTW.EX-0537587C.pf created - run 1 times, last run at Tue Aug  4 15:20:46 2009, full path: "
+		>
+	[Prefetch] JRE-6U14-WINDOWS-I586-IFTW.EX-0537587C.pf created - run 1 times, last run at Tue Aug  4 15:20:46 2009, full path: 
+	</event>
+
+	<event start="Tue Aug 04 2009 15:18:45 GMT"
+		end="Tue Aug 04 2009 15:18:45 GMT"
+		durationEvent="false"
+		title="[Prefetch] JUCHECK.EXE-395165C8.pf created - run 2 times, last run at Tue Aug  4 15:18:35 2009, full path: C:/PROGRAM FILES/JAVA/JRE6/BIN/JUCHECK.EXE"
+		>
+	[Prefetch] JUCHECK.EXE-395165C8.pf created - run 2 times, last run at Tue Aug  4 15:18:35 2009, full path: C:/PROGRAM FILES/JAVA/JRE6/BIN/JUCHECK.EXE
+	</event>
+
+	<event start="Tue Aug 04 2009 15:13:22 GMT"
+		end="Tue Aug 04 2009 15:13:22 GMT"
+		durationEvent="false"
+		title="[Prefetch] JUSCHED.EXE-25206883.pf created - run 1 times, last run at Tue Aug  4 15:13:12 2009, full path: C:/PROGRAM FILES/JAVA/JRE6/BIN/JUSCHED.EXE"
+		>
+	[Prefetch] JUSCHED.EXE-25206883.pf created - run 1 times, last run at Tue Aug  4 15:13:12 2009, full path: C:/PROGRAM FILES/JAVA/JRE6/BIN/JUSCHED.EXE
+	</event>
+
+	<event start="Mon Jul 13 2009 19:31:41 GMT"
+		end="Mon Jul 13 2009 19:31:41 GMT"
+		durationEvent="false"
+		title="[Prefetch] LIVEVIEWPUBLICINSTALLERV0.7B[-27EFCCB7.pf created - run 1 times, last run at Mon Jul 13 19:31:31 2009, full path: "
+		>
+	[Prefetch] LIVEVIEWPUBLICINSTALLERV0.7B[-27EFCCB7.pf created - run 1 times, last run at Mon Jul 13 19:31:31 2009, full path: 
+	</event>
+
+	<event start="Sat Apr 25 2009 22:01:17 GMT"
+		end="Sat Apr 25 2009 22:01:17 GMT"
+		durationEvent="false"
+		title="[Prefetch] LODCTR.EXE-1009C3B4.pf created - run 11 times, last run at Sat Apr 25 22:01:17 2009, full path: C:/WINDOWS/SYSTEM32/LODCTR.EXE"
+		>
+	[Prefetch] LODCTR.EXE-1009C3B4.pf created - run 11 times, last run at Sat Apr 25 22:01:17 2009, full path: C:/WINDOWS/SYSTEM32/LODCTR.EXE
+	</event>
+
+	<event start="Mon Jul 20 2009 12:21:46 GMT"
+		end="Mon Jul 20 2009 12:21:46 GMT"
+		durationEvent="false"
+		title="[Prefetch] LOGON.SCR-151EFAEA.pf created - run 11 times, last run at Mon Jul 20 12:21:36 2009, full path: "
+		>
+	[Prefetch] LOGON.SCR-151EFAEA.pf created - run 11 times, last run at Mon Jul 20 12:21:36 2009, full path: 
+	</event>
+
+	<event start="Tue Apr 28 2009 07:43:16 GMT"
+		end="Tue Apr 28 2009 07:43:16 GMT"
+		durationEvent="false"
+		title="[Prefetch] MMC.EXE-06C90BC7.pf created - run 1 times, last run at Tue Apr 28 07:43:06 2009, full path: C:/WINDOWS/SYSTEM32/MMC.EXE"
+		>
+	[Prefetch] MMC.EXE-06C90BC7.pf created - run 1 times, last run at Tue Apr 28 07:43:06 2009, full path: C:/WINDOWS/SYSTEM32/MMC.EXE
+	</event>
+
+	<event start="Sat Apr 25 2009 22:01:57 GMT"
+		end="Sat Apr 25 2009 22:01:57 GMT"
+		durationEvent="false"
+		title="[Prefetch] MOFCOMP.EXE-01718E95.pf created - run 10 times, last run at Sat Apr 25 22:01:57 2009, full path: C:/WINDOWS/SYSTEM32/WBEM/MOFCOMP.EXE"
+		>
+	[Prefetch] MOFCOMP.EXE-01718E95.pf created - run 10 times, last run at Sat Apr 25 22:01:57 2009, full path: C:/WINDOWS/SYSTEM32/WBEM/MOFCOMP.EXE
+	</event>
+
+	<event start="Tue Aug 04 2009 15:12:22 GMT"
+		end="Tue Aug 04 2009 15:12:22 GMT"
+		durationEvent="false"
+		title="[Prefetch] MPNOTIFY.EXE-3631A846.pf created - run 3 times, last run at Tue Aug  4 15:12:22 2009, full path: C:/WINDOWS/SYSTEM32/MPNOTIFY.EXE"
+		>
+	[Prefetch] MPNOTIFY.EXE-3631A846.pf created - run 3 times, last run at Tue Aug  4 15:12:22 2009, full path: C:/WINDOWS/SYSTEM32/MPNOTIFY.EXE
+	</event>
+
+	<event start="Mon Jul 20 2009 12:01:04 GMT"
+		end="Mon Jul 20 2009 12:01:04 GMT"
+		durationEvent="false"
+		title="[Prefetch] MRT.EXE-1B4A8D49.pf created - run 3 times, last run at Mon Jul 20 12:01:01 2009, full path: C:/4CDFA98EE624C744AEF1063E37/MRT.EXE"
+		>
+	[Prefetch] MRT.EXE-1B4A8D49.pf created - run 3 times, last run at Mon Jul 20 12:01:01 2009, full path: C:/4CDFA98EE624C744AEF1063E37/MRT.EXE
+	</event>
+
+	<event start="Mon Jul 13 2009 18:51:15 GMT"
+		end="Mon Jul 13 2009 18:51:15 GMT"
+		durationEvent="false"
+		title="[Prefetch] MRTSTUB.EXE-0C6E00DC.pf created - run 1 times, last run at Mon Jul 13 18:51:14 2009, full path: C:/05B9B8681BB66574BB474A5B87DB/MRTSTUB.EXE"
+		>
+	[Prefetch] MRTSTUB.EXE-0C6E00DC.pf created - run 1 times, last run at Mon Jul 13 18:51:14 2009, full path: C:/05B9B8681BB66574BB474A5B87DB/MRTSTUB.EXE
+	</event>
+
+	<event start="Mon Jul 20 2009 12:00:53 GMT"
+		end="Mon Jul 20 2009 12:00:53 GMT"
+		durationEvent="false"
+		title="[Prefetch] MRTSTUB.EXE-10C0D00C.pf created - run 1 times, last run at Mon Jul 20 12:00:52 2009, full path: C:/05B9B8681BB66574BB474A5B87DB/MRTSTUB.EXE"
+		>
+	[Prefetch] MRTSTUB.EXE-10C0D00C.pf created - run 1 times, last run at Mon Jul 20 12:00:52 2009, full path: C:/05B9B8681BB66574BB474A5B87DB/MRTSTUB.EXE
+	</event>
+
+	<event start="Mon Jul 13 2009 19:20:59 GMT"
+		end="Mon Jul 13 2009 19:20:59 GMT"
+		durationEvent="false"
+		title="[Prefetch] MSCORSVW.EXE-1BF30400.pf created - run 30 times, last run at Mon Jul 13 19:20:58 2009, full path: C:/WINDOWS/MICROSOFT.NET/FRAMEWORK/V2.0.50727/MSCORSVW.EXE"
+		>
+	[Prefetch] MSCORSVW.EXE-1BF30400.pf created - run 30 times, last run at Mon Jul 13 19:20:58 2009, full path: C:/WINDOWS/MICROSOFT.NET/FRAMEWORK/V2.0.50727/MSCORSVW.EXE
+	</event>
+
+	<event start="Mon Jul 13 2009 19:32:46 GMT"
+		end="Mon Jul 13 2009 19:32:46 GMT"
+		durationEvent="false"
+		title="[Prefetch] MSIC.TMP-073B2267.pf created - run 1 times, last run at Mon Jul 13 19:32:45 2009, full path: "
+		>
+	[Prefetch] MSIC.TMP-073B2267.pf created - run 1 times, last run at Mon Jul 13 19:32:45 2009, full path: 
+	</event>
+
+	<event start="Tue Aug 04 2009 15:13:08 GMT"
+		end="Tue Aug 04 2009 15:13:08 GMT"
+		durationEvent="false"
+		title="[Prefetch] MSIEXEC.EXE-2F8A8CAE.pf created - run 28 times, last run at Tue Aug  4 15:12:58 2009, full path: C:/WINDOWS/SYSTEM32/MSIEXEC.EXE"
+		>
+	[Prefetch] MSIEXEC.EXE-2F8A8CAE.pf created - run 28 times, last run at Tue Aug  4 15:12:58 2009, full path: C:/WINDOWS/SYSTEM32/MSIEXEC.EXE
+	</event>
+
+	<event start="Mon Jul 13 2009 19:32:47 GMT"
+		end="Mon Jul 13 2009 19:32:47 GMT"
+		durationEvent="false"
+		title="[Prefetch] MSIF.TMP-31ACFBC2.pf created - run 1 times, last run at Mon Jul 13 19:32:47 2009, full path: "
+		>
+	[Prefetch] MSIF.TMP-31ACFBC2.pf created - run 1 times, last run at Mon Jul 13 19:32:47 2009, full path: 
+	</event>
+
+	<event start="Mon Jul 13 2009 18:52:15 GMT"
+		end="Mon Jul 13 2009 18:52:15 GMT"
+		durationEvent="false"
+		title="[Prefetch] NDP35SP1-KB963707-X86.EXE-0A1DC737.pf created - run 1 times, last run at Mon Jul 13 18:52:05 2009, full path: C:/WINDOWS/SOFTWAREDISTRIBUTION/DOWNLOAD/INSTALL/NDP35SP1-KB963707-X86.EXE"
+		>
+	[Prefetch] NDP35SP1-KB963707-X86.EXE-0A1DC737.pf created - run 1 times, last run at Mon Jul 13 18:52:05 2009, full path: C:/WINDOWS/SOFTWAREDISTRIBUTION/DOWNLOAD/INSTALL/NDP35SP1-KB963707-X86.EXE
+	</event>
+
+	<event start="Mon Jul 13 2009 19:18:10 GMT"
+		end="Mon Jul 13 2009 19:18:10 GMT"
+		durationEvent="false"
+		title="[Prefetch] NGEN.EXE-38021CCC.pf created - run 16 times, last run at Mon Jul 13 19:18:10 2009, full path: C:/WINDOWS/MICROSOFT.NET/FRAMEWORK/V2.0.50727/NGEN.EXE"
+		>
+	[Prefetch] NGEN.EXE-38021CCC.pf created - run 16 times, last run at Mon Jul 13 19:18:10 2009, full path: C:/WINDOWS/MICROSOFT.NET/FRAMEWORK/V2.0.50727/NGEN.EXE
+	</event>
+
+	<event start="Tue Aug 04 2009 15:19:25 GMT"
+		end="Tue Aug 04 2009 15:19:25 GMT"
+		durationEvent="false"
+		title="[Prefetch] NOTEPAD.EXE-336351A9.pf created - run 5 times, last run at Tue Aug  4 15:19:23 2009, full path: C:/WINDOWS/NOTEPAD.EXE"
+		>
+	[Prefetch] NOTEPAD.EXE-336351A9.pf created - run 5 times, last run at Tue Aug  4 15:19:23 2009, full path: C:/WINDOWS/NOTEPAD.EXE
+	</event>
+
+	<event start="Tue Aug 04 2009 15:12:11 GMT"
+		end="Tue Aug 04 2009 15:12:11 GMT"
+		durationEvent="false"
+		title="[Prefetch] NTOSBOOT-B00DFAAD.pf created - run 13 times, last run at Tue Aug  4 15:10:22 2009, full path: "
+		>
+	[Prefetch] NTOSBOOT-B00DFAAD.pf created - run 13 times, last run at Tue Aug  4 15:10:22 2009, full path: 
+	</event>
+
+	<event start="Sat Apr 25 2009 21:19:20 GMT"
+		end="Sat Apr 25 2009 21:19:20 GMT"
+		durationEvent="false"
+		title="[Prefetch] PING.EXE-31216D26.pf created - run 6 times, last run at Sat Apr 25 21:19:18 2009, full path: C:/WINDOWS/SYSTEM32/PING.EXE"
+		>
+	[Prefetch] PING.EXE-31216D26.pf created - run 6 times, last run at Sat Apr 25 21:19:18 2009, full path: C:/WINDOWS/SYSTEM32/PING.EXE
+	</event>
+
+	<event start="Mon Jul 13 2009 19:18:12 GMT"
+		end="Mon Jul 13 2009 19:18:12 GMT"
+		durationEvent="false"
+		title="[Prefetch] PSCUSTOMSETUPUTIL.EXE-327BEC00.pf created - run 10 times, last run at Mon Jul 13 19:18:12 2009, full path: C:/WINDOWS/$NTUNINSTALLKB926141$/PSCUSTOMSETUPUTIL.EXE"
+		>
+	[Prefetch] PSCUSTOMSETUPUTIL.EXE-327BEC00.pf created - run 10 times, last run at Mon Jul 13 19:18:12 2009, full path: C:/WINDOWS/$NTUNINSTALLKB926141$/PSCUSTOMSETUPUTIL.EXE
+	</event>
+
+	<event start="Mon Jul 13 2009 18:15:14 GMT"
+		end="Mon Jul 13 2009 18:15:14 GMT"
+		durationEvent="false"
+		title="[Prefetch] PSCUSTOMSETUPUTIL.EXE-3942E84D.pf created - run 10 times, last run at Mon Jul 13 18:15:14 2009, full path: C:/WINDOWS/$NTUNINSTALLKB926141$/PSCUSTOMSETUPUTIL.EXE"
+		>
+	[Prefetch] PSCUSTOMSETUPUTIL.EXE-3942E84D.pf created - run 10 times, last run at Mon Jul 13 18:15:14 2009, full path: C:/WINDOWS/$NTUNINSTALLKB926141$/PSCUSTOMSETUPUTIL.EXE
+	</event>
+
+	<event start="Mon Jul 13 2009 18:15:24 GMT"
+		end="Mon Jul 13 2009 18:15:24 GMT"
+		durationEvent="false"
+		title="[Prefetch] PSSETUPNATIVEUTILS.EXE-133BE627.pf created - run 1 times, last run at Mon Jul 13 18:15:24 2009, full path: C:/WINDOWS/$NTUNINSTALLKB926139-V2$/PSSETUPNATIVEUTILS.EXE"
+		>
+	[Prefetch] PSSETUPNATIVEUTILS.EXE-133BE627.pf created - run 1 times, last run at Mon Jul 13 18:15:24 2009, full path: C:/WINDOWS/$NTUNINSTALLKB926139-V2$/PSSETUPNATIVEUTILS.EXE
+	</event>
+
+	<event start="Tue Aug 04 2009 15:12:44 GMT"
+		end="Tue Aug 04 2009 15:12:44 GMT"
+		durationEvent="false"
+		title="[Prefetch] REGSVR32.EXE-25EEFE2F.pf created - run 11 times, last run at Tue Aug  4 15:12:32 2009, full path: C:/WINDOWS/SYSTEM32/REGSVR32.EXE"
+		>
+	[Prefetch] REGSVR32.EXE-25EEFE2F.pf created - run 11 times, last run at Tue Aug  4 15:12:32 2009, full path: C:/WINDOWS/SYSTEM32/REGSVR32.EXE
+	</event>
+
+	<event start="Sat Apr 25 2009 22:00:05 GMT"
+		end="Sat Apr 25 2009 22:00:05 GMT"
+		durationEvent="false"
+		title="[Prefetch] REGTLIBV12.EXE-0E2FA54B.pf created - run 10 times, last run at Sat Apr 25 22:00:05 2009, full path: C:/WINDOWS/MICROSOFT.NET/FRAMEWORK/V2.0.50727/REGTLIBV12.EXE"
+		>
+	[Prefetch] REGTLIBV12.EXE-0E2FA54B.pf created - run 10 times, last run at Sat Apr 25 22:00:05 2009, full path: C:/WINDOWS/MICROSOFT.NET/FRAMEWORK/V2.0.50727/REGTLIBV12.EXE
+	</event>
+
+	<event start="Mon Jul 13 2009 18:49:06 GMT"
+		end="Mon Jul 13 2009 18:49:06 GMT"
+		durationEvent="false"
+		title="[Prefetch] ROOTSUPD.EXE-291AC2BC.pf created - run 1 times, last run at Mon Jul 13 18:49:05 2009, full path: C:/WINDOWS/SOFTWAREDISTRIBUTION/DOWNLOAD/INSTALL/ROOTSUPD.EXE"
+		>
+	[Prefetch] ROOTSUPD.EXE-291AC2BC.pf created - run 1 times, last run at Mon Jul 13 18:49:05 2009, full path: C:/WINDOWS/SOFTWAREDISTRIBUTION/DOWNLOAD/INSTALL/ROOTSUPD.EXE
+	</event>
+
+	<event start="Mon Jul 13 2009 18:04:31 GMT"
+		end="Mon Jul 13 2009 18:04:31 GMT"
+		durationEvent="false"
+		title="[Prefetch] RUNDLL32.EXE-1422889A.pf created - run 1 times, last run at Mon Jul 13 18:04:30 2009, full path: C:/WINDOWS/SYSTEM32/RUNDLL32.EXE"
+		>
+	[Prefetch] RUNDLL32.EXE-1422889A.pf created - run 1 times, last run at Mon Jul 13 18:04:30 2009, full path: C:/WINDOWS/SYSTEM32/RUNDLL32.EXE
+	</event>
+
+	<event start="Tue Apr 28 2009 07:43:04 GMT"
+		end="Tue Apr 28 2009 07:43:04 GMT"
+		durationEvent="false"
+		title="[Prefetch] RUNDLL32.EXE-147710F4.pf created - run 1 times, last run at Tue Apr 28 07:42:54 2009, full path: C:/WINDOWS/SYSTEM32/RUNDLL32.EXE"
+		>
+	[Prefetch] RUNDLL32.EXE-147710F4.pf created - run 1 times, last run at Tue Apr 28 07:42:54 2009, full path: C:/WINDOWS/SYSTEM32/RUNDLL32.EXE
+	</event>
+
+	<event start="Mon Jul 13 2009 18:04:30 GMT"
+		end="Mon Jul 13 2009 18:04:30 GMT"
+		durationEvent="false"
+		title="[Prefetch] RUNDLL32.EXE-148DE68D.pf created - run 1 times, last run at Mon Jul 13 18:04:30 2009, full path: C:/WINDOWS/SYSTEM32/RUNDLL32.EXE"
+		>
+	[Prefetch] RUNDLL32.EXE-148DE68D.pf created - run 1 times, last run at Mon Jul 13 18:04:30 2009, full path: C:/WINDOWS/SYSTEM32/RUNDLL32.EXE
+	</event>
+
+	<event start="Tue Apr 28 2009 10:21:19 GMT"
+		end="Tue Apr 28 2009 10:21:19 GMT"
+		durationEvent="false"
+		title="[Prefetch] RUNDLL32.EXE-150DDA3A.pf created - run 4 times, last run at Tue Apr 28 10:21:09 2009, full path: C:/WINDOWS/SYSTEM32/RUNDLL32.EXE"
+		>
+	[Prefetch] RUNDLL32.EXE-150DDA3A.pf created - run 4 times, last run at Tue Apr 28 10:21:09 2009, full path: C:/WINDOWS/SYSTEM32/RUNDLL32.EXE
+	</event>
+
+	<event start="Sun Jul 19 2009 14:27:20 GMT"
+		end="Sun Jul 19 2009 14:27:20 GMT"
+		durationEvent="false"
+		title="[Prefetch] RUNDLL32.EXE-1831A4F3.pf created - run 2 times, last run at Sun Jul 19 14:27:10 2009, full path: C:/WINDOWS/SYSTEM32/RUNDLL32.EXE"
+		>
+	[Prefetch] RUNDLL32.EXE-1831A4F3.pf created - run 2 times, last run at Sun Jul 19 14:27:10 2009, full path: C:/WINDOWS/SYSTEM32/RUNDLL32.EXE
+	</event>
+
+	<event start="Tue Aug 04 2009 15:12:52 GMT"
+		end="Tue Aug 04 2009 15:12:52 GMT"
+		durationEvent="false"
+		title="[Prefetch] RUNDLL32.EXE-1B9BC7CD.pf created - run 1 times, last run at Tue Aug  4 15:12:47 2009, full path: C:/WINDOWS/SYSTEM32/RUNDLL32.EXE"
+		>
+	[Prefetch] RUNDLL32.EXE-1B9BC7CD.pf created - run 1 times, last run at Tue Aug  4 15:12:47 2009, full path: C:/WINDOWS/SYSTEM32/RUNDLL32.EXE
+	</event>
+
+	<event start="Mon Jul 13 2009 18:05:10 GMT"
+		end="Mon Jul 13 2009 18:05:10 GMT"
+		durationEvent="false"
+		title="[Prefetch] RUNDLL32.EXE-1E478A55.pf created - run 1 times, last run at Mon Jul 13 18:05:07 2009, full path: C:/WINDOWS/SYSTEM32/RUNDLL32.EXE"
+		>
+	[Prefetch] RUNDLL32.EXE-1E478A55.pf created - run 1 times, last run at Mon Jul 13 18:05:07 2009, full path: C:/WINDOWS/SYSTEM32/RUNDLL32.EXE
+	</event>
+
+	<event start="Sun Jul 19 2009 14:27:21 GMT"
+		end="Sun Jul 19 2009 14:27:21 GMT"
+		durationEvent="false"
+		title="[Prefetch] RUNDLL32.EXE-2C7B5C4A.pf created - run 1 times, last run at Sun Jul 19 14:27:16 2009, full path: C:/WINDOWS/SYSTEM32/RUNDLL32.EXE"
+		>
+	[Prefetch] RUNDLL32.EXE-2C7B5C4A.pf created - run 1 times, last run at Sun Jul 19 14:27:16 2009, full path: C:/WINDOWS/SYSTEM32/RUNDLL32.EXE
+	</event>
+
+	<event start="Mon Apr 27 2009 15:38:19 GMT"
+		end="Mon Apr 27 2009 15:38:19 GMT"
+		durationEvent="false"
+		title="[Prefetch] RUNDLL32.EXE-34FD57A0.pf created - run 1 times, last run at Mon Apr 27 15:38:19 2009, full path: C:/WINDOWS/SYSTEM32/RUNDLL32.EXE"
+		>
+	[Prefetch] RUNDLL32.EXE-34FD57A0.pf created - run 1 times, last run at Mon Apr 27 15:38:19 2009, full path: C:/WINDOWS/SYSTEM32/RUNDLL32.EXE
+	</event>
+
+	<event start="Mon Jul 13 2009 18:04:30 GMT"
+		end="Mon Jul 13 2009 18:04:30 GMT"
+		durationEvent="false"
+		title="[Prefetch] RUNDLL32.EXE-3DC8200C.pf created - run 1 times, last run at Mon Jul 13 18:04:30 2009, full path: C:/WINDOWS/SYSTEM32/RUNDLL32.EXE"
+		>
+	[Prefetch] RUNDLL32.EXE-3DC8200C.pf created - run 1 times, last run at Mon Jul 13 18:04:30 2009, full path: C:/WINDOWS/SYSTEM32/RUNDLL32.EXE
+	</event>
+
+	<event start="Mon Jul 13 2009 18:05:13 GMT"
+		end="Mon Jul 13 2009 18:05:13 GMT"
+		durationEvent="false"
+		title="[Prefetch] RUNDLL32.EXE-3F78FFDD.pf created - run 1 times, last run at Mon Jul 13 18:05:12 2009, full path: C:/WINDOWS/SYSTEM32/RUNDLL32.EXE"
+		>
+	[Prefetch] RUNDLL32.EXE-3F78FFDD.pf created - run 1 times, last run at Mon Jul 13 18:05:12 2009, full path: C:/WINDOWS/SYSTEM32/RUNDLL32.EXE
+	</event>
+
+	<event start="Tue Aug 04 2009 15:12:47 GMT"
+		end="Tue Aug 04 2009 15:12:47 GMT"
+		durationEvent="false"
+		title="[Prefetch] RUNDLL32.EXE-4499C56E.pf created - run 1 times, last run at Tue Aug  4 15:12:46 2009, full path: C:/WINDOWS/SYSTEM32/RUNDLL32.EXE"
+		>
+	[Prefetch] RUNDLL32.EXE-4499C56E.pf created - run 1 times, last run at Tue Aug  4 15:12:46 2009, full path: C:/WINDOWS/SYSTEM32/RUNDLL32.EXE
+	</event>
+
+	<event start="Mon Jul 13 2009 18:04:32 GMT"
+		end="Mon Jul 13 2009 18:04:32 GMT"
+		durationEvent="false"
+		title="[Prefetch] RUNDLL32.EXE-449BFFB7.pf created - run 1 times, last run at Mon Jul 13 18:04:31 2009, full path: C:/WINDOWS/SYSTEM32/RUNDLL32.EXE"
+		>
+	[Prefetch] RUNDLL32.EXE-449BFFB7.pf created - run 1 times, last run at Mon Jul 13 18:04:31 2009, full path: C:/WINDOWS/SYSTEM32/RUNDLL32.EXE
+	</event>
+
+	<event start="Fri Jul 31 2009 20:24:49 GMT"
+		end="Fri Jul 31 2009 20:24:49 GMT"
+		durationEvent="false"
+		title="[Prefetch] RUNDLL32.EXE-451FC2C0.pf created - run 1 times, last run at Fri Jul 31 20:24:49 2009, full path: C:/WINDOWS/SYSTEM32/RUNDLL32.EXE"
+		>
+	[Prefetch] RUNDLL32.EXE-451FC2C0.pf created - run 1 times, last run at Fri Jul 31 20:24:49 2009, full path: C:/WINDOWS/SYSTEM32/RUNDLL32.EXE
+	</event>
+
+	<event start="Mon Jul 13 2009 18:05:07 GMT"
+		end="Mon Jul 13 2009 18:05:07 GMT"
+		durationEvent="false"
+		title="[Prefetch] RUNDLL32.EXE-45736D66.pf created - run 1 times, last run at Mon Jul 13 18:05:06 2009, full path: C:/WINDOWS/SYSTEM32/RUNDLL32.EXE"
+		>
+	[Prefetch] RUNDLL32.EXE-45736D66.pf created - run 1 times, last run at Mon Jul 13 18:05:06 2009, full path: C:/WINDOWS/SYSTEM32/RUNDLL32.EXE
+	</event>
+
+	<event start="Tue Aug 04 2009 15:12:39 GMT"
+		end="Tue Aug 04 2009 15:12:39 GMT"
+		durationEvent="false"
+		title="[Prefetch] RUNDLL32.EXE-470F11BD.pf created - run 1 times, last run at Tue Aug  4 15:12:38 2009, full path: C:/WINDOWS/SYSTEM32/RUNDLL32.EXE"
+		>
+	[Prefetch] RUNDLL32.EXE-470F11BD.pf created - run 1 times, last run at Tue Aug  4 15:12:38 2009, full path: C:/WINDOWS/SYSTEM32/RUNDLL32.EXE
+	</event>
+
+	<event start="Tue Aug 04 2009 15:13:09 GMT"
+		end="Tue Aug 04 2009 15:13:09 GMT"
+		durationEvent="false"
+		title="[Prefetch] RUNDLL32.EXE-48793BE6.pf created - run 1 times, last run at Tue Aug  4 15:13:05 2009, full path: C:/WINDOWS/SYSTEM32/RUNDLL32.EXE"
+		>
+	[Prefetch] RUNDLL32.EXE-48793BE6.pf created - run 1 times, last run at Tue Aug  4 15:13:05 2009, full path: C:/WINDOWS/SYSTEM32/RUNDLL32.EXE
+	</event>
+
+	<event start="Tue Aug 04 2009 15:13:05 GMT"
+		end="Tue Aug 04 2009 15:13:05 GMT"
+		durationEvent="false"
+		title="[Prefetch] RUNDLL32.EXE-4AF321B7.pf created - run 1 times, last run at Tue Aug  4 15:13:04 2009, full path: C:/WINDOWS/SYSTEM32/RUNDLL32.EXE"
+		>
+	[Prefetch] RUNDLL32.EXE-4AF321B7.pf created - run 1 times, last run at Tue Aug  4 15:13:04 2009, full path: C:/WINDOWS/SYSTEM32/RUNDLL32.EXE
+	</event>
+
+	<event start="Mon Jul 13 2009 18:05:24 GMT"
+		end="Mon Jul 13 2009 18:05:24 GMT"
+		durationEvent="false"
+		title="[Prefetch] RUNONCE.EXE-2803F297.pf created - run 11 times, last run at Mon Jul 13 18:05:24 2009, full path: C:/WINDOWS/SYSTEM32/RUNONCE.EXE"
+		>
+	[Prefetch] RUNONCE.EXE-2803F297.pf created - run 11 times, last run at Mon Jul 13 18:05:24 2009, full path: C:/WINDOWS/SYSTEM32/RUNONCE.EXE
+	</event>
+
+	<event start="Tue Aug 04 2009 15:21:31 GMT"
+		end="Tue Aug 04 2009 15:21:31 GMT"
+		durationEvent="false"
+		title="[Prefetch] SETUP.EXE-28CFEF3C.pf created - run 1 times, last run at Tue Aug  4 15:21:18 2009, full path: C:/WINDOWS/TEMP/000050CE/SETUP.EXE"
+		>
+	[Prefetch] SETUP.EXE-28CFEF3C.pf created - run 1 times, last run at Tue Aug  4 15:21:18 2009, full path: C:/WINDOWS/TEMP/000050CE/SETUP.EXE
+	</event>
+
+	<event start="Mon Jul 13 2009 18:03:35 GMT"
+		end="Mon Jul 13 2009 18:03:35 GMT"
+		durationEvent="false"
+		title="[Prefetch] SETUP.EXE-2D9E5C0F.pf created - run 1 times, last run at Mon Jul 13 18:02:58 2009, full path: C:/WINDOWS/TEMP/000050CE/SETUP.EXE"
+		>
+	[Prefetch] SETUP.EXE-2D9E5C0F.pf created - run 1 times, last run at Mon Jul 13 18:02:58 2009, full path: C:/WINDOWS/TEMP/000050CE/SETUP.EXE
+	</event>
+
+	<event start="Tue Aug 04 2009 15:16:30 GMT"
+		end="Tue Aug 04 2009 15:16:30 GMT"
+		durationEvent="false"
+		title="[Prefetch] SETUP.EXE-3A255981.pf created - run 1 times, last run at Tue Aug  4 15:16:20 2009, full path: C:/WINDOWS/TEMP/000050CE/SETUP.EXE"
+		>
+	[Prefetch] SETUP.EXE-3A255981.pf created - run 1 times, last run at Tue Aug  4 15:16:20 2009, full path: C:/WINDOWS/TEMP/000050CE/SETUP.EXE
+	</event>
+
+	<event start="Tue Aug 04 2009 15:12:57 GMT"
+		end="Tue Aug 04 2009 15:12:57 GMT"
+		durationEvent="false"
+		title="[Prefetch] SETUP50.EXE-362FF7C9.pf created - run 2 times, last run at Tue Aug  4 15:12:55 2009, full path: C:/PROGRAM FILES/OUTLOOK EXPRESS/SETUP50.EXE"
+		>
+	[Prefetch] SETUP50.EXE-362FF7C9.pf created - run 2 times, last run at Tue Aug  4 15:12:55 2009, full path: C:/PROGRAM FILES/OUTLOOK EXPRESS/SETUP50.EXE
+	</event>
+
+	<event start="Tue Aug 04 2009 15:13:09 GMT"
+		end="Tue Aug 04 2009 15:13:09 GMT"
+		durationEvent="false"
+		title="[Prefetch] SHMGRATE.EXE-1BA69E68.pf created - run 3 times, last run at Tue Aug  4 15:13:09 2009, full path: C:/WINDOWS/SYSTEM32/SHMGRATE.EXE"
+		>
+	[Prefetch] SHMGRATE.EXE-1BA69E68.pf created - run 3 times, last run at Tue Aug  4 15:13:09 2009, full path: C:/WINDOWS/SYSTEM32/SHMGRATE.EXE
+	</event>
+
+	<event start="Tue Apr 28 2009 10:12:13 GMT"
+		end="Tue Apr 28 2009 10:12:13 GMT"
+		durationEvent="false"
+		title="[Prefetch] SHUTDOWN.EXE-12DAD820.pf created - run 1 times, last run at Tue Apr 28 10:12:12 2009, full path: C:/WINDOWS/SYSTEM32/SHUTDOWN.EXE"
+		>
+	[Prefetch] SHUTDOWN.EXE-12DAD820.pf created - run 1 times, last run at Tue Apr 28 10:12:12 2009, full path: C:/WINDOWS/SYSTEM32/SHUTDOWN.EXE
+	</event>
+
+	<event start="Mon Jul 13 2009 18:05:14 GMT"
+		end="Mon Jul 13 2009 18:05:14 GMT"
+		durationEvent="false"
+		title="[Prefetch] SPOOLSV.EXE-282F76A7.pf created - run 1 times, last run at Mon Jul 13 18:05:05 2009, full path: C:/WINDOWS/SYSTEM32/SPOOLSV.EXE"
+		>
+	[Prefetch] SPOOLSV.EXE-282F76A7.pf created - run 1 times, last run at Mon Jul 13 18:05:05 2009, full path: C:/WINDOWS/SYSTEM32/SPOOLSV.EXE
+	</event>
+
+	<event start="Mon Jul 13 2009 19:22:16 GMT"
+		end="Mon Jul 13 2009 19:22:16 GMT"
+		durationEvent="false"
+		title="[Prefetch] SPUPDSVC.EXE-21B36524.pf created - run 7 times, last run at Mon Jul 13 19:22:16 2009, full path: C:/WINDOWS/SYSTEM32/SPUPDSVC.EXE"
+		>
+	[Prefetch] SPUPDSVC.EXE-21B36524.pf created - run 7 times, last run at Mon Jul 13 19:22:16 2009, full path: C:/WINDOWS/SYSTEM32/SPUPDSVC.EXE
+	</event>
+
+	<event start="Mon Jul 13 2009 18:04:29 GMT"
+		end="Mon Jul 13 2009 18:04:29 GMT"
+		durationEvent="false"
+		title="[Prefetch] TPAUTOCONNECT.EXE-3A8C30BE.pf created - run 1 times, last run at Mon Jul 13 18:04:29 2009, full path: C:/PROGRAM FILES/VMWARE/VMWARE TOOLS/TPAUTOCONNECT.EXE"
+		>
+	[Prefetch] TPAUTOCONNECT.EXE-3A8C30BE.pf created - run 1 times, last run at Mon Jul 13 18:04:29 2009, full path: C:/PROGRAM FILES/VMWARE/VMWARE TOOLS/TPAUTOCONNECT.EXE
+	</event>
+
+	<event start="Mon Jul 13 2009 18:05:16 GMT"
+		end="Mon Jul 13 2009 18:05:16 GMT"
+		durationEvent="false"
+		title="[Prefetch] TPAUTOCONNSVC.EXE-19F171C6.pf created - run 8 times, last run at Mon Jul 13 18:05:16 2009, full path: C:/PROGRAM FILES/VMWARE/VMWARE TOOLS/TPAUTOCONNSVC.EXE"
+		>
+	[Prefetch] TPAUTOCONNSVC.EXE-19F171C6.pf created - run 8 times, last run at Mon Jul 13 18:05:16 2009, full path: C:/PROGRAM FILES/VMWARE/VMWARE TOOLS/TPAUTOCONNSVC.EXE
+	</event>
+
+	<event start="Mon Jul 13 2009 18:05:17 GMT"
+		end="Mon Jul 13 2009 18:05:17 GMT"
+		durationEvent="false"
+		title="[Prefetch] TPVCGATEWAY.EXE-120287EA.pf created - run 2 times, last run at Mon Jul 13 18:05:16 2009, full path: C:/PROGRAM FILES/VMWARE/VMWARE TOOLS/TPVCGATEWAY.EXE"
+		>
+	[Prefetch] TPVCGATEWAY.EXE-120287EA.pf created - run 2 times, last run at Mon Jul 13 18:05:16 2009, full path: C:/PROGRAM FILES/VMWARE/VMWARE TOOLS/TPVCGATEWAY.EXE
+	</event>
+
+	<event start="Sat Apr 25 2009 21:47:33 GMT"
+		end="Sat Apr 25 2009 21:47:33 GMT"
+		durationEvent="false"
+		title="[Prefetch] TZCHANGE.EXE-2A8CFB4D.pf created - run 11 times, last run at Sat Apr 25 21:47:33 2009, full path: C:/WINDOWS/SOFTWAREDISTRIBUTION/DOWNLOAD/CFBC39150CCE12D1357BA324D4D0C40C/SP3GDR/TZCHANGE.EXE"
+		>
+	[Prefetch] TZCHANGE.EXE-2A8CFB4D.pf created - run 11 times, last run at Sat Apr 25 21:47:33 2009, full path: C:/WINDOWS/SOFTWAREDISTRIBUTION/DOWNLOAD/CFBC39150CCE12D1357BA324D4D0C40C/SP3GDR/TZCHANGE.EXE
+	</event>
+
+	<event start="Mon Jul 13 2009 19:33:20 GMT"
+		end="Mon Jul 13 2009 19:33:20 GMT"
+		durationEvent="false"
+		title="[Prefetch] UNPACK200.EXE-16F2D239.pf created - run 7 times, last run at Mon Jul 13 19:33:20 2009, full path: C:/PROGRAM FILES/JAVA/JRE6/BIN/UNPACK200.EXE"
+		>
+	[Prefetch] UNPACK200.EXE-16F2D239.pf created - run 7 times, last run at Mon Jul 13 19:33:20 2009, full path: C:/PROGRAM FILES/JAVA/JRE6/BIN/UNPACK200.EXE
+	</event>
+
+	<event start="Tue Aug 04 2009 15:12:52 GMT"
+		end="Tue Aug 04 2009 15:12:52 GMT"
+		durationEvent="false"
+		title="[Prefetch] UNREGMP2.EXE-07CACB61.pf created - run 1 times, last run at Tue Aug  4 15:12:49 2009, full path: C:/WINDOWS/INF/UNREGMP2.EXE"
+		>
+	[Prefetch] UNREGMP2.EXE-07CACB61.pf created - run 1 times, last run at Tue Aug  4 15:12:49 2009, full path: C:/WINDOWS/INF/UNREGMP2.EXE
+	</event>
+
+	<event start="Mon Jul 13 2009 18:14:38 GMT"
+		end="Mon Jul 13 2009 18:14:38 GMT"
+		durationEvent="false"
+		title="[Prefetch] UPDATE.EXE-00D48DA0.pf created - run 3 times, last run at Mon Jul 13 18:14:36 2009, full path: C:/WINDOWS/SOFTWAREDISTRIBUTION/DOWNLOAD/97F18C7AC91916468F96BB79C87BFF6C/UPDATE/UPDATE.EXE"
+		>
+	[Prefetch] UPDATE.EXE-00D48DA0.pf created - run 3 times, last run at Mon Jul 13 18:14:36 2009, full path: C:/WINDOWS/SOFTWAREDISTRIBUTION/DOWNLOAD/97F18C7AC91916468F96BB79C87BFF6C/UPDATE/UPDATE.EXE
+	</event>
+
+	<event start="Mon Jul 13 2009 18:49:53 GMT"
+		end="Mon Jul 13 2009 18:49:53 GMT"
+		durationEvent="false"
+		title="[Prefetch] UPDATE.EXE-00E7D32B.pf created - run 1 times, last run at Mon Jul 13 18:49:38 2009, full path: C:/WINDOWS/SOFTWAREDISTRIBUTION/DOWNLOAD/97F18C7AC91916468F96BB79C87BFF6C/UPDATE/UPDATE.EXE"
+		>
+	[Prefetch] UPDATE.EXE-00E7D32B.pf created - run 1 times, last run at Mon Jul 13 18:49:38 2009, full path: C:/WINDOWS/SOFTWAREDISTRIBUTION/DOWNLOAD/97F18C7AC91916468F96BB79C87BFF6C/UPDATE/UPDATE.EXE
+	</event>
+
+	<event start="Mon Jul 13 2009 18:14:30 GMT"
+		end="Mon Jul 13 2009 18:14:30 GMT"
+		durationEvent="false"
+		title="[Prefetch] UPDATE.EXE-033D0085.pf created - run 3 times, last run at Mon Jul 13 18:14:27 2009, full path: C:/WINDOWS/SOFTWAREDISTRIBUTION/DOWNLOAD/97F18C7AC91916468F96BB79C87BFF6C/UPDATE/UPDATE.EXE"
+		>
+	[Prefetch] UPDATE.EXE-033D0085.pf created - run 3 times, last run at Mon Jul 13 18:14:27 2009, full path: C:/WINDOWS/SOFTWAREDISTRIBUTION/DOWNLOAD/97F18C7AC91916468F96BB79C87BFF6C/UPDATE/UPDATE.EXE
+	</event>
+
+	<event start="Mon Jul 13 2009 18:49:18 GMT"
+		end="Mon Jul 13 2009 18:49:18 GMT"
+		durationEvent="false"
+		title="[Prefetch] UPDATE.EXE-0861C322.pf created - run 1 times, last run at Mon Jul 13 18:49:06 2009, full path: C:/WINDOWS/SOFTWAREDISTRIBUTION/DOWNLOAD/97F18C7AC91916468F96BB79C87BFF6C/UPDATE/UPDATE.EXE"
+		>
+	[Prefetch] UPDATE.EXE-0861C322.pf created - run 1 times, last run at Mon Jul 13 18:49:06 2009, full path: C:/WINDOWS/SOFTWAREDISTRIBUTION/DOWNLOAD/97F18C7AC91916468F96BB79C87BFF6C/UPDATE/UPDATE.EXE
+	</event>
+
+	<event start="Mon Jul 13 2009 18:14:35 GMT"
+		end="Mon Jul 13 2009 18:14:35 GMT"
+		durationEvent="false"
+		title="[Prefetch] UPDATE.EXE-095C05CC.pf created - run 3 times, last run at Mon Jul 13 18:14:31 2009, full path: C:/WINDOWS/SOFTWAREDISTRIBUTION/DOWNLOAD/97F18C7AC91916468F96BB79C87BFF6C/UPDATE/UPDATE.EXE"
+		>
+	[Prefetch] UPDATE.EXE-095C05CC.pf created - run 3 times, last run at Mon Jul 13 18:14:31 2009, full path: C:/WINDOWS/SOFTWAREDISTRIBUTION/DOWNLOAD/97F18C7AC91916468F96BB79C87BFF6C/UPDATE/UPDATE.EXE
+	</event>
+
+	<event start="Mon Jul 20 2009 12:02:08 GMT"
+		end="Mon Jul 20 2009 12:02:08 GMT"
+		durationEvent="false"
+		title="[Prefetch] UPDATE.EXE-096D89DD.pf created - run 1 times, last run at Mon Jul 20 12:02:02 2009, full path: C:/WINDOWS/SOFTWAREDISTRIBUTION/DOWNLOAD/97F18C7AC91916468F96BB79C87BFF6C/UPDATE/UPDATE.EXE"
+		>
+	[Prefetch] UPDATE.EXE-096D89DD.pf created - run 1 times, last run at Mon Jul 20 12:02:02 2009, full path: C:/WINDOWS/SOFTWAREDISTRIBUTION/DOWNLOAD/97F18C7AC91916468F96BB79C87BFF6C/UPDATE/UPDATE.EXE
+	</event>
+
+	<event start="Mon Jul 13 2009 19:23:21 GMT"
+		end="Mon Jul 13 2009 19:23:21 GMT"
+		durationEvent="false"
+		title="[Prefetch] UPDATE.EXE-0A4B6112.pf created - run 1 times, last run at Mon Jul 13 19:23:11 2009, full path: C:/WINDOWS/SOFTWAREDISTRIBUTION/DOWNLOAD/97F18C7AC91916468F96BB79C87BFF6C/UPDATE/UPDATE.EXE"
+		>
+	[Prefetch] UPDATE.EXE-0A4B6112.pf created - run 1 times, last run at Mon Jul 13 19:23:11 2009, full path: C:/WINDOWS/SOFTWAREDISTRIBUTION/DOWNLOAD/97F18C7AC91916468F96BB79C87BFF6C/UPDATE/UPDATE.EXE
+	</event>
+
+	<event start="Mon Jul 13 2009 18:50:04 GMT"
+		end="Mon Jul 13 2009 18:50:04 GMT"
+		durationEvent="false"
+		title="[Prefetch] UPDATE.EXE-0A9F0870.pf created - run 1 times, last run at Mon Jul 13 18:49:57 2009, full path: C:/WINDOWS/SOFTWAREDISTRIBUTION/DOWNLOAD/97F18C7AC91916468F96BB79C87BFF6C/UPDATE/UPDATE.EXE"
+		>
+	[Prefetch] UPDATE.EXE-0A9F0870.pf created - run 1 times, last run at Mon Jul 13 18:49:57 2009, full path: C:/WINDOWS/SOFTWAREDISTRIBUTION/DOWNLOAD/97F18C7AC91916468F96BB79C87BFF6C/UPDATE/UPDATE.EXE
+	</event>
+
+	<event start="Sun Jul 19 2009 14:28:20 GMT"
+		end="Sun Jul 19 2009 14:28:20 GMT"
+		durationEvent="false"
+		title="[Prefetch] UPDATE.EXE-0C56AB71.pf created - run 2 times, last run at Sun Jul 19 14:28:17 2009, full path: C:/WINDOWS/SOFTWAREDISTRIBUTION/DOWNLOAD/97F18C7AC91916468F96BB79C87BFF6C/UPDATE/UPDATE.EXE"
+		>
+	[Prefetch] UPDATE.EXE-0C56AB71.pf created - run 2 times, last run at Sun Jul 19 14:28:17 2009, full path: C:/WINDOWS/SOFTWAREDISTRIBUTION/DOWNLOAD/97F18C7AC91916468F96BB79C87BFF6C/UPDATE/UPDATE.EXE
+	</event>
+
+	<event start="Sun Jul 19 2009 14:28:27 GMT"
+		end="Sun Jul 19 2009 14:28:27 GMT"
+		durationEvent="false"
+		title="[Prefetch] UPDATE.EXE-0FE13FF1.pf created - run 2 times, last run at Sun Jul 19 14:28:21 2009, full path: C:/WINDOWS/SOFTWAREDISTRIBUTION/DOWNLOAD/97F18C7AC91916468F96BB79C87BFF6C/UPDATE/UPDATE.EXE"
+		>
+	[Prefetch] UPDATE.EXE-0FE13FF1.pf created - run 2 times, last run at Sun Jul 19 14:28:21 2009, full path: C:/WINDOWS/SOFTWAREDISTRIBUTION/DOWNLOAD/97F18C7AC91916468F96BB79C87BFF6C/UPDATE/UPDATE.EXE
+	</event>
+
+	<event start="Mon Jul 13 2009 18:14:58 GMT"
+		end="Mon Jul 13 2009 18:14:58 GMT"
+		durationEvent="false"
+		title="[Prefetch] UPDATE.EXE-19CB77C6.pf created - run 1 times, last run at Mon Jul 13 18:14:53 2009, full path: C:/WINDOWS/SOFTWAREDISTRIBUTION/DOWNLOAD/97F18C7AC91916468F96BB79C87BFF6C/UPDATE/UPDATE.EXE"
+		>
+	[Prefetch] UPDATE.EXE-19CB77C6.pf created - run 1 times, last run at Mon Jul 13 18:14:53 2009, full path: C:/WINDOWS/SOFTWAREDISTRIBUTION/DOWNLOAD/97F18C7AC91916468F96BB79C87BFF6C/UPDATE/UPDATE.EXE
+	</event>
+
+	<event start="Mon Jul 20 2009 12:00:26 GMT"
+		end="Mon Jul 20 2009 12:00:26 GMT"
+		durationEvent="false"
+		title="[Prefetch] UPDATE.EXE-23777D1B.pf created - run 1 times, last run at Mon Jul 20 12:00:16 2009, full path: C:/WINDOWS/SOFTWAREDISTRIBUTION/DOWNLOAD/97F18C7AC91916468F96BB79C87BFF6C/UPDATE/UPDATE.EXE"
+		>
+	[Prefetch] UPDATE.EXE-23777D1B.pf created - run 1 times, last run at Mon Jul 20 12:00:16 2009, full path: C:/WINDOWS/SOFTWAREDISTRIBUTION/DOWNLOAD/97F18C7AC91916468F96BB79C87BFF6C/UPDATE/UPDATE.EXE
+	</event>
+
+	<event start="Mon Jul 13 2009 19:16:23 GMT"
+		end="Mon Jul 13 2009 19:16:23 GMT"
+		durationEvent="false"
+		title="[Prefetch] UPDATE.EXE-24A92999.pf created - run 1 times, last run at Mon Jul 13 19:16:13 2009, full path: C:/WINDOWS/SOFTWAREDISTRIBUTION/DOWNLOAD/97F18C7AC91916468F96BB79C87BFF6C/UPDATE/UPDATE.EXE"
+		>
+	[Prefetch] UPDATE.EXE-24A92999.pf created - run 1 times, last run at Mon Jul 13 19:16:13 2009, full path: C:/WINDOWS/SOFTWAREDISTRIBUTION/DOWNLOAD/97F18C7AC91916468F96BB79C87BFF6C/UPDATE/UPDATE.EXE
+	</event>
+
+	<event start="Mon Jul 13 2009 19:20:37 GMT"
+		end="Mon Jul 13 2009 19:20:37 GMT"
+		durationEvent="false"
+		title="[Prefetch] UPDATE.EXE-27B4FE85.pf created - run 1 times, last run at Mon Jul 13 19:20:28 2009, full path: C:/WINDOWS/SOFTWAREDISTRIBUTION/DOWNLOAD/97F18C7AC91916468F96BB79C87BFF6C/UPDATE/UPDATE.EXE"
+		>
+	[Prefetch] UPDATE.EXE-27B4FE85.pf created - run 1 times, last run at Mon Jul 13 19:20:28 2009, full path: C:/WINDOWS/SOFTWAREDISTRIBUTION/DOWNLOAD/97F18C7AC91916468F96BB79C87BFF6C/UPDATE/UPDATE.EXE
+	</event>
+
+	<event start="Mon Jul 20 2009 12:02:24 GMT"
+		end="Mon Jul 20 2009 12:02:24 GMT"
+		durationEvent="false"
+		title="[Prefetch] UPDATE.EXE-2A94A7C6.pf created - run 1 times, last run at Mon Jul 20 12:02:14 2009, full path: C:/WINDOWS/SOFTWAREDISTRIBUTION/DOWNLOAD/97F18C7AC91916468F96BB79C87BFF6C/UPDATE/UPDATE.EXE"
+		>
+	[Prefetch] UPDATE.EXE-2A94A7C6.pf created - run 1 times, last run at Mon Jul 20 12:02:14 2009, full path: C:/WINDOWS/SOFTWAREDISTRIBUTION/DOWNLOAD/97F18C7AC91916468F96BB79C87BFF6C/UPDATE/UPDATE.EXE
+	</event>
+
+	<event start="Sat Apr 25 2009 21:43:05 GMT"
+		end="Sat Apr 25 2009 21:43:05 GMT"
+		durationEvent="false"
+		title="[Prefetch] UPDATE.EXE-2F9A6C71.pf created - run 2 times, last run at Sat Apr 25 21:43:03 2009, full path: C:/WINDOWS/SOFTWAREDISTRIBUTION/DOWNLOAD/97F18C7AC91916468F96BB79C87BFF6C/UPDATE/UPDATE.EXE"
+		>
+	[Prefetch] UPDATE.EXE-2F9A6C71.pf created - run 2 times, last run at Sat Apr 25 21:43:03 2009, full path: C:/WINDOWS/SOFTWAREDISTRIBUTION/DOWNLOAD/97F18C7AC91916468F96BB79C87BFF6C/UPDATE/UPDATE.EXE
+	</event>
+
+	<event start="Mon Jul 13 2009 18:49:35 GMT"
+		end="Mon Jul 13 2009 18:49:35 GMT"
+		durationEvent="false"
+		title="[Prefetch] UPDATE.EXE-32314E84.pf created - run 1 times, last run at Mon Jul 13 18:49:25 2009, full path: C:/WINDOWS/SOFTWAREDISTRIBUTION/DOWNLOAD/97F18C7AC91916468F96BB79C87BFF6C/UPDATE/UPDATE.EXE"
+		>
+	[Prefetch] UPDATE.EXE-32314E84.pf created - run 1 times, last run at Mon Jul 13 18:49:25 2009, full path: C:/WINDOWS/SOFTWAREDISTRIBUTION/DOWNLOAD/97F18C7AC91916468F96BB79C87BFF6C/UPDATE/UPDATE.EXE
+	</event>
+
+	<event start="Mon Jul 13 2009 18:14:43 GMT"
+		end="Mon Jul 13 2009 18:14:43 GMT"
+		durationEvent="false"
+		title="[Prefetch] UPDATE.EXE-363760EA.pf created - run 4 times, last run at Mon Jul 13 18:14:40 2009, full path: C:/WINDOWS/SOFTWAREDISTRIBUTION/DOWNLOAD/97F18C7AC91916468F96BB79C87BFF6C/UPDATE/UPDATE.EXE"
+		>
+	[Prefetch] UPDATE.EXE-363760EA.pf created - run 4 times, last run at Mon Jul 13 18:14:40 2009, full path: C:/WINDOWS/SOFTWAREDISTRIBUTION/DOWNLOAD/97F18C7AC91916468F96BB79C87BFF6C/UPDATE/UPDATE.EXE
+	</event>
+
+	<event start="Mon Jul 13 2009 19:22:44 GMT"
+		end="Mon Jul 13 2009 19:22:44 GMT"
+		durationEvent="false"
+		title="[Prefetch] UPDATE.EXE-3A8DDD23.pf created - run 1 times, last run at Mon Jul 13 19:22:34 2009, full path: C:/WINDOWS/SOFTWAREDISTRIBUTION/DOWNLOAD/97F18C7AC91916468F96BB79C87BFF6C/UPDATE/UPDATE.EXE"
+		>
+	[Prefetch] UPDATE.EXE-3A8DDD23.pf created - run 1 times, last run at Mon Jul 13 19:22:34 2009, full path: C:/WINDOWS/SOFTWAREDISTRIBUTION/DOWNLOAD/97F18C7AC91916468F96BB79C87BFF6C/UPDATE/UPDATE.EXE
+	</event>
+
+	<event start="Mon Jul 13 2009 18:49:06 GMT"
+		end="Mon Jul 13 2009 18:49:06 GMT"
+		durationEvent="false"
+		title="[Prefetch] UPDROOTS.EXE-15EEE67B.pf created - run 10 times, last run at Mon Jul 13 18:49:05 2009, full path: C:/DOCUME~1/ADMINI~1/LOCALS~1/TEMP/IXP000.TMP/UPDROOTS.EXE"
+		>
+	[Prefetch] UPDROOTS.EXE-15EEE67B.pf created - run 10 times, last run at Mon Jul 13 18:49:05 2009, full path: C:/DOCUME~1/ADMINI~1/LOCALS~1/TEMP/IXP000.TMP/UPDROOTS.EXE
+	</event>
+
+	<event start="Tue Aug 04 2009 15:12:37 GMT"
+		end="Tue Aug 04 2009 15:12:37 GMT"
+		durationEvent="false"
+		title="[Prefetch] USERINIT.EXE-30B18140.pf created - run 2 times, last run at Tue Aug  4 15:12:27 2009, full path: C:/WINDOWS/SYSTEM32/USERINIT.EXE"
+		>
+	[Prefetch] USERINIT.EXE-30B18140.pf created - run 2 times, last run at Tue Aug  4 15:12:27 2009, full path: C:/WINDOWS/SYSTEM32/USERINIT.EXE
+	</event>
+
+	<event start="Tue Aug 04 2009 15:19:05 GMT"
+		end="Tue Aug 04 2009 15:19:05 GMT"
+		durationEvent="false"
+		title="[Prefetch] VERCLSID.EXE-3667BD89.pf created - run 17 times, last run at Tue Aug  4 15:19:05 2009, full path: C:/WINDOWS/SYSTEM32/VERCLSID.EXE"
+		>
+	[Prefetch] VERCLSID.EXE-3667BD89.pf created - run 17 times, last run at Tue Aug  4 15:19:05 2009, full path: C:/WINDOWS/SYSTEM32/VERCLSID.EXE
+	</event>
+
+	<event start="Mon Jul 13 2009 18:05:27 GMT"
+		end="Mon Jul 13 2009 18:05:27 GMT"
+		durationEvent="false"
+		title="[Prefetch] VMACTHLP.EXE-0790714A.pf created - run 1 times, last run at Mon Jul 13 18:05:17 2009, full path: C:/PROGRAM FILES/VMWARE/VMWARE TOOLS/VMACTHLP.EXE"
+		>
+	[Prefetch] VMACTHLP.EXE-0790714A.pf created - run 1 times, last run at Mon Jul 13 18:05:17 2009, full path: C:/PROGRAM FILES/VMWARE/VMWARE TOOLS/VMACTHLP.EXE
+	</event>
+
+	<event start="Mon Jul 13 2009 19:39:20 GMT"
+		end="Mon Jul 13 2009 19:39:20 GMT"
+		durationEvent="false"
+		title="[Prefetch] VMWARE-SERVER-INSTALLER-1.0.8-37816A40.pf created - run 1 times, last run at Mon Jul 13 19:39:19 2009, full path: "
+		>
+	[Prefetch] VMWARE-SERVER-INSTALLER-1.0.8-37816A40.pf created - run 1 times, last run at Mon Jul 13 19:39:19 2009, full path: 
+	</event>
+
+	<event start="Tue Aug 04 2009 15:13:22 GMT"
+		end="Tue Aug 04 2009 15:13:22 GMT"
+		durationEvent="false"
+		title="[Prefetch] VMWARETRAY.EXE-029F476F.pf created - run 8 times, last run at Tue Aug  4 15:13:12 2009, full path: C:/PROGRAM FILES/VMWARE/VMWARE TOOLS/VMWARETRAY.EXE"
+		>
+	[Prefetch] VMWARETRAY.EXE-029F476F.pf created - run 8 times, last run at Tue Aug  4 15:13:12 2009, full path: C:/PROGRAM FILES/VMWARE/VMWARE TOOLS/VMWARETRAY.EXE
+	</event>
+
+	<event start="Tue Aug 04 2009 15:13:22 GMT"
+		end="Tue Aug 04 2009 15:13:22 GMT"
+		durationEvent="false"
+		title="[Prefetch] VMWAREUSER.EXE-1F72BBE4.pf created - run 9 times, last run at Tue Aug  4 15:13:12 2009, full path: C:/PROGRAM FILES/VMWARE/VMWARE TOOLS/VMWAREUSER.EXE"
+		>
+	[Prefetch] VMWAREUSER.EXE-1F72BBE4.pf created - run 9 times, last run at Tue Aug  4 15:13:12 2009, full path: C:/PROGRAM FILES/VMWARE/VMWARE TOOLS/VMWAREUSER.EXE
+	</event>
+
+	<event start="Tue Aug 04 2009 15:12:37 GMT"
+		end="Tue Aug 04 2009 15:12:37 GMT"
+		durationEvent="false"
+		title="[Prefetch] WGATRAY.EXE-0ED38BED.pf created - run 2 times, last run at Tue Aug  4 15:12:27 2009, full path: C:/WINDOWS/SYSTEM32/WGATRAY.EXE"
+		>
+	[Prefetch] WGATRAY.EXE-0ED38BED.pf created - run 2 times, last run at Tue Aug  4 15:12:27 2009, full path: C:/WINDOWS/SYSTEM32/WGATRAY.EXE
+	</event>
+
+	<event start="Mon Jul 13 2009 18:51:13 GMT"
+		end="Mon Jul 13 2009 18:51:13 GMT"
+		durationEvent="false"
+		title="[Prefetch] WINDOWS-KB890830-V2.11.EXE-1E60315A.pf created - run 1 times, last run at Mon Jul 13 18:51:12 2009, full path: C:/WINDOWS/SOFTWAREDISTRIBUTION/DOWNLOAD/INSTALL/WINDOWS-KB890830-V2.11.EXE"
+		>
+	[Prefetch] WINDOWS-KB890830-V2.11.EXE-1E60315A.pf created - run 1 times, last run at Mon Jul 13 18:51:12 2009, full path: C:/WINDOWS/SOFTWAREDISTRIBUTION/DOWNLOAD/INSTALL/WINDOWS-KB890830-V2.11.EXE
+	</event>
+
+	<event start="Mon Jul 20 2009 12:01:00 GMT"
+		end="Mon Jul 20 2009 12:01:00 GMT"
+		durationEvent="false"
+		title="[Prefetch] WINDOWS-KB890830-V2.12-DELTA.-2B5E42FE.pf created - run 1 times, last run at Mon Jul 20 12:00:50 2009, full path: "
+		>
+	[Prefetch] WINDOWS-KB890830-V2.12-DELTA.-2B5E42FE.pf created - run 1 times, last run at Mon Jul 20 12:00:50 2009, full path: 
+	</event>
+
+	<event start="Tue Aug 04 2009 15:12:51 GMT"
+		end="Tue Aug 04 2009 15:12:51 GMT"
+		durationEvent="false"
+		title="[Prefetch] WMDBEXPORT.EXE-12D0C352.pf created - run 1 times, last run at Tue Aug  4 15:12:50 2009, full path: "
+		>
+	[Prefetch] WMDBEXPORT.EXE-12D0C352.pf created - run 1 times, last run at Tue Aug  4 15:12:50 2009, full path: 
+	</event>
+
+	<event start="Mon Apr 27 2009 23:26:47 GMT"
+		end="Mon Apr 27 2009 23:26:47 GMT"
+		durationEvent="false"
+		title="[Prefetch] WMIADAP.EXE-2DF425B2.pf created - run 6 times, last run at Mon Apr 27 23:26:28 2009, full path: C:/WINDOWS/SYSTEM32/WBEM/WMIADAP.EXE"
+		>
+	[Prefetch] WMIADAP.EXE-2DF425B2.pf created - run 6 times, last run at Mon Apr 27 23:26:28 2009, full path: C:/WINDOWS/SYSTEM32/WBEM/WMIADAP.EXE
+	</event>
+
+	<event start="Fri Jul 31 2009 20:23:38 GMT"
+		end="Fri Jul 31 2009 20:23:38 GMT"
+		durationEvent="false"
+		title="[Prefetch] WMIPRVSE.EXE-28F301A9.pf created - run 22 times, last run at Fri Jul 31 20:23:28 2009, full path: C:/WINDOWS/SYSTEM32/WBEM/WMIPRVSE.EXE"
+		>
+	[Prefetch] WMIPRVSE.EXE-28F301A9.pf created - run 22 times, last run at Fri Jul 31 20:23:28 2009, full path: C:/WINDOWS/SYSTEM32/WBEM/WMIPRVSE.EXE
+	</event>
+
+	<event start="Tue Aug 04 2009 15:22:17 GMT"
+		end="Tue Aug 04 2009 15:22:17 GMT"
+		durationEvent="false"
+		title="[Prefetch] WSCNTFY.EXE-1B24F5EB.pf created - run 15 times, last run at Tue Aug  4 15:22:17 2009, full path: C:/WINDOWS/SYSTEM32/WSCNTFY.EXE"
+		>
+	[Prefetch] WSCNTFY.EXE-1B24F5EB.pf created - run 15 times, last run at Tue Aug  4 15:22:17 2009, full path: C:/WINDOWS/SYSTEM32/WSCNTFY.EXE
+	</event>
+
+	<event start="Tue Aug 04 2009 15:12:11 GMT"
+		end="Tue Aug 04 2009 15:12:11 GMT"
+		durationEvent="false"
+		title="[Prefetch] WUAUCLT.EXE-399A8E72.pf created - run 37 times, last run at Tue Aug  4 15:11:56 2009, full path: C:/WINDOWS/SYSTEM32/WUAUCLT.EXE"
+		>
+	[Prefetch] WUAUCLT.EXE-399A8E72.pf created - run 37 times, last run at Tue Aug  4 15:11:56 2009, full path: C:/WINDOWS/SYSTEM32/WUAUCLT.EXE
+	</event>
+
+	<event start="Mon Jul 13 2009 19:08:09 GMT"
+		end="Mon Jul 13 2009 19:08:09 GMT"
+		durationEvent="false"
+		title="[Prefetch] WUPDMGR.EXE-2F30BEAB.pf created - run 5 times, last run at Mon Jul 13 19:07:39 2009, full path: C:/WINDOWS/SYSTEM32/WUPDMGR.EXE"
+		>
+	[Prefetch] WUPDMGR.EXE-2F30BEAB.pf created - run 5 times, last run at Mon Jul 13 19:07:39 2009, full path: C:/WINDOWS/SYSTEM32/WUPDMGR.EXE
+	</event>
+
+	<event start="Mon Jul 13 2009 18:14:52 GMT"
+		end="Mon Jul 13 2009 18:14:52 GMT"
+		durationEvent="false"
+		title="[RP] Restore point RP22 created - System Checkpoint"
+		>
+	[RP] Restore point RP22 created - System Checkpoint
+	</event>
+
+	<event start="Tue Aug 04 2009 15:41:33 GMT"
+		end="Tue Aug 04 2009 15:41:33 GMT"
+		durationEvent="false"
+		title="[RP] Restore point RP22 created - System Checkpoint"
+		>
+	[RP] Restore point RP22 created - System Checkpoint
+	</event>
+
+	<event start="Tue Aug 04 2009 15:41:36 GMT"
+		end="Tue Aug 04 2009 15:41:36 GMT"
+		durationEvent="false"
+		title="[RP] Restore point RP22 created - System Checkpoint"
+		>
+	[RP] Restore point RP22 created - System Checkpoint
+	</event>
+
+	<event start="Tue Apr 28 2009 08:54:53 GMT"
+		end="Tue Apr 28 2009 08:54:53 GMT"
+		durationEvent="false"
+		title="[RP] Restore point RP22 created - System Checkpoint"
+		>
+	[RP] Restore point RP22 created - System Checkpoint
+	</event>
+
+	<event start="Mon Jul 13 2009 19:16:09 GMT"
+		end="Mon Jul 13 2009 19:16:09 GMT"
+		durationEvent="false"
+		title="[RP] Restore point RP23 created - Software Distribution Service 3.0"
+		>
+	[RP] Restore point RP23 created - Software Distribution Service 3.0
+	</event>
+
+	<event start="Tue Aug 04 2009 15:41:33 GMT"
+		end="Tue Aug 04 2009 15:41:33 GMT"
+		durationEvent="false"
+		title="[RP] Restore point RP23 created - Software Distribution Service 3.0"
+		>
+	[RP] Restore point RP23 created - Software Distribution Service 3.0
+	</event>
+
+	<event start="Tue Aug 04 2009 15:41:44 GMT"
+		end="Tue Aug 04 2009 15:41:44 GMT"
+		durationEvent="false"
+		title="[RP] Restore point RP23 created - Software Distribution Service 3.0"
+		>
+	[RP] Restore point RP23 created - Software Distribution Service 3.0
+	</event>
+
+	<event start="Mon Jul 13 2009 18:14:52 GMT"
+		end="Mon Jul 13 2009 18:14:52 GMT"
+		durationEvent="false"
+		title="[RP] Restore point RP23 created - Software Distribution Service 3.0"
+		>
+	[RP] Restore point RP23 created - Software Distribution Service 3.0
+	</event>
+
+	<event start="Mon Jul 13 2009 19:32:47 GMT"
+		end="Mon Jul 13 2009 19:32:47 GMT"
+		durationEvent="false"
+		title="[RP] Restore point RP24 created - Software Distribution Service 3.0"
+		>
+	[RP] Restore point RP24 created - Software Distribution Service 3.0
+	</event>
+
+	<event start="Tue Aug 04 2009 15:41:33 GMT"
+		end="Tue Aug 04 2009 15:41:33 GMT"
+		durationEvent="false"
+		title="[RP] Restore point RP24 created - Software Distribution Service 3.0"
+		>
+	[RP] Restore point RP24 created - Software Distribution Service 3.0
+	</event>
+
+	<event start="Tue Aug 04 2009 15:41:50 GMT"
+		end="Tue Aug 04 2009 15:41:50 GMT"
+		durationEvent="false"
+		title="[RP] Restore point RP24 created - Software Distribution Service 3.0"
+		>
+	[RP] Restore point RP24 created - Software Distribution Service 3.0
+	</event>
+
+	<event start="Mon Jul 13 2009 19:16:12 GMT"
+		end="Mon Jul 13 2009 19:16:12 GMT"
+		durationEvent="false"
+		title="[RP] Restore point RP24 created - Software Distribution Service 3.0"
+		>
+	[RP] Restore point RP24 created - Software Distribution Service 3.0
+	</event>
+
+	<event start="Sun Jul 19 2009 14:45:59 GMT"
+		end="Sun Jul 19 2009 14:45:59 GMT"
+		durationEvent="false"
+		title="[RP] Restore point RP25 created - Installed Java(TM) 6 Update 11"
+		>
+	[RP] Restore point RP25 created - Installed Java(TM) 6 Update 11
+	</event>
+
+	<event start="Tue Aug 04 2009 15:41:33 GMT"
+		end="Tue Aug 04 2009 15:41:33 GMT"
+		durationEvent="false"
+		title="[RP] Restore point RP25 created - Installed Java(TM) 6 Update 11"
+		>
+	[RP] Restore point RP25 created - Installed Java(TM) 6 Update 11
+	</event>
+
+	<event start="Tue Aug 04 2009 15:41:52 GMT"
+		end="Tue Aug 04 2009 15:41:52 GMT"
+		durationEvent="false"
+		title="[RP] Restore point RP25 created - Installed Java(TM) 6 Update 11"
+		>
+	[RP] Restore point RP25 created - Installed Java(TM) 6 Update 11
+	</event>
+
+	<event start="Mon Jul 13 2009 19:32:50 GMT"
+		end="Mon Jul 13 2009 19:32:50 GMT"
+		durationEvent="false"
+		title="[RP] Restore point RP25 created - Installed Java(TM) 6 Update 11"
+		>
+	[RP] Restore point RP25 created - Installed Java(TM) 6 Update 11
+	</event>
+
+	<event start="Mon Jul 20 2009 12:00:15 GMT"
+		end="Mon Jul 20 2009 12:00:15 GMT"
+		durationEvent="false"
+		title="[RP] Restore point RP26 created - System Checkpoint"
+		>
+	[RP] Restore point RP26 created - System Checkpoint
+	</event>
+
+	<event start="Tue Aug 04 2009 15:41:33 GMT"
+		end="Tue Aug 04 2009 15:41:33 GMT"
+		durationEvent="false"
+		title="[RP] Restore point RP26 created - System Checkpoint"
+		>
+	[RP] Restore point RP26 created - System Checkpoint
+	</event>
+
+	<event start="Tue Aug 04 2009 15:41:54 GMT"
+		end="Tue Aug 04 2009 15:41:54 GMT"
+		durationEvent="false"
+		title="[RP] Restore point RP26 created - System Checkpoint"
+		>
+	[RP] Restore point RP26 created - System Checkpoint
+	</event>
+
+	<event start="Sun Jul 19 2009 14:45:59 GMT"
+		end="Sun Jul 19 2009 14:45:59 GMT"
+		durationEvent="false"
+		title="[RP] Restore point RP26 created - System Checkpoint"
+		>
+	[RP] Restore point RP26 created - System Checkpoint
+	</event>
+
+	<event start="Tue Aug 04 2009 15:16:57 GMT"
+		end="Tue Aug 04 2009 15:16:57 GMT"
+		durationEvent="false"
+		title="[RP] Restore point RP27 created - Software Distribution Service 3.0"
+		>
+	[RP] Restore point RP27 created - Software Distribution Service 3.0
+	</event>
+
+	<event start="Tue Aug 04 2009 15:41:33 GMT"
+		end="Tue Aug 04 2009 15:41:33 GMT"
+		durationEvent="false"
+		title="[RP] Restore point RP27 created - Software Distribution Service 3.0"
+		>
+	[RP] Restore point RP27 created - Software Distribution Service 3.0
+	</event>
+
+	<event start="Tue Aug 04 2009 15:41:58 GMT"
+		end="Tue Aug 04 2009 15:41:58 GMT"
+		durationEvent="false"
+		title="[RP] Restore point RP27 created - Software Distribution Service 3.0"
+		>
+	[RP] Restore point RP27 created - Software Distribution Service 3.0
+	</event>
+
+	<event start="Mon Jul 20 2009 12:00:15 GMT"
+		end="Mon Jul 20 2009 12:00:15 GMT"
+		durationEvent="false"
+		title="[RP] Restore point RP27 created - Software Distribution Service 3.0"
+		>
+	[RP] Restore point RP27 created - Software Distribution Service 3.0
+	</event>
+
+	<event start="Tue Aug 04 2009 15:17:03 GMT"
+		end="Tue Aug 04 2009 15:17:03 GMT"
+		durationEvent="false"
+		title="[Firefox3] URL visited: http://is.www.mozilla.com/is/firefox/3.5.2/firstrun/ (Velkomin(n) í Firefox) [count: 1] Host: is.www.mozilla.com (URL not typed directly) type: LINK"
+		>
+	[Firefox3] URL visited: http://is.www.mozilla.com/is/firefox/3.5.2/firstrun/ (Velkomin(n) í Firefox) [count: 1] Host: is.www.mozilla.com (URL not typed directly) type: LINK
+	</event>
+
+	<event start="Tue Aug 04 2009 15:17:03 GMT"
+		end="Tue Aug 04 2009 15:17:03 GMT"
+		durationEvent="false"
+		title="[Firefox3] URL visited: http://is.start3.mozilla.com/firefox?client=firefox-a&amp;rls=org.mozilla:is:official (firefox) [count: 1] Host: is.start3.mozilla.com (URL not typed directly) type: LINK"
+		>
+	[Firefox3] URL visited: http://is.start3.mozilla.com/firefox?client=firefox-a&amp;rls=org.mozilla:is:official (firefox) [count: 1] Host: is.start3.mozilla.com (URL not typed directly) type: LINK
+	</event>
+
+	<event start="Tue Aug 04 2009 15:17:00 GMT"
+		end="Tue Aug 04 2009 15:17:00 GMT"
+		durationEvent="false"
+		title="[Firefox3] URL visited: http://www.google.com/firefox?client=firefox-a&amp;rls=org.mozilla:is:official (firefox) [count: 1] Host: www.google.com visited from: is.start3.mozilla.com (URL not typed directly) type: REDIRECT_PERMANENT"
+		>
+	[Firefox3] URL visited: http://www.google.com/firefox?client=firefox-a&amp;rls=org.mozilla:is:official (firefox) [count: 1] Host: www.google.com visited from: is.start3.mozilla.com (URL not typed directly) type: REDIRECT_PERMANENT
+	</event>
+
+	<event start="Tue Aug 04 2009 15:17:00 GMT"
+		end="Tue Aug 04 2009 15:17:00 GMT"
+		durationEvent="false"
+		title="[Firefox3] URL visited: http://www.google.is/firefox?client=firefox-a&amp;rls=org.mozilla:is:official (Byrjunarsíða Mozilla Firefox) [count: 1] Host: www.google.is visited from: www.google.com (URL not typed directly) type: REDIRECT_TEMPORARY"
+		>
+	[Firefox3] URL visited: http://www.google.is/firefox?client=firefox-a&amp;rls=org.mozilla:is:official (Byrjunarsíða Mozilla Firefox) [count: 1] Host: www.google.is visited from: www.google.com (URL not typed directly) type: REDIRECT_TEMPORARY
+	</event>
+
+	<event start="Tue Aug 04 2009 15:17:43 GMT"
+		end="Tue Aug 04 2009 15:17:43 GMT"
+		durationEvent="false"
+		title="[Firefox3] URL visited: http://www.google.is/search?client=firefox-a&amp;rls=org.mozilla%3Ais%3Aofficial&amp;channel=s&amp;hl=is&amp;q=how+to+delete+files&amp;lr=&amp;btnG=Google+leit (how to delete files - Google leit) [count: 1] Host: www.google.is visited from: www.google.is (URL not typed directly) type: LINK"
+		>
+	[Firefox3] URL visited: http://www.google.is/search?client=firefox-a&amp;rls=org.mozilla%3Ais%3Aofficial&amp;channel=s&amp;hl=is&amp;q=how+to+delete+files&amp;lr=&amp;btnG=Google+leit (how to delete files - Google leit) [count: 1] Host: www.google.is visited from: www.google.is (URL not typed directly) type: LINK
+	</event>
+
+	<event start="Tue Aug 04 2009 15:17:43 GMT"
+		end="Tue Aug 04 2009 15:17:43 GMT"
+		durationEvent="false"
+		title="[Firefox3] URL visited: http://www.cybertechhelp.com/tutorial/article/how-to-delete-files-and-folders (How to delete files and folders) [count: 1] Host: www.cybertechhelp.com visited from: www.google.is (URL not typed directly) type: LINK"
+		>
+	[Firefox3] URL visited: http://www.cybertechhelp.com/tutorial/article/how-to-delete-files-and-folders (How to delete files and folders) [count: 1] Host: www.cybertechhelp.com visited from: www.google.is (URL not typed directly) type: LINK
+	</event>
+
+	<event start="Tue Aug 04 2009 15:18:00 GMT"
+		end="Tue Aug 04 2009 15:18:00 GMT"
+		durationEvent="false"
+		title="[Firefox3] URL visited: http://www.geeksaresexy.net/2007/06/04/how-to-delete-an-undeletable-file/ (HOW TO: Delete an Undeletable or Locked File) [count: 1] Host: www.geeksaresexy.net visited from: www.google.is (URL not typed directly) type: LINK"
+		>
+	[Firefox3] URL visited: http://www.geeksaresexy.net/2007/06/04/how-to-delete-an-undeletable-file/ (HOW TO: Delete an Undeletable or Locked File) [count: 1] Host: www.geeksaresexy.net visited from: www.google.is (URL not typed directly) type: LINK
+	</event>
+
+	<event start="Tue Aug 04 2009 15:18:07 GMT"
+		end="Tue Aug 04 2009 15:18:07 GMT"
+		durationEvent="false"
+		title="[Firefox3] URL visited: http://support.microsoft.com/kb/260897 (How to Delete the Contents of the Temporary Internet Files Folder) [count: 1] Host: support.microsoft.com visited from: www.google.is (URL not typed directly) type: LINK"
+		>
+	[Firefox3] URL visited: http://support.microsoft.com/kb/260897 (How to Delete the Contents of the Temporary Internet Files Folder) [count: 1] Host: support.microsoft.com visited from: www.google.is (URL not typed directly) type: LINK
+	</event>
+
+	<event start="Tue Aug 04 2009 15:18:16 GMT"
+		end="Tue Aug 04 2009 15:18:16 GMT"
+		durationEvent="false"
+		title="[Firefox3] URL visited: http://tech.yahoo.com/blogs/null/50840 (How to Delete Files For Good : Christopher Null : Yahoo! Tech) [count: 1] Host: tech.yahoo.com visited from: www.google.is (URL not typed directly) type: LINK"
+		>
+	[Firefox3] URL visited: http://tech.yahoo.com/blogs/null/50840 (How to Delete Files For Good : Christopher Null : Yahoo! Tech) [count: 1] Host: tech.yahoo.com visited from: www.google.is (URL not typed directly) type: LINK
+	</event>
+
+	<event start="Tue Aug 04 2009 15:18:27 GMT"
+		end="Tue Aug 04 2009 15:18:27 GMT"
+		durationEvent="false"
+		title="[Firefox3] URL visited: http://www.jetico.com/ (Jetico - Military-Standard Data Protection Software - Wiping, Encryption, Firewall) [count: 1] Host: www.jetico.com visited from: tech.yahoo.com (URL not typed directly) type: LINK"
+		>
+	[Firefox3] URL visited: http://www.jetico.com/ (Jetico - Military-Standard Data Protection Software - Wiping, Encryption, Firewall) [count: 1] Host: www.jetico.com visited from: tech.yahoo.com (URL not typed directly) type: LINK
+	</event>
+
+	<event start="Tue Aug 04 2009 15:18:43 GMT"
+		end="Tue Aug 04 2009 15:18:43 GMT"
+		durationEvent="false"
+		title="[Firefox3] URL visited: http://www.jetico.com/index.php?page=home-no-flash-wiping (Jetico - Military-Standard Data Protection Software - Wiping) [count: 1] Host: www.jetico.com visited from: www.jetico.com (URL not typed directly) type: LINK"
+		>
+	[Firefox3] URL visited: http://www.jetico.com/index.php?page=home-no-flash-wiping (Jetico - Military-Standard Data Protection Software - Wiping) [count: 1] Host: www.jetico.com visited from: www.jetico.com (URL not typed directly) type: LINK
+	</event>
+
+	<event start="Tue Aug 04 2009 15:18:52 GMT"
+		end="Tue Aug 04 2009 15:18:52 GMT"
+		durationEvent="false"
+		title="[Firefox3] URL visited: http://www.jetico.com/wiping-bcwipe/ (Jetico - BCWipe) [count: 1] Host: www.jetico.com visited from: www.jetico.com (URL not typed directly) type: LINK"
+		>
+	[Firefox3] URL visited: http://www.jetico.com/wiping-bcwipe/ (Jetico - BCWipe) [count: 1] Host: www.jetico.com visited from: www.jetico.com (URL not typed directly) type: LINK
+	</event>
+
+	<event start="Tue Aug 04 2009 15:19:07 GMT"
+		end="Tue Aug 04 2009 15:19:07 GMT"
+		durationEvent="false"
+		title="[Firefox3] URL visited: http://www.jetico.com/download (download) [count: 1] Host: www.jetico.com visited from: www.jetico.com (URL not typed directly) type: LINK"
+		>
+	[Firefox3] URL visited: http://www.jetico.com/download (download) [count: 1] Host: www.jetico.com visited from: www.jetico.com (URL not typed directly) type: LINK
+	</event>
+
+	<event start="Tue Aug 04 2009 15:19:00 GMT"
+		end="Tue Aug 04 2009 15:19:00 GMT"
+		durationEvent="false"
+		title="[Firefox3] URL visited: http://www.jetico.com/download/ (Jetico - Download) [count: 1] Host: www.jetico.com visited from: www.jetico.com (URL not typed directly) type: REDIRECT_PERMANENT"
+		>
+	[Firefox3] URL visited: http://www.jetico.com/download/ (Jetico - Download) [count: 1] Host: www.jetico.com visited from: www.jetico.com (URL not typed directly) type: REDIRECT_PERMANENT
+	</event>
+
+	<event start="Tue Aug 04 2009 15:19:37 GMT"
+		end="Tue Aug 04 2009 15:19:37 GMT"
+		durationEvent="false"
+		title="[Firefox3] URL visited: http://www.jetico.com/bcwipe3.exe (bcwipe3.exe) [count: 0] Host: www.jetico.com visited from: www.jetico.com (URL not typed directly) type: DOWNLOAD"
+		>
+	[Firefox3] URL visited: http://www.jetico.com/bcwipe3.exe (bcwipe3.exe) [count: 0] Host: www.jetico.com visited from: www.jetico.com (URL not typed directly) type: DOWNLOAD
+	</event>
+
+	<event start="Tue Aug 04 2009 15:11:22 GMT"
+		end="Tue Aug 04 2009 15:11:22 GMT"
+		durationEvent="false"
+		title="[UserAssist] User: joe - UEME_RUNPIDL:%csidl2%\MSN.lnk [Count: 14]"
+		>
+	[UserAssist] User: joe - UEME_RUNPIDL:%csidl2%\MSN.lnk [Count: 14]
+	</event>
+
+	<event start="Tue Aug 04 2009 15:11:22 GMT"
+		end="Tue Aug 04 2009 15:11:22 GMT"
+		durationEvent="false"
+		title="[UserAssist] User: joe - UEME_RUNPIDL:%csidl2%\Windows Media Player.lnk [Count: 13]"
+		>
+	[UserAssist] User: joe - UEME_RUNPIDL:%csidl2%\Windows Media Player.lnk [Count: 13]
+	</event>
+
+	<event start="Tue Aug 04 2009 15:11:22 GMT"
+		end="Tue Aug 04 2009 15:11:22 GMT"
+		durationEvent="false"
+		title="[UserAssist] User: joe - UEME_RUNPIDL:%csidl2%\Windows Messenger.lnk [Count: 12]"
+		>
+	[UserAssist] User: joe - UEME_RUNPIDL:%csidl2%\Windows Messenger.lnk [Count: 12]
+	</event>
+
+	<event start="Tue Aug 04 2009 15:11:22 GMT"
+		end="Tue Aug 04 2009 15:11:22 GMT"
+		durationEvent="false"
+		title="[UserAssist] User: joe - UEME_RUNPIDL:%csidl2%\Accessories\Tour Windows XP.lnk [Count: 11]"
+		>
+	[UserAssist] User: joe - UEME_RUNPIDL:%csidl2%\Accessories\Tour Windows XP.lnk [Count: 11]
+	</event>
+
+	<event start="Tue Aug 04 2009 15:11:22 GMT"
+		end="Tue Aug 04 2009 15:11:22 GMT"
+		durationEvent="false"
+		title="[UserAssist] User: joe - UEME_RUNPIDL:%csidl2%\Accessories\System Tools\Files and Settings Transfer Wizard.lnk [Count: 10]"
+		>
+	[UserAssist] User: joe - UEME_RUNPIDL:%csidl2%\Accessories\System Tools\Files and Settings Transfer Wizard.lnk [Count: 10]
+	</event>
+
+	<event start="Tue Aug 04 2009 15:21:53 GMT"
+		end="Tue Aug 04 2009 15:21:53 GMT"
+		durationEvent="false"
+		title="[UserAssist] User: joe - UEME_RUNPATH [Count: 4]"
+		>
+	[UserAssist] User: joe - UEME_RUNPATH [Count: 4]
+	</event>
+
+	<event start="Tue Aug 04 2009 15:13:42 GMT"
+		end="Tue Aug 04 2009 15:13:42 GMT"
+		durationEvent="false"
+		title="[UserAssist] User: joe - UEME_RUNPATH:C:\Program Files\Internet Explorer\iexplore.exe [Count: 1]"
+		>
+	[UserAssist] User: joe - UEME_RUNPATH:C:\Program Files\Internet Explorer\iexplore.exe [Count: 1]
+	</event>
+
+	<event start="Tue Aug 04 2009 15:21:52 GMT"
+		end="Tue Aug 04 2009 15:21:52 GMT"
+		durationEvent="false"
+		title="[UserAssist] User: joe - UEME_RUNPIDL [Count: 3]"
+		>
+	[UserAssist] User: joe - UEME_RUNPIDL [Count: 3]
+	</event>
+
+	<event start="Tue Aug 04 2009 15:13:42 GMT"
+		end="Tue Aug 04 2009 15:13:42 GMT"
+		durationEvent="false"
+		title="[UserAssist] User: joe - UEME_RUNPIDL:::{2559A1F4-21D7-11D4-BDAF-00C04F60B9F0} [Count: 1]"
+		>
+	[UserAssist] User: joe - UEME_RUNPIDL:::{2559A1F4-21D7-11D4-BDAF-00C04F60B9F0} [Count: 1]
+	</event>
+
+	<event start="Tue Aug 04 2009 15:19:23 GMT"
+		end="Tue Aug 04 2009 15:19:23 GMT"
+		durationEvent="false"
+		title="[UserAssist] User: joe - UEME_RUNPATH:C:\WINDOWS\system32\NOTEPAD.EXE [Count: 2]"
+		>
+	[UserAssist] User: joe - UEME_RUNPATH:C:\WINDOWS\system32\NOTEPAD.EXE [Count: 2]
+	</event>
+
+	<event start="Tue Aug 04 2009 15:21:52 GMT"
+		end="Tue Aug 04 2009 15:21:52 GMT"
+		durationEvent="false"
+		title="[UserAssist] User: joe - UEME_RUNPIDL:%csidl2%\BCWipe 3.0\BCWipe Task Manager.lnk [Count: 1]"
+		>
+	[UserAssist] User: joe - UEME_RUNPIDL:%csidl2%\BCWipe 3.0\BCWipe Task Manager.lnk [Count: 1]
+	</event>
+
+	<event start="Tue Aug 04 2009 15:21:52 GMT"
+		end="Tue Aug 04 2009 15:21:52 GMT"
+		durationEvent="false"
+		title="[UserAssist] User: joe - UEME_RUNPIDL:%csidl2%\BCWipe 3.0 [Count: 1]"
+		>
+	[UserAssist] User: joe - UEME_RUNPIDL:%csidl2%\BCWipe 3.0 [Count: 1]
+	</event>
+
+	<event start="Thu Oct 11 2007 12:48:54 GMT"
+		end="Thu Oct 11 2007 12:48:54 GMT"
+		durationEvent="false"
+		title="[UserAssist] User: Administrator - UEME_RUNPIDL:%csidl2%\Accessories\Tour Windows XP.lnk [Count: 2]"
+		>
+	[UserAssist] User: Administrator - UEME_RUNPIDL:%csidl2%\Accessories\Tour Windows XP.lnk [Count: 2]
+	</event>
+
+	<event start="Thu Oct 11 2007 12:48:54 GMT"
+		end="Thu Oct 11 2007 12:48:54 GMT"
+		durationEvent="false"
+		title="[UserAssist] User: Administrator - UEME_RUNPIDL:%csidl2%\Accessories\System Tools\Files and Settings Transfer Wizard.lnk [Count: 10]"
+		>
+	[UserAssist] User: Administrator - UEME_RUNPIDL:%csidl2%\Accessories\System Tools\Files and Settings Transfer Wizard.lnk [Count: 10]
+	</event>
+
+	<event start="Thu Oct 11 2007 13:10:20 GMT"
+		end="Thu Oct 11 2007 13:10:20 GMT"
+		durationEvent="false"
+		title="[UserAssist] User: Administrator - UEME_RUNPIDL [Count: 1]"
+		>
+	[UserAssist] User: Administrator - UEME_RUNPIDL [Count: 1]
+	</event>
+
+	<event start="Thu Oct 11 2007 13:10:20 GMT"
+		end="Thu Oct 11 2007 13:10:20 GMT"
+		durationEvent="false"
+		title="[UserAssist] User: Administrator - UEME_RUNPIDL:C:\Documents and Settings\All Users\Start Menu\Windows Update.lnk [Count: 1]"
+		>
+	[UserAssist] User: Administrator - UEME_RUNPIDL:C:\Documents and Settings\All Users\Start Menu\Windows Update.lnk [Count: 1]
+	</event>
+
+	<event start="Tue Aug 04 2009 15:11:14 GMT"
+		end="Tue Aug 04 2009 15:11:14 GMT"
+		durationEvent="false"
+		title="[UserAssist] User: Administrator - UEME_RUNPATH [Count: 43]"
+		>
+	[UserAssist] User: Administrator - UEME_RUNPATH [Count: 43]
+	</event>
+
+	<event start="Mon Jul 13 2009 19:07:39 GMT"
+		end="Mon Jul 13 2009 19:07:39 GMT"
+		durationEvent="false"
+		title="[UserAssist] User: Administrator - UEME_RUNPATH:C:\WINDOWS\system32\wupdmgr.exe [Count: 23]"
+		>
+	[UserAssist] User: Administrator - UEME_RUNPATH:C:\WINDOWS\system32\wupdmgr.exe [Count: 23]
+	</event>
+
+	<event start="Tue Aug 04 2009 15:11:14 GMT"
+		end="Tue Aug 04 2009 15:11:14 GMT"
+		durationEvent="false"
+		title="[UserAssist] User: Administrator - UEME_RUNPATH:C:\WINDOWS\system32\mmc.exe [Count: 1]"
+		>
+	[UserAssist] User: Administrator - UEME_RUNPATH:C:\WINDOWS\system32\mmc.exe [Count: 1]
+	</event>
+
+	<event start="Tue Apr 28 2009 07:42:54 GMT"
+		end="Tue Apr 28 2009 07:42:54 GMT"
+		durationEvent="false"
+		title="[UserAssist] User: Administrator - UEME_RUNCPL [Count: 11]"
+		>
+	[UserAssist] User: Administrator - UEME_RUNCPL [Count: 11]
+	</event>
+
+	<event start="Fri Oct 12 2007 07:44:44 GMT"
+		end="Fri Oct 12 2007 07:44:44 GMT"
+		durationEvent="false"
+		title="[UserAssist] User: Administrator - UEME_RUNCPL:C:\WINDOWS\system32\nusrmgr.cpl,User Accounts [Count: 1]"
+		>
+	[UserAssist] User: Administrator - UEME_RUNCPL:C:\WINDOWS\system32\nusrmgr.cpl,User Accounts [Count: 1]
+	</event>
+
+	<event start="Tue Apr 28 2009 07:42:54 GMT"
+		end="Tue Apr 28 2009 07:42:54 GMT"
+		durationEvent="false"
+		title="[UserAssist] User: Administrator - UEME_RUNCPL:SYSDM.CPL [Count: 6]"
+		>
+	[UserAssist] User: Administrator - UEME_RUNCPL:SYSDM.CPL [Count: 6]
+	</event>
+
+	<event start="Fri Jul 31 2009 20:21:02 GMT"
+		end="Fri Jul 31 2009 20:21:02 GMT"
+		durationEvent="false"
+		title="[UserAssist] User: Administrator - UEME_UIQCUT [Count: 7]"
+		>
+	[UserAssist] User: Administrator - UEME_UIQCUT [Count: 7]
+	</event>
+
+	<event start="Fri Jul 31 2009 20:23:01 GMT"
+		end="Fri Jul 31 2009 20:23:01 GMT"
+		durationEvent="false"
+		title="[UserAssist] User: Administrator - UEME_UISCUT [Count: 10]"
+		>
+	[UserAssist] User: Administrator - UEME_UISCUT [Count: 10]
+	</event>
+
+	<event start="Tue Nov 20 2007 19:23:16 GMT"
+		end="Tue Nov 20 2007 19:23:16 GMT"
+		durationEvent="false"
+		title="[UserAssist] User: Administrator - UEME_RUNPATH:::{645FF040-5081-101B-9F08-00AA002F954E} [Count: 1]"
+		>
+	[UserAssist] User: Administrator - UEME_RUNPATH:::{645FF040-5081-101B-9F08-00AA002F954E} [Count: 1]
+	</event>
+
+	<event start="Tue Nov 20 2007 19:25:29 GMT"
+		end="Tue Nov 20 2007 19:25:29 GMT"
+		durationEvent="false"
+		title="[UserAssist] User: Administrator - UEME_RUNCPL:C:\WINDOWS\system32\intl.cpl,Regional and Language Options [Count: 1]"
+		>
+	[UserAssist] User: Administrator - UEME_RUNCPL:C:\WINDOWS\system32\intl.cpl,Regional and Language Options [Count: 1]
+	</event>
+
+	<event start="Thu Jan 10 2008 17:57:26 GMT"
+		end="Thu Jan 10 2008 17:57:26 GMT"
+		durationEvent="false"
+		title="[UserAssist] User: Administrator - UEME_RUNCPL:C:\WINDOWS\system32\powercfg.cpl,Power Options [Count: 1]"
+		>
+	[UserAssist] User: Administrator - UEME_RUNCPL:C:\WINDOWS\system32\powercfg.cpl,Power Options [Count: 1]
+	</event>
+
+	<event start="Wed Mar 19 2008 19:28:00 GMT"
+		end="Wed Mar 19 2008 19:28:00 GMT"
+		durationEvent="false"
+		title="[UserAssist] User: Administrator - UEME_RUNCPL:desk.cpl [Count: 1]"
+		>
+	[UserAssist] User: Administrator - UEME_RUNCPL:desk.cpl [Count: 1]
+	</event>
+
+	<event start="Sun Jul 19 2009 14:25:46 GMT"
+		end="Sun Jul 19 2009 14:25:46 GMT"
+		durationEvent="false"
+		title="[UserAssist] User: Administrator - UEME_RUNPATH:C:\WINDOWS\system32\cmd.exe [Count: 5]"
+		>
+	[UserAssist] User: Administrator - UEME_RUNPATH:C:\WINDOWS\system32\cmd.exe [Count: 5]
+	</event>
+
+	<event start="Tue Apr 28 2009 09:56:54 GMT"
+		end="Tue Apr 28 2009 09:56:54 GMT"
+		durationEvent="false"
+		title="[UserAssist] User: Administrator - UEME_RUNPATH:::{20D04FE0-3AEA-1069-A2D8-08002B30309D} [Count: 4]"
+		>
+	[UserAssist] User: Administrator - UEME_RUNPATH:::{20D04FE0-3AEA-1069-A2D8-08002B30309D} [Count: 4]
+	</event>
+
+	<event start="Mon Apr 27 2009 23:22:51 GMT"
+		end="Mon Apr 27 2009 23:22:51 GMT"
+		durationEvent="false"
+		title="[UserAssist] User: Administrator - UEME_RUNCPL:timedate.cpl [Count: 1]"
+		>
+	[UserAssist] User: Administrator - UEME_RUNCPL:timedate.cpl [Count: 1]
+	</event>
+
+	<event start="Fri Jul 31 2009 20:23:56 GMT"
+		end="Fri Jul 31 2009 20:23:56 GMT"
+		durationEvent="false"
+		title="[UserAssist] User: Administrator - UEME_RUNPATH:C:\Program Files\Internet Explorer\IEXPLORE.EXE [Count: 3]"
+		>
+	[UserAssist] User: Administrator - UEME_RUNPATH:C:\Program Files\Internet Explorer\IEXPLORE.EXE [Count: 3]
+	</event>
+
+	<event start="Fri Jul 31 2009 20:23:01 GMT"
+		end="Fri Jul 31 2009 20:23:01 GMT"
+		durationEvent="false"
+		title="[UserAssist] User: Administrator - UEME_RUNPATH:::{450D8FBA-AD25-11D0-98A8-0800361B1103} [Count: 1]"
+		>
+	[UserAssist] User: Administrator - UEME_RUNPATH:::{450D8FBA-AD25-11D0-98A8-0800361B1103} [Count: 1]
+	</event>
+
+	<event start="Tue Aug 04 2009 15:19:23 GMT"
+		end="Tue Aug 04 2009 15:19:23 GMT"
+		durationEvent="false"
+		title="[LNK] Administrator's Documents.lnk points to {C:\Documents and Settings\Administrator\My Documents}, which is stored on a local vol type - Fixed, SN 2363206191 - Rel path: ..\..\Administrator\My Documents  [a rel. path str,SI ID exists,points to a file or dir] - read only,directory"
+		>
+	[LNK] Administrator's Documents.lnk points to {C:\Documents and Settings\Administrator\My Documents}, which is stored on a local vol type - Fixed, SN 2363206191 - Rel path: ..\..\Administrator\My Documents  [a rel. path str,SI ID exists,points to a file or dir] - read only,directory
+	</event>
+
+	<event start="Fri Jul 31 2009 20:23:37 GMT"
+		end="Fri Jul 31 2009 20:23:37 GMT"
+		durationEvent="false"
+		title="[LNK] Administrator's Documents.lnk points to {C:\Documents and Settings\Administrator\My Documents}, which is stored on a local vol type - Fixed, SN 2363206191 - Rel path: ..\..\Administrator\My Documents  [a rel. path str,SI ID exists,points to a file or dir] - read only,directory"
+		>
+	[LNK] Administrator's Documents.lnk points to {C:\Documents and Settings\Administrator\My Documents}, which is stored on a local vol type - Fixed, SN 2363206191 - Rel path: ..\..\Administrator\My Documents  [a rel. path str,SI ID exists,points to a file or dir] - read only,directory
+	</event>
+
+	<event start="Thu Oct 11 2007 12:48:34 GMT"
+		end="Thu Oct 11 2007 12:48:34 GMT"
+		durationEvent="false"
+		title="[LNK] Administrator's Documents.lnk points to {C:\Documents and Settings\Administrator\My Documents}, which is stored on a local vol type - Fixed, SN 2363206191 - Rel path: ..\..\Administrator\My Documents  [a rel. path str,SI ID exists,points to a file or dir] - read only,directory"
+		>
+	[LNK] Administrator's Documents.lnk points to {C:\Documents and Settings\Administrator\My Documents}, which is stored on a local vol type - Fixed, SN 2363206191 - Rel path: ..\..\Administrator\My Documents  [a rel. path str,SI ID exists,points to a file or dir] - read only,directory
+	</event>
+
+	<event start="Tue Aug 04 2009 15:19:23 GMT"
+		end="Tue Aug 04 2009 15:19:23 GMT"
+		durationEvent="false"
+		title="[LNK] Not to be seen document.lnk points to {C:\Documents and Settings\Administrator\My Documents\Not to be seen document.txt}, which is stored on a local vol type - Fixed, SN 2363206191 - Rel path: ..\..\Administrator\My Documents\Not to be seen document.txt Working dir: C:\Documents and Settings\Administrator\My Documents  [a rel. path str,SI ID exists,working dir.,points to a file or dir] - mod since last backup"
+		>
+	[LNK] Not to be seen document.lnk points to {C:\Documents and Settings\Administrator\My Documents\Not to be seen document.txt}, which is stored on a local vol type - Fixed, SN 2363206191 - Rel path: ..\..\Administrator\My Documents\Not to be seen document.txt Working dir: C:\Documents and Settings\Administrator\My Documents  [a rel. path str,SI ID exists,working dir.,points to a file or dir] - mod since last backup
+	</event>
+
+	<event start="Fri Jul 31 2009 20:23:47 GMT"
+		end="Fri Jul 31 2009 20:23:47 GMT"
+		durationEvent="false"
+		title="[LNK] Not to be seen document.lnk points to {C:\Documents and Settings\Administrator\My Documents\Not to be seen document.txt}, which is stored on a local vol type - Fixed, SN 2363206191 - Rel path: ..\..\Administrator\My Documents\Not to be seen document.txt Working dir: C:\Documents and Settings\Administrator\My Documents  [a rel. path str,SI ID exists,working dir.,points to a file or dir] - mod since last backup"
+		>
+	[LNK] Not to be seen document.lnk points to {C:\Documents and Settings\Administrator\My Documents\Not to be seen document.txt}, which is stored on a local vol type - Fixed, SN 2363206191 - Rel path: ..\..\Administrator\My Documents\Not to be seen document.txt Working dir: C:\Documents and Settings\Administrator\My Documents  [a rel. path str,SI ID exists,working dir.,points to a file or dir] - mod since last backup
+	</event>
+
+	<event start="Fri Jul 31 2009 20:23:08 GMT"
+		end="Fri Jul 31 2009 20:23:08 GMT"
+		durationEvent="false"
+		title="[LNK] Not to be seen document.lnk points to {C:\Documents and Settings\Administrator\My Documents\Not to be seen document.txt}, which is stored on a local vol type - Fixed, SN 2363206191 - Rel path: ..\..\Administrator\My Documents\Not to be seen document.txt Working dir: C:\Documents and Settings\Administrator\My Documents  [a rel. path str,SI ID exists,working dir.,points to a file or dir] - mod since last backup"
+		>
+	[LNK] Not to be seen document.lnk points to {C:\Documents and Settings\Administrator\My Documents\Not to be seen document.txt}, which is stored on a local vol type - Fixed, SN 2363206191 - Rel path: ..\..\Administrator\My Documents\Not to be seen document.txt Working dir: C:\Documents and Settings\Administrator\My Documents  [a rel. path str,SI ID exists,working dir.,points to a file or dir] - mod since last backup
+	</event>
+
+	<event start="Tue Aug 04 2009 15:19:20 GMT"
+		end="Tue Aug 04 2009 15:19:20 GMT"
+		durationEvent="false"
+		title="[LNK] Very secret document.lnk points to {C:\Documents and Settings\Administrator\My Documents\Very secret document.txt}, which is stored on a local vol type - Fixed, SN 2363206191 - Rel path: ..\..\Administrator\My Documents\Very secret document.txt Working dir: C:\Documents and Settings\Administrator\My Documents  [a rel. path str,SI ID exists,working dir.,points to a file or dir] - mod since last backup"
+		>
+	[LNK] Very secret document.lnk points to {C:\Documents and Settings\Administrator\My Documents\Very secret document.txt}, which is stored on a local vol type - Fixed, SN 2363206191 - Rel path: ..\..\Administrator\My Documents\Very secret document.txt Working dir: C:\Documents and Settings\Administrator\My Documents  [a rel. path str,SI ID exists,working dir.,points to a file or dir] - mod since last backup
+	</event>
+
+	<event start="Fri Jul 31 2009 20:23:19 GMT"
+		end="Fri Jul 31 2009 20:23:19 GMT"
+		durationEvent="false"
+		title="[LNK] Very secret document.lnk points to {C:\Documents and Settings\Administrator\My Documents\Very secret document.txt}, which is stored on a local vol type - Fixed, SN 2363206191 - Rel path: ..\..\Administrator\My Documents\Very secret document.txt Working dir: C:\Documents and Settings\Administrator\My Documents  [a rel. path str,SI ID exists,working dir.,points to a file or dir] - mod since last backup"
+		>
+	[LNK] Very secret document.lnk points to {C:\Documents and Settings\Administrator\My Documents\Very secret document.txt}, which is stored on a local vol type - Fixed, SN 2363206191 - Rel path: ..\..\Administrator\My Documents\Very secret document.txt Working dir: C:\Documents and Settings\Administrator\My Documents  [a rel. path str,SI ID exists,working dir.,points to a file or dir] - mod since last backup
+	</event>
+
+	<event start="Fri Jul 31 2009 20:23:08 GMT"
+		end="Fri Jul 31 2009 20:23:08 GMT"
+		durationEvent="false"
+		title="[LNK] Very secret document.lnk points to {C:\Documents and Settings\Administrator\My Documents\Very secret document.txt}, which is stored on a local vol type - Fixed, SN 2363206191 - Rel path: ..\..\Administrator\My Documents\Very secret document.txt Working dir: C:\Documents and Settings\Administrator\My Documents  [a rel. path str,SI ID exists,working dir.,points to a file or dir] - mod since last backup"
+		>
+	[LNK] Very secret document.lnk points to {C:\Documents and Settings\Administrator\My Documents\Very secret document.txt}, which is stored on a local vol type - Fixed, SN 2363206191 - Rel path: ..\..\Administrator\My Documents\Very secret document.txt Working dir: C:\Documents and Settings\Administrator\My Documents  [a rel. path str,SI ID exists,working dir.,points to a file or dir] - mod since last backup
+	</event>
+
+</data>

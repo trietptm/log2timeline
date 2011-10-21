@@ -1,0 +1,820 @@
+#!/usr/bin/perl
+#################################################################################################
+#		log2timeline
+#################################################################################################
+# This script is a part of the the program log2timeline that is designed to parse a log file, 
+# any supported log file, and output it in a bodyfile that can be read by supporting software for
+# timeline creation.
+#
+# The default behaviour of the tool is to outpt in a CSV format.
+#
+# This script serves as the front-end for the program and it's purpose is to
+# read all parameters, find and load the appropriate format file, a perl script that is designed
+# to read a particular file format, and print the information found in the file in a body format.
+# The script also holds some methods that are used in more than one format file (instead of repeating
+# the code)
+#
+# The specification for the TLN body file format can be found here:
+#	http://windowsir.blogspot.com/2010/02/timeline-analysisdo-we-need-standard.html
+#
+# The specification of the body file can be found here (the mactime body file):
+#	http://wiki.sleuthkit.org/index.php?title=Body_file
+#
+# As said before this is the main script, it parses all arguments as well as to call other
+# scripts needed to parse the actual log files. The parsing of log files is done in a so
+# called format file, where each format file provides a method to parse different log format.
+# 
+# This script then gets the output from the format file, and uses it to print out a bodyfile
+# that can be used in TSK (default behaviour)
+# 
+# Author: Kristinn Gudjonsson
+# Date : 20/05/10
+#
+# Copyright 2009-2011 Kristinn Gudjonsson (kristinn ( a t ) log2timeline (d o t) net)
+#
+#  This file is part of log2timeline.
+#
+#    log2timeline is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    log2timeline is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with log2timeline.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Uses method Win2Unix written by A. Schuster and C. Barta from ptfinder.pl
+# Copyright (c) 2009 by Andreas Schuster and Csaba Barta.
+
+
+use strict;
+
+use Time::localtime;	# for time conversion
+use Getopt::Long; 	# read parameters
+use Pod::Usage;		# for man and help messages
+use LWP::UserAgent;	# to get the version number from the web
+use DateTime::TimeZone;	# for time zones,
+use Log2Timeline;	# the main engine of log2timeline
+use Digest::MD5;	# for MD5 sum calculation
+use Encode;
+
+# define variables
+my @dir_content;
+my $plug;
+
+my $line;
+my @lines;
+my $t_line;
+my $p_line;
+my $verify;
+
+my $log_file;
+my $temp;
+my @args; # an array that contains the arguments
+
+# for parameters
+my $show_version = 0;
+my $print_help = 0;
+my $time_offset = 0;
+my $textfield = '';
+my $format= '';
+my $hostname = 'unknown';	# a variable defining the hostname
+my $output_file = 'csv';
+my $out_file = 'STDOUT';
+my $detail = 0;	# a variable defining if we should skip the quick test in the verification phase
+my $log_file = '';
+my $file_exists = 0;
+my $format_file;
+my $temp_file = '';	# the default value for the temporary file location (it is automatically detected if this option is used)
+my $output;
+my $check = 0;
+my $timezone = undef;
+my $time_object;
+my $debug = 0;
+my $digest = 0;	# defines whether or not a MD5 sum is to be calculated
+my $recursive = 0;	# recursive search or not?
+my $preproc = 0;	# do we want to run pre-processing modules
+my $exclude = '';	# an exclusion list (list of files we would like to exclude from parsing)
+my @input_arguments;
+
+# record the start time...
+my $start_time = time();
+
+# for message digest
+my ($sum,%last_sum);
+
+# the l2t object
+my $l2t;
+
+# configure the getoptions
+Getopt::Long::Configure("no_ignore_case");
+
+# read options
+GetOptions( 
+	"skew=s"=>\$time_offset,
+	"m=s"=>\$textfield,
+	"verbose|debug+"=>\$debug,
+	"upgrade!" => \$check,
+	"calculate!" => \$digest,
+	"format|f=s"=>\$format_file,
+	"Version!"=>\$show_version,
+	"x!" => \$detail,
+	"name=s" => \$hostname,
+	"output=s"=>\$output_file,
+	"write=s"=>\$out_file,
+	"log=s"=>\$log_file,
+	"recursive!"=>\$recursive,
+	"preprocess!"=>\$preproc,
+	"zone=s"=>\$timezone,
+	"exclude=s"=>\$exclude,
+	"temp|t=s"=> \$temp_file,
+	"args=s" => \@input_arguments,
+        "help|?!"=>\$print_help
+) or pod2usage( 2 );
+
+# create the log2timeline object
+$l2t = Log2Timeline->new(  ) or pod2usage( { 	
+	-message	=> "Unable to create the Log2Timeline object, unable to continue",
+	-verbose	=> 1,
+	-exitval	=> 4 } );
+
+# check if the object is valid (the constructor was able to complete)
+pod2usage( { 	
+	-message	=> "The Log2Timeline object is not valid, cannot continue. The dreaded case of an 'Unknown error'.",
+	-verbose	=> 1,
+	-exitval	=> 5 } ) unless $l2t->is_valid;
+
+# check to see if we want all log messages written to a specific log file (or just to STDERR)
+if( $log_file ne '' )
+{
+	open( STDERR, '>' . $log_file );
+}
+
+# check options
+if( $show_version )
+{
+	my @t;
+	@t = split( /\//, $0 ) unless $^O =~ m/MSWin/;
+	@t = split( /\\/, $0 ) if $^O =~ m/MSWin/;
+	print $t[$#t] . " version " . $l2t->version . "\n";
+	exit 0;
+}
+
+if( $check )
+{
+	# check the latest version
+	print STDERR $l2t->check_upgrade . "\n";
+
+	exit 0;
+}
+
+# check if we want to print the help message
+if ( $print_help )
+{
+	# check if the option -f is also used, then we print the format file help as well
+	if( $format_file ne '' && $format_file ne 'list' )
+	{
+		eval
+		{
+			# print the help message
+			print STDERR $l2t->get_help_in( $format_file ) . "\n";
+		};
+		# check if we were unable to load the format file
+		if( $@ )
+		{
+			pod2usage( { 	
+				-message	=> "Unable to load input module [$format], so no help is printed (try $0 -f list to see available input modules)\nThe error message is: $@",
+				-verbose	=> 1,
+				-exitval	=> 12 } );
+		}
+	}
+	else
+	{
+		# then we print the help message
+		print STDERR "\n\n";
+		print STDERR "-------------------------------------------------\n";
+		pod2usage(1);
+	}
+	exit 0;
+
+}
+
+# check the temporary file
+unless ( $temp_file eq '' )
+{
+	# now we need to check the temporary folder, to see if it exists
+	pod2usage( { 	
+		-message	=> "The temporary folder ($temp_file) does not exist, it has to exist for the tool to able to use it.\n",
+		-verbose	=> 1,
+		-exitval	=> 8 } ) unless -d $temp_file;
+
+        # set the separator
+	my $p;
+	
+	$p = $temp_file . '\\bla.txt' if $^O =~ m/MSWin/i;
+	$p = $temp_file . '/bla.txt' unless $^O =~ m/MSWin/i;
+
+
+	# now the folder exists, let's check if we can write a file to it...
+	pod2usage( { 	
+		-message	=> "The temporary folder ($temp_file) does not exist, it has to exist for the tool to able to use it.\n",
+		-verbose	=> 1,
+		-exitval	=> 8 } ) unless open(TF, '>' . $p );
+
+	# remove this stuff
+	close(TF);
+	unlink( $p ) if -f $p;
+	
+}
+
+# find format files, check if format = list (then we are supposed to print available formats)
+if( $format_file eq "list" )
+{
+	eval
+	{
+		print $l2t->get_inputs;
+	};
+	if( $@ )
+	{	
+		pod2usage( { 	
+			-message 	=> "Error, unable to parse input module.\nError message: $@",
+			-verbose	=> 1,
+			-exitval	=> 12  });
+	}
+
+	# since we do no parsing we exit from the program
+	exit 0;
+}
+
+# check if we want to list all output plugins
+if( $output_file eq "list" )
+{
+	eval
+	{
+		print Log2t::Common::list_output();
+	};
+	if( $@ )
+	{	
+		pod2usage( { 	
+			-message 	=> "Error, unable to parse output module.\nError message: $@",
+			-verbose	=> 1,
+			-exitval	=> 13  });
+	}
+	exit 0;
+}
+
+# check if we are about to list timezone settings
+if( $timezone eq "list" )
+{
+	print $l2t->get_timezone_list;
+	exit 0;
+}
+
+# no we know that we are not printing a help message and not listing up available format files or output plugins
+# so we are about to parse a log file, and then we need to know the format of the file 
+# (there is no mechanism to detect the format of the log file, yet it might come in a future version)
+
+# if no input module is defined, then we will use the "all", or guessing which module to use
+$format_file = 'all' if $format_file eq '';
+$format_file = 'all' if $format_file eq 'guess';
+
+# test parameters, just to see if we have at least one parameter left on the command line (indicates that 
+# a log file has been provided)
+if( $#ARGV <  0  )
+{
+	pod2usage( { 	-message	=> "Wrong usage: no log file passed on", 
+			-verbose	=> 1,
+			-exitval	=> 1 } );
+}
+
+# check if timezone has been set or not
+print STDERR "-----------------------------------------------------------------
+			[WARNING] 
+No timezone has been chosen so the local timezone of this
+machine is chosen as the timezone of the suspect drive.
+
+If this is incorrect, then cancel the tool and re-run it
+using the -z TIMEZONE parameter to define the suspect drive
+timezone settings (and possible time skew with the -s parameter)
+
+(5 second delay has been added to allow you to read this message)
+-----------------------------------------------------------------\n" unless defined $timezone;
+sleep( 5 ) unless defined $timezone;
+$timezone = 'local' unless defined $timezone;
+
+
+# check the timezone settings
+eval 
+{
+	print STDERR "[LOG2TIMELINE] Testing time zone $timezone\n" if $debug;
+	$time_object = DateTime::TimeZone->new( 'name' => "$timezone" );
+};
+if( $@ )
+{
+	pod2usage( { 	
+		-message	=> "Timezone [$timezone] is not a valid timezone",
+		-verbose	=> 1,
+		-exitval	=> 45 } );
+}
+
+# assign the file name of the log file
+$log_file = shift(@ARGV);
+
+# check to see if this file/dir exists
+if( -e $log_file || -d $log_file )
+{
+	# file exists
+	print STDERR "Start processing file/dir [$log_file] ...\n";
+}
+else
+{
+	# the file/dir does not exist, exit the code
+	pod2usage( { 	-message	=> "Wrong usage: log file [$log_file] does not exist (or unable to find it)", 
+			-verbose	=> 1,
+			-exitval	=> 1 } );
+}
+
+# print a log message
+print STDERR "Starting to parse using input modules(s): [$format_file] \n";
+
+# prepare the output file
+if( $out_file eq 'STDOUT' )
+{
+	open( MYFILE, ">-" );
+}
+else
+{
+	# check if it exists
+	$file_exists = 1 if -f $out_file;
+
+	# we are redirecting to a file
+	open( MYFILE, '>>' . $out_file );
+}
+
+# start by fixing the settings
+eval
+{
+	$l2t->set(
+		'file'          => $log_file,
+		'recursive'     => $recursive,
+		'input'         => $format_file,
+		'output'        => $output_file,
+		'time_zone'     => $timezone,
+		'log_file'	=> $out_file,
+		'offset'        => $time_offset,
+                'exclusions'    => $exclude,
+		'text'          => $textfield,
+		'append'	=> $file_exists,
+		'debug'         => $debug,
+		'temp'		=> $temp_file,
+		'digest'        => $digest,
+		'quick'         => $detail,
+                'raw'           => 0,
+		'hostname'      => $hostname,
+		'preprocess'    => $preproc,
+	);
+};
+if($@)
+{
+	pod2usage( { 	
+		-message	=> "Unable to configure the log2timeline engine.  Error message: $@\n",
+		-verbose	=> 1,
+		-exitval	=> 11 } );
+}
+
+
+# check if the output file exists, and if it does, we need to 
+# do some parsing to remove extra footer before appending to it
+if ( $file_exists )
+{
+	# first verify that the footer actually contains data
+	my $footer = $l2t->get_out_footer;
+
+	if( ( $out_file ne 'STDOUT' ) && ( $footer ) )
+	{    
+		# we need to re-open the file read-only
+		close( MYFILE );
+		open( MYFILE, '<' . $out_file );
+	
+		# we have a footer and need to remove it
+		
+		# read the content of the file
+		my @content = <MYFILE>;
+		close(MYFILE);
+	
+		# remove the footer
+		@content = grep{ !/$footer/ } @content;
+	      
+		# open the file up again and print the previous content - header
+		open( MYFILE, '>' . $out_file );
+		print MYFILE @content;
+	}    
+}   
+
+eval
+{
+	$l2t->start;
+};	
+# check if there were errors loading the format file
+if( $@ )
+{
+	pod2usage( { 	
+		-message	=> "Unable to run the tool.  Error message given: $@\n",
+		-verbose	=> 1,
+		-exitval	=> 12 } );
+}
+
+# close the file
+close( MYFILE );
+
+# check if this was recursive... then we print out end time
+printf STDERR "Run time of the tool: %s seconds\n", time() - $start_time if $recursive;
+
+##############################################################################################################
+#		COMMON SUBROUTINES
+##############################################################################################################
+# here follow routines that can be called by each of the format files, that is routines that are shared
+# among all of the format files
+
+# a simple routine to print a line
+sub print_line($)
+{
+	my $line = shift;
+
+	# print to the file in question
+	print MYFILE encode('utf8', $line ); 
+	#print MYFILE $line;
+}
+
+
+__END__
+
+=pod
+
+=head1 NAME
+
+B<log2timeline> - a log file parser that produces a body file used to create timelines (for forensic investigations).
+
+=head1 SYNOPSIS	
+
+B<log2timeline> [OPTIONS] [-f FORMAT] [-z TIMEZONE] [-o OUTPUT MODULE] [-w BODYFILE] LOG_FILE/LOG_DIR [--] [FORMAT FILE OPTIONS]
+
+=head1 OPTIONS
+
+=over 8
+
+=item B<-s|-skew TIME>
+
+Time skew of original machine. The format of the variable TIME is: X | Xs | Xm | Xh, where X is a integer and s represents seconds, m minutes and h hours (default behaviour is seconds)
+
+=item B<-m TEXT>
+
+Prepend the filename with the B<TEXT>.  That is B<TEXT> is a string that is prepended in front of the file name to provide a path.  Examples are -m C: to prepend the C:/ in front of each file name to indicate the partition the file came from.
+
+=item B<-f|-format FORMAT>
+
+Use the following log file format to parse the content of the file. Use -f list to see the list of supported log files.  Omitting this options make B<log2timeline> attempt to guess the format.
+
+=item B<-u|-upgrade>
+
+Check the latest available version of B<log2timeline> and compare it to current version (use to check if there is an available update)
+
+=item B<-name HOST>
+
+Define the host name that the information is extracted from.
+
+=item B<-o|-output FORMAT>
+
+Use the following output format.  By default B<log2timeline> uses the CSV output.  To see a list of all available output formats, use -o list
+
+=item B<-w|-write FILENAME>
+
+Specify a file to write output to (otherwise STDOUT will be chosen).
+
+=item B<-z|-zone TIMEZONE>
+
+This option defines the timezone that was used on the computer that the log files belonged to.  The default value for this variable is the local timezone of the computer B<log2timeline> is run on. There is an option to define -z list to get a list of all available timezones.
+
+=item B<-t|-temp DIR>
+
+This option defines the temporary directory the tool uses. By default the front-end does not set the temporary directory, but allows the engine to automatically detect it. This option therefore overwrites the default temporary directory location.
+
+The engine checks the operating system in question, if it is Windows, it will try to determine the temporary path based on the Win32::API (so this might fail on 64-bit systems, perhaps better to use this option to set it manually on those systems). Otherwise it will use /tmp/ as the temporary directory (should work on *NIX systems).
+
+=item B<-log FILENAME>
+
+Specify a file to write error and information messages from the B<log2timeline> to a file, otherwise STDERR will be used.
+
+=item B<-c|-calculate>
+
+If this option is used then a MD5 sum is calculated for the file and stored in the timestamp object
+
+=item B<-x>
+
+Make B<log2timeline> skip some more detailed tests to see if a file truly is in the correct input module.  The tool should work faster with this option, however it might miss some files.
+
+=item B<-e|-exclude LIST>
+
+A comma separated list of files to exclude from the scan.  If a particular file has caused the tool to crash or not work, or you simply want to exclude some documents from the scan it is possible to exclude some 
+
+=item B<-r|-recursive>
+
+This option makes B<log2timeline> work in a recursive way, the same behaviour as timescanner.
+
+=item B<-p|-preprocess>
+
+If B<log2timeline> is working in recursive mode (-r) it is possible to use the -p option to run a set of pre-processors agains the image file.  Preprocessors are modules that search through the suspect drive and extract needed information that can be used in other modules, such as hostname, etc.
+
+=item B<-v|-verbose> 
+
+Add debugging information. Possible to use with -v -v to increase some error messages. 
+
+=item B<-V|-Version>
+
+Display the version number
+
+=item B<-h|-help|-?>
+
+Display this help message
+
+=back
+
+Better description can be read in the man page of the program (man B<log2timeline>).
+
+=head1	DESCRIPTION
+
+B<log2timeline> takes a log file (or a directory) and parses it to produce a body file that can be imported into other tools for timeline analysis.  The tool has both a modular based approach to the input file as well as the output file.  The current version supports exporting the timeline in a several different body formats.  B<log2timeline> is build as a series of scripts, this one being the front-end, which uses other scripts to actually parse the log files (called format files). The tool is build to be easily extended for anyone that wants to create a new format or an output file.
+
+As noted above the default output mechanism is in a CSV file format, which can be easily imported into spreadsheet applications, and parsed by the tool B<l2t_process>.  The output format can be easily changed with the -o parameter.  The output module can be set to output in a body format that needs to be imported into another tool for human readable format, or it can be implemented to print the timeline directly in a human readable format.
+
+The tool is build using multiple so called input modules.  Each of those input modules provide a single format that can be parsed, whether that is a log file or a directory containing some files that need to be parsed.
+
+The purpose of the tool is to provide a single tool to parse various artifacts that are either produced by the suspsect operating system or other systems that might have some logs retaining to the investigation.
+
+=head1 	OVERVIEW
+
+Furhter description of the parameters 
+
+=over 8
+
+=item B<-s|-skew TIME>
+
+Time skew of original machine. It is added (or subtracted) from each time (ctime,atime,mtime,crtime) in the bodyfile to compensate for different time in some log files from the "correct" time.  The format of the variable B<TIME> is: 
+
+=over 4 
+
+=item I<X | Xs | Xm | Xh>
+
+Where X is a integer and s represents seconds, m minutes and h hours (default behaviour is seconds)
+It is possible to prepend B<TIME> with a minus sign (-) to indicate that the time skew is a negative number.
+
+Example of this usage is: B<log2timeline> -t 1243 (a time skew of +1243 seconds is added to each time)
+
+=back
+
+=item B<-m TEXT>
+
+Prepend the filename with the B<TEXT>.  That is B<TEXT> is a string that is prepended in front of the file name to provide a path.  Examples are -m C: to prepend the C:/ in front of each file name to indicate the partition the file came from.
+
+=item B<-u|-upgrade>
+
+Check the latest available version of B<log2timeline> and compare it to current version (use to check if there is an available update).  What this option does is to fetch a file http://log2timeline.net/VERSION, which contains a single number, which reflects the latest released version of the tool.  This version number is then compared to the tools version number to find out if there is a new version available on the official site.
+
+=item B<-f|-format FORMAT>
+
+B<log2timeline> has the capability to automatically detect the format of the log file.  If this option is omitted log2timeline will attempt to guess the source file format.  However the behaviour can be overwritten with this option.  So if the -f parameter is set the tool will only use that input module to test against the log file. 
+
+It is possible to either define a single input module, list of them or a name of a list file that contains a list of input modules to use.
+
+To get a list of all available input modules use the option of -f list.
+
+=item B<-name HOST>
+
+Define the host name that the information is extracted from.
+
+=item B<-o|-output FORMAT>
+
+Use the following output format.  By default B<log2timeline> uses the CSV output.  To see a list of all available output formats, use -o list
+
+This option works the same way as the format file option does (-f) in the way that it searches the output folder for a file called FORMAT.pl and uses that to print the output that has been generated previously by the format file.  The tool dies if the script FORMAT.pl does not exist or is of the wrong format (with an exit code of 13).
+
+=item B<-w|-write FILENAME>
+
+The standard way to output the bodyfile or timeline is by using standard output (STDOUT).  That can be overwritten using this option to redirect the output to a file.
+
+=item B<-v|-verbose> 
+
+Add debugging information
+
+=item B<-z|-zone TIMEZONE>
+
+This option defines the timezone that was used on the computer that the log files belonged to.  The default value for this variable is the local timezone of the computer B<log2timeline> is run on. Depending on the supplied artifact it may be written using the timestamps from the original computer's timezone or it may be written in predefined timezone, such as UTC.
+
+If the "-z local" timezone is chosen the tool will print the found local timezone.
+
+The option -z list prints out a list of all available timezones that can be chosen.
+
+=item B<-t|-temp DIR>
+
+This option defines the temporary directory the tool uses. By default the front-end does not set the temporary directory, but allows the engine to automatically detect it. This option therefore overwrites the default temporary directory location.
+
+The engine checks the operating system in question, if it is Windows, it will try to determine the temporary path based on the Win32::API (so this might fail on 64-bit systems, perhaps better to use this option to set it manually on those systems). Otherwise it will use /tmp/ as the temporary directory (should work on *NIX systems).
+
+=item B<-log FILENAME>
+
+Specify a file to write error and information messages from the B<log2timeline> to a file, otherwise STDERR will be used.
+
+=item B<-c|-calculate>
+
+If this option is used then a MD5 sum is calculated for the file and stored in the timestamp object
+
+=item B<-x>
+
+B<log2timeline> will by default try to run a minimized test on the input file to determine if it is of the correct structure.  For instance only to test the first byte to see if it matches.  This could lead to some files not being detected by log2timeline.  Therefore the -x option is provided to skip this pre-test and move directly to a more comprehensive test that is otherwise done after the pre-test is successful.  This might lead to fewer false positives, but in turn makes the tool a bit slower.
+
+=item B<-V|-Version>
+
+Display the version number of the tool B<log2timeline> and exit with the exit code 0.
+
+=item B<-h|-help|-?>
+
+Display a help message explaining the available options to the tool (a simple version of this man page).
+
+=item B<-e|-exclude LIST>
+
+A comma separated list of files to exclude from the scan.  If a particular file has caused the tool to crash or not work, or you simply want to exclude some documents from the scan it is possible to exclude some 
+
+Example:
+
+=over 8
+
+I<log2timeline -f winvista -r -z local -e 'Windows-Diagnosis,secret[0-3]' /mnt/windows>
+
+This would scan all the directory /mnt/windows recursively, using only modules associated to a Windows Vista or later operating system, and excluding all filenames that have "Windows-Diagnosis" in them or contain the word secret0/secret1/secret2 or secret3 in it.
+
+=back
+
+=item B<-r|-recursive>
+
+This option makes B<log2timeline> work in a recursive way, the same behaviour as timescanner.
+
+=item B<-p|-preprocess>
+
+If B<log2timeline> is working in recursive mode (-r) it is possible to use the -p option to run a set of pre-processors agains the image file.  Preprocessors are modules that search through the suspect drive and extract needed information that can be used in other modules, such as hostname, etc.
+
+=back
+
+=head1	EXAMPLES
+
+=over 8
+
+=item B<log2timeline> -f list
+
+Print a list of all available format files.
+
+=item B<log2timeline> -f firefox3 -z EST5EDT -w /tmp/bodyfile places.sqlite -- -u JOE 2> /tmp/body.log
+
+Use the Firefox 3 history parser to parse a places.sqlite file that contains history information.  Prepened the output with information about the user that owned the file, in this case the user JOE owned this history file.  The output, which is in the TLN format will be written to the file body, while all log messages are written to the file body.log (STDERR is redirected to a file)
+
+=item B<log2timeline> -z local -f squid -s 2h access.log > squid.body
+
+Parses an access log file from Squid to produce a body file that is output into the file squid.body.  Two hours are added to each time in the timeline to correct the time settings of the log file that is parsed.
+
+=item B<log2timeline> -z GMT -f prefetch WINDOWS/Prefetch >> case.body
+
+Parses the content of the Windows Prefetch directory and adds the timeline to the already available case.body timeline.
+
+=item B<log2timeline> -f recycler -z local -o sqlite -w /tmp/rec.sql RECYCLER/S-1-5-21-..../
+
+Parses the content of the INFO2 file, found inside each recycle bin and prints out information into a SQLite database (/tmp/rec.sql).
+
+=item B<log2timeline> -z local -f winxp -r -p /mnt/analyze
+
+Make B<log2timeline> recursively go through the mount point /mnt/analyze using the available input modules that are stored inside the winxp list file (those that are relevant to a Windows XP machine).  Before running the recursive scan the pre-processing modules are ran against the image to gather information from it.
+
+=back
+
+=head1 RETURN VALUE 	
+
+=over 8
+
+=item B<0> 
+
+Successful program execution
+
+=item B<1> 
+
+Wrong usage of the B<log2timeline> program.  Possibly omitting the -f parameter or a file name to parse.
+
+=item B<12> 
+
+Problem loading the format file.  Format file not found, not correctly formed or otherwise unable to parse the format file.
+
+=item B<13> 
+
+Problem loading the output file.  Output file not found, not correctly formed or otherwise unable to parse the content of the output file.
+
+=item B<14> 
+
+Unable to verify the log file.  That is the format file is unable to verify that the log file is of the correct format.
+ 
+=item B<15> 
+
+Unable to open the log file.  Perhaps because you don't have permission to read the content of the log file.
+
+=item B<20> 
+
+Problem writing to output file.
+
+=item B<45> 
+
+The supplied timezone does not exist.
+
+=back
+
+=head1 BUGS 
+
+As of now there are no known bugs, and when bugs are either discovered or reported they are fixed as soon as possible
+and made available in the nightly builds.  
+
+If you find a bug in the tool, please start by downloading the latest build (nightly builds) available at 
+http://log2timeline.net/files/log2timeline_nightly.tgz to verify that the bug hasn't already been fixed and if it
+hasn't please report the problem to Kristinn Gudjonsson (bugs ( a t ) log2timeline ( d o t ) net.
+
+There are few known limitations though:
+
++ The LSO (.sol) input module isn't able to properly parse every .sol file it finds.  The payload of a .sol file is
+encoded using Action Message Format from Adobe.  There are two versions of AMF, AMF0 and AMF3.  The vast majority of
+.sol files is encoded using the AMF0, however there are some that use AMF3.  The current version of the sol parser
+only works against AMF0, however a version that supports AMF3 should be released in not so distant future.
+
++ There have also been reports about B<log2timeline> not properly clean temporary files after completing it's run.  
+This behaviour involves the input modules for Chrome and Firefox history.  If the input module detects a database that
+is being locked, it copies the database to a temporary location to be able to connect and properly parse the file.  After
+it has completed the parsing it will try to delete the temporary file using the Perl function unlink.  If you do have this
+problem please notify the author to see if we can figure this out together and fix the problem.
+
+=head1 HISTORY
+
+For a full history of releases please refer to the changelog.
+
+=over 8 
+
+=item v0.1b Initial release.
+
+=item v0.11b (20/07/2009) Mostly few bug fixes.
+
+=item v0.12b (31.07.2009) New features implemented, refining of code.
+
+=item v0.20b (04.08.2009) Bug fixes, changes in the structure and new input modules introduced.
+
+=item v0.21b (07.08.2009) Bug fixes, changes in the structure and new input modules introduced.
+
+=item v0.22b (10.08.2009) New input modules.
+
+=item v0.30b (02/09/09) Changes to the structure, first release of a GUI, bug fixes and common libraries used.
+
+=item v0.31b (07/09/09) New modules, new front-end timescanner introduced.  Small bug fixes.
+
+=item v0.32b (10/09/09) Bug fixes, new input modules as well as libraries. Version checking implemented.
+
+=item v0.33b (15/09/09) Bug fixes.
+
+=item v0.40 (25/11/09) Changes in the structure, timestamps normalized to UTC.  Bug fixes, improvements in modules, new input modules.
+
+=item v0.41 (15/01/10) New input modules, bug fixes, improvements of older modules, new update mechansim introduced.
+
+=item 0.42 (05/03/10) New input modules (pdf,mcafee), bug fixes, improvements of older modules and the main tool
+
+=item 0.50 (30/06/10) New timestamp object introduced, every module updated along with front-ends, bug fixes and improvements
+
+=item 0.51 (14/12/2010) New input modules alongside several bug fixes.
+
+=item 0.52 (05/04/2011) New input modules alongside several bug fixes.
+
+=item 0.60 (05/06/2011) Core redesign of the tool, moving the engine to a separate library and several other changes.
+
+=back 
+
+=head1 AUTHOR
+
+Kristinn Gudjonsson <kristinn (a t) log2timeline ( d o t ) net> is the original author of the program.
+
+The tool is released under GPL so anyone can contribute to the tool.  Some parts of the code have been copied from other GPL'ed programs, such as the Parse::Evtx library by Andreas Schuster, and parts of RegRipper written by H. Carvey.
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright 2009-2011 by Kristinn Gudjonsson (kristinn ( a t ) log2timeline ( d o t ) net ) 
+
+B<log2timeline> is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+
+B<log2timeline> is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with B<log2timeline>.  If not, see <http://www.gnu.org/licenses/>.
+
+=cut
+

@@ -1,0 +1,87 @@
+Usage:
+    log2timeline [OPTIONS] [-f FORMAT] [-z TIMEZONE] [-o OUTPUT MODULE] [-w
+    BODYFILE] LOG_FILE/LOG_DIR [--] [FORMAT FILE OPTIONS]
+
+Options:
+    -s|-skew TIME
+            Time skew of original machine. The format of the variable TIME
+            is: X | Xs | Xm | Xh, where X is a integer and s represents
+            seconds, m minutes and h hours (default behaviour is seconds)
+
+    -m TEXT Prepend the filename with the TEXT. That is TEXT is a string
+            that is prepended in front of the file name to provide a path.
+            Examples are -m C: to prepend the C:/ in front of each file name
+            to indicate the partition the file came from.
+
+    -f|-format FORMAT
+            Use the following log file format to parse the content of the
+            file. Use -f list to see the list of supported log files.
+            Omitting this options make log2timeline attempt to guess the
+            format.
+
+    -u|-upgrade
+            Check the latest available version of log2timeline and compare
+            it to current version (use to check if there is an available
+            update)
+
+    -name HOST
+            Define the host name that the information is extracted from.
+
+    -o|-output FORMAT
+            Use the following output format. By default log2timeline uses
+            the CSV output. To see a list of all available output formats,
+            use -o list
+
+    -w|-write FILENAME
+            Specify a file to write output to (otherwise STDOUT will be
+            chosen).
+
+    -z|-zone TIMEZONE
+            This option defines the timezone that was used on the computer
+            that the log files belonged to. The default value for this
+            variable is the local timezone of the computer log2timeline is
+            run on. There is an option to define -z list to get a list of
+            all available timezones.
+
+    -log FILENAME
+            Specify a file to write error and information messages from the
+            log2timeline to a file, otherwise STDERR will be used.
+
+    -c|-calculate
+            If this option is used then a MD5 sum is calculated for the file
+            and stored in the timestamp object
+
+    -x      Make log2timeline skip some more detailed tests to see if a file
+            truly is in the correct input module. The tool should work
+            faster with this option, however it might miss some files.
+
+    -e|-exclude LIST
+            A comma separated list of files to exclude from the scan. If a
+            particular file has caused the tool to crash or not work, or you
+            simply want to exclude some documents from the scan it is
+            possible to exclude some
+
+    -r|-recursive
+            This option makes log2timeline work in a recursive way, the same
+            behaviour as timescanner.
+
+    -p|-preprocess
+            If log2timeline is working in recursive mode (-r) it is possible
+            to use the -p option to run a set of pre-processors agains the
+            image file. Preprocessors are modules that search through the
+            suspect drive and extract needed information that can be used in
+            other modules, such as hostname, etc.
+
+    -v|-verbose
+            Add debugging information. Possible to use with -v -v to
+            increase some error messages.
+
+    -V|-Version
+            Display the version number
+
+    -h|-help|-?
+            Display this help message
+
+    Better description can be read in the man page of the program (man
+    log2timeline).
+

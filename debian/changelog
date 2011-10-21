@@ -1,0 +1,31 @@
+log2timeline-perl (0.61-1) natty hardy maverick karmic lucid; urgency=low
+
+  * Added few new modules, see changelog for further details
+  * Small changes to the tool itself, couple of enhancements
+  * The tool now comes with bash completion
+  * Changes to the SQLite schema and implementation
+  * Few bug fixes, see full changelog
+
+ -- Kristinn Gudjonsson <kristinn@log2timeline.net>  Wed, 24 Aug 2011 20:35:15 +0000
+
+log2timeline-perl (0.60-1) natty hardy maverick karmic lucid; urgency=low
+
+  * Small updates, see changelog for further details
+  * Added a natty repository (11.04)
+
+ -- Kristinn Gudjonsson <kristinn@log2timeline.net>  Tue, 21 Jun 2011 12:31:29 +0000
+
+log2timeline-perl (0.60) unstable hardy maverick karmic lucid; urgency=low
+
+  * 0.60 Complete rewrite of the core engine with the associated changes to the input modules.  See full changelog for additional information.
+  * 0.52 Added few more input modules and l2t_process.  Please see the full changelog for additional information.
+  * 0.51-1 Added a new dependency needed for the Safari module to work (libxml-entities-perl)
+  * 0.51 Several new input modules, fixes and new features. Please see the full changelog for additional information. 
+  * 0.50-rc1 Major change of the framework, see the full changelog to see all modifications made - this is the release canditate
+  * 0.43-5 Changed the control file, sleuthkit is now suggested, not recommended. 
+  * 0.43-4 Forgot to add one more dependency to the tool
+  * 0.43-3 Added an input module for firefox2 browser history
+  * 0.43-2 Fixed a bug with the dependencies
+  * 0.43-1 Initial Debian package
+
+ -- Kristinn Gudjonsson <kristinn@log2timeline.net>  Wed, 8 Jun 2011 16:58:24 +0000

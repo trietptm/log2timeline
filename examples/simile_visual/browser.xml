@@ -1,0 +1,1504 @@
+
+<data
+	wiki-url="http://simile.mit.edu/shelf/"
+	wikiSection="Timeline produced from log2timeline"
+	>
+	<!-- Sources:
+		log2timeline produced timeline data
+	-->
+
+
+	<event start="Tue Aug 04 2009 15:17:03 GMT"
+		durationEvent="false"
+		title="[Firefox3] URL visited: http://is.www.mozilla.com/is/firefox/3.5.2/firstrun/ (Velkomin(n) í Firefox) [count: 1] Host: is.www.mozilla.com (URL not typed directly) type: LINK"
+		>
+	[Firefox3] URL visited: http://is.www.mozilla.com/is/firefox/3.5.2/firstrun/ (Velkomin(n) í Firefox) [count: 1] Host: is.www.mozilla.com (URL not typed directly) type: LINK
+	</event>
+
+	<event start="Tue Aug 04 2009 15:17:03 GMT"
+		durationEvent="false"
+		title="[Firefox3] URL visited: http://is.start3.mozilla.com/firefox?client=firefox-a&amp;rls=org.mozilla:is:official (firefox) [count: 1] Host: is.start3.mozilla.com (URL not typed directly) type: LINK"
+		>
+	[Firefox3] URL visited: http://is.start3.mozilla.com/firefox?client=firefox-a&amp;rls=org.mozilla:is:official (firefox) [count: 1] Host: is.start3.mozilla.com (URL not typed directly) type: LINK
+	</event>
+
+	<event start="Tue Aug 04 2009 15:17:00 GMT"
+		durationEvent="false"
+		title="[Firefox3] URL visited: http://www.google.com/firefox?client=firefox-a&amp;rls=org.mozilla:is:official (firefox) [count: 1] Host: www.google.com visited from: http://is.start3.mozilla.com/firefox?client=firefox-a&amp;rls=org.mozilla:is:official (URL not typed directly) type: REDIRECT_PERMANENT"
+		>
+	[Firefox3] URL visited: http://www.google.com/firefox?client=firefox-a&amp;rls=org.mozilla:is:official (firefox) [count: 1] Host: www.google.com visited from: http://is.start3.mozilla.com/firefox?client=firefox-a&amp;rls=org.mozilla:is:official (URL not typed directly) type: REDIRECT_PERMANENT
+	</event>
+
+	<event start="Tue Aug 04 2009 15:17:00 GMT"
+		durationEvent="false"
+		title="[Firefox3] URL visited: http://www.google.is/firefox?client=firefox-a&amp;rls=org.mozilla:is:official (Byrjunarsíða Mozilla Firefox) [count: 1] Host: www.google.is visited from: http://www.google.com/firefox?client=firefox-a&amp;rls=org.mozilla:is:official (URL not typed directly) type: REDIRECT_TEMPORARY"
+		>
+	[Firefox3] URL visited: http://www.google.is/firefox?client=firefox-a&amp;rls=org.mozilla:is:official (Byrjunarsíða Mozilla Firefox) [count: 1] Host: www.google.is visited from: http://www.google.com/firefox?client=firefox-a&amp;rls=org.mozilla:is:official (URL not typed directly) type: REDIRECT_TEMPORARY
+	</event>
+
+	<event start="Tue Aug 04 2009 15:17:43 GMT"
+		durationEvent="false"
+		title="[Firefox3] URL visited: http://www.google.is/search?client=firefox-a&amp;rls=org.mozilla%3Ais%3Aofficial&amp;channel=s&amp;hl=is&amp;q=how+to+delete+files&amp;lr=&amp;btnG=Google+leit (how to delete files - Google leit) [count: 1] Host: www.google.is visited from: http://www.google.is/firefox?client=firefox-a&amp;rls=org.mozilla:is:official (URL not typed directly) type: LINK"
+		>
+	[Firefox3] URL visited: http://www.google.is/search?client=firefox-a&amp;rls=org.mozilla%3Ais%3Aofficial&amp;channel=s&amp;hl=is&amp;q=how+to+delete+files&amp;lr=&amp;btnG=Google+leit (how to delete files - Google leit) [count: 1] Host: www.google.is visited from: http://www.google.is/firefox?client=firefox-a&amp;rls=org.mozilla:is:official (URL not typed directly) type: LINK
+	</event>
+
+	<event start="Tue Aug 04 2009 15:17:43 GMT"
+		durationEvent="false"
+		title="[Firefox3] URL visited: http://www.cybertechhelp.com/tutorial/article/how-to-delete-files-and-folders (How to delete files and folders) [count: 1] Host: www.cybertechhelp.com visited from: http://www.google.is/search?client=firefox-a&amp;rls=org.mozilla%3Ais%3Aofficial&amp;channel=s&amp;hl=is&amp;q=how+to+delete+files&amp;lr=&amp;btnG=Google+leit (URL not typed directly) type: LINK"
+		>
+	[Firefox3] URL visited: http://www.cybertechhelp.com/tutorial/article/how-to-delete-files-and-folders (How to delete files and folders) [count: 1] Host: www.cybertechhelp.com visited from: http://www.google.is/search?client=firefox-a&amp;rls=org.mozilla%3Ais%3Aofficial&amp;channel=s&amp;hl=is&amp;q=how+to+delete+files&amp;lr=&amp;btnG=Google+leit (URL not typed directly) type: LINK
+	</event>
+
+	<event start="Tue Aug 04 2009 15:18:00 GMT"
+		durationEvent="false"
+		title="[Firefox3] URL visited: http://www.geeksaresexy.net/2007/06/04/how-to-delete-an-undeletable-file/ (HOW TO: Delete an Undeletable or Locked File) [count: 1] Host: www.geeksaresexy.net visited from: http://www.google.is/search?client=firefox-a&amp;rls=org.mozilla%3Ais%3Aofficial&amp;channel=s&amp;hl=is&amp;q=how+to+delete+files&amp;lr=&amp;btnG=Google+leit (URL not typed directly) type: LINK"
+		>
+	[Firefox3] URL visited: http://www.geeksaresexy.net/2007/06/04/how-to-delete-an-undeletable-file/ (HOW TO: Delete an Undeletable or Locked File) [count: 1] Host: www.geeksaresexy.net visited from: http://www.google.is/search?client=firefox-a&amp;rls=org.mozilla%3Ais%3Aofficial&amp;channel=s&amp;hl=is&amp;q=how+to+delete+files&amp;lr=&amp;btnG=Google+leit (URL not typed directly) type: LINK
+	</event>
+
+	<event start="Tue Aug 04 2009 15:18:07 GMT"
+		durationEvent="false"
+		title="[Firefox3] URL visited: http://support.microsoft.com/kb/260897 (How to Delete the Contents of the Temporary Internet Files Folder) [count: 1] Host: support.microsoft.com visited from: http://www.google.is/search?client=firefox-a&amp;rls=org.mozilla%3Ais%3Aofficial&amp;channel=s&amp;hl=is&amp;q=how+to+delete+files&amp;lr=&amp;btnG=Google+leit (URL not typed directly) type: LINK"
+		>
+	[Firefox3] URL visited: http://support.microsoft.com/kb/260897 (How to Delete the Contents of the Temporary Internet Files Folder) [count: 1] Host: support.microsoft.com visited from: http://www.google.is/search?client=firefox-a&amp;rls=org.mozilla%3Ais%3Aofficial&amp;channel=s&amp;hl=is&amp;q=how+to+delete+files&amp;lr=&amp;btnG=Google+leit (URL not typed directly) type: LINK
+	</event>
+
+	<event start="Tue Aug 04 2009 15:18:16 GMT"
+		durationEvent="false"
+		title="[Firefox3] URL visited: http://tech.yahoo.com/blogs/null/50840 (How to Delete Files For Good : Christopher Null : Yahoo! Tech) [count: 1] Host: tech.yahoo.com visited from: http://www.google.is/search?client=firefox-a&amp;rls=org.mozilla%3Ais%3Aofficial&amp;channel=s&amp;hl=is&amp;q=how+to+delete+files&amp;lr=&amp;btnG=Google+leit (URL not typed directly) type: LINK"
+		>
+	[Firefox3] URL visited: http://tech.yahoo.com/blogs/null/50840 (How to Delete Files For Good : Christopher Null : Yahoo! Tech) [count: 1] Host: tech.yahoo.com visited from: http://www.google.is/search?client=firefox-a&amp;rls=org.mozilla%3Ais%3Aofficial&amp;channel=s&amp;hl=is&amp;q=how+to+delete+files&amp;lr=&amp;btnG=Google+leit (URL not typed directly) type: LINK
+	</event>
+
+	<event start="Tue Aug 04 2009 15:18:27 GMT"
+		durationEvent="false"
+		title="[Firefox3] URL visited: http://www.jetico.com/ (Jetico - Military-Standard Data Protection Software - Wiping, Encryption, Firewall) [count: 1] Host: www.jetico.com visited from: http://tech.yahoo.com/blogs/null/50840 (URL not typed directly) type: LINK"
+		>
+	[Firefox3] URL visited: http://www.jetico.com/ (Jetico - Military-Standard Data Protection Software - Wiping, Encryption, Firewall) [count: 1] Host: www.jetico.com visited from: http://tech.yahoo.com/blogs/null/50840 (URL not typed directly) type: LINK
+	</event>
+
+	<event start="Tue Aug 04 2009 15:18:43 GMT"
+		durationEvent="false"
+		title="[Firefox3] URL visited: http://www.jetico.com/index.php?page=home-no-flash-wiping (Jetico - Military-Standard Data Protection Software - Wiping) [count: 1] Host: www.jetico.com visited from: http://www.jetico.com/ (URL not typed directly) type: LINK"
+		>
+	[Firefox3] URL visited: http://www.jetico.com/index.php?page=home-no-flash-wiping (Jetico - Military-Standard Data Protection Software - Wiping) [count: 1] Host: www.jetico.com visited from: http://www.jetico.com/ (URL not typed directly) type: LINK
+	</event>
+
+	<event start="Tue Aug 04 2009 15:18:52 GMT"
+		durationEvent="false"
+		title="[Firefox3] URL visited: http://www.jetico.com/wiping-bcwipe/ (Jetico - BCWipe) [count: 1] Host: www.jetico.com visited from: http://www.jetico.com/index.php?page=home-no-flash-wiping (URL not typed directly) type: LINK"
+		>
+	[Firefox3] URL visited: http://www.jetico.com/wiping-bcwipe/ (Jetico - BCWipe) [count: 1] Host: www.jetico.com visited from: http://www.jetico.com/index.php?page=home-no-flash-wiping (URL not typed directly) type: LINK
+	</event>
+
+	<event start="Tue Aug 04 2009 15:19:07 GMT"
+		durationEvent="false"
+		title="[Firefox3] URL visited: http://www.jetico.com/download (download) [count: 1] Host: www.jetico.com visited from: http://www.jetico.com/wiping-bcwipe/ (URL not typed directly) type: LINK"
+		>
+	[Firefox3] URL visited: http://www.jetico.com/download (download) [count: 1] Host: www.jetico.com visited from: http://www.jetico.com/wiping-bcwipe/ (URL not typed directly) type: LINK
+	</event>
+
+	<event start="Tue Aug 04 2009 15:19:00 GMT"
+		durationEvent="false"
+		title="[Firefox3] URL visited: http://www.jetico.com/download/ (Jetico - Download) [count: 1] Host: www.jetico.com visited from: http://www.jetico.com/download (URL not typed directly) type: REDIRECT_PERMANENT"
+		>
+	[Firefox3] URL visited: http://www.jetico.com/download/ (Jetico - Download) [count: 1] Host: www.jetico.com visited from: http://www.jetico.com/download (URL not typed directly) type: REDIRECT_PERMANENT
+	</event>
+
+	<event start="Tue Aug 04 2009 15:19:37 GMT"
+		durationEvent="false"
+		title="[Firefox3] URL visited: http://www.jetico.com/bcwipe3.exe (bcwipe3.exe) [count: 0] Host: www.jetico.com visited from: http://www.jetico.com/download/ (URL not typed directly) type: DOWNLOAD"
+		>
+	[Firefox3] URL visited: http://www.jetico.com/bcwipe3.exe (bcwipe3.exe) [count: 0] Host: www.jetico.com visited from: http://www.jetico.com/download/ (URL not typed directly) type: DOWNLOAD
+	</event>
+
+
+	<event start="Tue Aug 04 2009 15:16:08 GMT"
+		durationEvent="false"
+		title="[IE History] User  connected to URL:Visited: joe@http://mozilla-mirror.3347.voxcdn.com/pub/mozilla.org/firefox/releases/3.5.2/win32/is/Firefox%20Setup%203.5.2.exe cache stored in: /URL  - "
+		>
+	[IE History] User  connected to URL:Visited: joe@http://mozilla-mirror.3347.voxcdn.com/pub/mozilla.org/firefox/releases/3.5.2/win32/is/Firefox%20Setup%203.5.2.exe cache stored in: /URL  - 
+	</event>
+
+	<event start="Tue Aug 04 2009 15:19:23 GMT"
+		durationEvent="false"
+		title="[IE History] User  connected to URL:Visited: joe@file:///C:/Documents%20and%20Settings/Administrator/My%20Documents/Not%20to%20be%20seen%20document.txt cache stored in: /URL  - "
+		>
+	[IE History] User  connected to URL:Visited: joe@file:///C:/Documents%20and%20Settings/Administrator/My%20Documents/Not%20to%20be%20seen%20document.txt cache stored in: /URL  - 
+	</event>
+
+	<event start="Tue Aug 04 2009 15:15:13 GMT"
+		durationEvent="false"
+		title="[IE History] User  connected to URL:Visited: joe@http://is.www.mozilla.com/is cache stored in: /URL  - "
+		>
+	[IE History] User  connected to URL:Visited: joe@http://is.www.mozilla.com/is cache stored in: /URL  - 
+	</event>
+
+	<event start="Tue Aug 04 2009 15:14:18 GMT"
+		durationEvent="false"
+		title="[IE History] User  connected to URL:Visited: joe@http://www.msn.com/rss/alsoonmsn.aspx cache stored in: /URL  - "
+		>
+	[IE History] User  connected to URL:Visited: joe@http://www.msn.com/rss/alsoonmsn.aspx cache stored in: /URL  - 
+	</event>
+
+	<event start="Tue Aug 04 2009 15:14:50 GMT"
+		durationEvent="false"
+		title="[IE History] User  connected to URL:Visited: joe@http://download.mozilla.org/?product=firefox-3.5.2&amp;os=win&amp;lang=is cache stored in: /URL  - "
+		>
+	[IE History] User  connected to URL:Visited: joe@http://download.mozilla.org/?product=firefox-3.5.2&amp;os=win&amp;lang=is cache stored in: /URL  - 
+	</event>
+
+	<event start="Tue Aug 04 2009 15:14:17 GMT"
+		durationEvent="false"
+		title="[IE History] User  connected to URL:Visited: joe@http://go.microsoft.com/fwlink/?LinkId=69157 cache stored in: /URL  - "
+		>
+	[IE History] User  connected to URL:Visited: joe@http://go.microsoft.com/fwlink/?LinkId=69157 cache stored in: /URL  - 
+	</event>
+
+	<event start="Tue Aug 04 2009 15:14:18 GMT"
+		durationEvent="false"
+		title="[IE History] User  connected to URL:Visited: joe@http://www.msn.com/rss/PopularSearches.aspx cache stored in: /URL  - "
+		>
+	[IE History] User  connected to URL:Visited: joe@http://www.msn.com/rss/PopularSearches.aspx cache stored in: /URL  - 
+	</event>
+
+	<event start="Tue Aug 04 2009 15:14:18 GMT"
+		durationEvent="false"
+		title="[IE History] User  connected to URL:Visited: joe@http://www.msn.com/rss/top5search.aspx cache stored in: /URL  - "
+		>
+	[IE History] User  connected to URL:Visited: joe@http://www.msn.com/rss/top5search.aspx cache stored in: /URL  - 
+	</event>
+
+	<event start="Tue Aug 04 2009 15:14:16 GMT"
+		durationEvent="false"
+		title="[IE History] User  connected to URL:Visited: joe@http://www.msn.com cache stored in: /URL  - "
+		>
+	[IE History] User  connected to URL:Visited: joe@http://www.msn.com cache stored in: /URL  - 
+	</event>
+
+	<event start="Tue Aug 04 2009 15:14:32 GMT"
+		durationEvent="false"
+		title="[IE History] User  connected to URL:Visited: joe@http://www.msn.com/defaulta.aspx cache stored in: /URL  - "
+		>
+	[IE History] User  connected to URL:Visited: joe@http://www.msn.com/defaulta.aspx cache stored in: /URL  - 
+	</event>
+
+	<event start="Tue Aug 04 2009 15:19:21 GMT"
+		durationEvent="false"
+		title="[IE History] User  connected to URL:Visited: joe@file:///C:/Documents%20and%20Settings/Administrator/My%20Documents/Very%20secret%20document.txt cache stored in: /URL  - "
+		>
+	[IE History] User  connected to URL:Visited: joe@file:///C:/Documents%20and%20Settings/Administrator/My%20Documents/Very%20secret%20document.txt cache stored in: /URL  - 
+	</event>
+
+
+	<event start="Wed Apr 22 2009 17:13:08 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://is.www.mozilla.com/img/tignish/template/footer-portal-border.png cache stored in: 6G813UAL/footer-portal-border[1].png - HTTP/1.1 200 OK - ETag: 8af3-e0995100 - Content-Length: 35571 - Keep-Alive: timeout=20, max=996 - Content-Type: image/png - "
+		>
+	[IE History] User joe connected to URL:http://is.www.mozilla.com/img/tignish/template/footer-portal-border.png cache stored in: 6G813UAL/footer-portal-border[1].png - HTTP/1.1 200 OK - ETag: 8af3-e0995100 - Content-Length: 35571 - Keep-Alive: timeout=20, max=996 - Content-Type: image/png - 
+	</event>
+
+	<event start="Tue Aug 04 2009 15:14:44 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://is.www.mozilla.com/img/tignish/template/footer-portal-border.png cache stored in: 6G813UAL/footer-portal-border[1].png - HTTP/1.1 200 OK - ETag: 8af3-e0995100 - Content-Length: 35571 - Keep-Alive: timeout=20, max=996 - Content-Type: image/png - "
+		>
+	[IE History] User joe connected to URL:http://is.www.mozilla.com/img/tignish/template/footer-portal-border.png cache stored in: 6G813UAL/footer-portal-border[1].png - HTTP/1.1 200 OK - ETag: 8af3-e0995100 - Content-Length: 35571 - Keep-Alive: timeout=20, max=996 - Content-Type: image/png - 
+	</event>
+
+	<event start="Tue Feb 17 2009 01:10:00 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:https://ieonline.microsoft.com/favicon.ico cache stored in: RJX4Q6VZ/favicon[3].ico - HTTP/1.1 200 OK - Content-Length: 25214 - Content-Type: image/x-icon - ETag: A2B3D508B964F05DEE9229E8133946B00000627E - X-Powered-By: ASP.NET - P3P: CP=NON UNI COM NAV STA LOC CURa DEVa PSAa PSDa OUR IND, policyref=http://privacy.msn.com/w3c/p3p.xml - "
+		>
+	[IE History] User joe connected to URL:https://ieonline.microsoft.com/favicon.ico cache stored in: RJX4Q6VZ/favicon[3].ico - HTTP/1.1 200 OK - Content-Length: 25214 - Content-Type: image/x-icon - ETag: A2B3D508B964F05DEE9229E8133946B00000627E - X-Powered-By: ASP.NET - P3P: CP=NON UNI COM NAV STA LOC CURa DEVa PSAa PSDa OUR IND, policyref=http://privacy.msn.com/w3c/p3p.xml - 
+	</event>
+
+	<event start="Tue Aug 04 2009 15:15:13 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:https://ieonline.microsoft.com/favicon.ico cache stored in: RJX4Q6VZ/favicon[3].ico - HTTP/1.1 200 OK - Content-Length: 25214 - Content-Type: image/x-icon - ETag: A2B3D508B964F05DEE9229E8133946B00000627E - X-Powered-By: ASP.NET - P3P: CP=NON UNI COM NAV STA LOC CURa DEVa PSAa PSDa OUR IND, policyref=http://privacy.msn.com/w3c/p3p.xml - "
+		>
+	[IE History] User joe connected to URL:https://ieonline.microsoft.com/favicon.ico cache stored in: RJX4Q6VZ/favicon[3].ico - HTTP/1.1 200 OK - Content-Length: 25214 - Content-Type: image/x-icon - ETag: A2B3D508B964F05DEE9229E8133946B00000627E - X-Powered-By: ASP.NET - P3P: CP=NON UNI COM NAV STA LOC CURa DEVa PSAa PSDa OUR IND, policyref=http://privacy.msn.com/w3c/p3p.xml - 
+	</event>
+
+	<event start="Wed May 30 2007 19:42:28 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://www.bing.com/partner/primedns.gif cache stored in: RJX4Q6VZ/primedns[1].gif - HTTP/1.1 200 OK - Content-Length: 43 - Content-Type: image/gif - ETag: 325472601571F31E1BF00674C368D3350000002B - P3P: CP=NON UNI COM NAV STA LOC CURa DEVa PSAa PSDa OUR IND, policyref=http://privacy.msn.com/w3c/p3p.xml - "
+		>
+	[IE History] User joe connected to URL:http://www.bing.com/partner/primedns.gif cache stored in: RJX4Q6VZ/primedns[1].gif - HTTP/1.1 200 OK - Content-Length: 43 - Content-Type: image/gif - ETag: 325472601571F31E1BF00674C368D3350000002B - P3P: CP=NON UNI COM NAV STA LOC CURa DEVa PSAa PSDa OUR IND, policyref=http://privacy.msn.com/w3c/p3p.xml - 
+	</event>
+
+	<event start="Tue Aug 04 2009 15:14:18 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://www.bing.com/partner/primedns.gif cache stored in: RJX4Q6VZ/primedns[1].gif - HTTP/1.1 200 OK - Content-Length: 43 - Content-Type: image/gif - ETag: 325472601571F31E1BF00674C368D3350000002B - P3P: CP=NON UNI COM NAV STA LOC CURa DEVa PSAa PSDa OUR IND, policyref=http://privacy.msn.com/w3c/p3p.xml - "
+		>
+	[IE History] User joe connected to URL:http://www.bing.com/partner/primedns.gif cache stored in: RJX4Q6VZ/primedns[1].gif - HTTP/1.1 200 OK - Content-Length: 43 - Content-Type: image/gif - ETag: 325472601571F31E1BF00674C368D3350000002B - P3P: CP=NON UNI COM NAV STA LOC CURa DEVa PSAa PSDa OUR IND, policyref=http://privacy.msn.com/w3c/p3p.xml - 
+	</event>
+
+	<event start="Sat Jun 27 2009 07:39:32 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://is.www.mozilla.com/img/__utm.gif?utmwv=6.1&amp;utmn=331925953&amp;utmsr=1100x705&amp;utmsc=32-bit&amp;utmul=en-us&amp;utmje=1&amp;utmjv=1.3&amp;utmfl=6.0&amp;utmdt=Firefox%20vafrinn%20%E1%20%EDslensku%20%7C%20Hra%F0ur%2C%20%F6ruggur%20og%20s%E9rsni%F0inn&amp;utmhn=is.www.mozilla.com&amp;utmp=/download-tracking/is/firefox-3.5.2/win/using%3Aother cache stored in: UPQHCM07/__utm[1].gif - HTTP/1.1 200 OK - ETag: 23-8ec59500 - Content-Length: 35 - Keep-Alive: timeout=20, max=982 - Content-Type: image/gif - "
+		>
+	[IE History] User joe connected to URL:http://is.www.mozilla.com/img/__utm.gif?utmwv=6.1&amp;utmn=331925953&amp;utmsr=1100x705&amp;utmsc=32-bit&amp;utmul=en-us&amp;utmje=1&amp;utmjv=1.3&amp;utmfl=6.0&amp;utmdt=Firefox%20vafrinn%20%E1%20%EDslensku%20%7C%20Hra%F0ur%2C%20%F6ruggur%20og%20s%E9rsni%F0inn&amp;utmhn=is.www.mozilla.com&amp;utmp=/download-tracking/is/firefox-3.5.2/win/using%3Aother cache stored in: UPQHCM07/__utm[1].gif - HTTP/1.1 200 OK - ETag: 23-8ec59500 - Content-Length: 35 - Keep-Alive: timeout=20, max=982 - Content-Type: image/gif - 
+	</event>
+
+	<event start="Tue Aug 04 2009 15:14:49 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://is.www.mozilla.com/img/__utm.gif?utmwv=6.1&amp;utmn=331925953&amp;utmsr=1100x705&amp;utmsc=32-bit&amp;utmul=en-us&amp;utmje=1&amp;utmjv=1.3&amp;utmfl=6.0&amp;utmdt=Firefox%20vafrinn%20%E1%20%EDslensku%20%7C%20Hra%F0ur%2C%20%F6ruggur%20og%20s%E9rsni%F0inn&amp;utmhn=is.www.mozilla.com&amp;utmp=/download-tracking/is/firefox-3.5.2/win/using%3Aother cache stored in: UPQHCM07/__utm[1].gif - HTTP/1.1 200 OK - ETag: 23-8ec59500 - Content-Length: 35 - Keep-Alive: timeout=20, max=982 - Content-Type: image/gif - "
+		>
+	[IE History] User joe connected to URL:http://is.www.mozilla.com/img/__utm.gif?utmwv=6.1&amp;utmn=331925953&amp;utmsr=1100x705&amp;utmsc=32-bit&amp;utmul=en-us&amp;utmje=1&amp;utmjv=1.3&amp;utmfl=6.0&amp;utmdt=Firefox%20vafrinn%20%E1%20%EDslensku%20%7C%20Hra%F0ur%2C%20%F6ruggur%20og%20s%E9rsni%F0inn&amp;utmhn=is.www.mozilla.com&amp;utmp=/download-tracking/is/firefox-3.5.2/win/using%3Aother cache stored in: UPQHCM07/__utm[1].gif - HTTP/1.1 200 OK - ETag: 23-8ec59500 - Content-Length: 35 - Keep-Alive: timeout=20, max=982 - Content-Type: image/gif - 
+	</event>
+
+	<event start="Sat Jul 25 2009 01:02:05 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://is.www.mozilla.com/style/tignish/portal-page.css cache stored in: RJX4Q6VZ/portal-page[1].css - HTTP/1.1 200 OK - ETag: 34c-44efbd40 - ntCoent-Length: 844 - Keep-Alive: timeout=20, max=981 - Content-Type: text/css - Content-Length: 844 - "
+		>
+	[IE History] User joe connected to URL:http://is.www.mozilla.com/style/tignish/portal-page.css cache stored in: RJX4Q6VZ/portal-page[1].css - HTTP/1.1 200 OK - ETag: 34c-44efbd40 - ntCoent-Length: 844 - Keep-Alive: timeout=20, max=981 - Content-Type: text/css - Content-Length: 844 - 
+	</event>
+
+	<event start="Tue Aug 04 2009 15:14:42 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://is.www.mozilla.com/style/tignish/portal-page.css cache stored in: RJX4Q6VZ/portal-page[1].css - HTTP/1.1 200 OK - ETag: 34c-44efbd40 - ntCoent-Length: 844 - Keep-Alive: timeout=20, max=981 - Content-Type: text/css - Content-Length: 844 - "
+		>
+	[IE History] User joe connected to URL:http://is.www.mozilla.com/style/tignish/portal-page.css cache stored in: RJX4Q6VZ/portal-page[1].css - HTTP/1.1 200 OK - ETag: 34c-44efbd40 - ntCoent-Length: 844 - Keep-Alive: timeout=20, max=981 - Content-Type: text/css - Content-Length: 844 - 
+	</event>
+
+	<event start="Thu Jan 01 1970 00:00:00 GMT"
+		durationEvent="false"
+		title="[IE History] REDR: User was redirected to: http://download.mozilla.org/?product=firefox-3.5.2&amp;os=win&amp;lang=is"
+		>
+	[IE History] REDR: User was redirected to: http://download.mozilla.org/?product=firefox-3.5.2&amp;os=win&amp;lang=is
+	</event>
+
+	<event start="Thu Jan 01 1970 00:00:00 GMT"
+		durationEvent="false"
+		title="[IE History] REDR: User was redirected to: http://firefox.com/"
+		>
+	[IE History] REDR: User was redirected to: http://firefox.com/
+	</event>
+
+	<event start="Mon Jun 29 2009 18:19:33 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://col.stb.s-msn.com/i/59/F2059599F3A8F54AEEFB13E772BC2.jpg cache stored in: 6G813UAL/F2059599F3A8F54AEEFB13E772BC2[1].jpg - HTTP/1.1 200 OK - Content-Type: image/jpeg - S: stca01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 2020 - "
+		>
+	[IE History] User joe connected to URL:http://col.stb.s-msn.com/i/59/F2059599F3A8F54AEEFB13E772BC2.jpg cache stored in: 6G813UAL/F2059599F3A8F54AEEFB13E772BC2[1].jpg - HTTP/1.1 200 OK - Content-Type: image/jpeg - S: stca01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 2020 - 
+	</event>
+
+	<event start="Tue Aug 04 2009 15:14:18 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://col.stb.s-msn.com/i/59/F2059599F3A8F54AEEFB13E772BC2.jpg cache stored in: 6G813UAL/F2059599F3A8F54AEEFB13E772BC2[1].jpg - HTTP/1.1 200 OK - Content-Type: image/jpeg - S: stca01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 2020 - "
+		>
+	[IE History] User joe connected to URL:http://col.stb.s-msn.com/i/59/F2059599F3A8F54AEEFB13E772BC2.jpg cache stored in: 6G813UAL/F2059599F3A8F54AEEFB13E772BC2[1].jpg - HTTP/1.1 200 OK - Content-Type: image/jpeg - S: stca01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 2020 - 
+	</event>
+
+	<event start="Tue Apr 21 2009 08:40:58 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://col.stc.s-msn.com/br/hp/11/en-us/css/i/msnbf.gif cache stored in: RJX4Q6VZ/msnbf[1].gif - HTTP/1.1 200 OK - Content-Type: image/gif - S: STCA01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 601 - "
+		>
+	[IE History] User joe connected to URL:http://col.stc.s-msn.com/br/hp/11/en-us/css/i/msnbf.gif cache stored in: RJX4Q6VZ/msnbf[1].gif - HTTP/1.1 200 OK - Content-Type: image/gif - S: STCA01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 601 - 
+	</event>
+
+	<event start="Tue Aug 04 2009 15:14:18 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://col.stc.s-msn.com/br/hp/11/en-us/css/i/msnbf.gif cache stored in: RJX4Q6VZ/msnbf[1].gif - HTTP/1.1 200 OK - Content-Type: image/gif - S: STCA01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 601 - "
+		>
+	[IE History] User joe connected to URL:http://col.stc.s-msn.com/br/hp/11/en-us/css/i/msnbf.gif cache stored in: RJX4Q6VZ/msnbf[1].gif - HTTP/1.1 200 OK - Content-Type: image/gif - S: STCA01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 601 - 
+	</event>
+
+	<event start="Tue Apr 21 2009 08:40:41 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://col.stc.s-msn.com/br/hp/11/en-us/css/i/flyoutcdown.gif cache stored in: UPQHCM07/flyoutcdown[1].gif - HTTP/1.1 200 OK - Content-Type: image/gif - s: STCA01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 53 - "
+		>
+	[IE History] User joe connected to URL:http://col.stc.s-msn.com/br/hp/11/en-us/css/i/flyoutcdown.gif cache stored in: UPQHCM07/flyoutcdown[1].gif - HTTP/1.1 200 OK - Content-Type: image/gif - s: STCA01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 53 - 
+	</event>
+
+	<event start="Tue Aug 04 2009 15:14:19 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://col.stc.s-msn.com/br/hp/11/en-us/css/i/flyoutcdown.gif cache stored in: UPQHCM07/flyoutcdown[1].gif - HTTP/1.1 200 OK - Content-Type: image/gif - s: STCA01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 53 - "
+		>
+	[IE History] User joe connected to URL:http://col.stc.s-msn.com/br/hp/11/en-us/css/i/flyoutcdown.gif cache stored in: UPQHCM07/flyoutcdown[1].gif - HTTP/1.1 200 OK - Content-Type: image/gif - s: STCA01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 53 - 
+	</event>
+
+	<event start="Tue Jul 07 2009 20:50:15 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://is.www.mozilla.com/style/tignish/landing-page-l10n.css cache stored in: 6G813UAL/landing-page-l10n[1].css - HTTP/1.1 200 OK - ETag: 25d1-c5020fc0 - Cteonnt-Length: 9681 - Keep-Alive: timeout=20, max=996 - Content-Type: text/css - Content-Length: 9681 - "
+		>
+	[IE History] User joe connected to URL:http://is.www.mozilla.com/style/tignish/landing-page-l10n.css cache stored in: 6G813UAL/landing-page-l10n[1].css - HTTP/1.1 200 OK - ETag: 25d1-c5020fc0 - Cteonnt-Length: 9681 - Keep-Alive: timeout=20, max=996 - Content-Type: text/css - Content-Length: 9681 - 
+	</event>
+
+	<event start="Tue Aug 04 2009 15:14:42 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://is.www.mozilla.com/style/tignish/landing-page-l10n.css cache stored in: 6G813UAL/landing-page-l10n[1].css - HTTP/1.1 200 OK - ETag: 25d1-c5020fc0 - Cteonnt-Length: 9681 - Keep-Alive: timeout=20, max=996 - Content-Type: text/css - Content-Length: 9681 - "
+		>
+	[IE History] User joe connected to URL:http://is.www.mozilla.com/style/tignish/landing-page-l10n.css cache stored in: 6G813UAL/landing-page-l10n[1].css - HTTP/1.1 200 OK - ETag: 25d1-c5020fc0 - Cteonnt-Length: 9681 - Keep-Alive: timeout=20, max=996 - Content-Type: text/css - Content-Length: 9681 - 
+	</event>
+
+	<event start="Tue Aug 04 2009 00:43:38 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://col.stc.s-msn.com/br/hp/11/en-us/css/ovr_exp_nav_2.css cache stored in: 6G813UAL/ovr_exp_nav_2[1].css - HTTP/1.1 200 OK - Content-Type: text/css - ntCoent-Length: 49454 - S: STCA01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 49454 - "
+		>
+	[IE History] User joe connected to URL:http://col.stc.s-msn.com/br/hp/11/en-us/css/ovr_exp_nav_2.css cache stored in: 6G813UAL/ovr_exp_nav_2[1].css - HTTP/1.1 200 OK - Content-Type: text/css - ntCoent-Length: 49454 - S: STCA01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 49454 - 
+	</event>
+
+	<event start="Tue Aug 04 2009 15:14:17 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://col.stc.s-msn.com/br/hp/11/en-us/css/ovr_exp_nav_2.css cache stored in: 6G813UAL/ovr_exp_nav_2[1].css - HTTP/1.1 200 OK - Content-Type: text/css - ntCoent-Length: 49454 - S: STCA01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 49454 - "
+		>
+	[IE History] User joe connected to URL:http://col.stc.s-msn.com/br/hp/11/en-us/css/ovr_exp_nav_2.css cache stored in: 6G813UAL/ovr_exp_nav_2[1].css - HTTP/1.1 200 OK - Content-Type: text/css - ntCoent-Length: 49454 - S: STCA01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 49454 - 
+	</event>
+
+	<event start="Thu Jun 11 2009 21:43:39 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://ads1.msn.com/library/dap.js cache stored in: RJX4Q6VZ/dap[1].js - HTTP/1.1 200 OK - Content-Type: application/x-javascript - PICS-Label: (PICS-1.1 http://www.rsac.org/ratingsv01.html l comment RSACi North America Server by inet@microsoft.com r (n 0 s 0 v 0 l 0)) - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - X-WR-MODIFICATION: Content-Length - Content-Length: 13786 - "
+		>
+	[IE History] User joe connected to URL:http://ads1.msn.com/library/dap.js cache stored in: RJX4Q6VZ/dap[1].js - HTTP/1.1 200 OK - Content-Type: application/x-javascript - PICS-Label: (PICS-1.1 http://www.rsac.org/ratingsv01.html l comment RSACi North America Server by inet@microsoft.com r (n 0 s 0 v 0 l 0)) - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - X-WR-MODIFICATION: Content-Length - Content-Length: 13786 - 
+	</event>
+
+	<event start="Tue Aug 04 2009 15:14:17 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://ads1.msn.com/library/dap.js cache stored in: RJX4Q6VZ/dap[1].js - HTTP/1.1 200 OK - Content-Type: application/x-javascript - PICS-Label: (PICS-1.1 http://www.rsac.org/ratingsv01.html l comment RSACi North America Server by inet@microsoft.com r (n 0 s 0 v 0 l 0)) - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - X-WR-MODIFICATION: Content-Length - Content-Length: 13786 - "
+		>
+	[IE History] User joe connected to URL:http://ads1.msn.com/library/dap.js cache stored in: RJX4Q6VZ/dap[1].js - HTTP/1.1 200 OK - Content-Type: application/x-javascript - PICS-Label: (PICS-1.1 http://www.rsac.org/ratingsv01.html l comment RSACi North America Server by inet@microsoft.com r (n 0 s 0 v 0 l 0)) - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - X-WR-MODIFICATION: Content-Length - Content-Length: 13786 - 
+	</event>
+
+	<event start="Tue Aug 04 2009 03:14:28 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://col.stb.s-msn.com/i/19/C57AEF515BA2F6DAAED7FEA83225C2.jpg cache stored in: 6G813UAL/C57AEF515BA2F6DAAED7FEA83225C2[1].jpg - HTTP/1.1 200 OK - Content-Type: image/jpeg - S: stca01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 2782 - "
+		>
+	[IE History] User joe connected to URL:http://col.stb.s-msn.com/i/19/C57AEF515BA2F6DAAED7FEA83225C2.jpg cache stored in: 6G813UAL/C57AEF515BA2F6DAAED7FEA83225C2[1].jpg - HTTP/1.1 200 OK - Content-Type: image/jpeg - S: stca01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 2782 - 
+	</event>
+
+	<event start="Tue Aug 04 2009 15:14:18 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://col.stb.s-msn.com/i/19/C57AEF515BA2F6DAAED7FEA83225C2.jpg cache stored in: 6G813UAL/C57AEF515BA2F6DAAED7FEA83225C2[1].jpg - HTTP/1.1 200 OK - Content-Type: image/jpeg - S: stca01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 2782 - "
+		>
+	[IE History] User joe connected to URL:http://col.stb.s-msn.com/i/19/C57AEF515BA2F6DAAED7FEA83225C2.jpg cache stored in: 6G813UAL/C57AEF515BA2F6DAAED7FEA83225C2[1].jpg - HTTP/1.1 200 OK - Content-Type: image/jpeg - S: stca01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 2782 - 
+	</event>
+
+	<event start="Tue Apr 21 2009 08:40:52 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://col.stc.s-msn.com/br/hp/11/en-us/css/i/kvwrap.png cache stored in: FBRUWRCP/kvwrap[1].png - HTTP/1.1 200 OK - Content-Type: image/png - S: STCA01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 175 - "
+		>
+	[IE History] User joe connected to URL:http://col.stc.s-msn.com/br/hp/11/en-us/css/i/kvwrap.png cache stored in: FBRUWRCP/kvwrap[1].png - HTTP/1.1 200 OK - Content-Type: image/png - S: STCA01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 175 - 
+	</event>
+
+	<event start="Tue Aug 04 2009 15:14:18 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://col.stc.s-msn.com/br/hp/11/en-us/css/i/kvwrap.png cache stored in: FBRUWRCP/kvwrap[1].png - HTTP/1.1 200 OK - Content-Type: image/png - S: STCA01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 175 - "
+		>
+	[IE History] User joe connected to URL:http://col.stc.s-msn.com/br/hp/11/en-us/css/i/kvwrap.png cache stored in: FBRUWRCP/kvwrap[1].png - HTTP/1.1 200 OK - Content-Type: image/png - S: STCA01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 175 - 
+	</event>
+
+	<event start="Tue Apr 21 2009 08:41:22 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://col.stc.s-msn.com/br/hp/11/en-us/css/i/wslider.gif cache stored in: UPQHCM07/wslider[1].gif - HTTP/1.1 200 OK - Content-Type: image/gif - S: STCA01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 131 - "
+		>
+	[IE History] User joe connected to URL:http://col.stc.s-msn.com/br/hp/11/en-us/css/i/wslider.gif cache stored in: UPQHCM07/wslider[1].gif - HTTP/1.1 200 OK - Content-Type: image/gif - S: STCA01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 131 - 
+	</event>
+
+	<event start="Tue Aug 04 2009 15:14:19 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://col.stc.s-msn.com/br/hp/11/en-us/css/i/wslider.gif cache stored in: UPQHCM07/wslider[1].gif - HTTP/1.1 200 OK - Content-Type: image/gif - S: STCA01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 131 - "
+		>
+	[IE History] User joe connected to URL:http://col.stc.s-msn.com/br/hp/11/en-us/css/i/wslider.gif cache stored in: UPQHCM07/wslider[1].gif - HTTP/1.1 200 OK - Content-Type: image/gif - S: STCA01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 131 - 
+	</event>
+
+	<event start="Fri Jul 31 2009 00:18:52 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://col.stc.s-msn.com/br/hp/11/en-us/css/b_exp_nav_1.css cache stored in: FBRUWRCP/b_exp_nav_1[1].css - HTTP/1.1 200 OK - Content-Type: text/css - ntCoent-Length: 6869 - S: STCA01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 6869 - "
+		>
+	[IE History] User joe connected to URL:http://col.stc.s-msn.com/br/hp/11/en-us/css/b_exp_nav_1.css cache stored in: FBRUWRCP/b_exp_nav_1[1].css - HTTP/1.1 200 OK - Content-Type: text/css - ntCoent-Length: 6869 - S: STCA01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 6869 - 
+	</event>
+
+	<event start="Tue Aug 04 2009 15:14:17 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://col.stc.s-msn.com/br/hp/11/en-us/css/b_exp_nav_1.css cache stored in: FBRUWRCP/b_exp_nav_1[1].css - HTTP/1.1 200 OK - Content-Type: text/css - ntCoent-Length: 6869 - S: STCA01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 6869 - "
+		>
+	[IE History] User joe connected to URL:http://col.stc.s-msn.com/br/hp/11/en-us/css/b_exp_nav_1.css cache stored in: FBRUWRCP/b_exp_nav_1[1].css - HTTP/1.1 200 OK - Content-Type: text/css - ntCoent-Length: 6869 - S: STCA01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 6869 - 
+	</event>
+
+	<event start="Tue Apr 21 2009 08:41:17 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://col.stc.s-msn.com/br/hp/11/en-us/css/i/WL_Hotmail_24x22_blue.gif cache stored in: 6G813UAL/WL_Hotmail_24x22_blue[1].gif - HTTP/1.1 200 OK - Content-Type: image/gif - S: STCA01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 795 - "
+		>
+	[IE History] User joe connected to URL:http://col.stc.s-msn.com/br/hp/11/en-us/css/i/WL_Hotmail_24x22_blue.gif cache stored in: 6G813UAL/WL_Hotmail_24x22_blue[1].gif - HTTP/1.1 200 OK - Content-Type: image/gif - S: STCA01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 795 - 
+	</event>
+
+	<event start="Tue Aug 04 2009 15:14:18 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://col.stc.s-msn.com/br/hp/11/en-us/css/i/WL_Hotmail_24x22_blue.gif cache stored in: 6G813UAL/WL_Hotmail_24x22_blue[1].gif - HTTP/1.1 200 OK - Content-Type: image/gif - S: STCA01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 795 - "
+		>
+	[IE History] User joe connected to URL:http://col.stc.s-msn.com/br/hp/11/en-us/css/i/WL_Hotmail_24x22_blue.gif cache stored in: 6G813UAL/WL_Hotmail_24x22_blue[1].gif - HTTP/1.1 200 OK - Content-Type: image/gif - S: STCA01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 795 - 
+	</event>
+
+	<event start="Tue Apr 21 2009 08:40:21 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://col.stc.s-msn.com/br/hp/11/en-us/css/i/buttons.gif cache stored in: UPQHCM07/buttons[1].gif - HTTP/1.1 200 OK - Content-Type: image/gif - S: STCA01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 958 - "
+		>
+	[IE History] User joe connected to URL:http://col.stc.s-msn.com/br/hp/11/en-us/css/i/buttons.gif cache stored in: UPQHCM07/buttons[1].gif - HTTP/1.1 200 OK - Content-Type: image/gif - S: STCA01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 958 - 
+	</event>
+
+	<event start="Tue Aug 04 2009 15:14:18 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://col.stc.s-msn.com/br/hp/11/en-us/css/i/buttons.gif cache stored in: UPQHCM07/buttons[1].gif - HTTP/1.1 200 OK - Content-Type: image/gif - S: STCA01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 958 - "
+		>
+	[IE History] User joe connected to URL:http://col.stc.s-msn.com/br/hp/11/en-us/css/i/buttons.gif cache stored in: UPQHCM07/buttons[1].gif - HTTP/1.1 200 OK - Content-Type: image/gif - S: STCA01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 958 - 
+	</event>
+
+	<event start="Fri May 29 2009 19:00:46 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://www.bing.com/s/osd3.xml cache stored in: 6G813UAL/osd3[1].xml - HTTP/1.1 200 OK - Content-Type: text/xml - ETag: 76EA0033E4279EAF87C4514EAD7F4163000002E2 - Content-Length: 738 - "
+		>
+	[IE History] User joe connected to URL:http://www.bing.com/s/osd3.xml cache stored in: 6G813UAL/osd3[1].xml - HTTP/1.1 200 OK - Content-Type: text/xml - ETag: 76EA0033E4279EAF87C4514EAD7F4163000002E2 - Content-Length: 738 - 
+	</event>
+
+	<event start="Tue Aug 04 2009 15:14:42 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://www.bing.com/s/osd3.xml cache stored in: 6G813UAL/osd3[1].xml - HTTP/1.1 200 OK - Content-Type: text/xml - ETag: 76EA0033E4279EAF87C4514EAD7F4163000002E2 - Content-Length: 738 - "
+		>
+	[IE History] User joe connected to URL:http://www.bing.com/s/osd3.xml cache stored in: 6G813UAL/osd3[1].xml - HTTP/1.1 200 OK - Content-Type: text/xml - ETag: 76EA0033E4279EAF87C4514EAD7F4163000002E2 - Content-Length: 738 - 
+	</event>
+
+	<event start="Sat Jun 27 2009 07:39:32 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://is.www.mozilla.com/img/__utm.gif?utmwv=6.1&amp;utmn=393115742&amp;utmsr=1100x705&amp;utmsc=32-bit&amp;utmul=en-us&amp;utmje=1&amp;utmjv=1.3&amp;utmfl=6.0&amp;utmcn=1&amp;utmdt=Firefox%20vafrinn%20%E1%20%EDslensku%20%7C%20Hra%F0ur%2C%20%F6ruggur%20og%20s%E9rsni%F0inn&amp;utmhn=is.www.mozilla.com&amp;utmr=-&amp;utmp=/is/ cache stored in: FBRUWRCP/__utm[1].gif - HTTP/1.1 200 OK - ETag: 23-8ec59500 - Content-Length: 35 - Keep-Alive: timeout=20, max=982 - Content-Type: image/gif - "
+		>
+	[IE History] User joe connected to URL:http://is.www.mozilla.com/img/__utm.gif?utmwv=6.1&amp;utmn=393115742&amp;utmsr=1100x705&amp;utmsc=32-bit&amp;utmul=en-us&amp;utmje=1&amp;utmjv=1.3&amp;utmfl=6.0&amp;utmcn=1&amp;utmdt=Firefox%20vafrinn%20%E1%20%EDslensku%20%7C%20Hra%F0ur%2C%20%F6ruggur%20og%20s%E9rsni%F0inn&amp;utmhn=is.www.mozilla.com&amp;utmr=-&amp;utmp=/is/ cache stored in: FBRUWRCP/__utm[1].gif - HTTP/1.1 200 OK - ETag: 23-8ec59500 - Content-Length: 35 - Keep-Alive: timeout=20, max=982 - Content-Type: image/gif - 
+	</event>
+
+	<event start="Tue Aug 04 2009 15:14:44 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://is.www.mozilla.com/img/__utm.gif?utmwv=6.1&amp;utmn=393115742&amp;utmsr=1100x705&amp;utmsc=32-bit&amp;utmul=en-us&amp;utmje=1&amp;utmjv=1.3&amp;utmfl=6.0&amp;utmcn=1&amp;utmdt=Firefox%20vafrinn%20%E1%20%EDslensku%20%7C%20Hra%F0ur%2C%20%F6ruggur%20og%20s%E9rsni%F0inn&amp;utmhn=is.www.mozilla.com&amp;utmr=-&amp;utmp=/is/ cache stored in: FBRUWRCP/__utm[1].gif - HTTP/1.1 200 OK - ETag: 23-8ec59500 - Content-Length: 35 - Keep-Alive: timeout=20, max=982 - Content-Type: image/gif - "
+		>
+	[IE History] User joe connected to URL:http://is.www.mozilla.com/img/__utm.gif?utmwv=6.1&amp;utmn=393115742&amp;utmsr=1100x705&amp;utmsc=32-bit&amp;utmul=en-us&amp;utmje=1&amp;utmjv=1.3&amp;utmfl=6.0&amp;utmcn=1&amp;utmdt=Firefox%20vafrinn%20%E1%20%EDslensku%20%7C%20Hra%F0ur%2C%20%F6ruggur%20og%20s%E9rsni%F0inn&amp;utmhn=is.www.mozilla.com&amp;utmr=-&amp;utmp=/is/ cache stored in: FBRUWRCP/__utm[1].gif - HTTP/1.1 200 OK - ETag: 23-8ec59500 - Content-Length: 35 - Keep-Alive: timeout=20, max=982 - Content-Type: image/gif - 
+	</event>
+
+	<event start="Thu Apr 16 2009 20:44:09 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://analytics.live.com/Analytics/wlanalytics.js cache stored in: RJX4Q6VZ/wlanalytics[1].js - HTTP/1.1 200 OK - Content-Type: application/x-javascript - ETag: b5ad7d17d4bec91:0 - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo, policyref=http://privacy.msn.com/w3c/p3p.xml - Content-Length: 9288 - "
+		>
+	[IE History] User joe connected to URL:http://analytics.live.com/Analytics/wlanalytics.js cache stored in: RJX4Q6VZ/wlanalytics[1].js - HTTP/1.1 200 OK - Content-Type: application/x-javascript - ETag: b5ad7d17d4bec91:0 - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo, policyref=http://privacy.msn.com/w3c/p3p.xml - Content-Length: 9288 - 
+	</event>
+
+	<event start="Tue Aug 04 2009 15:14:18 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://analytics.live.com/Analytics/wlanalytics.js cache stored in: RJX4Q6VZ/wlanalytics[1].js - HTTP/1.1 200 OK - Content-Type: application/x-javascript - ETag: b5ad7d17d4bec91:0 - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo, policyref=http://privacy.msn.com/w3c/p3p.xml - Content-Length: 9288 - "
+		>
+	[IE History] User joe connected to URL:http://analytics.live.com/Analytics/wlanalytics.js cache stored in: RJX4Q6VZ/wlanalytics[1].js - HTTP/1.1 200 OK - Content-Type: application/x-javascript - ETag: b5ad7d17d4bec91:0 - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo, policyref=http://privacy.msn.com/w3c/p3p.xml - Content-Length: 9288 - 
+	</event>
+
+	<event start="Sat Jun 27 2009 07:39:34 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://is.www.mozilla.com/img/tignish/template/background-tile.png cache stored in: RJX4Q6VZ/background-tile[1].png - HTTP/1.1 200 OK - ETag: fe8-8ee41980 - Content-Length: 4072 - Keep-Alive: timeout=20, max=1000 - Content-Type: image/png - "
+		>
+	[IE History] User joe connected to URL:http://is.www.mozilla.com/img/tignish/template/background-tile.png cache stored in: RJX4Q6VZ/background-tile[1].png - HTTP/1.1 200 OK - ETag: fe8-8ee41980 - Content-Length: 4072 - Keep-Alive: timeout=20, max=1000 - Content-Type: image/png - 
+	</event>
+
+	<event start="Tue Aug 04 2009 15:14:43 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://is.www.mozilla.com/img/tignish/template/background-tile.png cache stored in: RJX4Q6VZ/background-tile[1].png - HTTP/1.1 200 OK - ETag: fe8-8ee41980 - Content-Length: 4072 - Keep-Alive: timeout=20, max=1000 - Content-Type: image/png - "
+		>
+	[IE History] User joe connected to URL:http://is.www.mozilla.com/img/tignish/template/background-tile.png cache stored in: RJX4Q6VZ/background-tile[1].png - HTTP/1.1 200 OK - ETag: fe8-8ee41980 - Content-Length: 4072 - Keep-Alive: timeout=20, max=1000 - Content-Type: image/png - 
+	</event>
+
+	<event start="Wed Apr 22 2009 20:30:33 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://is.www.mozilla.com/img/tignish/home/feature-background-2.jpg cache stored in: UPQHCM07/feature-background-2[1].jpg - HTTP/1.1 200 OK - ETag: f740-a29dac40 - Content-Length: 63296 - Keep-Alive: timeout=20, max=985 - Content-Type: image/jpeg - "
+		>
+	[IE History] User joe connected to URL:http://is.www.mozilla.com/img/tignish/home/feature-background-2.jpg cache stored in: UPQHCM07/feature-background-2[1].jpg - HTTP/1.1 200 OK - ETag: f740-a29dac40 - Content-Length: 63296 - Keep-Alive: timeout=20, max=985 - Content-Type: image/jpeg - 
+	</event>
+
+	<event start="Tue Aug 04 2009 15:14:44 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://is.www.mozilla.com/img/tignish/home/feature-background-2.jpg cache stored in: UPQHCM07/feature-background-2[1].jpg - HTTP/1.1 200 OK - ETag: f740-a29dac40 - Content-Length: 63296 - Keep-Alive: timeout=20, max=985 - Content-Type: image/jpeg - "
+		>
+	[IE History] User joe connected to URL:http://is.www.mozilla.com/img/tignish/home/feature-background-2.jpg cache stored in: UPQHCM07/feature-background-2[1].jpg - HTTP/1.1 200 OK - ETag: f740-a29dac40 - Content-Length: 63296 - Keep-Alive: timeout=20, max=985 - Content-Type: image/jpeg - 
+	</event>
+
+	<event start="Tue Apr 21 2009 08:40:15 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://col.stc.s-msn.com/br/hp/11/en-us/css/i/bg_blue_2.gif cache stored in: FBRUWRCP/bg_blue_2[1].gif - HTTP/1.1 200 OK - Content-Type: image/gif - S: STCA01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 1567 - "
+		>
+	[IE History] User joe connected to URL:http://col.stc.s-msn.com/br/hp/11/en-us/css/i/bg_blue_2.gif cache stored in: FBRUWRCP/bg_blue_2[1].gif - HTTP/1.1 200 OK - Content-Type: image/gif - S: STCA01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 1567 - 
+	</event>
+
+	<event start="Tue Aug 04 2009 15:14:17 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://col.stc.s-msn.com/br/hp/11/en-us/css/i/bg_blue_2.gif cache stored in: FBRUWRCP/bg_blue_2[1].gif - HTTP/1.1 200 OK - Content-Type: image/gif - S: STCA01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 1567 - "
+		>
+	[IE History] User joe connected to URL:http://col.stc.s-msn.com/br/hp/11/en-us/css/i/bg_blue_2.gif cache stored in: FBRUWRCP/bg_blue_2[1].gif - HTTP/1.1 200 OK - Content-Type: image/gif - S: STCA01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 1567 - 
+	</event>
+
+	<event start="Tue Apr 21 2009 08:40:18 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://col.stc.s-msn.com/br/hp/11/en-us/css/i/blu_search_header.gif cache stored in: RJX4Q6VZ/blu_search_header[1].gif - HTTP/1.1 200 OK - Content-Type: image/gif - S: STCA01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 1593 - "
+		>
+	[IE History] User joe connected to URL:http://col.stc.s-msn.com/br/hp/11/en-us/css/i/blu_search_header.gif cache stored in: RJX4Q6VZ/blu_search_header[1].gif - HTTP/1.1 200 OK - Content-Type: image/gif - S: STCA01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 1593 - 
+	</event>
+
+	<event start="Tue Aug 04 2009 15:14:18 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://col.stc.s-msn.com/br/hp/11/en-us/css/i/blu_search_header.gif cache stored in: RJX4Q6VZ/blu_search_header[1].gif - HTTP/1.1 200 OK - Content-Type: image/gif - S: STCA01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 1593 - "
+		>
+	[IE History] User joe connected to URL:http://col.stc.s-msn.com/br/hp/11/en-us/css/i/blu_search_header.gif cache stored in: RJX4Q6VZ/blu_search_header[1].gif - HTTP/1.1 200 OK - Content-Type: image/gif - S: STCA01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 1593 - 
+	</event>
+
+	<event start="Wed Apr 22 2009 20:31:35 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://is.www.mozilla.com/img/tignish/firstrun/sub-feature-bottom.png cache stored in: RJX4Q6VZ/sub-feature-bottom[1].png - HTTP/1.1 200 OK - ETag: 235c-a64fb7c0 - Content-Length: 9052 - Keep-Alive: timeout=20, max=992 - Content-Type: image/png - "
+		>
+	[IE History] User joe connected to URL:http://is.www.mozilla.com/img/tignish/firstrun/sub-feature-bottom.png cache stored in: RJX4Q6VZ/sub-feature-bottom[1].png - HTTP/1.1 200 OK - ETag: 235c-a64fb7c0 - Content-Length: 9052 - Keep-Alive: timeout=20, max=992 - Content-Type: image/png - 
+	</event>
+
+	<event start="Tue Aug 04 2009 15:14:43 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://is.www.mozilla.com/img/tignish/firstrun/sub-feature-bottom.png cache stored in: RJX4Q6VZ/sub-feature-bottom[1].png - HTTP/1.1 200 OK - ETag: 235c-a64fb7c0 - Content-Length: 9052 - Keep-Alive: timeout=20, max=992 - Content-Type: image/png - "
+		>
+	[IE History] User joe connected to URL:http://is.www.mozilla.com/img/tignish/firstrun/sub-feature-bottom.png cache stored in: RJX4Q6VZ/sub-feature-bottom[1].png - HTTP/1.1 200 OK - ETag: 235c-a64fb7c0 - Content-Length: 9052 - Keep-Alive: timeout=20, max=992 - Content-Type: image/png - 
+	</event>
+
+	<event start="Sat Jun 27 2009 07:39:34 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://is.www.mozilla.com/img/tignish/firstrun/link-arrow.png cache stored in: UPQHCM07/link-arrow[1].png - HTTP/1.1 200 OK - ETag: 107-8ee41980 - Content-Length: 263 - Keep-Alive: timeout=20, max=993 - Content-Type: image/png - "
+		>
+	[IE History] User joe connected to URL:http://is.www.mozilla.com/img/tignish/firstrun/link-arrow.png cache stored in: UPQHCM07/link-arrow[1].png - HTTP/1.1 200 OK - ETag: 107-8ee41980 - Content-Length: 263 - Keep-Alive: timeout=20, max=993 - Content-Type: image/png - 
+	</event>
+
+	<event start="Tue Aug 04 2009 15:14:43 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://is.www.mozilla.com/img/tignish/firstrun/link-arrow.png cache stored in: UPQHCM07/link-arrow[1].png - HTTP/1.1 200 OK - ETag: 107-8ee41980 - Content-Length: 263 - Keep-Alive: timeout=20, max=993 - Content-Type: image/png - "
+		>
+	[IE History] User joe connected to URL:http://is.www.mozilla.com/img/tignish/firstrun/link-arrow.png cache stored in: UPQHCM07/link-arrow[1].png - HTTP/1.1 200 OK - ETag: 107-8ee41980 - Content-Length: 263 - Keep-Alive: timeout=20, max=993 - Content-Type: image/png - 
+	</event>
+
+	<event start="Wed Apr 22 2009 20:30:33 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://is.www.mozilla.com/img/tignish/template/footer-logo.png cache stored in: 6G813UAL/footer-logo[1].png - HTTP/1.1 200 OK - ETag: 646-a29dac40 - Content-Length: 1606 - Keep-Alive: timeout=20, max=995 - Content-Type: image/png - "
+		>
+	[IE History] User joe connected to URL:http://is.www.mozilla.com/img/tignish/template/footer-logo.png cache stored in: 6G813UAL/footer-logo[1].png - HTTP/1.1 200 OK - ETag: 646-a29dac40 - Content-Length: 1606 - Keep-Alive: timeout=20, max=995 - Content-Type: image/png - 
+	</event>
+
+	<event start="Tue Aug 04 2009 15:14:44 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://is.www.mozilla.com/img/tignish/template/footer-logo.png cache stored in: 6G813UAL/footer-logo[1].png - HTTP/1.1 200 OK - ETag: 646-a29dac40 - Content-Length: 1606 - Keep-Alive: timeout=20, max=995 - Content-Type: image/png - "
+		>
+	[IE History] User joe connected to URL:http://is.www.mozilla.com/img/tignish/template/footer-logo.png cache stored in: 6G813UAL/footer-logo[1].png - HTTP/1.1 200 OK - ETag: 646-a29dac40 - Content-Length: 1606 - Keep-Alive: timeout=20, max=995 - Content-Type: image/png - 
+	</event>
+
+	<event start="Thu Jan 01 1970 00:00:00 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://is.www.mozilla.com/js/util.js cache stored in: RJX4Q6VZ/util[1].js - HTTP/1.1 200 OK - X-Powered-By: PHP/5.1.6 - Cteonnt-Length: 2867 - Keep-Alive: timeout=20, max=957 - Content-Type: text/html; charset=UTF-8 - Content-Length: 2867 - "
+		>
+	[IE History] User joe connected to URL:http://is.www.mozilla.com/js/util.js cache stored in: RJX4Q6VZ/util[1].js - HTTP/1.1 200 OK - X-Powered-By: PHP/5.1.6 - Cteonnt-Length: 2867 - Keep-Alive: timeout=20, max=957 - Content-Type: text/html; charset=UTF-8 - Content-Length: 2867 - 
+	</event>
+
+	<event start="Tue Aug 04 2009 15:14:42 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://is.www.mozilla.com/js/util.js cache stored in: RJX4Q6VZ/util[1].js - HTTP/1.1 200 OK - X-Powered-By: PHP/5.1.6 - Cteonnt-Length: 2867 - Keep-Alive: timeout=20, max=957 - Content-Type: text/html; charset=UTF-8 - Content-Length: 2867 - "
+		>
+	[IE History] User joe connected to URL:http://is.www.mozilla.com/js/util.js cache stored in: RJX4Q6VZ/util[1].js - HTTP/1.1 200 OK - X-Powered-By: PHP/5.1.6 - Cteonnt-Length: 2867 - Keep-Alive: timeout=20, max=957 - Content-Type: text/html; charset=UTF-8 - Content-Length: 2867 - 
+	</event>
+
+	<event start="Tue Apr 21 2009 08:40:51 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://col.stc.s-msn.com/br/hp/11/en-us/css/i/kvarr.png cache stored in: 6G813UAL/kvarr[1].png - HTTP/1.1 200 OK - Content-Type: image/png - S: STCA01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 133 - "
+		>
+	[IE History] User joe connected to URL:http://col.stc.s-msn.com/br/hp/11/en-us/css/i/kvarr.png cache stored in: 6G813UAL/kvarr[1].png - HTTP/1.1 200 OK - Content-Type: image/png - S: STCA01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 133 - 
+	</event>
+
+	<event start="Tue Aug 04 2009 15:14:18 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://col.stc.s-msn.com/br/hp/11/en-us/css/i/kvarr.png cache stored in: 6G813UAL/kvarr[1].png - HTTP/1.1 200 OK - Content-Type: image/png - S: STCA01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 133 - "
+		>
+	[IE History] User joe connected to URL:http://col.stc.s-msn.com/br/hp/11/en-us/css/i/kvarr.png cache stored in: 6G813UAL/kvarr[1].png - HTTP/1.1 200 OK - Content-Type: image/png - S: STCA01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 133 - 
+	</event>
+
+	<event start="Tue Apr 21 2009 08:41:15 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://col.stc.s-msn.com/br/hp/11/en-us/css/i/WindowsLive_Hotmail_logo_128x11_blue.gif cache stored in: UPQHCM07/WindowsLive_Hotmail_logo_128x11_blue[1].gif - HTTP/1.1 200 OK - Content-Type: image/gif - S: STCA01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 1661 - "
+		>
+	[IE History] User joe connected to URL:http://col.stc.s-msn.com/br/hp/11/en-us/css/i/WindowsLive_Hotmail_logo_128x11_blue.gif cache stored in: UPQHCM07/WindowsLive_Hotmail_logo_128x11_blue[1].gif - HTTP/1.1 200 OK - Content-Type: image/gif - S: STCA01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 1661 - 
+	</event>
+
+	<event start="Tue Aug 04 2009 15:14:19 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://col.stc.s-msn.com/br/hp/11/en-us/css/i/WindowsLive_Hotmail_logo_128x11_blue.gif cache stored in: UPQHCM07/WindowsLive_Hotmail_logo_128x11_blue[1].gif - HTTP/1.1 200 OK - Content-Type: image/gif - S: STCA01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 1661 - "
+		>
+	[IE History] User joe connected to URL:http://col.stc.s-msn.com/br/hp/11/en-us/css/i/WindowsLive_Hotmail_logo_128x11_blue.gif cache stored in: UPQHCM07/WindowsLive_Hotmail_logo_128x11_blue[1].gif - HTTP/1.1 200 OK - Content-Type: image/gif - S: STCA01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 1661 - 
+	</event>
+
+	<event start="Mon Jun 08 2009 11:01:11 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://analytics.live.com/Sync.html?V=3525&amp;AQNT=1 cache stored in: UPQHCM07/Sync[1].htm - HTTP/1.1 200 OK - Content-Type: text/html - ETag: 80f5ad6e28e8c91:0 - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo, policyref=http://privacy.msn.com/w3c/p3p.xml - Content-Length: 607 - "
+		>
+	[IE History] User joe connected to URL:http://analytics.live.com/Sync.html?V=3525&amp;AQNT=1 cache stored in: UPQHCM07/Sync[1].htm - HTTP/1.1 200 OK - Content-Type: text/html - ETag: 80f5ad6e28e8c91:0 - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo, policyref=http://privacy.msn.com/w3c/p3p.xml - Content-Length: 607 - 
+	</event>
+
+	<event start="Tue Aug 04 2009 15:14:19 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://analytics.live.com/Sync.html?V=3525&amp;AQNT=1 cache stored in: UPQHCM07/Sync[1].htm - HTTP/1.1 200 OK - Content-Type: text/html - ETag: 80f5ad6e28e8c91:0 - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo, policyref=http://privacy.msn.com/w3c/p3p.xml - Content-Length: 607 - "
+		>
+	[IE History] User joe connected to URL:http://analytics.live.com/Sync.html?V=3525&amp;AQNT=1 cache stored in: UPQHCM07/Sync[1].htm - HTTP/1.1 200 OK - Content-Type: text/html - ETag: 80f5ad6e28e8c91:0 - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo, policyref=http://privacy.msn.com/w3c/p3p.xml - Content-Length: 607 - 
+	</event>
+
+	<event start="Tue Oct 09 2007 23:29:50 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://col.stc.s-msn.com/br/gbl/css/6/decoration/02/pipe.gif cache stored in: FBRUWRCP/pipe[1].gif - HTTP/1.1 200 OK - Content-Type: image/gif - s: STCA01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 44 - "
+		>
+	[IE History] User joe connected to URL:http://col.stc.s-msn.com/br/gbl/css/6/decoration/02/pipe.gif cache stored in: FBRUWRCP/pipe[1].gif - HTTP/1.1 200 OK - Content-Type: image/gif - s: STCA01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 44 - 
+	</event>
+
+	<event start="Tue Aug 04 2009 15:14:18 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://col.stc.s-msn.com/br/gbl/css/6/decoration/02/pipe.gif cache stored in: FBRUWRCP/pipe[1].gif - HTTP/1.1 200 OK - Content-Type: image/gif - s: STCA01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 44 - "
+		>
+	[IE History] User joe connected to URL:http://col.stc.s-msn.com/br/gbl/css/6/decoration/02/pipe.gif cache stored in: FBRUWRCP/pipe[1].gif - HTTP/1.1 200 OK - Content-Type: image/gif - s: STCA01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 44 - 
+	</event>
+
+	<event start="Wed Apr 22 2009 20:30:33 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://is.www.mozilla.com/includes/yui/2.5.1/yahoo-dom-event/yahoo-dom-event.js cache stored in: FBRUWRCP/yahoo-dom-event[1].js - HTTP/1.1 200 OK - ETag: 795c-a29dac40 - Cteonnt-Length: 31068 - Keep-Alive: timeout=20, max=998 - Content-Type: application/x-javascript - Content-Length: 31068 - "
+		>
+	[IE History] User joe connected to URL:http://is.www.mozilla.com/includes/yui/2.5.1/yahoo-dom-event/yahoo-dom-event.js cache stored in: FBRUWRCP/yahoo-dom-event[1].js - HTTP/1.1 200 OK - ETag: 795c-a29dac40 - Cteonnt-Length: 31068 - Keep-Alive: timeout=20, max=998 - Content-Type: application/x-javascript - Content-Length: 31068 - 
+	</event>
+
+	<event start="Tue Aug 04 2009 15:14:42 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://is.www.mozilla.com/includes/yui/2.5.1/yahoo-dom-event/yahoo-dom-event.js cache stored in: FBRUWRCP/yahoo-dom-event[1].js - HTTP/1.1 200 OK - ETag: 795c-a29dac40 - Cteonnt-Length: 31068 - Keep-Alive: timeout=20, max=998 - Content-Type: application/x-javascript - Content-Length: 31068 - "
+		>
+	[IE History] User joe connected to URL:http://is.www.mozilla.com/includes/yui/2.5.1/yahoo-dom-event/yahoo-dom-event.js cache stored in: FBRUWRCP/yahoo-dom-event[1].js - HTTP/1.1 200 OK - ETag: 795c-a29dac40 - Cteonnt-Length: 31068 - Keep-Alive: timeout=20, max=998 - Content-Type: application/x-javascript - Content-Length: 31068 - 
+	</event>
+
+	<event start="Tue Feb 26 2008 02:45:46 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://col.stc.s-msn.com/br/gbl/css/6/decoration/pipe.gif cache stored in: 6G813UAL/pipe[1].gif - HTTP/1.1 200 OK - Content-Type: image/gif - S: STCA01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 43 - "
+		>
+	[IE History] User joe connected to URL:http://col.stc.s-msn.com/br/gbl/css/6/decoration/pipe.gif cache stored in: 6G813UAL/pipe[1].gif - HTTP/1.1 200 OK - Content-Type: image/gif - S: STCA01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 43 - 
+	</event>
+
+	<event start="Tue Aug 04 2009 15:14:18 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://col.stc.s-msn.com/br/gbl/css/6/decoration/pipe.gif cache stored in: 6G813UAL/pipe[1].gif - HTTP/1.1 200 OK - Content-Type: image/gif - S: STCA01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 43 - "
+		>
+	[IE History] User joe connected to URL:http://col.stc.s-msn.com/br/gbl/css/6/decoration/pipe.gif cache stored in: 6G813UAL/pipe[1].gif - HTTP/1.1 200 OK - Content-Type: image/gif - S: STCA01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 43 - 
+	</event>
+
+	<event start="Thu Jan 01 1970 00:00:00 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://is.www.mozilla.com/is/ cache stored in: FBRUWRCP/is[1].htm - HTTP/1.1 200 OK - X-Powered-By: PHP/5.1.6 - Cteonnt-Length: 7684 - Keep-Alive: timeout=20, max=988 - Content-Type: text/html; charset=UTF-8 - Content-Length: 7684 - "
+		>
+	[IE History] User joe connected to URL:http://is.www.mozilla.com/is/ cache stored in: FBRUWRCP/is[1].htm - HTTP/1.1 200 OK - X-Powered-By: PHP/5.1.6 - Cteonnt-Length: 7684 - Keep-Alive: timeout=20, max=988 - Content-Type: text/html; charset=UTF-8 - Content-Length: 7684 - 
+	</event>
+
+	<event start="Tue Aug 04 2009 15:14:42 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://is.www.mozilla.com/is/ cache stored in: FBRUWRCP/is[1].htm - HTTP/1.1 200 OK - X-Powered-By: PHP/5.1.6 - Cteonnt-Length: 7684 - Keep-Alive: timeout=20, max=988 - Content-Type: text/html; charset=UTF-8 - Content-Length: 7684 - "
+		>
+	[IE History] User joe connected to URL:http://is.www.mozilla.com/is/ cache stored in: FBRUWRCP/is[1].htm - HTTP/1.1 200 OK - X-Powered-By: PHP/5.1.6 - Cteonnt-Length: 7684 - Keep-Alive: timeout=20, max=988 - Content-Type: text/html; charset=UTF-8 - Content-Length: 7684 - 
+	</event>
+
+	<event start="Sat Jun 27 2009 07:39:34 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://is.www.mozilla.com/img/thunderbird-logo-64x64.png cache stored in: 6G813UAL/thunderbird-logo-64x64[1].png - HTTP/1.1 200 OK - ETag: 1f79-8ee41980 - Content-Length: 8057 - Keep-Alive: timeout=20, max=998 - Content-Type: image/png - "
+		>
+	[IE History] User joe connected to URL:http://is.www.mozilla.com/img/thunderbird-logo-64x64.png cache stored in: 6G813UAL/thunderbird-logo-64x64[1].png - HTTP/1.1 200 OK - ETag: 1f79-8ee41980 - Content-Length: 8057 - Keep-Alive: timeout=20, max=998 - Content-Type: image/png - 
+	</event>
+
+	<event start="Tue Aug 04 2009 15:14:43 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://is.www.mozilla.com/img/thunderbird-logo-64x64.png cache stored in: 6G813UAL/thunderbird-logo-64x64[1].png - HTTP/1.1 200 OK - ETag: 1f79-8ee41980 - Content-Length: 8057 - Keep-Alive: timeout=20, max=998 - Content-Type: image/png - "
+		>
+	[IE History] User joe connected to URL:http://is.www.mozilla.com/img/thunderbird-logo-64x64.png cache stored in: 6G813UAL/thunderbird-logo-64x64[1].png - HTTP/1.1 200 OK - ETag: 1f79-8ee41980 - Content-Length: 8057 - Keep-Alive: timeout=20, max=998 - Content-Type: image/png - 
+	</event>
+
+	<event start="Tue Apr 21 2009 08:41:29 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://st.msn.com/br/hp/11/en-us/css/w/32.png cache stored in: UPQHCM07/32[1].png - HTTP/1.1 200 OK - Content-Type: image/png - S: stcb02 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 23940 - "
+		>
+	[IE History] User joe connected to URL:http://st.msn.com/br/hp/11/en-us/css/w/32.png cache stored in: UPQHCM07/32[1].png - HTTP/1.1 200 OK - Content-Type: image/png - S: stcb02 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 23940 - 
+	</event>
+
+	<event start="Tue Aug 04 2009 15:14:18 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://st.msn.com/br/hp/11/en-us/css/w/32.png cache stored in: UPQHCM07/32[1].png - HTTP/1.1 200 OK - Content-Type: image/png - S: stcb02 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 23940 - "
+		>
+	[IE History] User joe connected to URL:http://st.msn.com/br/hp/11/en-us/css/w/32.png cache stored in: UPQHCM07/32[1].png - HTTP/1.1 200 OK - Content-Type: image/png - S: stcb02 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 23940 - 
+	</event>
+
+	<event start="Tue Apr 21 2009 08:41:13 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://col.stc.s-msn.com/br/hp/11/en-us/css/i/video.gif cache stored in: FBRUWRCP/video[1].gif - HTTP/1.1 200 OK - Content-Type: image/gif - S: STCA01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 267 - "
+		>
+	[IE History] User joe connected to URL:http://col.stc.s-msn.com/br/hp/11/en-us/css/i/video.gif cache stored in: FBRUWRCP/video[1].gif - HTTP/1.1 200 OK - Content-Type: image/gif - S: STCA01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 267 - 
+	</event>
+
+	<event start="Tue Aug 04 2009 15:14:18 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://col.stc.s-msn.com/br/hp/11/en-us/css/i/video.gif cache stored in: FBRUWRCP/video[1].gif - HTTP/1.1 200 OK - Content-Type: image/gif - S: STCA01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 267 - "
+		>
+	[IE History] User joe connected to URL:http://col.stc.s-msn.com/br/hp/11/en-us/css/i/video.gif cache stored in: FBRUWRCP/video[1].gif - HTTP/1.1 200 OK - Content-Type: image/gif - S: STCA01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 267 - 
+	</event>
+
+	<event start="Wed Apr 22 2009 20:30:33 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://is.www.mozilla.com/img/tignish/template/mozilla-logo.png cache stored in: 6G813UAL/mozilla-logo[1].png - HTTP/1.1 200 OK - ETag: 3cb-a29dac40 - Content-Length: 971 - Keep-Alive: timeout=20, max=969 - Content-Type: image/png - "
+		>
+	[IE History] User joe connected to URL:http://is.www.mozilla.com/img/tignish/template/mozilla-logo.png cache stored in: 6G813UAL/mozilla-logo[1].png - HTTP/1.1 200 OK - ETag: 3cb-a29dac40 - Content-Length: 971 - Keep-Alive: timeout=20, max=969 - Content-Type: image/png - 
+	</event>
+
+	<event start="Tue Aug 04 2009 15:14:43 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://is.www.mozilla.com/img/tignish/template/mozilla-logo.png cache stored in: 6G813UAL/mozilla-logo[1].png - HTTP/1.1 200 OK - ETag: 3cb-a29dac40 - Content-Length: 971 - Keep-Alive: timeout=20, max=969 - Content-Type: image/png - "
+		>
+	[IE History] User joe connected to URL:http://is.www.mozilla.com/img/tignish/template/mozilla-logo.png cache stored in: 6G813UAL/mozilla-logo[1].png - HTTP/1.1 200 OK - ETag: 3cb-a29dac40 - Content-Length: 971 - Keep-Alive: timeout=20, max=969 - Content-Type: image/png - 
+	</event>
+
+	<event start="Wed Oct 26 2005 22:39:58 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://hp.msn.com/global/c/hpv10/favicon.ico cache stored in: RJX4Q6VZ/favicon[1].ico - HTTP/1.1 200 OK - Content-Type: image/x-icon - ETag: b4f35327edac51:1086 - S: IMG03 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 1406 - "
+		>
+	[IE History] User joe connected to URL:http://hp.msn.com/global/c/hpv10/favicon.ico cache stored in: RJX4Q6VZ/favicon[1].ico - HTTP/1.1 200 OK - Content-Type: image/x-icon - ETag: b4f35327edac51:1086 - S: IMG03 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 1406 - 
+	</event>
+
+	<event start="Tue Aug 04 2009 15:14:19 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://hp.msn.com/global/c/hpv10/favicon.ico cache stored in: RJX4Q6VZ/favicon[1].ico - HTTP/1.1 200 OK - Content-Type: image/x-icon - ETag: b4f35327edac51:1086 - S: IMG03 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 1406 - "
+		>
+	[IE History] User joe connected to URL:http://hp.msn.com/global/c/hpv10/favicon.ico cache stored in: RJX4Q6VZ/favicon[1].ico - HTTP/1.1 200 OK - Content-Type: image/x-icon - ETag: b4f35327edac51:1086 - S: IMG03 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 1406 - 
+	</event>
+
+	<event start="Thu Jan 01 1970 00:00:00 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://is.www.mozilla.com/js/track.js cache stored in: 6G813UAL/track[1].js - HTTP/1.1 200 OK - X-Powered-By: PHP/5.1.6 - Cteonnt-Length: 3912 - Keep-Alive: timeout=20, max=951 - Content-Type: text/html; charset=UTF-8 - Content-Length: 3912 - "
+		>
+	[IE History] User joe connected to URL:http://is.www.mozilla.com/js/track.js cache stored in: 6G813UAL/track[1].js - HTTP/1.1 200 OK - X-Powered-By: PHP/5.1.6 - Cteonnt-Length: 3912 - Keep-Alive: timeout=20, max=951 - Content-Type: text/html; charset=UTF-8 - Content-Length: 3912 - 
+	</event>
+
+	<event start="Tue Aug 04 2009 15:14:42 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://is.www.mozilla.com/js/track.js cache stored in: 6G813UAL/track[1].js - HTTP/1.1 200 OK - X-Powered-By: PHP/5.1.6 - Cteonnt-Length: 3912 - Keep-Alive: timeout=20, max=951 - Content-Type: text/html; charset=UTF-8 - Content-Length: 3912 - "
+		>
+	[IE History] User joe connected to URL:http://is.www.mozilla.com/js/track.js cache stored in: 6G813UAL/track[1].js - HTTP/1.1 200 OK - X-Powered-By: PHP/5.1.6 - Cteonnt-Length: 3912 - Keep-Alive: timeout=20, max=951 - Content-Type: text/html; charset=UTF-8 - Content-Length: 3912 - 
+	</event>
+
+	<event start="Tue Aug 04 2009 01:38:42 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://col.stb.s-msn.com/i/23/38EC66B22840A8FA35DCA5A18D7ABE.jpg cache stored in: 6G813UAL/38EC66B22840A8FA35DCA5A18D7ABE[1].jpg - HTTP/1.1 200 OK - Content-Type: image/jpeg - S: stca01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 2370 - "
+		>
+	[IE History] User joe connected to URL:http://col.stb.s-msn.com/i/23/38EC66B22840A8FA35DCA5A18D7ABE.jpg cache stored in: 6G813UAL/38EC66B22840A8FA35DCA5A18D7ABE[1].jpg - HTTP/1.1 200 OK - Content-Type: image/jpeg - S: stca01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 2370 - 
+	</event>
+
+	<event start="Tue Aug 04 2009 15:14:18 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://col.stb.s-msn.com/i/23/38EC66B22840A8FA35DCA5A18D7ABE.jpg cache stored in: 6G813UAL/38EC66B22840A8FA35DCA5A18D7ABE[1].jpg - HTTP/1.1 200 OK - Content-Type: image/jpeg - S: stca01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 2370 - "
+		>
+	[IE History] User joe connected to URL:http://col.stb.s-msn.com/i/23/38EC66B22840A8FA35DCA5A18D7ABE.jpg cache stored in: 6G813UAL/38EC66B22840A8FA35DCA5A18D7ABE[1].jpg - HTTP/1.1 200 OK - Content-Type: image/jpeg - S: stca01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 2370 - 
+	</event>
+
+	<event start="Fri Jul 31 2009 00:18:55 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://col.stc.s-msn.com/br/hp/11/en-us/css/ie_exp_nav_1.css cache stored in: UPQHCM07/ie_exp_nav_1[1].css - HTTP/1.1 200 OK - Content-Type: text/css - ntCoent-Length: 7251 - S: STCA01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 7251 - "
+		>
+	[IE History] User joe connected to URL:http://col.stc.s-msn.com/br/hp/11/en-us/css/ie_exp_nav_1.css cache stored in: UPQHCM07/ie_exp_nav_1[1].css - HTTP/1.1 200 OK - Content-Type: text/css - ntCoent-Length: 7251 - S: STCA01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 7251 - 
+	</event>
+
+	<event start="Tue Aug 04 2009 15:14:17 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://col.stc.s-msn.com/br/hp/11/en-us/css/ie_exp_nav_1.css cache stored in: UPQHCM07/ie_exp_nav_1[1].css - HTTP/1.1 200 OK - Content-Type: text/css - ntCoent-Length: 7251 - S: STCA01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 7251 - "
+		>
+	[IE History] User joe connected to URL:http://col.stc.s-msn.com/br/hp/11/en-us/css/ie_exp_nav_1.css cache stored in: UPQHCM07/ie_exp_nav_1[1].css - HTTP/1.1 200 OK - Content-Type: text/css - ntCoent-Length: 7251 - S: STCA01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 7251 - 
+	</event>
+
+	<event start="Mon Aug 03 2009 18:57:05 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://col.stb.s-msn.com/i/8D/C7D3EFF88DE4FAA2799CE78609EF2.jpg cache stored in: RJX4Q6VZ/C7D3EFF88DE4FAA2799CE78609EF2[1].jpg - HTTP/1.1 200 OK - Content-Type: image/jpeg - S: stca01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 2041 - "
+		>
+	[IE History] User joe connected to URL:http://col.stb.s-msn.com/i/8D/C7D3EFF88DE4FAA2799CE78609EF2.jpg cache stored in: RJX4Q6VZ/C7D3EFF88DE4FAA2799CE78609EF2[1].jpg - HTTP/1.1 200 OK - Content-Type: image/jpeg - S: stca01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 2041 - 
+	</event>
+
+	<event start="Tue Aug 04 2009 15:14:18 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://col.stb.s-msn.com/i/8D/C7D3EFF88DE4FAA2799CE78609EF2.jpg cache stored in: RJX4Q6VZ/C7D3EFF88DE4FAA2799CE78609EF2[1].jpg - HTTP/1.1 200 OK - Content-Type: image/jpeg - S: stca01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 2041 - "
+		>
+	[IE History] User joe connected to URL:http://col.stb.s-msn.com/i/8D/C7D3EFF88DE4FAA2799CE78609EF2.jpg cache stored in: RJX4Q6VZ/C7D3EFF88DE4FAA2799CE78609EF2[1].jpg - HTTP/1.1 200 OK - Content-Type: image/jpeg - S: stca01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 2041 - 
+	</event>
+
+	<event start="Thu Jan 01 1970 00:00:00 GMT"
+		durationEvent="false"
+		title="[IE History] REDR: User was redirected to: http://ad.doubleclick.net/ad/N5043.microsoftnetwork/B3311296.122;sz=1x1;ord=287375636?"
+		>
+	[IE History] REDR: User was redirected to: http://ad.doubleclick.net/ad/N5043.microsoftnetwork/B3311296.122;sz=1x1;ord=287375636?
+	</event>
+
+	<event start="Mon Jun 08 2009 11:01:11 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://analytics.msn.com/Include.html cache stored in: RJX4Q6VZ/Include[1].htm - HTTP/1.1 200 OK - Content-Type: text/html - ETag: 80f5ad6e28e8c91:0 - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo, policyref=http://privacy.msn.com/w3c/p3p.xml - Content-Length: 464 - "
+		>
+	[IE History] User joe connected to URL:http://analytics.msn.com/Include.html cache stored in: RJX4Q6VZ/Include[1].htm - HTTP/1.1 200 OK - Content-Type: text/html - ETag: 80f5ad6e28e8c91:0 - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo, policyref=http://privacy.msn.com/w3c/p3p.xml - Content-Length: 464 - 
+	</event>
+
+	<event start="Tue Aug 04 2009 15:14:20 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://analytics.msn.com/Include.html cache stored in: RJX4Q6VZ/Include[1].htm - HTTP/1.1 200 OK - Content-Type: text/html - ETag: 80f5ad6e28e8c91:0 - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo, policyref=http://privacy.msn.com/w3c/p3p.xml - Content-Length: 464 - "
+		>
+	[IE History] User joe connected to URL:http://analytics.msn.com/Include.html cache stored in: RJX4Q6VZ/Include[1].htm - HTTP/1.1 200 OK - Content-Type: text/html - ETag: 80f5ad6e28e8c91:0 - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo, policyref=http://privacy.msn.com/w3c/p3p.xml - Content-Length: 464 - 
+	</event>
+
+	<event start="Thu Jan 01 1970 00:00:00 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://analytics.atdmt.com/Scripts/wlHelper.js?i=MUID cache stored in: UPQHCM07/wlHelper[1].js - HTTP/1.1 200 OK - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo, policyref=http://privacy.msn.com/w3c/p3p.xml - X-AspNet-Version: 2.0.50727 - ETag: af8ccbf3d8f443588d867665ed24e1263698 - Content-Type: application/x-javascript; charset=utf-8 - ntCoent-Length: 1340 - Content-Length: 1340 - "
+		>
+	[IE History] User joe connected to URL:http://analytics.atdmt.com/Scripts/wlHelper.js?i=MUID cache stored in: UPQHCM07/wlHelper[1].js - HTTP/1.1 200 OK - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo, policyref=http://privacy.msn.com/w3c/p3p.xml - X-AspNet-Version: 2.0.50727 - ETag: af8ccbf3d8f443588d867665ed24e1263698 - Content-Type: application/x-javascript; charset=utf-8 - ntCoent-Length: 1340 - Content-Length: 1340 - 
+	</event>
+
+	<event start="Tue Aug 04 2009 15:14:20 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://analytics.atdmt.com/Scripts/wlHelper.js?i=MUID cache stored in: UPQHCM07/wlHelper[1].js - HTTP/1.1 200 OK - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo, policyref=http://privacy.msn.com/w3c/p3p.xml - X-AspNet-Version: 2.0.50727 - ETag: af8ccbf3d8f443588d867665ed24e1263698 - Content-Type: application/x-javascript; charset=utf-8 - ntCoent-Length: 1340 - Content-Length: 1340 - "
+		>
+	[IE History] User joe connected to URL:http://analytics.atdmt.com/Scripts/wlHelper.js?i=MUID cache stored in: UPQHCM07/wlHelper[1].js - HTTP/1.1 200 OK - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo, policyref=http://privacy.msn.com/w3c/p3p.xml - X-AspNet-Version: 2.0.50727 - ETag: af8ccbf3d8f443588d867665ed24e1263698 - Content-Type: application/x-javascript; charset=utf-8 - ntCoent-Length: 1340 - Content-Length: 1340 - 
+	</event>
+
+	<event start="Thu Jan 01 1970 00:00:00 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://is.www.mozilla.com/js/s_code.js cache stored in: UPQHCM07/s_code[1].js - HTTP/1.1 200 OK - X-Powered-By: PHP/5.1.6 - Keep-Alive: timeout=20, max=948 - Content-Type: text/html; charset=UTF-8 - Content-Length: 26695 - "
+		>
+	[IE History] User joe connected to URL:http://is.www.mozilla.com/js/s_code.js cache stored in: UPQHCM07/s_code[1].js - HTTP/1.1 200 OK - X-Powered-By: PHP/5.1.6 - Keep-Alive: timeout=20, max=948 - Content-Type: text/html; charset=UTF-8 - Content-Length: 26695 - 
+	</event>
+
+	<event start="Tue Aug 04 2009 15:14:43 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://is.www.mozilla.com/js/s_code.js cache stored in: UPQHCM07/s_code[1].js - HTTP/1.1 200 OK - X-Powered-By: PHP/5.1.6 - Keep-Alive: timeout=20, max=948 - Content-Type: text/html; charset=UTF-8 - Content-Length: 26695 - "
+		>
+	[IE History] User joe connected to URL:http://is.www.mozilla.com/js/s_code.js cache stored in: UPQHCM07/s_code[1].js - HTTP/1.1 200 OK - X-Powered-By: PHP/5.1.6 - Keep-Alive: timeout=20, max=948 - Content-Type: text/html; charset=UTF-8 - Content-Length: 26695 - 
+	</event>
+
+	<event start="Sat Jun 27 2009 07:39:35 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://is.www.mozilla.com/includes/yui/2.5.1/container/container_core-min.js cache stored in: FBRUWRCP/container_core-min[1].js - HTTP/1.1 200 OK - ETag: 8d57-8ef35bc0 - Cteonnt-Length: 36183 - Keep-Alive: timeout=20, max=986 - Content-Type: application/x-javascript - Content-Length: 36183 - "
+		>
+	[IE History] User joe connected to URL:http://is.www.mozilla.com/includes/yui/2.5.1/container/container_core-min.js cache stored in: FBRUWRCP/container_core-min[1].js - HTTP/1.1 200 OK - ETag: 8d57-8ef35bc0 - Cteonnt-Length: 36183 - Keep-Alive: timeout=20, max=986 - Content-Type: application/x-javascript - Content-Length: 36183 - 
+	</event>
+
+	<event start="Tue Aug 04 2009 15:14:42 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://is.www.mozilla.com/includes/yui/2.5.1/container/container_core-min.js cache stored in: FBRUWRCP/container_core-min[1].js - HTTP/1.1 200 OK - ETag: 8d57-8ef35bc0 - Cteonnt-Length: 36183 - Keep-Alive: timeout=20, max=986 - Content-Type: application/x-javascript - Content-Length: 36183 - "
+		>
+	[IE History] User joe connected to URL:http://is.www.mozilla.com/includes/yui/2.5.1/container/container_core-min.js cache stored in: FBRUWRCP/container_core-min[1].js - HTTP/1.1 200 OK - ETag: 8d57-8ef35bc0 - Cteonnt-Length: 36183 - Keep-Alive: timeout=20, max=986 - Content-Type: application/x-javascript - Content-Length: 36183 - 
+	</event>
+
+	<event start="Tue Aug 04 2009 04:42:14 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://col.stb.s-msn.com/i/40/79595E2D11AF203B8696F705730CF.jpg cache stored in: FBRUWRCP/79595E2D11AF203B8696F705730CF[1].jpg - HTTP/1.1 200 OK - Content-Type: image/jpeg - S: stca01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 2055 - "
+		>
+	[IE History] User joe connected to URL:http://col.stb.s-msn.com/i/40/79595E2D11AF203B8696F705730CF.jpg cache stored in: FBRUWRCP/79595E2D11AF203B8696F705730CF[1].jpg - HTTP/1.1 200 OK - Content-Type: image/jpeg - S: stca01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 2055 - 
+	</event>
+
+	<event start="Tue Aug 04 2009 15:14:18 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://col.stb.s-msn.com/i/40/79595E2D11AF203B8696F705730CF.jpg cache stored in: FBRUWRCP/79595E2D11AF203B8696F705730CF[1].jpg - HTTP/1.1 200 OK - Content-Type: image/jpeg - S: stca01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 2055 - "
+		>
+	[IE History] User joe connected to URL:http://col.stb.s-msn.com/i/40/79595E2D11AF203B8696F705730CF.jpg cache stored in: FBRUWRCP/79595E2D11AF203B8696F705730CF[1].jpg - HTTP/1.1 200 OK - Content-Type: image/jpeg - S: stca01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 2055 - 
+	</event>
+
+	<event start="Mon Aug 03 2009 19:16:35 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://col.stb.s-msn.com/i/2C/92595E27F969EC65F34C6BAEA7DF2.jpg cache stored in: UPQHCM07/92595E27F969EC65F34C6BAEA7DF2[1].jpg - HTTP/1.1 200 OK - Content-Type: image/jpeg - S: stca01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 15327 - "
+		>
+	[IE History] User joe connected to URL:http://col.stb.s-msn.com/i/2C/92595E27F969EC65F34C6BAEA7DF2.jpg cache stored in: UPQHCM07/92595E27F969EC65F34C6BAEA7DF2[1].jpg - HTTP/1.1 200 OK - Content-Type: image/jpeg - S: stca01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 15327 - 
+	</event>
+
+	<event start="Tue Aug 04 2009 15:14:18 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://col.stb.s-msn.com/i/2C/92595E27F969EC65F34C6BAEA7DF2.jpg cache stored in: UPQHCM07/92595E27F969EC65F34C6BAEA7DF2[1].jpg - HTTP/1.1 200 OK - Content-Type: image/jpeg - S: stca01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 15327 - "
+		>
+	[IE History] User joe connected to URL:http://col.stb.s-msn.com/i/2C/92595E27F969EC65F34C6BAEA7DF2.jpg cache stored in: UPQHCM07/92595E27F969EC65F34C6BAEA7DF2[1].jpg - HTTP/1.1 200 OK - Content-Type: image/jpeg - S: stca01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 15327 - 
+	</event>
+
+	<event start="Sat Jun 27 2009 07:39:34 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://is.www.mozilla.com/img/tignish/firefox/download-arrow.png cache stored in: FBRUWRCP/download-arrow[1].png - HTTP/1.1 200 OK - ETag: 57f-8ee41980 - Content-Length: 1407 - Keep-Alive: timeout=20, max=991 - Content-Type: image/png - "
+		>
+	[IE History] User joe connected to URL:http://is.www.mozilla.com/img/tignish/firefox/download-arrow.png cache stored in: FBRUWRCP/download-arrow[1].png - HTTP/1.1 200 OK - ETag: 57f-8ee41980 - Content-Length: 1407 - Keep-Alive: timeout=20, max=991 - Content-Type: image/png - 
+	</event>
+
+	<event start="Tue Aug 04 2009 15:14:43 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://is.www.mozilla.com/img/tignish/firefox/download-arrow.png cache stored in: FBRUWRCP/download-arrow[1].png - HTTP/1.1 200 OK - ETag: 57f-8ee41980 - Content-Length: 1407 - Keep-Alive: timeout=20, max=991 - Content-Type: image/png - "
+		>
+	[IE History] User joe connected to URL:http://is.www.mozilla.com/img/tignish/firefox/download-arrow.png cache stored in: FBRUWRCP/download-arrow[1].png - HTTP/1.1 200 OK - ETag: 57f-8ee41980 - Content-Length: 1407 - Keep-Alive: timeout=20, max=991 - Content-Type: image/png - 
+	</event>
+
+	<event start="Mon Aug 03 2009 23:20:36 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://col.stb.s-msn.com/i/7C/D57E86FB448D3036ECA118EE2392.jpg cache stored in: FBRUWRCP/D57E86FB448D3036ECA118EE2392[1].jpg - HTTP/1.1 200 OK - Content-Type: image/jpeg - S: stca01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 2048 - "
+		>
+	[IE History] User joe connected to URL:http://col.stb.s-msn.com/i/7C/D57E86FB448D3036ECA118EE2392.jpg cache stored in: FBRUWRCP/D57E86FB448D3036ECA118EE2392[1].jpg - HTTP/1.1 200 OK - Content-Type: image/jpeg - S: stca01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 2048 - 
+	</event>
+
+	<event start="Tue Aug 04 2009 15:14:18 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://col.stb.s-msn.com/i/7C/D57E86FB448D3036ECA118EE2392.jpg cache stored in: FBRUWRCP/D57E86FB448D3036ECA118EE2392[1].jpg - HTTP/1.1 200 OK - Content-Type: image/jpeg - S: stca01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 2048 - "
+		>
+	[IE History] User joe connected to URL:http://col.stb.s-msn.com/i/7C/D57E86FB448D3036ECA118EE2392.jpg cache stored in: FBRUWRCP/D57E86FB448D3036ECA118EE2392[1].jpg - HTTP/1.1 200 OK - Content-Type: image/jpeg - S: stca01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 2048 - 
+	</event>
+
+	<event start="Tue Apr 21 2009 08:40:09 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://col.stc.s-msn.com/br/hp/11/en-us/css/i/alarrow.gif cache stored in: RJX4Q6VZ/alarrow[1].gif - HTTP/1.1 200 OK - Content-Type: image/gif - S: STCA01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 106 - "
+		>
+	[IE History] User joe connected to URL:http://col.stc.s-msn.com/br/hp/11/en-us/css/i/alarrow.gif cache stored in: RJX4Q6VZ/alarrow[1].gif - HTTP/1.1 200 OK - Content-Type: image/gif - S: STCA01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 106 - 
+	</event>
+
+	<event start="Tue Aug 04 2009 15:14:18 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://col.stc.s-msn.com/br/hp/11/en-us/css/i/alarrow.gif cache stored in: RJX4Q6VZ/alarrow[1].gif - HTTP/1.1 200 OK - Content-Type: image/gif - S: STCA01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 106 - "
+		>
+	[IE History] User joe connected to URL:http://col.stc.s-msn.com/br/hp/11/en-us/css/i/alarrow.gif cache stored in: RJX4Q6VZ/alarrow[1].gif - HTTP/1.1 200 OK - Content-Type: image/gif - S: STCA01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 106 - 
+	</event>
+
+	<event start="Thu Jan 01 1970 00:00:00 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://is.www.mozilla.com/js/__utm.js cache stored in: RJX4Q6VZ/__utm[1].js - HTTP/1.1 200 OK - X-Powered-By: PHP/5.1.6 - Keep-Alive: timeout=20, max=977 - Content-Type: text/html; charset=UTF-8 - Content-Length: 16386 - "
+		>
+	[IE History] User joe connected to URL:http://is.www.mozilla.com/js/__utm.js cache stored in: RJX4Q6VZ/__utm[1].js - HTTP/1.1 200 OK - X-Powered-By: PHP/5.1.6 - Keep-Alive: timeout=20, max=977 - Content-Type: text/html; charset=UTF-8 - Content-Length: 16386 - 
+	</event>
+
+	<event start="Tue Aug 04 2009 15:14:42 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://is.www.mozilla.com/js/__utm.js cache stored in: RJX4Q6VZ/__utm[1].js - HTTP/1.1 200 OK - X-Powered-By: PHP/5.1.6 - Keep-Alive: timeout=20, max=977 - Content-Type: text/html; charset=UTF-8 - Content-Length: 16386 - "
+		>
+	[IE History] User joe connected to URL:http://is.www.mozilla.com/js/__utm.js cache stored in: RJX4Q6VZ/__utm[1].js - HTTP/1.1 200 OK - X-Powered-By: PHP/5.1.6 - Keep-Alive: timeout=20, max=977 - Content-Type: text/html; charset=UTF-8 - Content-Length: 16386 - 
+	</event>
+
+	<event start="Thu Jul 30 2009 23:42:44 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://mozilla-mirror.3347.voxcdn.com/pub/mozilla.org/firefox/releases/3.5.2/win32/is/Firefox%20Setup%203.5.2.exe cache stored in: FBRUWRCP/Firefox%20Setup%203.5.2[2].exe - HTTP/1.1 200 OK - ETag: 22df627-7837d8-46ff4dc34e500 - Content-Length: 7878616 - X-Cache: HIT from VoxCAST - Keep-Alive: timeout=5, max=100 - Content-Type: application/x-msdos-program - "
+		>
+	[IE History] User joe connected to URL:http://mozilla-mirror.3347.voxcdn.com/pub/mozilla.org/firefox/releases/3.5.2/win32/is/Firefox%20Setup%203.5.2.exe cache stored in: FBRUWRCP/Firefox%20Setup%203.5.2[2].exe - HTTP/1.1 200 OK - ETag: 22df627-7837d8-46ff4dc34e500 - Content-Length: 7878616 - X-Cache: HIT from VoxCAST - Keep-Alive: timeout=5, max=100 - Content-Type: application/x-msdos-program - 
+	</event>
+
+	<event start="Tue Aug 04 2009 15:15:33 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://mozilla-mirror.3347.voxcdn.com/pub/mozilla.org/firefox/releases/3.5.2/win32/is/Firefox%20Setup%203.5.2.exe cache stored in: FBRUWRCP/Firefox%20Setup%203.5.2[2].exe - HTTP/1.1 200 OK - ETag: 22df627-7837d8-46ff4dc34e500 - Content-Length: 7878616 - X-Cache: HIT from VoxCAST - Keep-Alive: timeout=5, max=100 - Content-Type: application/x-msdos-program - "
+		>
+	[IE History] User joe connected to URL:http://mozilla-mirror.3347.voxcdn.com/pub/mozilla.org/firefox/releases/3.5.2/win32/is/Firefox%20Setup%203.5.2.exe cache stored in: FBRUWRCP/Firefox%20Setup%203.5.2[2].exe - HTTP/1.1 200 OK - ETag: 22df627-7837d8-46ff4dc34e500 - Content-Length: 7878616 - X-Cache: HIT from VoxCAST - Keep-Alive: timeout=5, max=100 - Content-Type: application/x-msdos-program - 
+	</event>
+
+	<event start="Tue Apr 21 2009 08:41:12 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://col.stc.s-msn.com/br/hp/11/en-us/css/i/t.gif cache stored in: FBRUWRCP/t[1].gif - HTTP/1.1 200 OK - Content-Type: image/gif - S: STCA01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 43 - "
+		>
+	[IE History] User joe connected to URL:http://col.stc.s-msn.com/br/hp/11/en-us/css/i/t.gif cache stored in: FBRUWRCP/t[1].gif - HTTP/1.1 200 OK - Content-Type: image/gif - S: STCA01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 43 - 
+	</event>
+
+	<event start="Tue Aug 04 2009 15:14:18 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://col.stc.s-msn.com/br/hp/11/en-us/css/i/t.gif cache stored in: FBRUWRCP/t[1].gif - HTTP/1.1 200 OK - Content-Type: image/gif - S: STCA01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 43 - "
+		>
+	[IE History] User joe connected to URL:http://col.stc.s-msn.com/br/hp/11/en-us/css/i/t.gif cache stored in: FBRUWRCP/t[1].gif - HTTP/1.1 200 OK - Content-Type: image/gif - S: STCA01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 43 - 
+	</event>
+
+	<event start="Thu Jan 01 1970 00:00:00 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://b.ads2.msn.com/CIS/111/000/000/000/000/725.gif cache stored in: FBRUWRCP/725[1].gif - HTTP/1.1 200 OK - Content-Type: image/gif - X-Powered-By: ASP.NET - X-AspNet-Version: 2.0.50727 - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 2340 - "
+		>
+	[IE History] User joe connected to URL:http://b.ads2.msn.com/CIS/111/000/000/000/000/725.gif cache stored in: FBRUWRCP/725[1].gif - HTTP/1.1 200 OK - Content-Type: image/gif - X-Powered-By: ASP.NET - X-AspNet-Version: 2.0.50727 - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 2340 - 
+	</event>
+
+	<event start="Tue Aug 04 2009 15:14:18 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://b.ads2.msn.com/CIS/111/000/000/000/000/725.gif cache stored in: FBRUWRCP/725[1].gif - HTTP/1.1 200 OK - Content-Type: image/gif - X-Powered-By: ASP.NET - X-AspNet-Version: 2.0.50727 - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 2340 - "
+		>
+	[IE History] User joe connected to URL:http://b.ads2.msn.com/CIS/111/000/000/000/000/725.gif cache stored in: FBRUWRCP/725[1].gif - HTTP/1.1 200 OK - Content-Type: image/gif - X-Powered-By: ASP.NET - X-AspNet-Version: 2.0.50727 - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 2340 - 
+	</event>
+
+	<event start="Tue Apr 21 2009 08:40:58 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://col.stc.s-msn.com/br/hp/11/en-us/css/i/msn_b2.gif cache stored in: UPQHCM07/msn_b2[1].gif - HTTP/1.1 200 OK - Content-Type: image/gif - S: STCA01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 1476 - "
+		>
+	[IE History] User joe connected to URL:http://col.stc.s-msn.com/br/hp/11/en-us/css/i/msn_b2.gif cache stored in: UPQHCM07/msn_b2[1].gif - HTTP/1.1 200 OK - Content-Type: image/gif - S: STCA01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 1476 - 
+	</event>
+
+	<event start="Tue Aug 04 2009 15:14:18 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://col.stc.s-msn.com/br/hp/11/en-us/css/i/msn_b2.gif cache stored in: UPQHCM07/msn_b2[1].gif - HTTP/1.1 200 OK - Content-Type: image/gif - S: STCA01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 1476 - "
+		>
+	[IE History] User joe connected to URL:http://col.stc.s-msn.com/br/hp/11/en-us/css/i/msn_b2.gif cache stored in: UPQHCM07/msn_b2[1].gif - HTTP/1.1 200 OK - Content-Type: image/gif - S: STCA01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 1476 - 
+	</event>
+
+	<event start="Tue Feb 26 2008 02:45:45 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://col.stc.s-msn.com/br/gbl/css/6/decoration/msft.gif cache stored in: 6G813UAL/msft[1].gif - HTTP/1.1 200 OK - Content-Type: image/gif - S: STCA01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 847 - "
+		>
+	[IE History] User joe connected to URL:http://col.stc.s-msn.com/br/gbl/css/6/decoration/msft.gif cache stored in: 6G813UAL/msft[1].gif - HTTP/1.1 200 OK - Content-Type: image/gif - S: STCA01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 847 - 
+	</event>
+
+	<event start="Tue Aug 04 2009 15:14:18 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://col.stc.s-msn.com/br/gbl/css/6/decoration/msft.gif cache stored in: 6G813UAL/msft[1].gif - HTTP/1.1 200 OK - Content-Type: image/gif - S: STCA01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 847 - "
+		>
+	[IE History] User joe connected to URL:http://col.stc.s-msn.com/br/gbl/css/6/decoration/msft.gif cache stored in: 6G813UAL/msft[1].gif - HTTP/1.1 200 OK - Content-Type: image/gif - S: STCA01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 847 - 
+	</event>
+
+	<event start="Mon Aug 03 2009 23:16:53 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://col.stb.s-msn.com/i/34/B56193C75CFC0C25411CFDDD8C38.jpg cache stored in: RJX4Q6VZ/B56193C75CFC0C25411CFDDD8C38[1].jpg - HTTP/1.1 200 OK - Content-Type: image/jpeg - S: stca01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 12186 - "
+		>
+	[IE History] User joe connected to URL:http://col.stb.s-msn.com/i/34/B56193C75CFC0C25411CFDDD8C38.jpg cache stored in: RJX4Q6VZ/B56193C75CFC0C25411CFDDD8C38[1].jpg - HTTP/1.1 200 OK - Content-Type: image/jpeg - S: stca01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 12186 - 
+	</event>
+
+	<event start="Tue Aug 04 2009 15:14:19 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://col.stb.s-msn.com/i/34/B56193C75CFC0C25411CFDDD8C38.jpg cache stored in: RJX4Q6VZ/B56193C75CFC0C25411CFDDD8C38[1].jpg - HTTP/1.1 200 OK - Content-Type: image/jpeg - S: stca01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 12186 - "
+		>
+	[IE History] User joe connected to URL:http://col.stb.s-msn.com/i/34/B56193C75CFC0C25411CFDDD8C38.jpg cache stored in: RJX4Q6VZ/B56193C75CFC0C25411CFDDD8C38[1].jpg - HTTP/1.1 200 OK - Content-Type: image/jpeg - S: stca01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 12186 - 
+	</event>
+
+	<event start="Tue Jul 07 2009 20:46:05 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://is.www.mozilla.com/img/tignish/firefox/download-button-primary.png cache stored in: RJX4Q6VZ/download-button-primary[1].png - HTTP/1.1 200 OK - ETag: 7de1-b61b5d40 - Content-Length: 32225 - Keep-Alive: timeout=20, max=993 - Content-Type: image/png - "
+		>
+	[IE History] User joe connected to URL:http://is.www.mozilla.com/img/tignish/firefox/download-button-primary.png cache stored in: RJX4Q6VZ/download-button-primary[1].png - HTTP/1.1 200 OK - ETag: 7de1-b61b5d40 - Content-Length: 32225 - Keep-Alive: timeout=20, max=993 - Content-Type: image/png - 
+	</event>
+
+	<event start="Tue Aug 04 2009 15:14:43 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://is.www.mozilla.com/img/tignish/firefox/download-button-primary.png cache stored in: RJX4Q6VZ/download-button-primary[1].png - HTTP/1.1 200 OK - ETag: 7de1-b61b5d40 - Content-Length: 32225 - Keep-Alive: timeout=20, max=993 - Content-Type: image/png - "
+		>
+	[IE History] User joe connected to URL:http://is.www.mozilla.com/img/tignish/firefox/download-button-primary.png cache stored in: RJX4Q6VZ/download-button-primary[1].png - HTTP/1.1 200 OK - ETag: 7de1-b61b5d40 - Content-Length: 32225 - Keep-Alive: timeout=20, max=993 - Content-Type: image/png - 
+	</event>
+
+	<event start="Mon Aug 03 2009 23:04:59 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://col.stb.s-msn.com/i/FB/3AEA9DC9D7A523D8282F03B26.jpg cache stored in: RJX4Q6VZ/3AEA9DC9D7A523D8282F03B26[1].jpg - HTTP/1.1 200 OK - Content-Type: image/jpeg - S: stca01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 8576 - "
+		>
+	[IE History] User joe connected to URL:http://col.stb.s-msn.com/i/FB/3AEA9DC9D7A523D8282F03B26.jpg cache stored in: RJX4Q6VZ/3AEA9DC9D7A523D8282F03B26[1].jpg - HTTP/1.1 200 OK - Content-Type: image/jpeg - S: stca01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 8576 - 
+	</event>
+
+	<event start="Tue Aug 04 2009 15:14:18 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://col.stb.s-msn.com/i/FB/3AEA9DC9D7A523D8282F03B26.jpg cache stored in: RJX4Q6VZ/3AEA9DC9D7A523D8282F03B26[1].jpg - HTTP/1.1 200 OK - Content-Type: image/jpeg - S: stca01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 8576 - "
+		>
+	[IE History] User joe connected to URL:http://col.stb.s-msn.com/i/FB/3AEA9DC9D7A523D8282F03B26.jpg cache stored in: RJX4Q6VZ/3AEA9DC9D7A523D8282F03B26[1].jpg - HTTP/1.1 200 OK - Content-Type: image/jpeg - S: stca01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 8576 - 
+	</event>
+
+	<event start="Tue Jan 02 2007 23:36:14 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://www.live.com/favicon.ico cache stored in: UPQHCM07/favicon[1].ico - HTTP/1.1 200 OK - Content-Length: 1150 - Content-Type: image/x-icon - ETag: 1FDF59A04249EFA16DDB926B444C312E0000047E - X-Powered-By: ASP.NET - "
+		>
+	[IE History] User joe connected to URL:http://www.live.com/favicon.ico cache stored in: UPQHCM07/favicon[1].ico - HTTP/1.1 200 OK - Content-Length: 1150 - Content-Type: image/x-icon - ETag: 1FDF59A04249EFA16DDB926B444C312E0000047E - X-Powered-By: ASP.NET - 
+	</event>
+
+	<event start="Tue Aug 04 2009 15:14:34 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://www.live.com/favicon.ico cache stored in: UPQHCM07/favicon[1].ico - HTTP/1.1 200 OK - Content-Length: 1150 - Content-Type: image/x-icon - ETag: 1FDF59A04249EFA16DDB926B444C312E0000047E - X-Powered-By: ASP.NET - "
+		>
+	[IE History] User joe connected to URL:http://www.live.com/favicon.ico cache stored in: UPQHCM07/favicon[1].ico - HTTP/1.1 200 OK - Content-Length: 1150 - Content-Type: image/x-icon - ETag: 1FDF59A04249EFA16DDB926B444C312E0000047E - X-Powered-By: ASP.NET - 
+	</event>
+
+	<event start="Wed Apr 22 2009 20:31:35 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://is.www.mozilla.com/img/tignish/firstrun/sub-feature-top.png cache stored in: FBRUWRCP/sub-feature-top[1].png - HTTP/1.1 200 OK - ETag: 1b1-a64fb7c0 - Content-Length: 433 - Keep-Alive: timeout=20, max=952 - Content-Type: image/png - "
+		>
+	[IE History] User joe connected to URL:http://is.www.mozilla.com/img/tignish/firstrun/sub-feature-top.png cache stored in: FBRUWRCP/sub-feature-top[1].png - HTTP/1.1 200 OK - ETag: 1b1-a64fb7c0 - Content-Length: 433 - Keep-Alive: timeout=20, max=952 - Content-Type: image/png - 
+	</event>
+
+	<event start="Tue Aug 04 2009 15:14:43 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://is.www.mozilla.com/img/tignish/firstrun/sub-feature-top.png cache stored in: FBRUWRCP/sub-feature-top[1].png - HTTP/1.1 200 OK - ETag: 1b1-a64fb7c0 - Content-Length: 433 - Keep-Alive: timeout=20, max=952 - Content-Type: image/png - "
+		>
+	[IE History] User joe connected to URL:http://is.www.mozilla.com/img/tignish/firstrun/sub-feature-top.png cache stored in: FBRUWRCP/sub-feature-top[1].png - HTTP/1.1 200 OK - ETag: 1b1-a64fb7c0 - Content-Length: 433 - Keep-Alive: timeout=20, max=952 - Content-Type: image/png - 
+	</event>
+
+	<event start="Tue Apr 21 2009 08:40:52 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://col.stc.s-msn.com/br/hp/11/en-us/css/i/kvrc.png cache stored in: 6G813UAL/kvrc[1].png - HTTP/1.1 200 OK - Content-Type: image/png - S: STCA01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 367 - "
+		>
+	[IE History] User joe connected to URL:http://col.stc.s-msn.com/br/hp/11/en-us/css/i/kvrc.png cache stored in: 6G813UAL/kvrc[1].png - HTTP/1.1 200 OK - Content-Type: image/png - S: STCA01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 367 - 
+	</event>
+
+	<event start="Tue Aug 04 2009 15:14:18 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://col.stc.s-msn.com/br/hp/11/en-us/css/i/kvrc.png cache stored in: 6G813UAL/kvrc[1].png - HTTP/1.1 200 OK - Content-Type: image/png - S: STCA01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 367 - "
+		>
+	[IE History] User joe connected to URL:http://col.stc.s-msn.com/br/hp/11/en-us/css/i/kvrc.png cache stored in: 6G813UAL/kvrc[1].png - HTTP/1.1 200 OK - Content-Type: image/png - S: STCA01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 367 - 
+	</event>
+
+	<event start="Tue Apr 21 2009 08:39:31 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://col.stc.s-msn.com/br/hp/11/en-us/css/hp_1.css cache stored in: 6G813UAL/hp_1[1].css - HTTP/1.1 200 OK - Content-Type: text/css - ntCoent-Length: 16247 - S: STCA01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 16247 - "
+		>
+	[IE History] User joe connected to URL:http://col.stc.s-msn.com/br/hp/11/en-us/css/hp_1.css cache stored in: 6G813UAL/hp_1[1].css - HTTP/1.1 200 OK - Content-Type: text/css - ntCoent-Length: 16247 - S: STCA01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 16247 - 
+	</event>
+
+	<event start="Tue Aug 04 2009 15:14:17 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://col.stc.s-msn.com/br/hp/11/en-us/css/hp_1.css cache stored in: 6G813UAL/hp_1[1].css - HTTP/1.1 200 OK - Content-Type: text/css - ntCoent-Length: 16247 - S: STCA01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 16247 - "
+		>
+	[IE History] User joe connected to URL:http://col.stc.s-msn.com/br/hp/11/en-us/css/hp_1.css cache stored in: 6G813UAL/hp_1[1].css - HTTP/1.1 200 OK - Content-Type: text/css - ntCoent-Length: 16247 - S: STCA01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 16247 - 
+	</event>
+
+	<event start="Fri Jul 31 2009 00:19:06 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://col.stj.s-msn.com/br/hp/11/en-us/js/tr_20.js cache stored in: UPQHCM07/tr_20[1].js - HTTP/1.1 200 OK - Content-Type: application/x-javascript - S: STCA01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 14650 - "
+		>
+	[IE History] User joe connected to URL:http://col.stj.s-msn.com/br/hp/11/en-us/js/tr_20.js cache stored in: UPQHCM07/tr_20[1].js - HTTP/1.1 200 OK - Content-Type: application/x-javascript - S: STCA01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 14650 - 
+	</event>
+
+	<event start="Tue Aug 04 2009 15:14:17 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://col.stj.s-msn.com/br/hp/11/en-us/js/tr_20.js cache stored in: UPQHCM07/tr_20[1].js - HTTP/1.1 200 OK - Content-Type: application/x-javascript - S: STCA01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 14650 - "
+		>
+	[IE History] User joe connected to URL:http://col.stj.s-msn.com/br/hp/11/en-us/js/tr_20.js cache stored in: UPQHCM07/tr_20[1].js - HTTP/1.1 200 OK - Content-Type: application/x-javascript - S: STCA01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 14650 - 
+	</event>
+
+	<event start="Tue Apr 21 2009 08:40:44 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://col.stc.s-msn.com/br/hp/11/en-us/css/i/glow_b.gif cache stored in: FBRUWRCP/glow_b[1].gif - HTTP/1.1 200 OK - Content-Type: image/gif - S: STCA01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 2231 - "
+		>
+	[IE History] User joe connected to URL:http://col.stc.s-msn.com/br/hp/11/en-us/css/i/glow_b.gif cache stored in: FBRUWRCP/glow_b[1].gif - HTTP/1.1 200 OK - Content-Type: image/gif - S: STCA01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 2231 - 
+	</event>
+
+	<event start="Tue Aug 04 2009 15:14:18 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://col.stc.s-msn.com/br/hp/11/en-us/css/i/glow_b.gif cache stored in: FBRUWRCP/glow_b[1].gif - HTTP/1.1 200 OK - Content-Type: image/gif - S: STCA01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 2231 - "
+		>
+	[IE History] User joe connected to URL:http://col.stc.s-msn.com/br/hp/11/en-us/css/i/glow_b.gif cache stored in: FBRUWRCP/glow_b[1].gif - HTTP/1.1 200 OK - Content-Type: image/gif - S: STCA01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 2231 - 
+	</event>
+
+	<event start="Thu Jan 01 1970 00:00:00 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://is.www.mozilla.com/js/download.js cache stored in: UPQHCM07/download[1].js - HTTP/1.1 200 OK - X-Powered-By: PHP/5.1.6 - Cteonnt-Length: 5211 - Keep-Alive: timeout=20, max=964 - Content-Type: text/html; charset=UTF-8 - Content-Length: 5211 - "
+		>
+	[IE History] User joe connected to URL:http://is.www.mozilla.com/js/download.js cache stored in: UPQHCM07/download[1].js - HTTP/1.1 200 OK - X-Powered-By: PHP/5.1.6 - Cteonnt-Length: 5211 - Keep-Alive: timeout=20, max=964 - Content-Type: text/html; charset=UTF-8 - Content-Length: 5211 - 
+	</event>
+
+	<event start="Tue Aug 04 2009 15:14:42 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://is.www.mozilla.com/js/download.js cache stored in: UPQHCM07/download[1].js - HTTP/1.1 200 OK - X-Powered-By: PHP/5.1.6 - Cteonnt-Length: 5211 - Keep-Alive: timeout=20, max=964 - Content-Type: text/html; charset=UTF-8 - Content-Length: 5211 - "
+		>
+	[IE History] User joe connected to URL:http://is.www.mozilla.com/js/download.js cache stored in: UPQHCM07/download[1].js - HTTP/1.1 200 OK - X-Powered-By: PHP/5.1.6 - Cteonnt-Length: 5211 - Keep-Alive: timeout=20, max=964 - Content-Type: text/html; charset=UTF-8 - Content-Length: 5211 - 
+	</event>
+
+	<event start="Thu Jan 01 1970 00:00:00 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://ads2.msn.com/CIS/27/000/000/000/001/349.jpg cache stored in: 6G813UAL/349[1].jpg - HTTP/1.1 200 OK - Content-Type: image/jpeg - X-Powered-By: ASP.NET - X-AspNet-Version: 2.0.50727 - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 20321 - "
+		>
+	[IE History] User joe connected to URL:http://ads2.msn.com/CIS/27/000/000/000/001/349.jpg cache stored in: 6G813UAL/349[1].jpg - HTTP/1.1 200 OK - Content-Type: image/jpeg - X-Powered-By: ASP.NET - X-AspNet-Version: 2.0.50727 - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 20321 - 
+	</event>
+
+	<event start="Tue Aug 04 2009 15:14:18 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://ads2.msn.com/CIS/27/000/000/000/001/349.jpg cache stored in: 6G813UAL/349[1].jpg - HTTP/1.1 200 OK - Content-Type: image/jpeg - X-Powered-By: ASP.NET - X-AspNet-Version: 2.0.50727 - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 20321 - "
+		>
+	[IE History] User joe connected to URL:http://ads2.msn.com/CIS/27/000/000/000/001/349.jpg cache stored in: 6G813UAL/349[1].jpg - HTTP/1.1 200 OK - Content-Type: image/jpeg - X-Powered-By: ASP.NET - X-AspNet-Version: 2.0.50727 - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 20321 - 
+	</event>
+
+	<event start="Thu Jan 01 1970 00:00:00 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://ads2.msn.com/CIS/69/000/000/000/001/528.jpg cache stored in: 6G813UAL/528[1].jpg - HTTP/1.1 200 OK - Content-Type: image/jpeg - X-Powered-By: ASP.NET - X-AspNet-Version: 2.0.50727 - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 15308 - "
+		>
+	[IE History] User joe connected to URL:http://ads2.msn.com/CIS/69/000/000/000/001/528.jpg cache stored in: 6G813UAL/528[1].jpg - HTTP/1.1 200 OK - Content-Type: image/jpeg - X-Powered-By: ASP.NET - X-AspNet-Version: 2.0.50727 - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 15308 - 
+	</event>
+
+	<event start="Tue Aug 04 2009 15:14:18 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://ads2.msn.com/CIS/69/000/000/000/001/528.jpg cache stored in: 6G813UAL/528[1].jpg - HTTP/1.1 200 OK - Content-Type: image/jpeg - X-Powered-By: ASP.NET - X-AspNet-Version: 2.0.50727 - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 15308 - "
+		>
+	[IE History] User joe connected to URL:http://ads2.msn.com/CIS/69/000/000/000/001/528.jpg cache stored in: 6G813UAL/528[1].jpg - HTTP/1.1 200 OK - Content-Type: image/jpeg - X-Powered-By: ASP.NET - X-AspNet-Version: 2.0.50727 - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 15308 - 
+	</event>
+
+	<event start="Tue Apr 21 2009 08:40:10 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://col.stc.s-msn.com/br/hp/11/en-us/css/i/asmsn.gif cache stored in: RJX4Q6VZ/asmsn[1].gif - HTTP/1.1 200 OK - Content-Type: image/gif - S: STCA01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 445 - "
+		>
+	[IE History] User joe connected to URL:http://col.stc.s-msn.com/br/hp/11/en-us/css/i/asmsn.gif cache stored in: RJX4Q6VZ/asmsn[1].gif - HTTP/1.1 200 OK - Content-Type: image/gif - S: STCA01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 445 - 
+	</event>
+
+	<event start="Tue Aug 04 2009 15:14:19 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://col.stc.s-msn.com/br/hp/11/en-us/css/i/asmsn.gif cache stored in: RJX4Q6VZ/asmsn[1].gif - HTTP/1.1 200 OK - Content-Type: image/gif - S: STCA01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 445 - "
+		>
+	[IE History] User joe connected to URL:http://col.stc.s-msn.com/br/hp/11/en-us/css/i/asmsn.gif cache stored in: RJX4Q6VZ/asmsn[1].gif - HTTP/1.1 200 OK - Content-Type: image/gif - S: STCA01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 445 - 
+	</event>
+
+	<event start="Wed Mar 25 2009 20:05:12 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://col.stb.s-msn.com/i/96/5146F629B72E6A89B01B5FF61E30B8.gif cache stored in: RJX4Q6VZ/5146F629B72E6A89B01B5FF61E30B8[1].gif - HTTP/1.1 200 OK - Content-Type: image/gif - S: stca01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 290 - "
+		>
+	[IE History] User joe connected to URL:http://col.stb.s-msn.com/i/96/5146F629B72E6A89B01B5FF61E30B8.gif cache stored in: RJX4Q6VZ/5146F629B72E6A89B01B5FF61E30B8[1].gif - HTTP/1.1 200 OK - Content-Type: image/gif - S: stca01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 290 - 
+	</event>
+
+	<event start="Tue Aug 04 2009 15:14:18 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://col.stb.s-msn.com/i/96/5146F629B72E6A89B01B5FF61E30B8.gif cache stored in: RJX4Q6VZ/5146F629B72E6A89B01B5FF61E30B8[1].gif - HTTP/1.1 200 OK - Content-Type: image/gif - S: stca01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 290 - "
+		>
+	[IE History] User joe connected to URL:http://col.stb.s-msn.com/i/96/5146F629B72E6A89B01B5FF61E30B8.gif cache stored in: RJX4Q6VZ/5146F629B72E6A89B01B5FF61E30B8[1].gif - HTTP/1.1 200 OK - Content-Type: image/gif - S: stca01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 290 - 
+	</event>
+
+	<event start="Thu Jan 01 1970 00:00:00 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://ads2.msn.com/CIS/54/000/000/000/001/535.jpg cache stored in: FBRUWRCP/535[1].jpg - HTTP/1.1 200 OK - Content-Type: image/jpeg - X-Powered-By: ASP.NET - X-AspNet-Version: 2.0.50727 - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 2804 - "
+		>
+	[IE History] User joe connected to URL:http://ads2.msn.com/CIS/54/000/000/000/001/535.jpg cache stored in: FBRUWRCP/535[1].jpg - HTTP/1.1 200 OK - Content-Type: image/jpeg - X-Powered-By: ASP.NET - X-AspNet-Version: 2.0.50727 - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 2804 - 
+	</event>
+
+	<event start="Tue Aug 04 2009 15:14:19 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://ads2.msn.com/CIS/54/000/000/000/001/535.jpg cache stored in: FBRUWRCP/535[1].jpg - HTTP/1.1 200 OK - Content-Type: image/jpeg - X-Powered-By: ASP.NET - X-AspNet-Version: 2.0.50727 - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 2804 - "
+		>
+	[IE History] User joe connected to URL:http://ads2.msn.com/CIS/54/000/000/000/001/535.jpg cache stored in: FBRUWRCP/535[1].jpg - HTTP/1.1 200 OK - Content-Type: image/jpeg - X-Powered-By: ASP.NET - X-AspNet-Version: 2.0.50727 - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 2804 - 
+	</event>
+
+	<event start="Tue Jul 07 2009 20:50:15 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://is.www.mozilla.com/style/tignish/content.css cache stored in: 6G813UAL/content[1].css - HTTP/1.1 200 OK - ETag: 184e-c5020fc0 - Cteonnt-Length: 6222 - Keep-Alive: timeout=20, max=999 - Content-Type: text/css - Content-Length: 6222 - "
+		>
+	[IE History] User joe connected to URL:http://is.www.mozilla.com/style/tignish/content.css cache stored in: 6G813UAL/content[1].css - HTTP/1.1 200 OK - ETag: 184e-c5020fc0 - Cteonnt-Length: 6222 - Keep-Alive: timeout=20, max=999 - Content-Type: text/css - Content-Length: 6222 - 
+	</event>
+
+	<event start="Tue Aug 04 2009 15:14:42 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://is.www.mozilla.com/style/tignish/content.css cache stored in: 6G813UAL/content[1].css - HTTP/1.1 200 OK - ETag: 184e-c5020fc0 - Cteonnt-Length: 6222 - Keep-Alive: timeout=20, max=999 - Content-Type: text/css - Content-Length: 6222 - "
+		>
+	[IE History] User joe connected to URL:http://is.www.mozilla.com/style/tignish/content.css cache stored in: 6G813UAL/content[1].css - HTTP/1.1 200 OK - ETag: 184e-c5020fc0 - Cteonnt-Length: 6222 - Keep-Alive: timeout=20, max=999 - Content-Type: text/css - Content-Length: 6222 - 
+	</event>
+
+	<event start="Sat Jun 27 2009 07:39:35 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://is.www.mozilla.com/includes/yui/2.5.1/reset-fonts-grids/reset-fonts-grids.css cache stored in: UPQHCM07/reset-fonts-grids[1].css - HTTP/1.1 200 OK - ETag: 1592-8ef35bc0 - Cteonnt-Length: 5522 - Keep-Alive: timeout=20, max=980 - Content-Type: text/css - Content-Length: 5522 - "
+		>
+	[IE History] User joe connected to URL:http://is.www.mozilla.com/includes/yui/2.5.1/reset-fonts-grids/reset-fonts-grids.css cache stored in: UPQHCM07/reset-fonts-grids[1].css - HTTP/1.1 200 OK - ETag: 1592-8ef35bc0 - Cteonnt-Length: 5522 - Keep-Alive: timeout=20, max=980 - Content-Type: text/css - Content-Length: 5522 - 
+	</event>
+
+	<event start="Tue Aug 04 2009 15:14:42 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://is.www.mozilla.com/includes/yui/2.5.1/reset-fonts-grids/reset-fonts-grids.css cache stored in: UPQHCM07/reset-fonts-grids[1].css - HTTP/1.1 200 OK - ETag: 1592-8ef35bc0 - Cteonnt-Length: 5522 - Keep-Alive: timeout=20, max=980 - Content-Type: text/css - Content-Length: 5522 - "
+		>
+	[IE History] User joe connected to URL:http://is.www.mozilla.com/includes/yui/2.5.1/reset-fonts-grids/reset-fonts-grids.css cache stored in: UPQHCM07/reset-fonts-grids[1].css - HTTP/1.1 200 OK - ETag: 1592-8ef35bc0 - Cteonnt-Length: 5522 - Keep-Alive: timeout=20, max=980 - Content-Type: text/css - Content-Length: 5522 - 
+	</event>
+
+	<event start="Tue Aug 04 2009 00:43:38 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://col.stj.s-msn.com/br/hp/11/en-us/js/ascode_2.js cache stored in: UPQHCM07/ascode_2[1].js - HTTP/1.1 200 OK - Content-Type: application/x-javascript - ntCoent-Length: 6500 - S: STCA01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 6500 - "
+		>
+	[IE History] User joe connected to URL:http://col.stj.s-msn.com/br/hp/11/en-us/js/ascode_2.js cache stored in: UPQHCM07/ascode_2[1].js - HTTP/1.1 200 OK - Content-Type: application/x-javascript - ntCoent-Length: 6500 - S: STCA01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 6500 - 
+	</event>
+
+	<event start="Tue Aug 04 2009 15:14:18 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://col.stj.s-msn.com/br/hp/11/en-us/js/ascode_2.js cache stored in: UPQHCM07/ascode_2[1].js - HTTP/1.1 200 OK - Content-Type: application/x-javascript - ntCoent-Length: 6500 - S: STCA01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 6500 - "
+		>
+	[IE History] User joe connected to URL:http://col.stj.s-msn.com/br/hp/11/en-us/js/ascode_2.js cache stored in: UPQHCM07/ascode_2[1].js - HTTP/1.1 200 OK - Content-Type: application/x-javascript - ntCoent-Length: 6500 - S: STCA01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 6500 - 
+	</event>
+
+	<event start="Tue Apr 21 2009 08:41:22 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://col.stc.s-msn.com/br/hp/11/en-us/css/i/wplay.png cache stored in: FBRUWRCP/wplay[1].png - HTTP/1.1 200 OK - Content-Type: image/png - S: STCA01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 1737 - "
+		>
+	[IE History] User joe connected to URL:http://col.stc.s-msn.com/br/hp/11/en-us/css/i/wplay.png cache stored in: FBRUWRCP/wplay[1].png - HTTP/1.1 200 OK - Content-Type: image/png - S: STCA01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 1737 - 
+	</event>
+
+	<event start="Tue Aug 04 2009 15:14:19 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://col.stc.s-msn.com/br/hp/11/en-us/css/i/wplay.png cache stored in: FBRUWRCP/wplay[1].png - HTTP/1.1 200 OK - Content-Type: image/png - S: STCA01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 1737 - "
+		>
+	[IE History] User joe connected to URL:http://col.stc.s-msn.com/br/hp/11/en-us/css/i/wplay.png cache stored in: FBRUWRCP/wplay[1].png - HTTP/1.1 200 OK - Content-Type: image/png - S: STCA01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 1737 - 
+	</event>
+
+	<event start="Tue Jul 15 2003 16:49:37 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://b.ads1.msn.com/ads/1/0000000001_000000000000000017246.gif cache stored in: RJX4Q6VZ/0000000001_000000000000000017246[1].gif - HTTP/1.1 200 OK - Content-Type: image/gif - PICS-Label: (PICS-1.1 http://www.rsac.org/ratingsv01.html l comment RSACi North America Server by inet@microsoft.com r (n 0 s 0 v 0 l 0)) - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 85 - "
+		>
+	[IE History] User joe connected to URL:http://b.ads1.msn.com/ads/1/0000000001_000000000000000017246.gif cache stored in: RJX4Q6VZ/0000000001_000000000000000017246[1].gif - HTTP/1.1 200 OK - Content-Type: image/gif - PICS-Label: (PICS-1.1 http://www.rsac.org/ratingsv01.html l comment RSACi North America Server by inet@microsoft.com r (n 0 s 0 v 0 l 0)) - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 85 - 
+	</event>
+
+	<event start="Tue Aug 04 2009 15:14:19 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://b.ads1.msn.com/ads/1/0000000001_000000000000000017246.gif cache stored in: RJX4Q6VZ/0000000001_000000000000000017246[1].gif - HTTP/1.1 200 OK - Content-Type: image/gif - PICS-Label: (PICS-1.1 http://www.rsac.org/ratingsv01.html l comment RSACi North America Server by inet@microsoft.com r (n 0 s 0 v 0 l 0)) - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 85 - "
+		>
+	[IE History] User joe connected to URL:http://b.ads1.msn.com/ads/1/0000000001_000000000000000017246.gif cache stored in: RJX4Q6VZ/0000000001_000000000000000017246[1].gif - HTTP/1.1 200 OK - Content-Type: image/gif - PICS-Label: (PICS-1.1 http://www.rsac.org/ratingsv01.html l comment RSACi North America Server by inet@microsoft.com r (n 0 s 0 v 0 l 0)) - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 85 - 
+	</event>
+
+	<event start="Tue Apr 21 2009 08:40:19 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://col.stc.s-msn.com/br/hp/11/en-us/css/i/bullet.gif cache stored in: UPQHCM07/bullet[1].gif - HTTP/1.1 200 OK - Content-Type: image/gif - S: STCA01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 43 - "
+		>
+	[IE History] User joe connected to URL:http://col.stc.s-msn.com/br/hp/11/en-us/css/i/bullet.gif cache stored in: UPQHCM07/bullet[1].gif - HTTP/1.1 200 OK - Content-Type: image/gif - S: STCA01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 43 - 
+	</event>
+
+	<event start="Tue Aug 04 2009 15:14:18 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://col.stc.s-msn.com/br/hp/11/en-us/css/i/bullet.gif cache stored in: UPQHCM07/bullet[1].gif - HTTP/1.1 200 OK - Content-Type: image/gif - S: STCA01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 43 - "
+		>
+	[IE History] User joe connected to URL:http://col.stc.s-msn.com/br/hp/11/en-us/css/i/bullet.gif cache stored in: UPQHCM07/bullet[1].gif - HTTP/1.1 200 OK - Content-Type: image/gif - S: STCA01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 43 - 
+	</event>
+
+	<event start="Mon Aug 03 2009 23:19:17 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://col.stb.s-msn.com/i/53/4D494278BBEEAA6611632AD49AC09F.jpg cache stored in: RJX4Q6VZ/4D494278BBEEAA6611632AD49AC09F[1].jpg - HTTP/1.1 200 OK - Content-Type: image/jpeg - S: stca01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 15789 - "
+		>
+	[IE History] User joe connected to URL:http://col.stb.s-msn.com/i/53/4D494278BBEEAA6611632AD49AC09F.jpg cache stored in: RJX4Q6VZ/4D494278BBEEAA6611632AD49AC09F[1].jpg - HTTP/1.1 200 OK - Content-Type: image/jpeg - S: stca01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 15789 - 
+	</event>
+
+	<event start="Tue Aug 04 2009 15:14:19 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://col.stb.s-msn.com/i/53/4D494278BBEEAA6611632AD49AC09F.jpg cache stored in: RJX4Q6VZ/4D494278BBEEAA6611632AD49AC09F[1].jpg - HTTP/1.1 200 OK - Content-Type: image/jpeg - S: stca01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 15789 - "
+		>
+	[IE History] User joe connected to URL:http://col.stb.s-msn.com/i/53/4D494278BBEEAA6611632AD49AC09F.jpg cache stored in: RJX4Q6VZ/4D494278BBEEAA6611632AD49AC09F[1].jpg - HTTP/1.1 200 OK - Content-Type: image/jpeg - S: stca01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 15789 - 
+	</event>
+
+	<event start="Mon Dec 29 2008 15:54:24 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://m1.2mdn.net/viewad/2080520/9-1x1.gif cache stored in: UPQHCM07/9-1x1[1].gif - HTTP/1.1 200 OK - Content-Type: image/gif - Content-Length: 43 - "
+		>
+	[IE History] User joe connected to URL:http://m1.2mdn.net/viewad/2080520/9-1x1.gif cache stored in: UPQHCM07/9-1x1[1].gif - HTTP/1.1 200 OK - Content-Type: image/gif - Content-Length: 43 - 
+	</event>
+
+	<event start="Tue Aug 04 2009 15:14:19 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://m1.2mdn.net/viewad/2080520/9-1x1.gif cache stored in: UPQHCM07/9-1x1[1].gif - HTTP/1.1 200 OK - Content-Type: image/gif - Content-Length: 43 - "
+		>
+	[IE History] User joe connected to URL:http://m1.2mdn.net/viewad/2080520/9-1x1.gif cache stored in: UPQHCM07/9-1x1[1].gif - HTTP/1.1 200 OK - Content-Type: image/gif - Content-Length: 43 - 
+	</event>
+
+	<event start="Thu Jan 01 1970 00:00:00 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://analytics.live.com/Scripts/wlHelper.js?i=ANID cache stored in: 6G813UAL/wlHelper[1].js - HTTP/1.1 200 OK - Content-Type: application/x-javascript; charset=utf-8 - X-AspNet-Version: 2.0.50727 - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo, policyref=http://privacy.msn.com/w3c/p3p.xml - Content-Length: 1893 - "
+		>
+	[IE History] User joe connected to URL:http://analytics.live.com/Scripts/wlHelper.js?i=ANID cache stored in: 6G813UAL/wlHelper[1].js - HTTP/1.1 200 OK - Content-Type: application/x-javascript; charset=utf-8 - X-AspNet-Version: 2.0.50727 - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo, policyref=http://privacy.msn.com/w3c/p3p.xml - Content-Length: 1893 - 
+	</event>
+
+	<event start="Tue Aug 04 2009 15:14:20 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://analytics.live.com/Scripts/wlHelper.js?i=ANID cache stored in: 6G813UAL/wlHelper[1].js - HTTP/1.1 200 OK - Content-Type: application/x-javascript; charset=utf-8 - X-AspNet-Version: 2.0.50727 - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo, policyref=http://privacy.msn.com/w3c/p3p.xml - Content-Length: 1893 - "
+		>
+	[IE History] User joe connected to URL:http://analytics.live.com/Scripts/wlHelper.js?i=ANID cache stored in: 6G813UAL/wlHelper[1].js - HTTP/1.1 200 OK - Content-Type: application/x-javascript; charset=utf-8 - X-AspNet-Version: 2.0.50727 - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo, policyref=http://privacy.msn.com/w3c/p3p.xml - Content-Length: 1893 - 
+	</event>
+
+	<event start="Wed Apr 22 2009 20:31:32 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://is.www.mozilla.com/favicon.ico cache stored in: RJX4Q6VZ/favicon[2].ico - HTTP/1.1 200 OK - ETag: 57e-a621f100 - Content-Length: 1406 - Keep-Alive: timeout=20, max=868 - Content-Type: image/x-icon - "
+		>
+	[IE History] User joe connected to URL:http://is.www.mozilla.com/favicon.ico cache stored in: RJX4Q6VZ/favicon[2].ico - HTTP/1.1 200 OK - ETag: 57e-a621f100 - Content-Length: 1406 - Keep-Alive: timeout=20, max=868 - Content-Type: image/x-icon - 
+	</event>
+
+	<event start="Tue Aug 04 2009 15:14:44 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://is.www.mozilla.com/favicon.ico cache stored in: RJX4Q6VZ/favicon[2].ico - HTTP/1.1 200 OK - ETag: 57e-a621f100 - Content-Length: 1406 - Keep-Alive: timeout=20, max=868 - Content-Type: image/x-icon - "
+		>
+	[IE History] User joe connected to URL:http://is.www.mozilla.com/favicon.ico cache stored in: RJX4Q6VZ/favicon[2].ico - HTTP/1.1 200 OK - ETag: 57e-a621f100 - Content-Length: 1406 - Keep-Alive: timeout=20, max=868 - Content-Type: image/x-icon - 
+	</event>
+
+	<event start="Mon Jun 01 2009 10:53:30 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://col.stc.s-msn.com/br/hp/11/en-us/css/i/kv_logof.png cache stored in: UPQHCM07/kv_logof[1].png - HTTP/1.1 200 OK - Content-Type: image/png - S: STCA01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 2382 - "
+		>
+	[IE History] User joe connected to URL:http://col.stc.s-msn.com/br/hp/11/en-us/css/i/kv_logof.png cache stored in: UPQHCM07/kv_logof[1].png - HTTP/1.1 200 OK - Content-Type: image/png - S: STCA01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 2382 - 
+	</event>
+
+	<event start="Tue Aug 04 2009 15:14:18 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://col.stc.s-msn.com/br/hp/11/en-us/css/i/kv_logof.png cache stored in: UPQHCM07/kv_logof[1].png - HTTP/1.1 200 OK - Content-Type: image/png - S: STCA01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 2382 - "
+		>
+	[IE History] User joe connected to URL:http://col.stc.s-msn.com/br/hp/11/en-us/css/i/kv_logof.png cache stored in: UPQHCM07/kv_logof[1].png - HTTP/1.1 200 OK - Content-Type: image/png - S: STCA01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 2382 - 
+	</event>
+
+	<event start="Tue Apr 21 2009 08:40:51 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://col.stc.s-msn.com/br/hp/11/en-us/css/i/kvlc.png cache stored in: 6G813UAL/kvlc[1].png - HTTP/1.1 200 OK - Content-Type: image/png - S: STCA01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 343 - "
+		>
+	[IE History] User joe connected to URL:http://col.stc.s-msn.com/br/hp/11/en-us/css/i/kvlc.png cache stored in: 6G813UAL/kvlc[1].png - HTTP/1.1 200 OK - Content-Type: image/png - S: STCA01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 343 - 
+	</event>
+
+	<event start="Tue Aug 04 2009 15:14:18 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://col.stc.s-msn.com/br/hp/11/en-us/css/i/kvlc.png cache stored in: 6G813UAL/kvlc[1].png - HTTP/1.1 200 OK - Content-Type: image/png - S: STCA01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 343 - "
+		>
+	[IE History] User joe connected to URL:http://col.stc.s-msn.com/br/hp/11/en-us/css/i/kvlc.png cache stored in: 6G813UAL/kvlc[1].png - HTTP/1.1 200 OK - Content-Type: image/png - S: STCA01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 343 - 
+	</event>
+
+	<event start="Tue Apr 21 2009 08:40:10 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://col.stc.s-msn.com/br/hp/11/en-us/css/i/arr.gif cache stored in: UPQHCM07/arr[1].gif - HTTP/1.1 200 OK - Content-Type: image/gif - S: STCA01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 841 - "
+		>
+	[IE History] User joe connected to URL:http://col.stc.s-msn.com/br/hp/11/en-us/css/i/arr.gif cache stored in: UPQHCM07/arr[1].gif - HTTP/1.1 200 OK - Content-Type: image/gif - S: STCA01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 841 - 
+	</event>
+
+	<event start="Tue Aug 04 2009 15:14:18 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://col.stc.s-msn.com/br/hp/11/en-us/css/i/arr.gif cache stored in: UPQHCM07/arr[1].gif - HTTP/1.1 200 OK - Content-Type: image/gif - S: STCA01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 841 - "
+		>
+	[IE History] User joe connected to URL:http://col.stc.s-msn.com/br/hp/11/en-us/css/i/arr.gif cache stored in: UPQHCM07/arr[1].gif - HTTP/1.1 200 OK - Content-Type: image/gif - S: STCA01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 841 - 
+	</event>
+
+	<event start="Tue Aug 04 2009 00:43:40 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://col.stj.s-msn.com/br/hp/11/en-us/js/hp_exp_7.js cache stored in: UPQHCM07/hp_exp_7[1].js - HTTP/1.1 200 OK - Content-Type: application/x-javascript - ntCoent-Length: 119132 - S: STCA01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 119132 - "
+		>
+	[IE History] User joe connected to URL:http://col.stj.s-msn.com/br/hp/11/en-us/js/hp_exp_7.js cache stored in: UPQHCM07/hp_exp_7[1].js - HTTP/1.1 200 OK - Content-Type: application/x-javascript - ntCoent-Length: 119132 - S: STCA01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 119132 - 
+	</event>
+
+	<event start="Tue Aug 04 2009 15:14:18 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://col.stj.s-msn.com/br/hp/11/en-us/js/hp_exp_7.js cache stored in: UPQHCM07/hp_exp_7[1].js - HTTP/1.1 200 OK - Content-Type: application/x-javascript - ntCoent-Length: 119132 - S: STCA01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 119132 - "
+		>
+	[IE History] User joe connected to URL:http://col.stj.s-msn.com/br/hp/11/en-us/js/hp_exp_7.js cache stored in: UPQHCM07/hp_exp_7[1].js - HTTP/1.1 200 OK - Content-Type: application/x-javascript - ntCoent-Length: 119132 - S: STCA01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 119132 - 
+	</event>
+
+	<event start="Mon Aug 03 2009 23:15:21 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://col.stb.s-msn.com/i/C8/73BD89E0E170F470B669A7F5762F8A.jpg cache stored in: UPQHCM07/73BD89E0E170F470B669A7F5762F8A[1].jpg - HTTP/1.1 200 OK - Content-Type: image/jpeg - S: stca01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 2370 - "
+		>
+	[IE History] User joe connected to URL:http://col.stb.s-msn.com/i/C8/73BD89E0E170F470B669A7F5762F8A.jpg cache stored in: UPQHCM07/73BD89E0E170F470B669A7F5762F8A[1].jpg - HTTP/1.1 200 OK - Content-Type: image/jpeg - S: stca01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 2370 - 
+	</event>
+
+	<event start="Tue Aug 04 2009 15:14:18 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://col.stb.s-msn.com/i/C8/73BD89E0E170F470B669A7F5762F8A.jpg cache stored in: UPQHCM07/73BD89E0E170F470B669A7F5762F8A[1].jpg - HTTP/1.1 200 OK - Content-Type: image/jpeg - S: stca01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 2370 - "
+		>
+	[IE History] User joe connected to URL:http://col.stb.s-msn.com/i/C8/73BD89E0E170F470B669A7F5762F8A.jpg cache stored in: UPQHCM07/73BD89E0E170F470B669A7F5762F8A[1].jpg - HTTP/1.1 200 OK - Content-Type: image/jpeg - S: stca01 - X-Powered-By: ASP.NET - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 2370 - 
+	</event>
+
+	<event start="Wed Apr 22 2009 17:13:08 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://is.www.mozilla.com/img/tignish/template/header-background.png cache stored in: UPQHCM07/header-background[1].png - HTTP/1.1 200 OK - ETag: 221-e0995100 - Content-Length: 545 - Keep-Alive: timeout=20, max=951 - Content-Type: image/png - "
+		>
+	[IE History] User joe connected to URL:http://is.www.mozilla.com/img/tignish/template/header-background.png cache stored in: UPQHCM07/header-background[1].png - HTTP/1.1 200 OK - ETag: 221-e0995100 - Content-Length: 545 - Keep-Alive: timeout=20, max=951 - Content-Type: image/png - 
+	</event>
+
+	<event start="Tue Aug 04 2009 15:14:43 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://is.www.mozilla.com/img/tignish/template/header-background.png cache stored in: UPQHCM07/header-background[1].png - HTTP/1.1 200 OK - ETag: 221-e0995100 - Content-Length: 545 - Keep-Alive: timeout=20, max=951 - Content-Type: image/png - "
+		>
+	[IE History] User joe connected to URL:http://is.www.mozilla.com/img/tignish/template/header-background.png cache stored in: UPQHCM07/header-background[1].png - HTTP/1.1 200 OK - ETag: 221-e0995100 - Content-Length: 545 - Keep-Alive: timeout=20, max=951 - Content-Type: image/png - 
+	</event>
+
+	<event start="Thu Jan 01 1970 00:00:00 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://a.ads2.msn.com/CIS/17/000/000/000/001/502.gif cache stored in: RJX4Q6VZ/502[1].gif - HTTP/1.1 200 OK - Content-Type: image/gif - X-Powered-By: ASP.NET - X-AspNet-Version: 2.0.50727 - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 2389 - "
+		>
+	[IE History] User joe connected to URL:http://a.ads2.msn.com/CIS/17/000/000/000/001/502.gif cache stored in: RJX4Q6VZ/502[1].gif - HTTP/1.1 200 OK - Content-Type: image/gif - X-Powered-By: ASP.NET - X-AspNet-Version: 2.0.50727 - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 2389 - 
+	</event>
+
+	<event start="Tue Aug 04 2009 15:14:19 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://a.ads2.msn.com/CIS/17/000/000/000/001/502.gif cache stored in: RJX4Q6VZ/502[1].gif - HTTP/1.1 200 OK - Content-Type: image/gif - X-Powered-By: ASP.NET - X-AspNet-Version: 2.0.50727 - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 2389 - "
+		>
+	[IE History] User joe connected to URL:http://a.ads2.msn.com/CIS/17/000/000/000/001/502.gif cache stored in: RJX4Q6VZ/502[1].gif - HTTP/1.1 200 OK - Content-Type: image/gif - X-Powered-By: ASP.NET - X-AspNet-Version: 2.0.50727 - P3P: CP=BUS CUR CONo FIN IVDo ONL OUR PHY SAMo TELo - Content-Length: 2389 - 
+	</event>
+
+	<event start="Wed Jun 03 2009 18:34:03 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://is.www.mozilla.com/style/tignish/template.css cache stored in: FBRUWRCP/template[1].css - HTTP/1.1 200 OK - ETag: 18d5-e75fbf00 - Cteonnt-Length: 6357 - Keep-Alive: timeout=20, max=980 - Content-Type: text/css - Content-Length: 6357 - "
+		>
+	[IE History] User joe connected to URL:http://is.www.mozilla.com/style/tignish/template.css cache stored in: FBRUWRCP/template[1].css - HTTP/1.1 200 OK - ETag: 18d5-e75fbf00 - Cteonnt-Length: 6357 - Keep-Alive: timeout=20, max=980 - Content-Type: text/css - Content-Length: 6357 - 
+	</event>
+
+	<event start="Tue Aug 04 2009 15:14:42 GMT"
+		durationEvent="false"
+		title="[IE History] User joe connected to URL:http://is.www.mozilla.com/style/tignish/template.css cache stored in: FBRUWRCP/template[1].css - HTTP/1.1 200 OK - ETag: 18d5-e75fbf00 - Cteonnt-Length: 6357 - Keep-Alive: timeout=20, max=980 - Content-Type: text/css - Content-Length: 6357 - "
+		>
+	[IE History] User joe connected to URL:http://is.www.mozilla.com/style/tignish/template.css cache stored in: FBRUWRCP/template[1].css - HTTP/1.1 200 OK - ETag: 18d5-e75fbf00 - Cteonnt-Length: 6357 - Keep-Alive: timeout=20, max=980 - Content-Type: text/css - Content-Length: 6357 - 
+	</event>
+
+</data>

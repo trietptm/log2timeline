@@ -1,0 +1,405 @@
+#!/usr/bin/perl
+#################################################################################################
+#               an example simple front-end for the SIFT station
+#################################################################################################
+# This is a simple front-end designed to make life easier on the SIFT station, it accepts
+# parameters for the image file needed to be mounted and does the following:
+#
+# + Prints out the partition table
+# + Mounts the image file
+# + Carves out the $MFT file
+# + Extracts the super timeline from the drive
+#
+# This only works for images that are NTFS, and the script assumes by default that we have a
+# Windows XP system that we are extracting the super timeline from (can be changed via the -w 
+# parameter if this is a Vista/Win7 image).
+# 
+# Author: Kristinn Gudjonsson
+# Date : 29/05/11
+#
+# Copyright 2009-2011 Kristinn Gudjonsson (kristinn ( a t ) log2timeline (d o t) net)
+#
+#  This file is part of log2timeline.
+#
+#    log2timeline is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    log2timeline is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with log2timeline.  If not, see <http://www.gnu.org/licenses/>.
+#
+
+use Log2Timeline;	# import the library that contains the log2timeline engine
+use strict;
+use Getopt::Long;	# for parameter parsing
+use Pod::Usage;         # for man and help messages
+
+use vars qw/$VERSION/;
+
+# the version number
+$VERSION = "0.09";
+
+# global variables that can be modified to adjust the tool to different workstations
+my $icat = "/usr/local/bin/icat";	# default location for icat
+my $mmls = "/usr/local/bin/mmls";	# default location for mmls
+my $fls = "/usr/local/bin/fls";		# default location for fls
+my $mount_point = '/mnt/windows_mount';	# the mount point of the image
+my $store_point = '/cases/timeline/';	# the location where the timeline data is stored
+
+
+
+# parameter variables and their defaults
+my $image_file = '';
+my $part_nr = -1;
+my $show_version = 0;
+my $print_help = 0;
+my $mount_image_file = 0;	# do we want the script to mount the image file or not?
+my $check = undef;		# variable used for storing output of shell commands
+my $time_zone = 'local';	# the timezone used
+my $type = 'winxp';		# the type of modules to use
+my $is_win_7 = 0;		# are we talking about a Windows 7 image or Windows XP?
+
+# other parameters
+
+# the mount command
+my $mount_cmd = "/sbin/mount.ntfs-3g -o ro,loop,nodev,noexec,show_sys_files,streams_interface=windows" ;
+# any additional mount options
+my $mount_extra_options = "";
+# any additional options to TSK
+my $image_options = '';
+
+# other variables
+my $temp;
+my @t;
+
+# read options
+GetOptions( 
+        "image|i=s"=>\$image_file,
+        "partition|p=i"=>\$part_nr,
+        "version!"=>\$show_version,
+	"os=s" => \$type,
+	"win7!" => \$is_win_7,
+	"zone=s" => \$time_zone,
+        "help|?!"=>\$print_help
+) or pod2usage( 2 );
+
+# check options
+if( $show_version )
+{
+	@t = split( /\//, $0 );
+        print $t[$#t] . " version " . $VERSION . "\n";
+        exit 0;
+}
+
+pod2usage(1) if $print_help;
+exit 0 if $print_help;
+
+# now to check the existance of the image_file
+pod2usage( {
+        -message        => "The image file ($image_file) does not exist. Please provide a valid image file for processing.\n",
+        -verbose        => 1,
+        -exitval        => 1 } ) unless -f $image_file;
+
+# now to check if the image file has been mounted or not
+@t = split( /\//, $mount_point );
+$temp = $t[$#t];
+
+$check = `df -h | grep $temp`;
+
+if ( $check eq '' )
+{
+	while ( 1 )
+	{
+		print "Image file ($image_file) has not been mounted. Do you want me to mount it for you? [y|n]: ";
+		my $read = <STDIN>;
+		$read =~ s/\n//;
+	
+		if ( lc($read) eq 'y' )
+		{
+			$mount_image_file = 1;
+			last;
+		}
+		elsif( lc( $read ) eq 'n' )
+		{
+			print "The image is not mounted under $mount_point and since you do not want the tool to mount it for you, the tool has to quit....\n";
+			$mount_image_file = 0;
+			exit 0;
+			last;
+		}
+		else
+		{
+			print "You have to answer either 'y' or 'n'. Please try again.\n";
+		} 
+	}
+
+	# now we need to mount the image, or at least verify
+	if( $mount_image_file )
+	{
+		# now we need to check the partition table...
+		if( $part_nr == -1 )
+		{
+			# no partition number has been provided to the tool, let's print out the partition table
+			print "No partition nr. has been provided, attempting to print it out.\n";
+			$check = `$mmls $image_file 2>&1`;
+			$check =~ s/\n$//;
+
+			if( $check eq 'Cannot determine partition type' )
+			{
+				print "Is this a disk image file? Or is it perhaps a partition image?\n";
+				$check = `$fls $image_file 2>&1`;
+				$check =~ s/\n$//;
+
+				if( $check eq 'Cannot determine file system type' )
+				{
+					print "Are you sure this is an image file?\nTSK is unable to determine the file system in question...\n";
+					exit 12;
+				}
+				else
+				{
+					print "This doesn't look like a disk image file, if this is a partition image (which it looks like), please re-run the tool with the parameter -p 0.\n";
+					print "Example: log2timeline-sift -p 0 -i IMAGE_FILE\n";
+					exit 2;
+				} 
+			}
+			else
+			{
+				# now we have a partition table to print... let's print it...
+				my $part_table = $check;
+
+				# parse the partition table
+				my @lines = split( /\n/, $part_table );
+				my $max = 0;
+				my %parts;
+				foreach my $l (@lines)
+				{
+					if ( $l =~ m/^(0[0-9]+)/ )
+					{
+						$max = $1;	
+						@t = split( /\s+/, $l );
+						$parts{int($1)} = int($t[2]);	
+					}
+				}
+				$max = int( $max );
+
+				while( 1 )
+				{
+					print $part_table. "\n";
+					print "Which partion would you like to mount?: [1-" .$max . "]: ";
+					$check = <STDIN>; 
+					$check =~ s/\n//g;
+					$check = int( $check );
+
+					if ( ($check le $max) and ( $check ge 1 ) )
+					{
+						# all OK
+						$mount_extra_options = sprintf ",offset=%d", $parts{$check} * 512;
+						$check = `sudo $mount_cmd$mount_extra_options $image_file $mount_point 2>&1`;
+						print "sudo $mount_cmd$mount_extra_options $image_file $mount_point 2>&1";
+						
+						if ( $check ne '' )
+						{
+							print $check;
+						}
+						else
+						{
+							print "Image file mounted successfully as $mount_point\n";
+						}
+						
+						last;
+					}
+					else
+					{
+						print "Partition [$check] does not exist, please enter value inside the given range.\n";
+					}
+				}
+			
+				# haven't continued past this point.....
+			}
+		}
+		elsif( $part_nr == 0 )
+		{
+			print "This is a partition image, let's attempt mounting it directly.\n";
+
+			# don't need to do any offset calculations...
+			$check = `sudo $mount_cmd $image_file $mount_point 2>&1`;
+
+			if ( $check ne '' )
+			{
+				print $check;
+			}
+			else
+			{
+				print "Image file mounted successfully as $mount_point\n";
+			}
+			
+		}
+		else
+		{
+			print "WE ARE ATTEMPTING THE UNATTEMPTABLE\n";
+	
+			# we need to calculate the offset to the partition in the image file
+			my $check = `sudo $mount_cmd" . $mount_extra_options . " $image_file $mount_point 2>&1`;
+		}
+	}
+	else
+	{
+		print "The image is not mounted under $mount_point, and the tool is not supposed to mount the image file for you... please run the tool again, and let it attempt mounting it or mount it manually.\n";
+		exit 0;
+	}
+}
+
+# check again if the image has been mounted
+$check = `df -h | grep $temp`;
+
+
+pod2usage( {
+        -message        => "There has been a problem, the image file does not seem to be mounted. Please review the process and re-run the script if necessary.\n",
+        -verbose        => 1,
+        -exitval        => 1 } ) if $check eq '';
+
+
+# now we've mounted the image file.... let's do the rest
+my $mft = `mktemp`;
+$mft =~ s/\n//g;
+
+# extract the MFT file
+$check = `$icat $image_options $image_file 0 > $mft 2>&1`;
+
+$check =~ s/\n//g;
+
+pod2usage( {
+        -message        => "There has been a problem with extracting the MFT file, please review the error message below ($check)\n",
+        -verbose        => 1,
+        -exitval        => 1 } ) unless $check eq '';
+
+
+# create folders
+mkdir 'timeline' unless -d './timeline';
+
+# create the timeline file
+open( TF, '>' . $store_point . '/timeline/bodyfile.txt' ) or die( 'Unable to create the bodyfile ' . $store_point . '/bodyfile.txt, not enough access rights?');
+
+# check the type
+$type = 'win7' if $is_win_7;
+
+# now we can start to create log2timeline objects and run against the image to extract the super timeline
+my $l2t_mft = Log2Timeline->new( 
+	file => $mft,		# point to the file/directory to parse
+	'recursive' => 0,		# we want to recursively go through stuff
+	'input' => 'mft',		# which input modules to use (this is a Win XP machine)
+	'output' => 'csv',		# what is the output module to be used
+	'text' => 'C:',			# text to prepend to path of files (like c:)
+	'append' => 0,			# we are appending to an output file, instead of writing a new one
+	'time_zone' => $time_zone,	# the time zone of the image
+	'preprocess' => 0, 		# turn on pre-processing modules 
+) or die( 'unable to start log2timeline');
+
+
+# and to process the timestamps, or run the engine against the MFT
+$l2t_mft->start;
+
+#	print_lin
+my $l2t_all = Log2Timeline->new( 
+	file => $mount_point,		# point to the file/directory to parse
+	'recursive' => 1,		# we want to recursively go through stuff
+	'input' => $type,		# which input modules to use (this is a Win XP machine)
+	'output' => 'csv',		# what is the output module to be used
+	'text' => 'C:',			# text to prepend to path of files (like c:)
+	'append' => 1,			# we are appending to an output file, instead of writing a new one
+	'time_zone' => $time_zone,	# the time zone of the image
+	'preprocess' => 1, 		# turn on pre-processing modules 
+) or die( 'unable to start log2timeline');
+
+
+# and to process the timestamps, or run the engine
+$l2t_all->start;
+
+# delete the MFT file
+unlink( $mft );
+
+# close the file
+close(TF);
+
+# unmount the image file
+$check = `umount $mount_point`;
+
+#	print_line
+# It is necessary to implement this routine in the front end.  The output modules call this method
+# to print all the output from them.  The routine can be as simple as this one, that is just to
+# print the lines to STDOUT or to print them to a file, or even some other funky stuff.
+sub print_line($)
+{
+        my $line = shift || '';
+
+        # print the line to STDOUT.... very simple processing
+        print TF $line;
+}
+
+# it is also possible to use the raw mode of log2timeline. If you do that there will be no calls to 
+# the output module.  If this option is used then the front-end needs to implement the function:
+#	process_output($)
+# This routine accepts one parameter, or the timestamp object.  The front-end then needs to process 
+# it to be able to extract the needed information.
+# 
+# Although this is possible with this version it is still highly recommended to rather create a new
+# output module than to use this option.  Creating new output module gives you all of the control 
+# you need to process and work with the timestamp object.
+# 
+
+__END__
+
+=head1 NAME
+
+B<log2timeline-sift> - A simple front-end for log2timeline, designed for the SIFT workstation. Takes care of mounting and extracting the super timeline from an image file.
+
+=head1 SYNOPSIS
+
+B<log2timeline-sift> [-p NR] -i IMAGEFILE
+
+=head1 OPTIONS
+
+=over 4
+
+=item B<-i|-image FILE>
+
+The image file that the tool is about to parse. It consists of a raw image file or a DD image file, either a partition or a disk image.
+
+=item B<-p|-partition NR>
+
+If this is a disk image, then we can provide the partition number directly so that tool can skip printing out the partition table.
+
+If the image file is a partition, not a disk image, then the option of -p 0 has to be used.
+
+=item B<-z|-zone ZONE>
+
+Define the timezone of the image file
+
+=item B<-o|-os TYPE>
+
+This variable defines the modules used in log2timeline, that is you can define directly here the list of modules or the name of a list file of input modules that log2timeline accepts.
+
+=item B<-w|-win7>
+
+Defines whether or not we are dealing with a Windows 7 image, instead of the default Windows XP
+
+=item B<-v|-version>
+
+Show the version number of this front-end
+
+=item B<-h|-help|?>
+
+This help message
+
+=back
+
+=head1 EXAMPLES
+
+log2timeline-sift -z EST5EDT -i /images/xp_dblake.dd -p 0 
+
+=cut

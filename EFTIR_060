@@ -1,0 +1,48 @@
+VILLA!!
+	Skoda mismun a EXIF upplysingum ur annars vegar SIFT og hins vegar ur minni vel.... 
+		- er ekki ad hondla zone rett....
+
+===================
+GEYMA EKKI NUNA!!!
+-------------------
+? threads http://perldoc.perl.org/perlthrtut.html
+	haegt ad bua til nyja vela, afar einfalda:
+
+    use Config;
+    use MyMod;
+    BEGIN {
+    if ($Config{useithreads}) {
+    # We have threads
+    require MyMod_threaded;
+    import MyMod_threaded;
+    } else {
+    require MyMod_unthreaded;
+    import MyMod_unthreaded;
+    }
+    }
+
+Log2t/Threaded.pm og NonThreaded,pm eftir stillingu
+
+	I Log2t/Threaded.pm er
+use Log2t::NonThreaded;
+@ISA = ( "Log2t::NonThreaded" );
+
+	inheret - og svo yfirskrifa thad sem tharf ad yfirskrifa....
+
+
+Bua svo til nyjan trad fyrir hverja skra (baedi validate og parse)
+	? skoda fjolda kjarna og bua bara til $fjoldi-1???
+
+  use Sys::CPU;
+  
+  $number_of_cpus = Sys::CPU::cpu_count();
+  printf("I have %d CPU's\n",$number_of_cpus);
+  print "  Speed : ",Sys::CPU::cpu_clock(),"\n";
+  print "  Type  : ",Sys::CPU::cpu_type(),"\n";
+
+svo spurning med ad baeta vid module -> change log paelingarnar....
+
+? med glog2timeline framenda...... drepa? betrumbaeta? sja til med tima.....
+-------------------
+? threads http://perldoc.perl.org/perlthrtut.html
+

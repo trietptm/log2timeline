@@ -1,0 +1,2556 @@
+#################################################################################################
+#	 	NTUSER (formerly userassist)
+#################################################################################################
+# this script reads the user registry file (NTUSER.DAT) and parses it.  It then further extracts
+# the user assist part of the registry and produces a bodyfile containing the timeline information
+# that can be used directly with the script mactime from TSK collection.  
+#
+# The specification of the body file can be found here:
+#	http://wiki.sleuthkit.org/index.php?title=Body_file
+# 
+# This script was originally based on the userassist.pl from the RegRipper (regripper.net),
+# written by H. Carvey.  The script consists of most parts of the function pluginmain from
+# that file.  Since the structure of log2timeline is different from that of RegRipper, that 
+# function had to be split up into several functions and some changes made to the function
+# (some features taken out while others added in).  But essentially for the Windows XP 
+# part this is the same code.
+# The code was taken from the 20080726 version of userassist.pl.
+#
+# Support for the Windows 7/Vista UserAssist keys was added by me after reading the 
+# article "Windows 7 UserAssist Registry keys" by Didier Stevens in the Into The Boxes
+# magazine, q1 2009
+#
+# For ShellBags read: http://www.dfrws.org/2009/proceedings/p69-zhu.pdf
+#
+# The code was then further expanded to read more keys from the NTUSER.DAT file, so that
+# it does not only include entries from the UserAssist key but various keys that are commonly
+# found within the NTUSER.DAT file.
+#
+# Author: Kristinn Gudjonsson
+# Version : 1.0
+# Date : 05/05/11
+#
+# Copyright 2009-2011 Kristinn Gudjonsson (kristinn ( a t ) log2timeline (d o t) net)
+#
+#  This file is part of log2timeline.
+#
+#    log2timeline is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    log2timeline is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with log2timeline.  If not, see <http://www.gnu.org/licenses/>.
+#
+#-----------------------------------------------------------
+# userassist.pl
+# Plugin for Registry Ripper, NTUSER.DAT edition - gets the 
+# UserAssist values 
+#
+# Change history
+#  20080726 - added reference to help examiner understand Control
+#             Panel entries found in output
+#  20080301 - updated to include run count along with date
+#
+# 
+# 
+# copyright 2008 H. Carvey
+#-----------------------------------------------------------
+package Log2t::input::ntuser;
+
+use strict;
+use Log2t::base::input; # the SUPER class or parent
+use Parse::Win32Registry qw(:REG_);
+use Log2t::Common ':binary';
+use Log2t::Time;
+use Log2t::BinRead;
+use Log2t::Win;
+use Encode;
+use vars qw($VERSION @ISA);
+
+# inherit the base input module, or the super class.
+@ISA = ( "Log2t::base::input" );
+
+# version number
+$VERSION = '1.0';
+
+# hvernig gera:
+# byrja ad laga bara til ad "skitvirki", bara eins, taka global breytur og setja i self, og svo taka 
+# self inn i foll, gera thannig ad virki
+# + svo taka oll _parse foll og setja inn i WinReg/Ntuser.pm skranna fjarlaegja ut her
+# + taka svo ut longu og leidinlegu if/elsif/..... setninguna og breyta i code reference
+# + vera med sjalfgefid gildi sem leidir til thess ad nafn se bara prentad ut.... 
+# + aetla ad breyta i recursive fall, sem athugar, get er gert e-d snidugt vid lykil, ja, senda tangad (ntuser.pm), 
+# nei, senda a sjalfgefna (regtime paelingin)
+# 
+# verify - sama og adur, athugar bara UserAssist, ef thad er ekki, tha erum vid ekki med NTUSER hvort ed er
+
+# the constructor
+sub new()
+{
+        my $class = shift;
+
+        # inherit from the base class
+        my $self = $class->SUPER::new();
+
+        # indicate that we would like to parse this file in one attempt, and return it in a single hash
+        $self->{'multi_line'} = 0;
+
+        # TEMPORARY - remove when FH is accepted through Parse::Win32Registry
+        $self->{'file_access'} = 1;     # do we need to parse the actual file or is it enough to get a file handle
+	
+	# set some default variables
+	$self->{'ua_key_base'} = 'Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\UserAssist';
+	$self->{'ua_xp_key_path'} = '{75048700-EF1F-11D0-9888-006097DEACF9}\\Count';
+	$self->{'ua_new_key_path_1'} = '{CEBFF5CD-ACE2-4F4F-9178-9926F41749EA}\\Count';
+	$self->{'ua_new_key_path_2'} = '{F4E57C4B-2036-45F0-A9AB-443BCFE33D9F}\\Count';
+
+        bless($self,$class);
+
+        return $self;
+}
+
+sub init()
+{	
+	# initialize all variables
+	my $self = shift;
+
+	$self->{'vista'} = 0;
+	$self->{'vals_count'} = 0;		# reset the counter of the hash vals
+	$self->{'vals'} = undef;
+
+	return 1;
+}
+
+#       get_version
+# A simple subroutine that returns the version number of the format file
+#
+# @return A version number
+sub get_version()
+{
+	return $VERSION;
+}
+
+#       get_description
+# A simple subroutine that returns a string containing a description of 
+# the funcionality of the format file. This string is used when a list of
+# all available format files is printed out
+#
+# @return A string containing a description of the format file's functionality
+sub get_description()
+{
+	return "Parses the NTUSER.DAT registry file";	
+}
+
+#	get_time
+# This subroutine starts by reading the NTUSER.DAT registry file and parse it
+# using the Win32Registry library.  It then retrives the UserAssist part of the
+# registry and stores it's values in the array @vals (which is global)
+# 
+# It then returns a reference to a hash that stores all the timestamp
+# objects to the main engine for further processing
+sub get_time()
+{
+	my $self = shift;
+	my $key;
+	my $root_key;
+	my @extra;
+	my $path;
+	my @t_array;
+	my %t_hash;
+
+	# set the default values
+	$self->{'no_go'} = 0;
+
+	# get the root key
+	$root_key = $self->{'reg'}->get_root_key;
+
+	eval 
+	{
+		# now we need to test for the existance of the keys in question
+		# get the userassist key
+		# test if this is an XP or Vista (that is new or old format)
+		$key = $root_key->get_subkey( $self->{'ua_key_base'} . '\\' . $self->{'ua_xp_key_path'} );
+		if( defined $key )
+		{
+			$self->{'type'} = 'xp';
+			print STDERR "[UA] We have detected the XP UserAssist key\n" if $self->{'debug'};
+		}
+		else
+		{
+			$key = $root_key->get_subkey( $self->{'ua_key_base'} . '\\' .  $self->{'ua_new_key_path_1'} );
+			$self->{'type'} = 'new' if defined $key;
+			$self->{'type'} = 'none' unless defined $key;
+		}
+
+		# override settings
+		$self->{'type'} = 'new' if $self->{'vista'};
+		print STDERR "[NTUSER] Overriding settings: VISTA\n" if $self->{'vista'};
+
+		if( $self->{'type'} eq 'xp' )
+		{
+			# get all the values
+			@t_array = $key->get_list_of_values();
+		}
+		elsif ( $self->{'type'} eq 'new' )
+		{
+			print STDERR "[NTUSER] This is a Vista/Win7 or later UserAssist key\n" if $self->{'debug'};
+
+			@t_array = $key->get_list_of_values();
+			$key = $root_key->get_subkey( $self->{'ua_key_base'} . '\\' .  $self->{'ua_new_key_path_2'} );
+			
+			# and get the second content
+			@extra = $key->get_list_of_values() if defined $key;
+			push( @t_array, @extra );
+		}
+		else
+		{
+			print STDERR "[NTUSER] We have an unknown an unidentified UserAssist key and no processing will be done\n" if $self->{'debug'};
+			$self->{'no_go'} = 1;
+			return 0;
+		}
+
+		# now to go over the t_array array and push it into a hash
+		foreach( @t_array )
+		{
+			$self->{'vals'}->{$self->{'vals_count'}++} = { 'value' => $_, 'type' => 'UserAssist' };
+		}
+
+		# get the username (if possible)
+		$self->{'username'} = $self->_get_username() unless $self->{'no_go'};
+
+		if( $self->{'username'} eq '0' || $self->{'username'} eq 'unknown' )
+		{
+			$self->{'username'} = Log2t::Common::get_username_from_path( ${$self->{'name'}});
+			print STDERR "[NTUSER] Guessed username '" . $self->{'username'} . "'\n" if $self->{'debug'};
+		}
+
+
+		# now we need to process other keys that belong to the NTUSER.DAT file and include those into the line
+	
+		# start by the recent file extensions
+		# Key:	Software\Microsoft\Windows\CurrentVersion\Explorer\FileExts
+		$key = $root_key->get_subkey( "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\FileExts" );
+		@t_array = $key->get_list_of_subkeys();
+
+		# include this into the vals hash                
+		if (scalar(@t_array) > 0) 
+		{	
+			foreach( @t_array )
+			{
+				$self->{'vals'}->{$self->{'vals_count'}++} = { 'value' => $_, 'type' => 'FileExts' };
+			}
+		}
+
+		# Go to the LastVisitedMRU key
+		# Key: Software\Microsoft\Windows\CurrentVersion\Explorer\ComDlg32\LastVisitedMRU not found.
+		# URL: http://support.microsoft.com/kb/322948/EN-US/
+		if( $key = $root_key->get_subkey( "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\ComDlg32\\LastVisitedMRU" ) )
+		{
+			$self->{'vals'}->{$self->{'vals_count'}++} = { 'value' => $key, 'type' => 'LastVisitedMRU' };
+		}
+
+		# Software\Microsoft\Windows\CurrentVersion\Explorer\ComDlg32\OpenSaveMRU not found.
+		if( $key = $root_key->get_subkey( "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\ComDlg32\\OpenSaveMRU" ) )
+		{
+			$self->{'vals'}->{$self->{'vals_count'}++} = { 'value' => $key, 'type' => 'OpenSaveMRU' };
+		}
+
+		# Software\Microsoft\Windows\CurrentVersion\Explorer\Map Network Drive MRU
+		if( $key = $root_key->get_subkey( "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Map Network Drive MRU" ) )
+		{
+			$self->{'vals'}->{$self->{'vals_count'}++} = { 'value' => $key, 'type' => 'Map Network Drive MRU' };
+		}
+
+		# Software\Microsoft\Windows\CurrentVersion\Explorer\MountPoints2
+		$key = $root_key->get_subkey( "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\MountPoints2" );
+		@t_array = $key->get_list_of_subkeys();
+
+		# include this into the vals hash                
+		if (scalar(@t_array) > 0) 
+		{	
+			foreach( @t_array )
+			{
+				$self->{'vals'}->{$self->{'vals_count'}++} = { 'value' => $_, 'type' => 'MountPoints2' };
+			}
+		}
+		# Software\Microsoft\Windows\CurrentVersion\Explorer\RecentDocs\...
+		$key = $root_key->get_subkey( "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\RecentDocs" );
+		@t_array = $key->get_list_of_subkeys();
+
+		# include this into the vals hash                
+		if (scalar(@t_array) > 0) 
+		{	
+			foreach( @t_array )
+			{
+				$self->{'vals'}->{$self->{'vals_count'}++} = { 'value' => $_, 'type' => 'RecentDocs' };
+			}
+		}
+
+		# Software\Microsoft\Windows\CurrentVersion\Explorer\RunMRU
+		if( $key = $root_key->get_subkey( "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\RunMRU" ) )
+		{
+			$self->{'vals'}->{$self->{'vals_count'}++} = { 'value' => $key,  'type' => 'RunMRU' };
+		}
+
+		# Software\Microsoft\Windows\CurrentVersion\Applets\Regedit
+		if( $key = $root_key->get_subkey( "Software\\Microsoft\\Windows\\CurrentVersion\\Applets\\Regedit" ) )
+		{
+			$self->{'vals'}->{$self->{'vals_count'}++} = { 'value' => $key, 'type' => 'Regedit' };
+		}
+
+		# --- ShellBags ---
+		# Two keys: identical structure
+		
+		# 	VISTA/Win 7 keys
+		#* HKEY_CURRENT_USER\Software\Classes\Local Settings\Software\Microsoft\Windows\Shell\Bags
+		#* HKEY_CURRENT_USER\Software\Classes\Local Settings\Software\Microsoft\Windows\Shell\BagMRU
+		#* HKEY_CURRENT_USER\Software\Classes\Wow6432Node\Local Settings\Software\Microsoft\Windows\Shell\Bags
+		#* HKEY_CURRENT_USER\Software\Classes\Wow6432Node\Local Settings\Software\Microsoft\Windows\Shell\BagMRU
+
+
+		# Shell key is used to store information related to remote folders
+#		if( $key = $root_key->get_subkey( "Software\\Classes\\Local Settings\\Software\\Microsoft\\Windows\\Shell\\BagMRU" ) )
+#		{
+#			print STDERR "[NTUSER] We've got a Shell (shellbag) for remote folders\n" if $self->{'debug'};
+#
+#			# start by the Desktop folder, or the initial key
+#			# then we need to recursively go through the key... and employ the same
+#			# processing to each key (so a new function)
+#		
+#			# so we start by populating the folder structure
+#			$self->_populate_folder( \$key, $self->{'shell_folder'}, undef, "Software\\Classes\\Local Settings\\Software\\Microsoft\\Windows\\Shell\\BagMRU\\0", 0 );
+#
+#			# no we've populated the folder structure, let's process the bag files
+#			$self->_preprocess_shell( \$key, 'Shell' );
+#		}
+		if( $key = $root_key->get_subkey( "Software\\Microsoft\\Windows\\Shell\\BagMRU" ) and $self->{'type'} eq 'xp' )
+		{
+			print STDERR "[NTUSER] We've got a Shell (shellbag) for remote folders\n" if $self->{'debug'};
+
+			# start by the Desktop folder, or the initial key
+			# then we need to recursively go through the key... and employ the same
+			# processing to each key (so a new function)
+		
+			# so we start by populating the folder structure
+#			$self->_populate_folder( \$key, $self->{'shell_folder'}, undef, "Software\\Microsoft\\Windows\\Shell\\BagMRU\\0", 0 );
+
+			# no we've populated the folder structure, let's process the bag files
+#			$self->_preprocess_shell( \$key, 'Shell' );
+		}
+
+		# ShellNoRoam is used to describe local folders' information 
+		if( $key = $root_key->get_subkey( "Software\\Microsoft\\Windows\\ShellNoRoam\\BagMRU\\0" ) and $self->{'type'} eq 'xp' )
+		{
+			print STDERR "[NTUSER] We've got a ShellNoRoam (shellbag) for local folders\n" if $self->{'debug'};
+
+			# start by the Desktop folder, or the initial key
+			# then we need to recursively go through the key... and employ the same
+			# processing to each key (so a new function)
+		
+			# so we start by populating the folder structure
+#			$self->_populate_folder( \$key, $self->{'shell_noroam_folder'}, undef, "Software\\Microsoft\\Windows\\ShellNoRoam\\BagMRU\\0", 0 );
+
+			# no we've populated the folder structure, let's process the bag files
+#			$self->_preprocess_shell( \$key, 'ShellNoRoam' );
+		}
+#		if( $key = $root_key->get_subkey( "Software\\Classes\\Wow6432Node\\Local Settings\\Software\\Microsoft\\Windows\\Shell\\BagMRU\\0" ) )
+#		{
+#			print STDERR "[NTUSER] We've got a ShellNoRoam (shellbag) for local folders\n" if $self->{'debug'};
+#
+#			# start by the Desktop folder, or the initial key
+#			# then we need to recursively go through the key... and employ the same
+#			# processing to each key (so a new function)
+#		
+#			# so we start by populating the folder structure
+#			$self->_populate_folder( \$key, $self->{'shell_noroam_folder'}, undef, "Software\\Classes\\Wow6432Node\\Local Settings\\Software\\Microsoft\\Windows\\Shell\\BagMRU\\0", 0 );
+#
+#			# no we've populated the folder structure, let's process the bag files
+#			$self->_preprocess_shell( \$key, 'ShellNoRoam' );
+#		}
+
+		print STDERR "[UA] The total number of records saved: " . $self->{'vals_count'} . "\n" if $self->{'debug'};
+
+
+	};
+	if( $@ )
+	{
+		$self->{'no_go'} = 1; # indicate that an error occured and we do not have a valid registry file
+		# supress error message
+		print STDERR "[NTUSER - ERROR] There was an error reading the registry file: $@\n" if $self->{'debug'};
+	}
+
+	# initialize
+	$self->{'container'} = undef;
+	$self->{'cont_index'} = 0;
+
+	# if no_go is set, then we just return with no line
+	return undef if $self->{'no_go'};
+
+	foreach my $key ( keys %{$self->{'vals'}} )
+	{
+		if ( (scalar($self->{'vals'}->{$key}->{'value'}) > 0) && ($self->{'vals_count'} > $key ) )
+		{
+			print STDERR "[NTUSER] We are about to load record nr. $key\n" if $self->{'debug'};
+			$self->{'value'} = $self->{'vals'}->{$key}->{'value'};
+			$self->{'key_type'} = $self->{'vals'}->{$key}->{'type'};
+			print STDERR "[NTUSER] The record is of type " . $self->{'key_type'} . "\n" if $self->{'debug'};
+			$self->_parse_line;
+		}
+		else
+		{
+			print STDERR "[NTUSER] Not loading line (record $key " . $self->{'vals_count'} . ") - zero return\n" if $self->{'debug'};
+			print STDERR "[NU] Key type: ", $self->{'vals'}->{$key}->{'type'}, ' and value ' , $self->{'vals'}->{$key}->{'value'}, "\n" if $self->{'debug'};
+			next;
+		}
+	}
+
+	return $self->{'container'};
+}
+
+sub _populate_folder($$$$$)
+{
+	my $self = shift;
+	my $k = shift; # the key
+	my $h = shift; # hash value for the folder structure
+	my $fbag = shift; # the bag from previous path
+	my $kp = shift; # the KeyPath
+	my $id = shift;	# the ID of the bag associated with this particular field (found in parent)
+
+	print STDERR "[ShellBag] -----------------------------------------------------------------------\n" if $self->{'debug'};
+	print STDERR "[ShellBag] Populating folder with parent slot number $id (", $fbag->{'ascii'}, ") [", $fbag->{'utf'}, "] - $kp\n" if $self->{'debug'};
+
+	my $fn;		# the aquired file name/folder
+	my $temp;	# a temporary value
+	my %bag;	# values extracted from bag
+
+	my $rk = $self->{'reg'}->get_root_key;
+
+	# fix the path variables a bit
+	$fbag->{'ascii'} =~ s/\\/\//g;	# change \ to /
+	$fbag->{'ascii'} =~ s/\/\//\//g;	# change // to /
+	$fbag->{'utf'} =~ s/\\/\//g;	# change \ to /
+	$fbag->{'utf'} =~ s/\/\//\//g;	# change // to /
+
+	my $nk; # new key
+	my $v; # value
+
+	# get all the values beneath (and thus the filenames/paths)
+	my @ar = $$k->get_list_of_values();
+
+	# the slot number of the parent
+	my $slot;
+
+	# get the NodeSlot value for the key, this is the number that represent
+	# the bag name, and it is also the index to the hash $h
+	# n.b. this is the id of the PARENT, that is the actual key being read, not the 
+	# sub values, that get parsed throught the array ar
+	$v = $$k->get_value('NodeSlot');
+	if( $v )
+	{
+		$slot = $v->get_data();
+	}
+	else
+	{
+		$slot = -1;
+	}
+
+	print STDERR "[ShellBag] Reading slot number for folder: $slot\n" if $self->{'debug'};
+
+	# assign the values of the parsed object
+	unless( $id == 0 )
+	{
+		print STDERR "[ShellBag] Assigning slot $slot to UTF ", $fbag->{'utf'}, "\n" if $self->{'debug'};
+		# don't assign the Desktop folder a value
+		$h->{$slot}->{'ascii'} = $fbag->{'ascii'};
+		$h->{$slot}->{'utf'} = $fbag->{'utf'};
+		$h->{$slot}->{'parent'} = $id;
+		$h->{$slot}->{'key'} = $kp;
+		$h->{$slot}->{'mod'} = $fbag->{'mod'};
+		$h->{$slot}->{'created'} = $fbag->{'created'};
+		$h->{$slot}->{'access'} = $fbag->{'access'};
+	}
+		
+	# navigate through the subkeys
+	foreach(@ar)
+	{
+		# check if numeric
+		if( $_->get_name() =~ m/[0-9]+/ )	
+		{
+			# we need to decode this value
+			$v = $_->get_data();	
+
+			#open( NOW, ">Nr_" . $_->get_name() . '_ID_' . $id . '_' .  int(rand(190)+50) );
+			#binmode( NOW );
+			#print NOW $v;
+			#close(NOW);
+
+			print STDERR "[ShellBag] We are parsing the number [",  $_->get_name(), "]\n" if $self->{'debug'};
+
+			# decode the data variable
+			# --------------------------------------------------------------------------------------
+			# 			Information gathered from here
+			#
+			# http://www.42llc.net/index.php?option=com_myblog&task=tag&category=Enscript&Itemid=39
+			# --------------------------------------------------------------------------------------
+			#
+			# struct BagFile {
+			# 	USHORT BagSize; // Length of BAG structure
+			# 	USHORT flags;
+			# 	DWORD size;
+			# 	USHORT ModifiedDOSDATE; //Modified Date GMT
+			# 	USHORT ModifiedDOSTIME; //Modified Time GMT
+			# 	USHORT FlagUnknown;
+			# 	char  name[]; // (DOS short filename)
+			# 	//extra byte here sometimes to align to even byte boundary
+			# 	UnicodeBagData UnicodeData;
+			# };
+			#
+			# struct UnicodeBagData {
+			#    	USHORT LengthOfUnicodeStructure;
+			#    	USHORT Short1; // 0x0003 for XP, 0x0008 for win7
+			#    	USHORT Short2; // 0x0004
+			#    	USHORT Short3; // 0xBEEF
+			#    	USHORT CreatedDOSDATE; // Created Date GMT
+			#    	USHORT CreatedDOSTIME; // Created Time GMT
+			#    	USHORT AccessedDOSDATE; // Accessed Date GMT
+			#    	USHORT AccessedDOSTIME; // Accessed Time GMT
+			#    	DWORD Unknown; // usually xp = 0x14, win7 = 0x2A
+			#    	// Vista and Windows 7 Extra Fields (22 bytes total)
+			#    	DWORD  MftFileId;
+			#    	USHORT Unknown1;
+			#    	USHORT MftSequence;
+			#    	DWORD  Unknown2;
+			#    	DWORD  Unknown3;
+			#    	DWORD  Unknown4;
+			#    	USHORT Unknown5;
+			#    	// END Vista extra fields
+			#    	wchar name; // Unicode Filename
+			#    	USHORT Unknown6;
+			# };	
+			#
+			# --------------------------------------------------------------------------------------
+			# 
+			# this is not really how I've seen the ShellBag format being constructed as.... so
+			# the first variable is a USHORT BagSize one.... although it seems that you need to add
+			# either one, two or three to get the actual size...
+			# The flag is not a USHORT, it's a one byte, and depending on it, we see the beginning
+			# of the ASCII code:
+			#	Flag	ASCII
+			#	0x46 	0x05
+			#	0x2F	0x03
+			#	0x31	0x0E
+			#	0x2E	X (UTF 0x0A)
+			#	0xC3	0x05
+			#	0x41	0x05
+			#	0xB1	0x0E
+			#	0x2E	x
+			#	0x42	0x05
+			# 	0x71	x
+
+
+			if( $self->{'debug'} )
+			{
+				printf STDERR "[UA SHELL] The content of the cell is 0x";
+
+				# go through the entire content	of the V variable
+				my $di = 0;
+				while ($di < length( $v ) )
+				{
+					printf STDERR "%0.4x ", unpack( "n", substr( $v, $di, 2 ) );
+					$di+=2;
+				}
+				print STDERR "\t";
+				$di = 0;
+				while ($di < length( $v ) )
+				{
+					printf STDERR "%s", substr( $v, $di++, 1 );
+				}
+
+				print STDERR "\n";
+			}
+
+			# date is eight bytes, divided in two four byte fields (MS-DOS 32)
+
+			# start from the beginning
+			my $ofs = 0;
+			# read the length
+			$bag{'length'} = unpack( "v", substr( $v, $ofs, 2 ) ) + 2;
+			$ofs+=2;
+
+			print STDERR "[ShellBags] The length of the record is $bag{'length'}\n" if $self->{'debug'};
+
+			# check for the flags
+			$bag{'flags'} = unpack( "c", substr( $v, $ofs, 1 ) );
+			$bag{'flags'} = $bag{'flags'} & 0xff;
+
+			printf STDERR "[ShellBags] Read the flags {0x%x}\n", $bag{'flags'} if $self->{'debug'};
+
+			# set the default values of the timestamps (as zero) since some of the bags don't update it
+			$bag{'access'} = 0;
+			$bag{'created'} = 0;
+			$bag{'mod'} = 0;
+			
+			# the structure depends on the previously read flag...
+			if( $bag{'flags'} == 0x46 )
+			{
+				print STDERR "[FLAG - 46] WE START AT 0x05 (pure ASCII)\n" if $self->{'debug'};
+				$ofs = 0x5;
+
+				# Set the ASCII bag
+				$bag{'ascii'} = $fbag->{'ascii'} . '/' unless $fbag->{'ascii'} eq '';
+				$bag{'ascii'} = '' if $fbag->{'ascii'} eq '';
+
+				my $t = $self->_read_shell_ascii( \$v, \$ofs );
+
+				# Set the UTF bag
+				$bag{'utf'} = $fbag->{'utf'} . '/' unless $fbag->{'utf'} eq '';
+				$bag{'utf'} = '' if $fbag->{'utf'} eq '';
+
+				$bag{'utf'} .= $t;
+
+				$bag{'ascii'} .= $t;
+
+				$t = $self->_read_shell_ascii( \$v, \$ofs );
+				$bag{'ascii'} .= ' (' . $t . ')';
+				
+			}
+			elsif( $bag{'flags'} == 0x2f )
+			{
+				print STDERR "[FLAG - 2F] WE START AT 0x03 (pure ASCII)\n" if $self->{'debug'};
+				$ofs = 0x3;
+
+				# Set the ASCII bag
+				$bag{'ascii'} = $fbag->{'ascii'} . '/' unless $fbag->{'ascii'} eq '';
+				$bag{'ascii'} = '' if $fbag->{'ascii'} eq '';
+
+				my $t = $self->_read_shell_ascii( \$v, \$ofs );
+
+				# Set the UTF bag
+				$bag{'utf'} = $fbag->{'utf'} . '/' unless $fbag->{'utf'} eq '';
+				$bag{'utf'} = '' if $fbag->{'utf'} eq '';
+
+				$bag{'utf'} .= $t;
+
+				$bag{'ascii'} .= $t;
+
+			}
+			elsif( $bag{'flags'} == 0x31 )
+			{
+				print STDERR "[FLAG - 31] WE START AT 0x0E (both)\n" if $self->{'debug'};
+
+				# start by reading date objects
+				$ofs = 8;
+				$bag{'mod_date'} = unpack( "v", substr( $v, $ofs, 2 ) ) ;
+				$ofs+=2;
+				$bag{'mod_time'} = unpack( "v", substr( $v, $ofs, 2 ) ) ;
+				$ofs+=2;
+				eval 
+				{
+					$bag{'mod'} = Log2t::Time::Dos2Unix( $bag{'mod_date'}, $bag{'mod_time'} );
+				};
+				if( $@ )
+				{
+					print STDERR "[ShellBag] Unable to parse the timestamp for modification date\n";
+					$bag{'mod'} = 0;
+				}
+
+				$ofs = 0x0e;
+
+				# Set the ASCII bag
+				$bag{'ascii'} = $fbag->{'ascii'} . '/' unless $fbag->{'ascii'} eq '';
+				$bag{'ascii'} = '' if $fbag->{'ascii'} eq '';
+
+				$bag{'ascii'} .= $self->_read_shell_ascii( \$v, \$ofs );
+		
+				# round the number to an even number
+				$ofs = int( $ofs/2 + 0.99 ) * 2;
+
+				$ofs += 8;
+				# find the remaining dates
+                               $bag{'created_date'} = unpack( "v", substr($v, $ofs, 2 ) );
+                               $ofs+=2;
+                               $bag{'created_time'} = unpack( "v", substr($v, $ofs, 2 ) );
+                               $ofs+=2;
+                               $bag{'access_date'} = unpack( "v", substr($v, $ofs, 2 ) );
+                               $ofs+=2;
+                               $bag{'access_time'} = unpack( "v", substr($v, $ofs, 2 ) );
+                               $ofs+=2;
+
+                               eval
+                               {
+                                       $bag{'created'} = Log2t::Time::Dos2Unix( $bag{'created_date'}, $bag{'created_time'} );
+                               };
+                               if( $@ )
+                               {               
+                                       # THE DEBUG REQUIRMENT SHOULD BE REMOVED WHEN MORE STABLE
+                                       print STDERR "[ShellBags] Error while trying to convert the date object\n Error: $@\n" if $self->{'debug'};
+                                       $bag{'created'} = 0;
+                               }
+
+                               eval 
+                               {
+                                       $bag{'access'} = Log2t::Time::Dos2Unix( $bag{'access_date'}, $bag{'access_time'} );
+                               };
+                               if( $@ )
+                               {               
+                                       # THE DEBUG REQUIRMENT SHOULD BE REMOVED WHEN MORE STABLE
+                                       print STDERR "[ShellBags] Error while trying to convert the date object\n Error: $@\n" if $self->{'debug'};
+                                       $bag{'access'} = 0;
+                               }
+
+
+				$ofs += 4;
+				printf STDERR "[SHELL] Starting to read (A %s) at offset 0x%x\n", $bag{'ascii'}, $ofs if $self->{'debug'};
+
+				# Set the UTF-8 bag
+				$bag{'utf'} = $fbag->{'utf'} . '/' unless $fbag->{'utf'} eq '';
+				$bag{'utf'} = '' if $fbag->{'utf'} eq '';
+
+				$bag{'utf'} .= $self->_read_shell_utf( \$v, \$ofs, $bag{'length'} );
+
+			}
+			elsif( $bag{'flags'} == 0x2e )
+			{
+				print STDERR "[FLAG - 2E] WE START AT 0x0A (pure UTF)\n" if $self->{'debug'};
+				# Set the ASCII bag
+				$bag{'ascii'} = $fbag->{'ascii'} . '/' unless $fbag->{'ascii'} eq '';
+				$bag{'ascii'} = '' if $fbag->{'ascii'} eq '';
+
+				$bag{'ascii'} .= '?';
+
+				# Set the UTF bag
+				$bag{'utf'} = $fbag->{'utf'} . '/' unless $fbag->{'utf'} eq '';
+				$bag{'utf'} = '' if $fbag->{'utf'} eq '';
+
+				$bag{'utf'} .= '?';
+
+#				$ofs = 0xa;
+#
+#				# Set the UTF bag
+#				$bag{'utf'} = $fbag->{'utf'} . '/' unless $fbag->{'utf'} eq '';
+#				$bag{'utf'} = '' if $fbag->{'utf'} eq '';
+#
+#				my $t = $self->_read_shell_utf( \$v, \$ofs, $bag{'length'} );
+#
+#				# Set the ASCII bag
+#				$bag{'ascii'} = $fbag->{'ascii'} . '/' unless $fbag->{'ascii'} eq '';
+#				$bag{'ascii'} = '' if $fbag->{'ascii'} eq '';
+#
+#				$bag{'ascii'} .= $t;
+#				$bag{'utf'} .= $t;
+
+			}
+			elsif( $bag{'flags'} == 0xC3 )
+			{
+				print STDERR "[FLAG - C3] WE START AT 0x05 (pure ASCII)\n" if $self->{'debug'}; 
+				$ofs = 0x5;
+
+				# Set the ASCII bag
+				$bag{'ascii'} = $fbag->{'ascii'} . '/' unless $fbag->{'ascii'} eq '';
+				$bag{'ascii'} = '' if $fbag->{'ascii'} eq '';
+
+				my $t = $self->_read_shell_ascii( \$v, \$ofs );
+
+				# Set the UTF bag
+				$bag{'utf'} = $fbag->{'utf'} . '/' unless $fbag->{'utf'} eq '';
+				$bag{'utf'} = '' if $fbag->{'utf'} eq '';
+
+				$bag{'utf'} .= $t;
+				$bag{'ascii'} .= $t;
+
+			}
+			elsif( $bag{'flags'} == 0x41 )
+			{
+				print STDERR "[FLAG - 41] WE START AT 0x05 (pure ASCII, double)\n" if $self->{'debug'};
+				$ofs = 0x5;
+
+				# Set the ASCII bag
+				$bag{'ascii'} = $fbag->{'ascii'} . '/' unless $fbag->{'ascii'} eq '';
+				$bag{'ascii'} = '' if $fbag->{'ascii'} eq '';
+
+				my $t = $self->_read_shell_ascii( \$v, \$ofs );
+
+				# Set the UTF bag
+				$bag{'utf'} = $fbag->{'utf'} . '/' unless $fbag->{'utf'} eq '';
+				$bag{'utf'} = '' if $fbag->{'utf'} eq '';
+
+				$bag{'utf'} .= $t; 
+				$bag{'ascii'} .= $t; 
+
+				$t = $self->_read_shell_ascii( \$v, \$ofs );
+				$bag{'ascii'} .= '(' . $t . ')';
+
+			}
+			elsif( $bag{'flags'} == 0xb1 )
+			{
+				print STDERR "[FLAG - B1] WE START AT 0x0E (both)\n" if $self->{'debug'};
+				$ofs = 0xe;
+
+				# Set the ASCII bag
+				$bag{'ascii'} = $fbag->{'ascii'} . '/' unless $fbag->{'ascii'} eq '';
+				$bag{'ascii'} = '' if $fbag->{'ascii'} eq '';
+
+				$bag{'ascii'} .= $self->_read_shell_ascii( \$v, \$ofs );
+
+				# increment the offset
+				$ofs = int( $ofs/2 + 0.99 ) * 2;
+				$ofs += 20;
+				#$ofs += 22;
+
+				printf STDERR "[SHELL] Starting to read (A %s) at offset 0x%x\n", $bag{'ascii'}, $ofs if $self->{'debug'};
+
+				# Set the UTF bag
+				$bag{'utf'} = $fbag->{'utf'} . '/' unless $fbag->{'utf'} eq '';
+				$bag{'utf'} = '' if $fbag->{'utf'} eq '';
+
+				$bag{'utf'} .= $self->_read_shell_utf( \$v, \$ofs, $bag{'length'} );
+
+			}
+			elsif( $bag{'flags'} == 0x42 )
+			{
+				print STDERR "[FLAG - 42] WE START AT 0x05 (pure ASCII, double)\n" if $self->{'debug'};
+				$ofs = 0x5;
+
+				# Set the ASCII bag
+				$bag{'ascii'} = $fbag->{'ascii'} . '/' unless $fbag->{'ascii'} eq '';
+				$bag{'ascii'} = '' if $fbag->{'ascii'} eq '';
+
+				my $t = $self->_read_shell_ascii( \$v, \$ofs );
+
+				# Set the UTF bag
+				$bag{'utf'} = $fbag->{'utf'} . '/' unless $fbag->{'utf'} eq '';
+				$bag{'utf'} = '' if $fbag->{'utf'} eq '';
+
+				$bag{'utf'} .= $t;
+				$bag{'ascii'} .= $t;
+
+				$t = $self->_read_shell_ascii( \$v, \$ofs );
+				$bag{'ascii'} .= '(' . $t . ')';
+
+			}
+			elsif( $bag{'flags'} == 0x71 )
+			{
+				print STDERR "[FLAG  - 71] WE ARE NOT TO READ ANY ...\n" if $self->{'debug'};
+
+				# Set the ASCII bag
+				$bag{'ascii'} = $fbag->{'ascii'} . '/' unless $fbag->{'ascii'} eq '';
+				$bag{'ascii'} = '' if $fbag->{'ascii'} eq '';
+
+				$bag{'ascii'} .= '?';
+
+				# Set the UTF bag
+				$bag{'utf'} = $fbag->{'utf'} . '/' unless $fbag->{'utf'} eq '';
+				$bag{'utf'} = '' if $fbag->{'utf'} eq '';
+
+				$bag{'utf'} .= '?';
+
+			}
+			else
+			{
+				printf STDERR "[FLAG] WE DONT KNOW WHERE TO START (0x%0.2x)\n", $bag{'flags'};
+			}
+
+			print STDERR "\n" if $self->{'debug'};
+#			{
+#				# full fledged reading
+#				$bag{'flags'} = unpack( "v", substr( $v, $ofs, 2 ) ) ;
+#				$ofs+=2;
+#				$bag{'size'} = unpack( "v", substr( $v, $ofs, 4 ) ) ;
+#				$ofs+=4;
+#	
+#				$bag{'mod_date'} = unpack( "v", substr( $v, $ofs, 2 ) ) ;
+#				$ofs+=2;
+#				$bag{'mod_time'} = unpack( "v", substr( $v, $ofs, 2 ) ) ;
+#				$ofs+=2;
+#				eval 
+#				{
+#					$bag{'mod'} = Log2t::Time::Dos2Unix( $bag{'mod_date'}, $bag{'mod_time'} );
+#				};
+#				if( $@ )
+#				{
+#					print STDERR "[ShellBag] Unable to parse the timestamp for modification date\n";
+#					$bag{'mod'} = 0;
+#				}
+#	
+#				#print STDERR "[ShellBag] Modified time: ", $bag{'mod'} , " [", $bag{'mod_date'}, "] (", $bag{'mod_time'}, ") \n" if $self->{'debug'};
+#			
+#				$bag{'unk_flags'} = unpack( "v", substr( $v, $ofs, 2 ) ) ;
+#				$ofs+=2;
+#			}
+#
+#			my $s = 1;
+#			my $c;
+#
+#			print STDERR "[ShellBag] Ascii is before parsing ", $bag{'ascii'}, " (", $fbag->{'ascii'}, ")\n" if $self->{'debug'};
+#			$bag{'ascii'} = $fbag->{'ascii'} . '/' unless $fbag->{'ascii'} eq '';
+#			$bag{'ascii'} = '' if $fbag->{'ascii'} eq '';
+#
+#			printf STDERR "[ShellBag] Offset now 0x%x :", $ofs if $self->{'debug'};
+#			while ( $s )
+#			{
+#				printf STDERR ".0x%x.", $ofs if $self->{'debug'};
+#				# read a single character
+#				$c = substr( $v, $ofs++,1 );
+#				printf STDERR "(%s)",$c if $self->{'debug'};
+#
+#				# check if we have reached the end of filename
+#				$s = 0 if $c eq "\0";
+#				
+#				next unless $s;
+#				
+#				# add to the ASCII string
+#				$bag{'ascii'} .= sprintf "%s", $c;
+#			}
+#			printf STDERR "\n" if $self->{'debug'};
+
+                        # struct UnicodeBagData {
+                        #       USHORT LengthOfUnicodeStructure;
+                        #       USHORT Short1; // 0x0003 for XP, 0x0008 for win7
+                        #       USHORT Short2; // 0x0004
+                        #       USHORT Short3; // 0xBEEF
+                        #       USHORT CreatedDOSDATE; // Created Date GMT
+                        #       USHORT CreatedDOSTIME; // Created Time GMT
+                        #       USHORT AccessedDOSDATE; // Accessed Date GMT
+                        #       USHORT AccessedDOSTIME; // Accessed Time GMT
+                        #       DWORD Unknown; // usually xp = 0x14, win7 = 0x2A
+                        #       // Vista and Windows 7 Extra Fields (22 bytes total)
+                        #       DWORD  MftFileId;
+                        #       USHORT Unknown1;
+                        #       USHORT MftSequence;
+                        #       DWORD  Unknown2;
+                        #       DWORD  Unknown3;
+                        #       DWORD  Unknown4;
+                        #       USHORT Unknown5;
+                        #       // END Vista extra fields
+                        #       wchar name; // Unicode Filename
+                        #       USHORT Unknown6;
+                        # };   
+			
+			# round the offset to a even number (basically "ceil")
+#			printf STDERR "[ShellBag] Modifying the offset, it's now 0x%x\n", $ofs if $self->{'debug'};
+#			$ofs = int( $ofs/2 + 0.99 ) * 2;
+
+#			printf STDERR "[ShellBag] Offset is now %d (0x%x) and ASCII output is %s\n", $ofs, $ofs, $bag{'ascii'} if $self->{'debug'};
+#			printf STDERR "[ShellDebug] Hex kodi 0x%x\n", substr( $v, $ofs, $ofs+20 ) if $self->{'debug'};
+#
+#			# grab the rest of the values
+#			$bag{'length_utf'} = unpack( "v", substr($v, $ofs, 2 ) );
+#			$ofs+=2;
+#			printf STDERR "[ShellDebug] The length of the UTF portion is 0x%x (%d)\n", $bag{'length_utf'}, $bag{'length_utf'} if $self->{'debug'};
+
+
+			# now we have reached the end of the ASCII output, let's go to the UTF one
+#			$bag{'utf'} = $fbag->{'utf'} . '/' unless $fbag->{'utf'} eq '';
+#			$bag{'utf'} = '' if $fbag->{'ascii'} eq '';
+
+
+			# check the length
+#			if( $bag{'length_utf'} > 0 )
+#			{
+#				if( unpack( "v", substr($v, $ofs,2 ) ) == 3 )
+#				{
+#					$bag{'os'} = 'XP';
+#				}
+#				else
+#				{	
+#					$bag{'os'} = 'Win7';
+#				}
+	
+#				$ofs+=2;
+#				printf STDERR "[ShellBags] The OS IS %s\n", $bag{'os'} if $self->{'debug'};
+	
+#				$ofs+=4; # irrelevant data, skip it, 0x0004 and 0xBEEF
+#				$bag{'created_date'} = unpack( "v", substr($v, $ofs, 2 ) );
+#				$ofs+=2;
+#				$bag{'created_time'} = unpack( "v", substr($v, $ofs, 2 ) );
+#				$ofs+=2;
+#				$bag{'access_date'} = unpack( "v", substr($v, $ofs, 2 ) );
+#				$ofs+=2;
+#				$bag{'access_time'} = unpack( "v", substr($v, $ofs, 2 ) );
+#				$ofs+=2;
+#
+#				eval
+#				{
+#					$bag{'created'} = Log2t::Time::Dos2Unix( $bag{'created_date'}, $bag{'created_time'} );
+#				};
+#				if( $@ )
+#				{		
+#					# THE DEBUG REQUIRMENT SHOULD BE REMOVED WHEN MORE STABLE
+#					print STDERR "[ShellBags] Error while trying to convert the date object\n Error: $@\n" if $self->{'debug'};
+#					$bag{'created'} = 0;
+#				}
+#
+#				eval 
+#				{
+#					$bag{'access'} = Log2t::Time::Dos2Unix( $bag{'access_date'}, $bag{'access_time'} );
+#				};
+#				if( $@ )
+#				{		
+#					# THE DEBUG REQUIRMENT SHOULD BE REMOVED WHEN MORE STABLE
+#					print STDERR "[ShellBags] Error while trying to convert the date object\n Error: $@\n" if $self->{'debug'};
+#					$bag{'access'} = 0;
+#				}
+#
+#				print STDERR "[ShellBags] Dates: access ", $bag{'access'}, " and created ", $bag{'created'}, " \n" if $self->{'debug'};
+
+	
+#				$ofs+=4; 	# irrelevant (different value between XP and Vista)
+	
+				# if we are dealing with a Vista/Win7 system, we need to add some more values			
+#				$ofs += 22 if( $bag{'os'} eq 'Win7' );
+						
+	
+				#$ofs += 20;
+#				$s = 1;
+#				print STDERR "[ShellBag] UTF is before parsing: ", $bag{'utf'}, "\n" if $self->{'debug'};
+#				while( $s )
+#				{
+#					# read a single character
+#					$c = substr( $v, $ofs, 2 );
+#					$ofs += 2;
+	
+#					printf STDERR "[ShellBag] 0x%x - UTF 0x%x [%s]\n", $ofs, $c, $c if $self->{'debug'};
+		
+					# check the length
+#					$s = 0 if sprintf "%s", $c eq "\0";
+#					$s = 0 if $bag{'length'} lt $ofs;
+ 
+#					next unless $s;
+
+#					# add to the UTF-8 string
+#					$bag{'utf'} .= decode( 'utf-8', $c );
+#				}
+#				print STDERR "[ShellBag] UTF is after parsing: ", $bag{'utf'}, "\n" if $self->{'debug'};
+#			}
+#
+#			if( $bag{'utf'} eq '' )
+#			{
+#				$bag{'utf'} = $bag{'ascii'};
+#			}
+
+			print STDERR "[ShellBag] We've got the ASCII output {", $bag{'ascii'}, "} and the UTF {",$bag{'utf'},"}\n" if $self->{'debug'};
+			
+			$nk = $rk->get_subkey( $kp . "\\" . $_->get_name() );
+
+			$bag{'parent'} = $id;
+
+			# and we go recursively through the folder structure
+			$self->_populate_folder(\$nk,$h,\%bag, "$kp\\" . $_->get_name(), $slot );			
+		}
+	}
+}
+
+# read ASCII string from a binary variable
+sub _read_shell_ascii($$)
+{
+	my $self = shift;
+	my $v = shift;
+	my $ofs = shift;
+	
+	my $c;
+	my $string;
+
+	my $s = 1;
+
+	# read the ASCII string until we reach the \0 marker
+	while ( $s )
+	{
+		# debug information
+		printf STDERR ".0x%x.", $$ofs if $self->{'debug'};
+
+		# read a single character
+		$c = substr( $$v, $$ofs++,1 );
+		printf STDERR "(%s)",$c if $self->{'debug'};
+		
+		# check if we have reached the end of filename
+		$s = 0 if $c eq "\0";
+		$s = 0 if $$ofs > length( $v );	# extra check for some bags
+		
+		next unless $s;
+	
+		# add to the ASCII string
+		$string .= sprintf "%s", $c;
+	}
+
+	return $string;
+}
+
+# read UTF string from a binary variable
+sub _read_shell_utf($$$)
+{
+	my $self = shift;
+	my $v = shift;
+	my $ofs = shift;
+	my $l = shift;
+
+	my $string;
+	my $c;
+	my $s = 1;
+
+	while( $s )
+	{
+		# read a single character
+		$c = substr( $$v, $$ofs, 2 );
+		$$ofs += 2;
+
+		printf STDERR "[ShellBag] 0x%x - UTF 0x%x [%s]\n", $$ofs, $c, $c if $self->{'debug'};
+		
+		# check the length
+		$s = 0 if sprintf "%s", $c eq "\0";
+		$s = 0 if $l lt $$ofs;
+
+		next unless $s;
+		
+		# add to the UTF-8 string
+		$string .= encode( 'utf-8', $c );
+	}
+
+	return $string;
+
+}
+
+# search for every itempos entry
+sub _preprocess_shell($$)
+{
+	my $self = shift;
+	my @ar;
+	my $k = shift;
+	my $key_type = shift;
+        my $rk = $self->{'reg'}->get_root_key;
+	my %text;
+
+	print STDERR "------------------------\n" if $self->{'debug'};
+
+	# get a list of all values available for the key
+	@ar = $$k->get_list_of_values();
+
+	foreach( @ar )
+	{
+		if( $_->get_name() eq 'NodeSlot' )
+		{
+			print STDERR "[ShellBags] Bag key: ", $_->get_data(), "\n" if $self->{'debug'};
+			my $num = $_->get_data();
+			my $new_key;
+	
+			if( $key_type eq 'ShellNoRoam' )
+			{
+				# check if the folder is empty
+				if( $self->{'debug'} )
+				{
+					print STDERR "[ShellBags] [$num] Skipping bag nr. ", $_->get_data(), " since there is no associated folder to it\n" unless defined $self->{'shell_noroam_folder'}->{$num}->{'ascii'};
+				}
+				next unless defined $self->{'shell_noroam_folder'}->{$num}->{'ascii'};
+				$text{'a'} = $self->{'shell_noroam_folder'}->{$num}->{'ascii'};
+				$text{'u'} = $self->{'shell_noroam_folder'}->{$num}->{'utf'};
+	
+				# print the extracted folder
+				print STDERR "[ShellBags] [$num] associated to FOLDER ", $self->{'shell_noroam_folder'}->{$num}->{'ascii'}, " - ", $self->{'shell_noroam_folder'}->{$num}->{'utf'}, "\n" if $self->{'debug'};  
+
+				# add to the timestamp value
+				$self->{'vals'}->{$self->{'vals_count'}++} = { 'value' => $num, 'type' => $key_type };
+
+				# get that number (fetch the Shell Key underneath the number)
+				if( $self->{'debug'} )
+				{
+					print STDERR "[ShellBags] Fetching key: Software\\Microsoft\\Windows\\$key_type\\Bags\\$num\n" ;#if $self->{'shell_noroam_folder'}->{$num}->{'os'} eq 'XP';
+					#print STDERR "[ShellBags] Fetching Software\\Classes\\Wow6432Node\\Local Settings\\Software\\Microsoft\\Windows\\$key_type\\Bags\\$num\n" unless $self->{'shell_noroam_folder'}->{$num}->{'os'} eq 'XP';
+				}
+				# Software\\Classes\\Wow6432Node\\Local Settings\\Software\\Microsoft\\Windows\\Shell\\BagMRU
+	
+				$new_key = $rk->get_subkey( "Software\\Microsoft\\Windows\\$key_type\\Bags\\$num\\Shell") ;#if $self->{'shell_noroam_folder'}->{$num}->{'os'} eq 'XP';
+				#$new_key = $rk->get_subkey( "Software\\Classes\\Wow6432Node\\Local Settings\\Software\\Microsoft\\Windows\\$key_type\\Bags\\$num\\Shell") unless $self->{'shell_noroam_folder'}->{$num}->{'os'} eq 'XP';
+			}
+			else
+			{
+				# check if the folder is empty
+				if( $self->{'debug'} )
+				{
+					print STDERR "[ShellBags] [$num] Skipping bag nr. ", $_->get_data(), " since there is no associated folder to it\n" unless defined $self->{'shell_folder'}->{$num}->{'ascii'};
+				}
+				next unless defined $self->{'shell_folder'}->{$num}->{'ascii'};
+				$text{'a'} = $self->{'shell_folder'}->{$num}->{'ascii'};
+				$text{'u'} = $self->{'shell_folder'}->{$num}->{'utf'};
+	
+				# print the extracted folder
+				print STDERR "[ShellBags] [$num] associated to FOLDER ", $self->{'shell_folder'}->{$num}->{'ascii'}, " - ", $self->{'shell_folder'}->{$num}->{'utf'}, "\n" if $self->{'debug'};
+
+				# add to the timestamp value
+				$self->{'vals'}->{$self->{'vals_count'}++} = { 'value' => $num, 'type' => $key_type };
+
+				# get that number (fetch the Shell Key underneath the number)
+				if( $self->{'debug'} )
+				{
+					print STDERR "[ShellBags] Fetching key: Software\\Microsoft\\Windows\\$key_type\\Bags\\$num\n";# if $self->{'shell_noroam_folder'}->{$num}->{'os'} eq 'XP';
+					#print STDERR "[ShellBags] Fetching Software\\Classes\\Wow6432Node\\Local Settings\\Software\\Microsoft\\Windows\\$key_type\\Bags\\$num\n" unless $self->{'shell_noroam_folder'}->{$num}->{'os'} eq 'XP';
+				}
+				# Software\\Classes\\Wow6432Node\\Local Settings\\Software\\Microsoft\\Windows\\Shell\\BagMRU
+	
+				$new_key = $rk->get_subkey( "Software\\Microsoft\\Windows\\$key_type\\Bags\\$num\\Shell") ;#if $self->{'shell_noroam_folder'}->{$num}->{'os'} eq 'XP';
+				#$new_key = $rk->get_subkey( "Software\\Classes\\Wow6432Node\\Local Settings\\Software\\Microsoft\\Windows\\$key_type\\Bags\\$num\\Shell") unless $self->{'shell_noroam_folder'}->{$num}->{'os'} eq 'XP';
+
+			}
+	
+
+
+			# get a list all the values of the key
+			my @a = $new_key->get_list_of_values();
+
+			foreach my $ak (@a )
+			{
+				if( $ak->get_name =~ m/^ItemPos/ )
+				{
+					# we need to parse this object a bit more
+					my $v = $ak->get_data();
+		
+					my $ofs = 0x1E;
+					my %name;
+					$name{'mod_time'} = unpack( "v", substr( $v, $ofs, 2 ) );
+					$ofs+=2;
+					$name{'mod_date'} = unpack( "v", substr( $v, $ofs, 2 ) );
+					$ofs+=2;
+
+					eval
+					{
+						$name{'mod'} = Log2t::Time::Dos2Unix( $name{'mod_date'}, $name{'mod_time'} );
+					};
+					if( $@ )
+					{
+						# THE DEBUG REQUIREMENT SHOULD BE REMOVED WHEN MORE STABLE
+						print STDERR "[ShellBags] Unable to calculate modified time for Shell key. Error $@\n" if $self->{'debug'};
+						$name{'mod'} = 0;
+					}
+
+
+					$ofs+=4; # skip 
+					# read ascii
+					my $s = 1;
+					my $c;
+					while ( $s )
+					{
+						# read a single character
+						$c = substr( $v, $ofs++,1 );
+			
+						# check if we have reached the end of filename
+						$s = 0 if $c eq "\0";
+		
+						next unless $s;
+
+						# add to the ASCII string
+						$name{'ascii'} .= sprintf "%s", $c;
+					}
+					$ofs+=8;
+					$name{'access_date'} = unpack( "v", substr( $v, $ofs, 2 ) );
+					$ofs+=2;
+					$name{'access_time'} = unpack( "v", substr( $v, $ofs, 2 ) );
+					$ofs+=2;
+					$name{'create_date'} = unpack( "v", substr( $v, $ofs, 2 ) );
+					$ofs+=2;
+					$name{'create_time'} = unpack( "v", substr( $v, $ofs, 2 ) );
+					$ofs+=6;
+
+					eval
+					{
+						$name{'created'} = Log2t::Time::Dos2Unix( $name{'create_date'}, $name{'create_time'} );
+					};
+					if( $@ )
+					{
+						# THE DEBUG REQUIREMENT SHOULD BE REMOVED WHEN MORE STABLE
+						print STDERR "[ShellBags] Unable to calculate create time for Shell key. Error $@\n" if $self->{'debug'};
+						$name{'created'} = 0;
+					}
+
+					eval
+					{
+						# THE DEBUG REQUIREMENT SHOULD BE REMOVED WHEN MORE STABLE
+						$name{'access'} = Log2t::Time::Dos2Unix( $name{'access_date'}, $name{'access_time'} );
+					};
+					if( $@ )
+					{
+						print STDERR "[ShellBags] Unable to calculate access time for Shell key. Error $@\n" if $self->{'debug'};
+						$name{'access'} = 0;
+					}
+
+					$name{'type'} = $key_type;
+					$name{'key'} = "Software\\Microsoft\\Windows\\$key_type\\Bags\\$num\\Shell";
+
+					printf STDERR "[ShellBag] Shell OFFSET Before UTF 0x%x\n", $ofs if $self->{'debug'};
+
+					# now read the utf
+					$s = 1;
+					while( $s )
+					{
+						# read a single character
+						$c = substr( $v, $ofs, 2 );
+						$ofs += 2;
+
+						printf STDERR "[ShellBag] 0x%x - UTF 0x%x [%s]\n", $ofs, decode('utf-8', $c), $c if $self->{'debug'};
+		
+						# check the length
+						$s = 0 if (sprintf "%s", $c) eq "\0";
+						$s = 0 if (sprintf "%s", $c) eq "\00";
+						$s = 0 if (length $v) < $ofs;
+
+						next unless $s;
+	
+						# add to the UTF-8 string
+						$name{'utf'} .= decode( 'utf-8', $c );
+					}
+					
+					$name{'folder_a'} = $text{'a'};
+					$name{'folder_u'} = $text{'u'};
+					# add to the timestamp value
+					$self->{'vals'}->{$self->{'vals_count'}++} = { 'value' => \%name, 'type' => 'Shell_' . $key_type };
+
+
+					# check if mod timestamp is empty and print out a warning message
+					print STDERR "[ShellBag] WARNING. There is no MODIFICATION TIMESTAMP, ONLY DATE for the file " . $name{'folder_u'} . '/' . $name{'utf'} . " \n" if( $name{'mod_time'} == 0 );
+
+					printf STDERR "[ShellBags] Shell key value [%s] is \t\t%s (%s)\n", $ak->get_name(), $name{'ascii'},$name{'utf'} if $self->{'debug'};
+				}
+			}
+			# now to get the values
+			
+
+		}
+	}
+				
+	# now to get all subkeys
+	@ar = $$k->get_list_of_subkeys();
+	
+	# to recursively go through the keys, call this function again for each subkey found
+	foreach (@ar) 
+	{
+		$self->_preprocess_shell( \$_, $key_type );
+	}
+
+
+	return 1;
+}
+			
+
+#       parse_line
+# This is the main "juice" of the format file.  It takes an object from the @vals array
+# and parses it to produce an array containing all the needed values to print a 
+# body file.
+#
+# 
+# @param v. A registry object from the @vals array 
+# @return Returns a array containing the needed values to print a body file
+sub _parse_line()
+{
+	# remove this endless if/elsif/elsi..... sentence
+	my $self = shift;
+	my $key_type = $self->{'key_type'};
+
+	if( $key_type eq 'UserAssist' )
+	{
+		$self->_parse_ua();
+	}
+	elsif( $key_type eq 'FileExts' )
+	{
+		$self->_parse_fe();
+	}
+	elsif( $key_type eq 'LastVisitedMRU' )
+	{
+		$self->_parse_lvm();
+	}
+	elsif( $key_type eq 'OpenSaveMRU' )
+	{
+		$self->_parse_osm();
+	}
+	elsif( $key_type eq 'Map Network Drive MRU' )
+	{
+		$self->_parse_mndm();
+	}
+	elsif( $key_type eq 'MountPoints2' )
+	{
+		$self->_parse_mp2();
+	}
+	elsif( $key_type eq 'RecentDocs' )
+	{
+		$self->_parse_rd();
+	}
+	elsif( $key_type eq 'RunMRU' )
+	{
+		$self->_parse_rm();
+	}
+	elsif( $key_type eq 'Regedit' )
+	{
+		$self->_parse_re();
+	}
+	elsif( $key_type eq 'Shell' )
+	{
+		$self->_parse_shell();
+	}
+	elsif( $key_type eq 'ShellNoRoam' )
+	{
+		$self->_parse_shell();
+	}
+	elsif( $key_type =~ m/^Shell_/ )
+	{
+		$self->_parse_shell_key();
+	}
+	else
+	{
+		print STDERR "[NTUSER] Unkown key type: $key_type\n" if $self->{'debug'};	
+	}
+}
+
+sub _parse_shell_key()
+{
+	my $self = shift;
+	my %t_line;
+	my $text;
+	my $title;
+
+	# we've got two subkeys
+	#	BagMRU
+	#	Bags
+	#
+	# key_type is Shell_KEYTYPE
+	# value is hash reference 
+
+	my $ktype = $self->{'key_type'};
+	$ktype =~ s/^Shell_//;
+
+
+        # content of array t_line ([optional])
+        # %t_line {        #       time
+        #               index
+        #                       value
+        #                       type
+        #                       legacy
+        #       desc
+        #       short
+        #       source
+        #       sourcetype
+        #       version
+        #       [notes]
+        #       extra
+        #               [filename]
+        #               [md5]
+        #               [mode]
+        #               [host]
+        #               [user]
+        #               [url]
+        #               [size]
+        #               [...]
+        # }
+	# we've got all the values
+	$text = $self->{'value'}->{'folder_u'} . '/' .  $self->{'value'}->{'utf'} . ' (' . $self->{'value'}->{'folder_a'} . '/' . $self->{'value'}->{'ascii'} . ')';
+	$title = $text;
+
+        # create the t_line variable
+	$self->{'container'}->{$self->{'cont_index'}++} = {
+                'time' => { 
+			0 => { 'value' => $self->{'value'}->{'mod'}, 'type' => 'Modified', 'legacy' => 1 },
+			1 => { 'value' => $self->{'value'}->{'access'}, 'type' => 'Accessed', 'legacy' => 2 },
+			2 => { 'value' => $self->{'value'}->{'created'}, 'type' => 'Created', 'legacy' => 12 },
+		},
+                'desc' => "File/Path: " . $text . " (MAC when first closed)" ,
+                'short' => "File path:" . $title,
+                'source' => 'REG',
+                'sourcetype' => $ktype . ' key',
+                'version' => 2,
+                'extra' => { 'user' => $self->{'username'}, 'notes' => 'Dates correspond to the filesystem MAC timestamps from when the file was first closed, and the entry written to the registry'  }
+        };
+
+	return \%t_line;
+}
+
+#	parse_shell
+#
+# This is a simple sub routine designed to parse the ShellBags found inside the NTUSER
+# registry file.  The ShellBags represent information about files and folders, both on
+# a local volume and on a remote one.
+#
+# The structure is mostly parsed from the article "Using shellbag information to 
+# reconstruct user actvities", published in the Digital Investigation magasine, 
+# Digital Investigation 6 (2009) S69-S77
+sub _parse_shell()
+{
+	my $self = shift;
+	my %t_line;
+	my $text;
+	my $title;
+	my $ref;
+
+	# we've got two subkeys
+	#	BagMRU
+	#	Bags
+	#
+	# The BagMRU key represents the Desktop folder, and it contains a folder 
+	# structure underneath, representing each folder underneath the Desktop
+	# So we begin with parsing the BagMRU key.... and work our way from there
+
+        # content of array t_line ([optional])
+        # %t_line {        #       time
+        #               index
+        #                       value
+        #                       type
+        #                       legacy
+        #       desc
+        #       short
+        #       source
+        #       sourcetype
+        #       version
+        #       [notes]
+        #       extra
+        #               [filename]
+        #               [md5]
+        #               [mode]
+        #               [host]
+        #               [user]
+        #               [url]
+        #               [size]
+        #               [...]
+        # }
+	# we've got all the values
+	if( $self->{'key_type'} eq 'ShellNoRoam' )
+	{
+		$ref = $self->{'shell_noroam_folder'}->{$self->{'value'}};
+		$text = $self->{'shell_noroam_folder'}->{$self->{'value'}}->{'utf'} . ' (' . $self->{'shell_noroam_folder'}->{$self->{'value'}}->{'ascii'} . ')';
+		$title = $text;
+	}
+	else
+	{
+		$ref = $self->{'shell_folder'}->{$self->{'value'}};
+		$text = $self->{'shell_folder'}->{$self->{'value'}}->{'utf'} . ' (' . $self->{'shell_folder'}->{$self->{'value'}}->{'ascii'} . ')';
+		$title = $text;
+	}
+
+        # create the t_line variable
+        $self->{'container'}->{$self->{'cont_index'}} = {
+                'desc' => "Path: " . $text . " (MAC when first closed)",
+                'short' => 'Folder: ' . $title,
+                'source' => 'REG',
+                'sourcetype' => $self->{'key_type'} . ' key',
+                'version' => 2,
+		'notes' => 'Dates correspond to the filesystem MAC timestamps from when the file was first closed, and the entry written to the registry',
+                'extra' => { 'user' => $self->{'username'}, }
+        };
+
+	$self->{'container'}->{$self->{'cont_index'}++}->{'time'} = {
+		0 => { 'value' => $ref->{'mod'}, 'type' => 'Modified', 'legacy' => 15 },
+		1 => { 'value' => $ref->{'access'}, 'type' => 'Accessed', 'legacy' => 0 },
+		2 => { 'value' => $ref->{'created'}, 'type' => 'Created', 'legacy' => 12 }
+	};
+
+	return \%t_line;
+}
+
+#	parse_fe
+#
+# This is a simple sub routine that parses the FileExts key of the NTUSER.DAT file,
+# a registry key that contains the last application that opened a file with a given
+# file extension.
+#
+# The code is mostly taken from the fileexts.pl from RegRipper, written by H. Carvey
+sub _parse_fe()
+{
+	my $self = shift;
+	my %t_line;
+	my $time_value;
+	my $text;
+	my $title;
+	my $list;
+
+	my $name = $self->{'value'}->get_name();
+	next unless ($name =~ m/^\.\w+/);
+
+	# code taken from fileexts.pl (slightly changed to fit the code)
+        eval 
+	{
+       		my $data = $self->{'value'}->get_subkey("OpenWithList")->get_value("MRUList")->get_data();
+       		if ($data =~ m/^\w/) 
+		{
+			# get the time value
+			$time_value = $self->{'value'}->get_subkey("OpenWithList")->get_timestamp();
+
+			# and construct the text
+			$text = 'File extension [' . $name . '] opened with {';
+
+			# find out the latest entry
+			$list = substr $data,0,1;	# get the latest key
+
+			# fetch that entry
+			my $software = $self->{'value'}->get_subkey("OpenWithList")->get_value($list)->get_data();
+			$text .= $software . '}';
+
+			$title = 'File extension ' . $name . ' opened by '  . $software;
+       		}
+       };
+
+        # content of array t_line ([optional])
+        # %t_line {        #       time
+        #               index
+        #                       value
+        #                       type
+        #                       legacy
+        #       desc
+        #       short
+        #       source
+        #       sourcetype
+        #       version
+        #       [notes]
+        #       extra
+        #               [filename]
+        #               [md5]
+        #               [mode]
+        #               [host]
+        #               [user]
+        #               [url]
+        #               [size]
+        #               [...]
+        # }
+
+        # create the t_line variable
+        $self->{'container'}->{$self->{'cont_index'}++} = {
+                'time' => { 0 => { 'value' => $time_value, 'type' => 'Extension Changed', 'legacy' => 15 } },
+                'desc' => $text,
+                'short' => $title,
+                'source' => 'REG',
+                'sourcetype' => $self->{'key_type'} . ' key',
+                'version' => 2,
+                'extra' => { 'user' => $self->{'username'}, }
+        };
+
+	return \%t_line;
+}
+
+#	parse_lvm
+# A simple routine that parses the "last visited MRU" of the NTUSER.DAT registry file.
+#
+# Code mostly borrowed from the comdlg32.pl, a plugin file from the RegRipper tool 
+# written by H. Carvey
+sub _parse_lvm()
+{
+	my $self = shift;
+	my %t_line;
+	my $time_value;
+	my $text;
+	my $title;
+	my %mru;
+
+	my @att;
+
+	# get all the sub keys of the last visited MRU
+	@att = $self->{'value'}->get_list_of_values();
+	return \%t_line unless scalar( @att ) > 0;
+
+	# enter all of the keys into a hash
+	map{$mru{$_->get_name()} = $_->get_data()}(@att);
+
+	# get the time
+	$time_value = $self->{'value'}->get_timestamp();
+
+	# get the value
+	my $first = substr $mru{'MRUList'}, 0, 1;
+	my ($file,$dir ) = split( /\00\00/, $mru{$first}, 2);
+	$file =~ s/\00//g;
+	$dir  =~ s/\00//g;
+
+	$text = 'Most recently opened file in Windows (in an "Open" dialog): ' . $dir . ' -> ' . $file;
+	$title = 'File opened: ' . $dir . ' -> ' . $file;
+
+        # content of array t_line ([optional])
+        # %t_line {        #       time
+        #               index
+        #                       value
+        #                       type
+        #                       legacy
+        #       desc
+        #       short
+        #       source
+        #       sourcetype
+        #       version
+        #       [notes]
+        #       extra
+        #               [filename]
+        #               [md5]
+        #               [mode]
+        #               [host]
+        #               [user]
+        #               [url]
+        #               [size]
+        #               [...]
+        # }
+
+        # create the t_line variable
+        $self->{'container'}->{$self->{'cont_index'}++} = {
+                'time' => { 0 => { 'value' => $time_value, 'type' => 'File Opened', 'legacy' => 15 } },
+                'desc' => $text,
+                'short' => $text,
+                'source' => 'REG',
+                'sourcetype' => $self->{'key_type'} . ' key',
+                'version' => 2,
+                'extra' => { 'user' => $self->{'username'}, 'url' => 'http://support.microsoft.com/kb/322948/EN-US/'  }
+        };
+
+	return \%t_line;
+}
+
+# OpenSaveMRU
+sub _parse_osm()
+{
+	my $self = shift;
+	my %t_line;
+	my $time_value;
+	my $text;
+	my $title;
+	my %mru;
+
+	my @att;
+
+	# get all the sub keys of the last visited MRU
+	@att = $self->{'value'}->get_list_of_values();
+	return \%t_line unless scalar( @att ) > 0;
+
+	# enter all of the keys into a hash
+	map{$mru{$_->get_name()} = $_->get_data()}(@att);
+
+	# check if we have a MRUList variable defined
+	return \%t_line unless exists $mru{'MRUList'};
+
+	# get the time
+	$time_value = $self->{'value'}->get_timestamp();
+
+	# get the value
+	my $first = substr $mru{'MRUList'}, 0, 1;
+
+	$text = 'Most recent file saved or copied to a specific location in Windows (in an "Open" or "Save As" dialog): ' . $mru{$first};
+	$title = 'File saved or copied: ' . $mru{$first};
+
+        # content of array t_line ([optional])
+        # %t_line {        #       time
+        #               index
+        #                       value
+        #                       type
+        #                       legacy
+        #       desc
+        #       short
+        #       source
+        #       sourcetype
+        #       version
+        #       [notes]
+        #       extra
+        #               [filename]
+        #               [md5]
+        #               [mode]
+        #               [host]
+        #               [user]
+        #               [url]
+        #               [size]
+        #               [...]
+        # }
+
+        # create the t_line variable
+	$self->{'container'}->{$self->{'cont_index'}++} = {
+
+                'time' => { 0 => { 'value' => $time_value, 'type' => 'File saved or copied', 'legacy' => 15 } },
+                'desc' => $text,
+                'short' => $title,
+                'source' => 'REG',
+                'sourcetype' => $self->{'key_type'} . ' key',
+                'version' => 2,
+                'extra' => { 'user' => $self->{'username'}, 'url' => 'http://support.microsoft.com/kb/322948/EN-US/'  }
+        };
+
+	return \%t_line;
+}
+
+# Map Network Drive MRU
+sub _parse_mndm()
+{
+	my $self = shift;
+	my %t_line;
+	my $time_value;
+	my $text;
+	my $title;
+	my %mru;
+
+	my @att;
+
+	# get all the sub keys of the last visited MRU
+	@att = $self->{'value'}->get_list_of_values();
+	return \%t_line unless scalar( @att ) > 0;
+
+	# enter all of the keys into a hash
+	map{$mru{$_->get_name()} = $_->get_data()}(@att);
+
+	# check if we have a MRUList variable defined
+	return \%t_line unless exists $mru{'MRUList'};
+
+	# get the time
+	$time_value = $self->{'value'}->get_timestamp();
+
+	# get the value
+	my $first = substr $mru{'MRUList'}, 0, 1;
+
+	$text = $mru{$first} . ' - Recently mounted network drive';
+	$title = $mru{$first} . ' mounted';
+
+        # content of array t_line ([optional])
+        # %t_line {        #       time
+        #               index
+        #                       value
+        #                       type
+        #                       legacy
+        #       desc
+        #       short
+        #       source
+        #       sourcetype
+        #       version
+        #       [notes]
+        #       extra
+        #               [filename]
+        #               [md5]
+        #               [mode]
+        #               [host]
+        #               [user]
+        #               [url]
+        #               [size]
+        #               [...]
+        # }
+
+        # create the t_line variable
+	$self->{'container'}->{$self->{'cont_index'}++} = {
+                'time' => { 0 => { 'value' => $time_value, 'type' => 'Drive Mounted', 'legacy' => 15 } },
+                'desc' => $text,
+                'short' => $title,
+                'source' => 'REG',
+                'sourcetype' =>  $self->{'key_type'} . ' key',
+                'version' => 2,
+                'extra' => { 'user' => $self->{'username'},   }
+        };
+
+	return \%t_line;
+}
+
+# MountPoints2
+# taken mostly from mp2.pl from RegRipper
+sub _parse_mp2()
+{
+	my $self = shift;
+	my %t_line;
+	my $time_value;
+	my $text;
+	my $title;
+	my $s = $self->{'value'};
+
+	# code gotten from mp2.pl, originally written by H. Carvey
+	my $name = $s->get_name();
+
+	if ($name =~ m/^{/) 
+	{
+		$text = $name . ' volume mounted';
+	}
+	elsif ($name =~ m/^[A-Z]/) 
+	{
+		$text = $name . ' drive mounted' ; 
+	}
+	elsif ($name =~ m/^#/) 
+	{
+		$text = $name . ' (remote) Drive mounted'; 
+	}
+	else 
+	{
+		$text = 'Key name = ' . $name;
+	}
+	
+	# get the timestamp
+	$time_value = $s->get_timestamp();
+
+	$title = $text;
+	
+        # content of array t_line ([optional])
+        # %t_line {        #       time
+        #               index
+        #                       value
+        #                       type
+        #                       legacy
+        #       desc
+        #       short
+        #       source
+        #       sourcetype
+        #       version
+        #       [notes]
+        #       extra
+        #               [filename]
+        #               [md5]
+        #               [mode]
+        #               [host]
+        #               [user]
+        #               [url]
+        #               [size]
+        #               [...]
+        # }
+
+        # create the t_line variable
+	$self->{'container'}->{$self->{'cont_index'}++} = {
+                'time' => { 0 => { 'value' => $time_value, 'type' => 'Drive last mounted', 'legacy' => 15 } },
+                'desc' => $text,
+                'short' => $title,
+                'source' => 'REG',
+                'sourcetype' =>  $self->{'key_type'} . ' key',
+                'version' => 2,
+                'extra' => { 'user' => $self->{'username'}, }
+        };
+
+	return \%t_line;
+}
+
+# a sub routine borrowed from the recentdocs.pl, written by H. Carvey
+sub _getRDValues {
+	my $self = shift;
+        my $key = $self->{'value'};
+
+        my $mru = "MRUList";
+        my %rdvals;
+
+        my @vals = $key->get_list_of_values();
+        if (scalar @vals > 0) {
+                foreach my $v (@vals) {
+                        my $name = $v->get_name();
+                        my $data = $v->get_data();
+                        if ($name =~ m/^$mru/) {
+                                my @mru;
+                                if ($name eq "MRUList") {
+                                        @mru = split(//,$data);
+                                }
+                                elsif ($name eq "MRUListEx") {
+                                        @mru = unpack("V*",$data);
+                                }
+                                $rdvals{$name} = join(',',@mru);
+                        }
+                        else {
+                                my $file = (split(/\00\00/,$data))[0];
+                                $file =~ s/\00//g;
+                                $rdvals{$name} = $file;
+                        }
+                }
+                return %rdvals;
+        }
+        else {
+                return undef;
+        }
+}
+
+
+# RecentDocs, mostly borrowed from recentdocs.pl, written by H. Carvey for the RegRipper tool
+sub _parse_rd()
+{
+	my $self = shift;
+	my %t_line;
+	my $time_value;
+	my $text;
+	my $title;
+	my $t = 'File';	# default behaviour of the type of file in question
+
+	my $name = $self->{'value'}->get_name();
+	$t = 'Folder' if $name eq 'Folder';
+
+	$time_value = $self->{'value'}->get_timestamp();
+
+	# code from recentdocs.pl, slightly changed to fit this tool
+	my %rdvals = $self->_getRDValues;
+
+	# check to see if we've got a proper value
+	if (%rdvals) 
+	{
+		my $tag;
+		if (exists $rdvals{"MRUListEx"}) 
+		{
+			$tag = "MRUListEx";
+		}
+		elsif (exists $rdvals{"MRUList"}) {
+			$tag = "MRUList";
+		}
+		else {
+		}
+	
+		my @list = split(/,/,$rdvals{$tag});
+
+		# get the first tag in the MRU list (the one that the timestamp corresponds to)
+		my $first = @list[0];
+
+		$text = 'Recently opened file of extension: ' . $name . ' - value: ' . encode( 'utf-8', $rdvals{$first} );
+	}
+	else 
+	{
+		print STDERR "[UA] Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\RecentDocs\\",$name , " has no values.\n" if $self->{'debug'};
+		return \%t_line;
+	}
+
+	# end of recentdocs.pl code
+	$title = $text;
+
+        # content of array t_line ([optional])
+        # %t_line {        #       time
+        #               index
+        #                       value
+        #                       type
+        #                       legacy
+        #       desc
+        #       short
+        #       source
+        #       sourcetype
+        #       version
+        #       [notes]
+        #       extra
+        #               [filename]
+        #               [md5]
+        #               [mode]
+        #               [host]
+        #               [user]
+        #               [url]
+        #               [size]
+        #               [...]
+        # }
+
+        # create the t_line variable
+	$self->{'container'}->{$self->{'cont_index'}++} = {
+                'time' => { 0 => { 'value' => $time_value, 'type' => $t . ' opened', 'legacy' => 15 } },
+                'desc' => $text,
+                'short' => $title,
+                'source' => 'REG',
+                'sourcetype' =>  $self->{'key_type'} . ' key',
+                'version' => 2,
+                'extra' => { 'user' => $self->{'username'},   }
+        };
+
+	return \%t_line;
+}
+
+# RunMRU
+sub _parse_rm()
+{
+	my $self = shift;
+	my %t_line;
+	my $time_value;
+	my $text;
+	my $title;
+	my %mru;
+
+	my @att;
+
+	# get all the sub keys of the last visited MRU
+	@att = $self->{'value'}->get_list_of_values();
+	return \%t_line unless scalar( @att ) > 0;
+
+	# enter all of the keys into a hash
+	map{$mru{$_->get_name()} = $_->get_data()}(@att);
+
+	# check if we have a MRUList variable defined
+	return \%t_line unless exists $mru{'MRUList'};
+
+	# get the time
+	$time_value = $self->{'value'}->get_timestamp();
+
+	# get the value
+	my $first = substr $mru{'MRUList'}, 0, 1;
+
+	$text = 'typed the following cmd in the RUN dialog {' . $mru{$first} . '}';
+	$title = 'RunMRU value [' . $mru{$first} . ']';
+
+
+
+        # content of array t_line ([optional])
+        # %t_line {        #       time
+        #               index
+        #                       value
+        #                       type
+        #                       legacy
+        #       desc
+        #       short
+        #       source
+        #       sourcetype
+        #       version
+        #       [notes]
+        #       extra
+        #               [filename]
+        #               [md5]
+        #               [mode]
+        #               [host]
+        #               [user]
+        #               [url]
+        #               [size]
+        #               [...]
+        # }
+
+        # create the t_line variable
+	$self->{'container'}->{$self->{'cont_index'}++} = {
+                'time' => { 0 => { 'value' => $time_value, 'type' => 'CMD typed', 'legacy' => 15 } },
+                'desc' => $text,
+                'short' => $title,
+                'source' => 'REG',
+                'sourcetype' =>  $self->{'key_type'} . ' key',
+                'version' => 2,
+                'extra' => { 'user' => $self->{'username'},  }
+        };
+
+	return \%t_line;
+}
+
+# Regedit, taken from the applets.pl (part of RegRipper), written by H. Carvey
+sub _parse_re()
+{
+	my $self = shift;
+	my %t_line;
+	my $time_value;
+	my $text;
+	my $title;
+	my $lastkey = undef;
+
+	# get the time
+	$time_value = $self->{'value'}->get_timestamp();
+
+	# part from applets.pl
+	eval
+	{
+        	$lastkey = $self->{'value'}->get_value("LastKey")->get_data();
+	};
+	if( $@ )
+	{
+		print STDERR "[NTUSER ERROR] Error while getting the RegEdit key\n";
+		return \%t_line;
+	}
+
+	$text = 'RegEdit LastKey value (last key edited by user)-> ' . $lastkey;
+	# end of code from applets.pl
+
+	$title = $text;
+
+
+        # content of array t_line ([optional])
+        # %t_line {        #       time
+        #               index
+        #                       value
+        #                       type
+        #                       legacy
+        #       desc
+        #       short
+        #       source
+        #       sourcetype
+        #       version
+        #       [notes]
+        #       extra
+        #               [filename]
+        #               [md5]
+        #               [mode]
+        #               [host]
+        #               [user]
+        #               [url]
+        #               [size]
+        #               [...]
+        # }
+
+        # create the t_line variable
+	$self->{'container'}->{$self->{'cont_index'}++} = {
+                'time' => { 0 => { 'value' => $time_value, 'type' => 'Key Edited', 'legacy' => 15 } },
+                'desc' => $text,
+                'short' => $title,
+                'source' => 'REG',
+                'sourcetype' => $self->{'key_type'} . ' key',
+                'version' => 2,
+                'extra' => { 'user' => $self->{'username'}, }
+        };
+
+	return \%t_line;
+}
+
+
+# 	parse_ua
+#
+# This is a sub routine that parses the UserAssist key of the registry
+#
+# This mainly consists of code taken from the userassist.pl of the RegRipper, written
+# by H. Carvey
+sub _parse_ua()
+{
+	my $self = shift;
+	# the timestamp object
+	my $v;
+	my %t_line;
+	my %ua;
+	my $hrzr = "HRZR";
+	my $text;
+	my $time_value;
+	my $title;
+	my $detail;
+
+	$v = $self->{'value'};
+
+	my $value_name = $v->get_name();
+	print STDERR "[UA] Parsing (as read) $value_name\n" if $self->{'debug'};
+
+	my $data = $v->get_data();
+
+	if( $self->{'type'} eq 'xp' )
+	{
+		print STDERR "[UA] We are parsing the UserAssist key according to XP rules\n" if $self->{'debug'};
+
+		if (length($data) == 16) {
+			my ($session,$count,$val1,$val2) = unpack("V*",$data);
+			if ($val2 != 0) {
+				$time_value = Log2t::Time::Win2Unix($val1,$val2);
+				if ($value_name =~ m/^$hrzr/) { 
+					$value_name =~ tr/N-ZA-Mn-za-m/A-Za-z/;
+				}
+				$count -= 5 if ($count > 5);
+
+				# check if a GUID has been used
+				if( $value_name =~ m/(\{.+\})/ )
+				{
+					print STDERR "[UA] A GUID IS IN THE PATH ($value_name)\n" if $self->{'debug'};
+	
+					# we have a GUID that needs to be replaced
+					print STDERR "[UA] The guid is $1\n" if $self->{'debug'};
+	
+					# check if GUID exists in a "known" GUID table
+					if( Log2t::Win::guid_exists( $1 ) )
+					{ 
+						# then we need to remove the GUID and replace it with the path name
+						my $val = Log2t::Win::get_guid_path( "$1" );
+	
+						print STDERR "[UA] And the text version is '$val'\n" if $self->{'debug'};
+	
+						$value_name =~ s/$1/$val/;
+					}
+				}
+	
+				$text =  $value_name . ' [Count: ' . $count . ']';
+				$title = $value_name;
+				print STDERR "THE TEXT [$text]\n" if $self->{'debug'};
+	
+			}
+			else # added by kristinn
+			{
+				print STDERR "Val2 is equal to zero ($val2) and therfore an invalid record\n" if $self->{'debug'};
+				return undef;
+			}
+
+			# check the text for common beginning (added by Kristinn)
+			if( $text =~ m/RUNPATH/ )
+			{
+				$detail = 'Absolute path, occured either via double clicking an icon in Explorer or typing in the name of the application in Start/Run dialog';
+			} 
+			elsif( $text =~ m/RUNCPL/ )
+			{
+				$detail = 'Control Panel Applet being launched';
+			}
+			elsif( $text =~ m/RUNPIDL/ )
+			{
+				$detail = 'A PIDL (reference to an object), most likely caused by running a shortcut (LNK file)';
+			}
+			else
+			{
+				$detail = 'no additional information provided.';
+			}
+		}
+		else {
+			# we have a bad length for the record and therefore it is invalid
+			# supress the error message
+			print STDERR "Error message: Key $value_name has no values (the length is invalid " . length($data) . ").\n" if $self->{'debug'};
+			return undef;
+		}
+	}
+	elsif( $self->{'type'} eq 'new' )
+	{
+		# we are dealing with a Windows Vista or newer
+		if( length( $data ) == 72 )
+		{
+			# we have a valid data length
+			print STDERR "[UA] Valid data lenght\n" if $self->{'debug'};
+			$value_name =~ tr/N-ZA-Mn-za-m/A-Za-z/;
+			print STDERR "[UA] Decoded key name: $value_name\n" if $self->{'debug'};
+
+			# unpack the entire string into 32 bit integers
+			my( @values ) = unpack( "V*", $data );
+
+			# check if a GUID has been used
+			if( $value_name =~ m/(\{.+\})/ )
+			{
+				print STDERR "[UA] A GUID IS IN THE PATH ($value_name)\n" if $self->{'debug'};
+
+				# we have a GUID that needs to be replaced
+				print STDERR "[UA] The guid is $1\n" if $self->{'debug'};
+
+				# check if GUID exists in a "known" GUID table
+				if( Log2t::Win::guid_exists( $1 ) )
+				{ 
+					# then we need to remove the GUID and replace it with the path name
+					my $val = Log2t::Win::get_guid_path( "$1" );
+
+					print STDERR "[UA] And the text version is '$val'\n" if $self->{'debug'};
+
+					$value_name =~ s/$1/$val/;
+				}
+			}
+
+			# make an extra check
+			if( $values[0] == 0 )
+			{
+				$time_value = Log2t::Time::Win2Unix( $values[15], $values[16] );
+				$text = $value_name . ' [Count: ' . $values[1] . ']  nr. of times app had focus: ' . $values[2] . ' and duration of focus: ' . $values[3] . 'ms';	
+				$title = $value_name;
+			}
+			else
+			{
+				print STDERR "[UA] The first 32 bit integer is not equal to zero\n" if $self->{'debug'};
+				return undef;
+			}
+		}	
+		else
+		{
+			# invalid data length
+			print STDERR "[UA] Invalid data length " . length( $data ) . " - length not 72\n" if $self->{'debug'};	
+			return undef;
+		}
+	}
+	else
+	{
+		$text = '';	
+		$title = '';
+	}
+
+        # content of array t_line ([optional])
+        # %t_line {        #       time
+        #               index
+        #                       value
+        #                       type
+        #                       legacy
+        #       desc
+        #       short
+        #       source
+        #       sourcetype
+        #       version
+        #       [notes]
+        #       extra
+        #               [filename]
+        #               [md5]
+        #               [mode]
+        #               [host]
+        #               [user]
+        #               [url]
+        #               [size]
+        #               [...]
+        # }
+
+        # create the t_line variable
+	$self->{'container'}->{$self->{'cont_index'}++} = {
+                'time' => { 0 => { 'value' => $time_value, 'type' => 'Time of Launch', 'legacy' => 15 } },
+                'desc' => $text,
+                'short' => $title,
+                'source' => 'REG',
+                'sourcetype' => 'UserAssist key',
+                'version' => 2,
+		'notes' => $detail,
+                'extra' => { 'user' => $self->{'username'},  }
+        };
+
+	return \%t_line;
+}
+
+#       get_help
+# A simple subroutine that returns a string containing the help 
+# message for this particular format file.
+# @return A string containing a help file for this format file
+sub get_help()
+{
+	return "This format file reads and parses the user registry file NTUSER.DAT,
+extracts from it the UserAssist key, decodes it and produces a body file.  The body
+file can than be used in a timeline analysis (using tools like mactime from TSK).
+
+The script depends upon the Perl library:
+	Parse::Win32Registry
+
+The parameter to this format file is the NTUSER.DAT file that can be found for instance
+at the following location (win xp):
+	C:\\Documents and Settings\\ MYUSERNAME\\NTUSER.DAT
+
+Description of Control Panel Files in XP - http://support.microsoft.com/kb/313808
+
+This format file accepts the following option
+	--host	 HOST\n";
+
+}
+
+#       verify
+# A subroutine that verifies if we are examining a ntuser file, so it can be further 
+# processed.  
+# @return An array containing an integer and a string.  The integer indicates a success or failure and the
+#       string is the error message (if the file is not correctly formed)
+sub verify
+{
+	my $self = shift;
+	# define an array to keep
+	my %return;
+	my $line;
+	my @words;
+	my $root_key;
+	my $key;
+
+	# start by setting the endian correctly
+	#Log2t::BinRead::set_endian( Log2t::Common::LITTLE_E );
+	#Log2t::BinRead::set_endian( LITTLE_E );
+
+	# default values
+	$return{'success'} = 0;
+	$return{'msg'} = 'not a file';
+	
+	return \%return unless -f ${$self->{'name'}};
+
+	my $ofs = 0;
+
+	# start by checking if this is a file or not
+	if( -f ${$self->{'name'}} )
+	{
+		# this is a file, check further
+		eval
+		{
+			$line = Log2t::BinRead::read_ascii( $self->{'file'},\$ofs,4 );
+		};
+		if ( $@ )
+		{
+			$return{'success'} = 0;
+			$return{'msg'} = "Unable to open the file ($@)";
+			return \%return;
+		}
+
+		# the content of these bytes should be
+		# regf = 7265 6766
+		if( $line eq 'regf' )
+		{
+			# load the array ( or try to at least )
+			eval 
+			{
+				$self->{'reg'} = Parse::Win32Registry->new(${$self->{'name'}});
+			};
+			if( $@ )
+			{
+				# an error occured, return from this mess ;)
+				$return{'msg'} = "[UserAssist] Unable to load registry file";
+				$return{'success'} = 0;
+
+				return \%return;
+			}
+
+                        # sometimes there might be false positives here, so let's try to get the root key
+                        eval
+                        {
+                                # the registry is now loaded, check the existance of a UserAssist key
+                                $root_key = $self->{'reg'}->get_root_key;
+			};
+			if( $@ )
+			{
+                                $return{'msg'} = 'Unable to retrieve the root key, this might not be a registry file (' . ${$self->{'name'}} .')';
+                                $return{'success'} = 0;
+                                return \%return;
+                        }
+
+			eval 
+			{
+				# now we need to test for the existance of the keys in question
+				# one test
+				# get the userassist key
+
+				$key = $root_key->get_subkey($self->{'ua_key_base'});
+				if( defined $key )
+				{
+					$return{'success'} = 1;
+				}
+				else
+				{
+					$return{'success'} = 0;
+					$return{'msg'} = 'The UserAssist key does not exist';
+				}
+			};
+			if( $@ )
+			{
+				$return{'msg'} = 'Unable to load UserAssist key, not a NTUSER.DAT file';
+				$return{'success'} = 0;
+			}
+		}
+		else
+		{
+			$return{'success'} = 0;
+			$return{'msg'} = 'File not a registry file.';
+		}
+	}
+	else
+	{
+		# not a file, so back out
+		$return{'success'} = 0;
+		$return{'msg'} = ${$self->{'name'}} . ' is not a file. ';
+	}
+
+	return \%return;
+}
+
+#logonusername.pl
+sub _get_username
+{
+	my $self = shift;
+	my $logon_name;
+	my $key;
+	my $name_key_path;
+
+	print STDERR "[UA] Reading username\n" if $self->{'debug'};
+
+        my $root_key = $self->{'reg'}->get_root_key;
+
+	if ( $self->{'type'} eq 'xp' )
+	{
+  	     	$logon_name = "Logon User Name";
+       		$name_key_path = 'Software\\Microsoft\\Windows\\CurrentVersion\\Explorer';
+	}
+	elsif( $self->{'type'} eq 'new' )
+	{
+		$name_key_path = 'Software\\Microsoft\\Active Setup\\Installed Components\\{44BBA840-CC51-11CF-AAFA-00AA00B6015C}';
+		$logon_name = 'Username';		
+	}
+	else
+	{
+		print STDERR "[UA] Username not found since we are dealing with an unknown NTUSER.DAT file\n" if $self->{'debug'};
+		return 'unknown';
+	}
+
+       	if ($key = $root_key->get_subkey($name_key_path)) {
+       	        my @n_vals = $key->get_list_of_values();
+       	        if (scalar(@n_vals) > 0) {
+       	                foreach my $v (@n_vals) {
+       	                        if ($v->get_name() eq $logon_name) {
+					print STDERR "[UA] Username found " .$v->get_data() ."\n" if $self->{'debug'};
+       	                                return $v->get_data();
+       	                        }
+				else
+				{
+					print STDERR "[UA] Username keys extracted, examining: " . $v->get_name() . "\n" if $self->{'debug'};
+				}
+       	                }
+       	        }
+       	        else {
+			print STDERR "[UA] Username failed: Now values found\n" if $self->{'debug'};
+			return 'unknown';
+       	        }
+       	}
+       	else {
+		print STDERR "[UA] Username not found: Key does not exist\n" if $self->{'debug'};
+		return 'unknown';
+       	}
+
+	print STDERR "[UA] Key found yet no username returned: logon name perhaps changed?\n" if $self->{'debug'};
+
+	return 'unknown';
+}
+
+
+1;
+

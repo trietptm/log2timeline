@@ -1,0 +1,261 @@
+The installation of this tool is very simple (if all dependencies are sorted out)
+
+There are basically three different methods to install/use log2timeline:
+	+ use a distro with log2timeline pre-installed, something like SIFT version 2.0
+	+ use a repository to use the package manager to install the package and all of the dependencies
+	+ install from sources, building all the dependencies yourself
+
+Installing the tool using your distributions repository is the preferred way, if possible, since that way the tool 
+will get automatically updated each time a new version is released.
+
+Otherwise there is a script called update_log2timeline that is shipped with the tool that downloads the latest version
+and compiles it (tries to do everything automatically, but there might be new dependencies that need to be fixed).
+
++ ---------------------------------------------------------------------------------------------------------------------
++				BUILDING FROM SOURCE 
++ ---------------------------------------------------------------------------------------------------------------------
+
+Building from source (OS independent, as long as you've got the make command).
+
+In short you can issue the following commands:
+
+perl Makefile.PL
+make
+make install (as root user)
+
+During the "perl Makefile.PL" all dependencies are tested, so all missing dependencies should produce a warning.
+
+The installation of the missing dependencies can either be accomplished through your OS package manager or through
+CPAN (or downloading the source for all dependencies and compiling them manually).
+
+
+A more comprehensive and OS/distribution specific installation will follow:
+
++ ---------------------------------------------------------------------------------------------------------------------
++				WINDOWS
++ ---------------------------------------------------------------------------------------------------------------------
+This has been tested on a Windows XP sp3 machine (32 bit). The same instructions apply for a Windows 7 64-bit, and it has
+been verified that they work just as well....
+
+Download and install ActiveState Perl (latest version)
+Open command prompt and run the following commands (install dependencies):
+
+ppm install datetime
+ppm install win32::api
+ppm install date::manip
+ppm install xml::libxml
+ppm install carp::assert
+ppm install digest::crc
+ppm install data::hexify
+ppm install image::exiftool
+ppm install file::mork
+ppm install datetime::format::strptime
+ppm install parse::win32registry
+ppm install html::scrubber
+
+Download the latest source code for log2timeline
+Download two additional libraries:
+	"http://search.cpan.org/CPAN/authors/id/B/BD/BDFOY/Mac-PropertyList-1.33.tar.gz"
+	"http://search.cpan.org/CPAN/authors/id/S/SI/SIXTEASE/XML-Entities-1.0000.tar.gz"
+
+Uncompress
+
+Inside the XML-Entities:
+	Copy the content of the lib/XML folder to c:/perl/lib/XML/
+
+Inside the Mac-Propertylist:
+	Create the directory c:/perl/lib/Mac
+	Copy the content of the lib/* to c:/perl/lib/Mac
+
+Inside the log2timeline directory
+	Delete the file lib/Log2t/input/pcap.pm
+	Copy the content of the lib/Parse/* to c:/perl/lib/Parse/
+	Copy the content of the folder lib/Log2t to c:/perl/lib/Log2t/*
+	Copy lib/Log2Timeline.pm to c:/perl/lib/
+	Copy log2timeline to c:/perl/bin/log2timeline.pl
+	Copy l2t_process to c:/perl/bin/l2t_process.pl
+	Copy timescanner to c:/perl/bin/timescanner.pl
+
+
+Test and hope the best... ;)
+
+
+Special thanks to Chris Pogue for doing the vast majority of the Windows testing and the creation of this install guide.
+
+
++ ---------------------------------------------------------------------------------------------------------------------
++ 				Linux - Arch
++ ---------------------------------------------------------------------------------------------------------------------
+
+To install the tool using Arch Linux simply use the package manager to install it.
+
+See: https://aur.archlinux.org/packages.php?ID=51651 
+
+Thanks to David Souther for putting it together and maintaining it.
+
++ ---------------------------------------------------------------------------------------------------------------------
++ 				Linux - Debian
++ ---------------------------------------------------------------------------------------------------------------------
+
+To install the tool using Debian it is best to use the log2timeline repository.
+
+Add the following line to /etc/apt/sources.list
+
+For Ubuntu 9.10 (karmic):
+	deb http://log2timeline.net/pub/ karmic main
+
+And for Ubuntu 10.04 (lucid)
+	deb http://log2timeline.net/pub/ lucid main
+
+To get my GPG trusted you need to install my key, which can be downloaded from http://log2timeline.net/gpg.asc
+Download the GPG file and issue the following command:
+
+	apt-key add gpg.asc
+
+And then all you should need to do is:
+
+	apt-get update
+	apt-get install log2timeline-perl
+
+(if there isn't a repository for your architecture, please send me an e-mail and I will add it to the repo)
+
+These are the packages that are available through the default repository (the rest of the dependencies will be
+built into the log2timeline repository):
+
+        libdatetime-perl
+        libnet-pcap-perl
+        libarchive-any-perl
+        libxml-libxml-perl
+        libdbi-perl
+        libhtml-scrubber-perl
+        libimage-exiftool-perl
+        libgtk2-perl
+        libglib-perl
+	libcarp-assert-perl
+	libdbd-sqlite3-perl
+	libdigest-crc-perl
+	libversion-perl
+	libdate-manip-perl
+	perl-modules 
+
++ ---------------------------------------------------------------------------------------------------------------------
++ 				Linux - Fedora
++ ---------------------------------------------------------------------------------------------------------------------
+
+log2timeline was recently added to the CERT.org forensics repository (available here: http://www.cert.org/forensics/tools/)
+
+After adding the repository to yum, you can install log2timeline using
+
+	yum install log2timeline
+
+As simple as that (all dependencies are solved)
+
++ Fedora (older version of the SIFT workstation, version 1.3)
+
+n.b. version 2.0 is Ubuntu based and has log2timeline pre-installed.
+
+To resolve dependencies install the following packets using yum (yum install PACKAGE)
+
+	perl-Archive-Zip
+	perl-DateTime
+	perl-HTML-Scrubber
+	perl-Glib
+	perl-Image-ExiftTool
+	perl-Net-Pcap
+	perl-DBD-SQLite
+	perl-HTML-Parser
+	perl-Carp-Assert
+	perl-Digest-Crc
+
+For some reason the Gtk2 packet does not work out of the box for the SIFT workstation (dependency problem, requiring an older version of perl)
+	perl-Gtk2
+
+The rest needs to be installed through CPAN (that is NetPacket dependencies and Gtk2 - enough to install NetPacket::Ethernet using CPAN to solve
+all NetPacket dependencies)
+	NetPacket::Ethernet
+	Data::Hexify
+
+
++ ---------------------------------------------------------------------------------------------------------------------
++ OpenBSD 4.6
++ ---------------------------------------------------------------------------------------------------------------------
+
+Install the following packages with dependencies using pkg_add:
+p5-Carp-Assert-0.18.tgz p5-DBI-1.607.tgz (p5-Net-Daemon-0.43 p5-PlRPC-0.2018p0)
+p5-DateTime-0.5000.tgz
+(p5-List-MoreUtils-0.22p0 p5-Params-Validate-0.91 p5-DateTime-Locale-0.42 p5-DateTime-TimeZone-0.90 p5-Class-Singleton-1.03 p5-DateTime-TimeZone-0.90)
+p5-HTML-Parser-3.60.tgz p5-Image-ExifTool-7.67.tgz p5-DateManip-5.54.tgz p5-Params-Validate-0.91.tgz p5-Glib2-1.221.tgz
+p5-Gtk2-1.220.tgz
+(p5-Pango-1.220:p5-Cairo-1.061 p5-Pango-1.220)
+p5-Class-DBI-SQLite-0.11.tgz
+(p5-DBIx-ContextualFetch-1.03 p5-Class-Data-Inheritable-0.08 p5-Ima-DBI-0.35 p5-Class-Accessor-0.31 p5-Class-Trigger-0.11:p5-IO-stringy-2.110p0
+p5-Class-Trigger-0.11 p5-Clone-0.29 p5-Universal-moniker-0.08:p5-Lingua-EN-Inflect-1.88p0 p5-Universal-moniker-0.08
+p5-Class-DBI-3.0.16p0 p5-DBD-SQLite-1.25v0)
+p5-Digest-Crc
+
+The following libraries have to be installed using CPAN (perl -MCPAN -e shell):
+        Archive::Zip
+        Data::Hexify
+        HTML::Scrubber
+        LWP::UserAgent
+        Parse::Win32Registry
+        XML::LibXML
+        XML::LibXML::Common
+
+
++ ---------------------------------------------------------------------------------------------------------------------
++ FreeBSD 8.0-RELEASE #0:
++ ---------------------------------------------------------------------------------------------------------------------
+
+Install the following packages with dependencies using pkg_add:
+        p5-Archive-Zip-1.30.tbz
+        (p5-IO-Compress-Base-2.015.tbz p5-Compress-Raw-Zlib-2.021.tbz p5-IO-Compress-Zlib-2.015.tbz p5-Compress-Zlib-2.015.tbz)
+        p5-Carp-Assert-0.20.tbz p5-DBD-SQLite-1.25.tbz
+        (p5-Storable-2.21.tbz sqlite3-3.6.14.2.tbz p5-DBI-1.60.9.tbz)
+        p5-DateTime-0.50.tbz
+        (p5-List-MoreUtils-0.25.02.tbz p5-Params-Validate-0.91.tbz p5-DateTime-Locale-0.44.tbz p5-Class-Singleton-1.4.tbz p5-DateTime-TimeZone-0.98.tbz)
+        p5-Digest-Crc32-0.01.tbz p5-HTML-Parser-3.62.tbz
+        (p5-URI-1.40.tbz p5-HTML-Tagset-3.20.tbz)
+        p5-HTML-Scrubber-0.08.tbz p5-NetPacket-0.41.1.tbz p5-Net-Pcap-0.16.tbz (p5-IO-Interface-1.05.tbz)
+        p5-XML-LibXML-1.69,1.tbz
+        (p5-XML-NamespaceSupport-1.10.tbz p5-XML-SAX-0.96.tbz p5-XML-LibXML-Common-0.13.tbz)
+        p5-LWP-UserAgent-Determined-1.04.tbz
+        (p5-libwww-5.832.tbz)
+        p5-Glib2-1.222.tbz p5-Gtk2-1.203.tbz
+
+Then to install the rest through CPAN:
+        perl -MCPAN -e shell
+        Data::Hexify
+        Parse::Win32Registry
+
+
++ ---------------------------------------------------------------------------------------------------------------------
++ Mac OS X (10.5+, 10.6+)
++ ---------------------------------------------------------------------------------------------------------------------
+
+To resolve the dependencies in Mac OS X using perl from macports.  To install few of the packages that are needed: (installed by issuing port install PACKAGE)
+
+        p5-image-exiftool
+        p5-xml-libxml
+        p5-xml-libxml-common
+        p5-datetime
+        p5-datemanip
+        p5-archive-zip
+        p5-net-pcap
+	p5-digest-crc
+        p5-archive-zip
+        p5-dbi
+        p5-html-scrubber
+        p5-gtk2
+        p5-glib
+	p5-html-parser
+	p5-data-hexify
+	p5-carp-assert 
+	p5-version
+        p5-params-validate
+        p5-dbd-sqlite
+
+
+By using the CPAN shell other dependencies should be easily resolved. For the GUI to work, you need to
+have X11 installed on the Mac OS (install XQuartz)
+

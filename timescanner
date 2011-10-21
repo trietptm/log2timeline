@@ -1,0 +1,443 @@
+#!/usr/bin/perl
+#################################################################################################
+#               timescanner
+#################################################################################################
+# This script is a part of the the program log2timeline.  What this program does is to scan
+# a directory recursively and test weather or not any parsers inside the log2timeline
+# project can scan it and if so, print out a timeline
+# 
+# Author: Kristinn Gudjonsson
+# Version : 0.03beta
+# Date : 07/01/10
+#
+# Copyright 2009,2010 Kristinn Gudjonsson (kristinn ( a t ) log2timeline (d o t) net)
+#
+#  This file is part of log2timeline.
+#
+#    log2timeline is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    log2timeline is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with log2timeline.  If not, see <http://www.gnu.org/licenses/>.
+# 
+# a line added by JLR (John Ritchie)
+
+use strict;
+
+use Getopt::Long; # read parameters
+use Pod::Usage;
+use DateTime::TimeZone;	# to verify timezone settings
+use Log2Timeline;       # the main engine of log2timeline
+use Digest::MD5;
+use Log2t::Time;
+#use Time::HiRes;
+#use Encode;
+
+# define all variables used in the script
+my $debug = 0;	# to debug the script
+my @dir_content;
+my %formats;
+my $i;
+my $temp;
+
+my ($start_time,$end_time); # defining the run time of the tool
+
+# for options (with default parameters)
+my $time_offset = 0;
+my $textfield = undef;
+my $show_version = 0;
+my $output = undef; 
+my $output_file = 'csv';
+my $out_file = 'STDOUT';
+my $log_file = undef;
+my $print_help = 0;
+my $dir = undef;
+my $format_dir = undef;
+my $timezone = 'local';
+my $hostname = 'unknown';	# defining the hostname
+my $time_object = undef;
+my $digest = 0;	# defines whether or not we are suppost to calculate md5 sum of files
+my ($sum, %last_sum );
+my $input_list = 'all';
+my $detailed = 0;	# a variable defining if we want to skip the simple verification test
+my $exclude = undef;	# a string containing an exclusion list, that is files that we are about to skip parsing
+my @exclude_list = undef;	# an array containing all the entries from the exclude variable
+my $preproc = 0;	# define if we would like the pre-processing engine to run or not
+
+# get the time the tool was started
+$start_time = time();
+
+# configure the getoptions
+Getopt::Long::Configure("no_ignore_case");
+
+# small variable that contains the argument string
+my $arguments = join( ' ', @ARGV );
+
+# read options
+GetOptions(
+        "skew=s"=>\$time_offset,
+        "m=s"=>\$textfield,
+        "Version!"=>\$show_version,
+        "output=s"=>\$output_file,
+	'verbose+'=>\$debug,
+	"calculate!"=>\$digest,
+        "write=s"=>\$out_file,
+	"x!"=>\$detailed,
+	"format:s"=>\$input_list,
+        "log=s"=>\$log_file,
+	"name=s"=>\$hostname,
+	"preproc!"=>\$preproc,
+	"zone=s"=>\$timezone,
+	"dir=s"=>\$dir,
+        "help|?!"=>\$print_help,
+	"exclude=s" => \$exclude
+) or pod2usage( 2 );
+
+# create the log2timeline object
+my $l2t = Log2Timeline->new(  ) or pod2usage( {
+        -message        => "Unable to create the Log2Timeline object, quitting...",
+        -verbose        => 1,
+        -exitval        => 4 } );
+
+# check if the object is valid (the constructor was able to complete)
+pod2usage( {
+        -message        => "The Log2Timeline object is not valid, cannot continue. The dreaded case of an 'Unknown error'.",
+        -verbose        => 1,
+        -exitval        => 5 } ) unless $l2t->is_valid;
+
+
+# check to see if we want all log messages written to a specific log file (or just to STDERR)
+if( $log_file ne '' )
+{
+        open( STDERR, '>' . $log_file );
+}
+
+# check options
+if( $show_version )
+{
+        print "$0 version " . $l2t->version . "\n";
+        exit 0;
+}
+
+
+# check if we want to print the help message
+pod2usage(1) if $print_help;
+
+# check if we are about to print a list of available format files
+if( lc( $input_list ) eq 'list' )
+{
+	# we need to provide a list of all available formats and format list files
+	eval 
+	{
+        	print $l2t->get_inputs;
+	};
+        if( $@ )
+        {      
+                pod2usage( {   
+                        -message        => "Error, unable to parse input module.\nError message: $@",
+                        -verbose        => 1,
+                        -exitval        => 12  });
+        }
+
+        # since we do no parsing we exit from the program
+        exit 0;
+
+}
+
+# check to see if the directory exists
+pod2usage( {    
+	-message        => "No directory to recurse through entered.  use the parameter -d DIR",
+	-verbose        => 1,
+	-exitval        => 1 } ) unless defined $dir;
+
+
+# run some information about the tool (that is version + when, etc...)
+print STDERR "-" x 80, "\n";
+printf STDERR "%s [version %s] run with options [%s]\n", $0, $l2t->version, $arguments;
+printf STDERR "Date of run (localtime): %s\n",  Log2t::Time::get_cur_local_time();
+printf STDERR "Timezone used: %s\n", $timezone;
+
+# check the timezone settings
+eval
+{
+        $time_object = DateTime::TimeZone->new( name => $timezone );
+};
+if( $@ )
+{
+        pod2usage( {
+                -message        => "Timezone [$timezone] is not a valid timezone",
+                -verbose        => 1,
+                -exitval        => 45 } );
+}
+
+# check the timezone
+if( $timezone eq 'local' )
+{
+        print STDERR "Local timezone is: " . $time_object->name . ' (' . $time_object->short_name_for_datetime( DateTime->now() ) . ")\n";
+}
+
+# load the output file
+print STDERR "Using output module: $output_file\n";
+
+# prepare the output file
+if( $out_file eq 'STDOUT' )
+{
+	print STDERR "Using standard out to output timestamp information\n";
+        open( MYFILE, ">-" );
+}
+else
+{
+	if( -e $out_file )
+	{
+		print STDERR "Body file $out_file exists! Overwrite? [y|N] ";
+		my $t = <STDIN>;
+		chomp($t);
+
+		if( $t eq 'y' )
+		{	
+		        # we are redirecting to a file
+		        open( MYFILE, '>' . $out_file );
+		}
+		else
+		{
+        		pod2usage( {
+        		        -message        => "Body file exists, not overwriting. Please delete the file $out_file or use a different output before trying again.",
+        		        -verbose        => 1,
+        		        -exitval        => 13 } );
+		}
+	}
+	else
+	{
+		open(MYFILE, '>' . $out_file );
+	}
+
+	print STDERR "Using file '$out_file' for output\n";
+}
+
+# footer of general information
+print STDERR "-" x 80, "\n";
+
+# start by fixing the settings
+eval
+{
+        $l2t->set(
+                'file'          => $dir,
+                'recursive'     => 1,	# this is a recursive scanner
+                'input'         => $input_list,
+                'output'        => $output_file,
+                'time_zone'     => $timezone,
+                'offset'        => $time_offset,
+                'exclusions'    => $exclude,
+		'log_file'	=> $out_file,
+                'text'          => $textfield,
+		'append'	=> 0,
+                'debug'         => $debug,
+                'digest'        => $digest,
+                'quick'         => $detailed,
+                'raw'           => 0,
+                'hostname'      => $hostname,
+                'preprocess'    => $preproc,
+        );
+};
+if($@)
+{
+        pod2usage( {
+                -message        => "Unable to configure the log2timeline engine.  Error message: $@\n",
+                -verbose        => 1,
+                -exitval        => 11 } );
+}
+
+eval
+{
+        $l2t->start;
+};
+# check if there were errors loading the format file
+if( $@ )
+{
+        pod2usage( {
+                -message        => "Unable to run the tool.  Error message given: $@\n",
+                -verbose        => 1,
+                -exitval        => 12 } );
+}
+
+
+
+close(MYFILE);
+
+# now we are completly finished, let's print out a message indicating that everything is done
+$end_time = time();
+printf STDERR "[timescanner] Recursive scan completed.  Successfully extracted timestamps from %d artifacts (either files or directories). \nRun time of the script %d seconds.\n",$l2t->{'counter'},$end_time-$start_time;
+
+# a simple routine to print a line
+sub print_line($)
+{
+        my $line = shift;
+
+        # print to the file in question
+        #print MYFILE encode( 'utf-8', $line );
+        print MYFILE $line;
+}
+
+
+1;
+
+__END__
+
+=pod
+
+=head1 NAME
+
+B<timescanner> - A recursive scanner to produce timeline data extracted from file artifacts
+
+=head1 DESCRIPTION
+
+B<timscanner> recursively scans through a directory (such as a mounted filesystem) and extracts timestamp data gathered from the files that the tool L<log2timeline> supports.
+This tool is written as a separate tool from B<log2timeline> but will be integrated in the tool soon.
+
+=head1 SYNOPSIS 
+
+B<timescanner> [OPTIONS] -z TIMEZONE [-f INPUT MODULE] [-o OUTPUT MODULE] [-w BODYFILE] [-v] -d|-dir DIRECTORY 
+
+See man timescanner for full details of options to use.
+
+=head1 OPTIONS
+
+=over 8
+
+=item B<-d|-dir DIRECTORY>
+
+This option is mandatory for the tool to operate.  This option defines the starting directory which the tools recursively searches for supported artifacts. 
+
+=item B<-s|-skew TIME>
+
+Time skew of original machine. The format of the variable TIME is: X | Xs | Xm | Xh, where X is a integer and s represents seconds, m minutes and h hours (default behaviour is sec
+onds)
+
+=item B<-m TEXT>
+
+Prepend the output line with TEXT, for instance by using -m HOSTNAME to include a hostname in the output
+
+=item B<-o|-output FORMAT>
+
+Use the following output format.  By default B<log2timeline> uses the csv output.  To see a list of all available output formats, use -o list
+
+=item B<-w|-write FILENAME>
+
+Specify a file to write output to (otherwise STDOUT will be chosen).
+
+=item B<-z|-zone TIMEZONE>
+
+This option defines the timezone that was used on the computer that the log files belonged to.  The default value for this variable is the local timezone of the computer timescanner is run on.
+
+=item B<-log FILENAME>
+
+Specify a file to write error and information messages from the B<log2timeline> to a file, otherwise STDERR will be used.
+
+=item B<-name HOST>
+
+Define the host name that the information is extracted from.
+
+=item B<-c|-calculate>
+
+If this option is used then a MD5 sum for each file that passes verification is calculated and included in the timestamp object
+
+=item B<-x>
+
+Make B<timescanner> skip the default minimalist test to see if a file can be parsed by the supplied input module.
+
+=item B<-V|-Version>
+
+Display the version number
+
+=item B<-v|-verbose>
+
+Add the verbose level of output, or debug level.  This option can be provided twice to get an extra level of verbosity (two levels available)
+
+=item B<-h|-help|-?>
+
+Display this help message
+
+=item B<-f|--format> MODULE
+
+The option of -f can be used to select which modules are used in timescanner when recursively searching through the directory supplied to the tool.  The option MODULE can be any of the four listed here:
+
+=over 8
+
+=item B<-f list> 
+
+Print a list of all available modules the tool supports, alongside a print-out of the available lists (preselected modules that can be chosen)
+
+=item B<-f NAME OF A MODULE> 
+
+If a list of available modules is presented, only those modules will be used by the tool.  One module can be supplied, or a list separated with a comma (,). An example
+
+=over 8
+
+=item timescanner -z local -f evtx,oxml,pdf -d .
+
+=back
+
+This will run timescanner on the current directory and only use the modules evtx, oxml and pdf in the process.
+
+=item B<-f="-NAME OF A MODULE">
+
+This option can be used to exclude a given module from being run (either a single one or a list, separated with a comma), an example:
+
+=over 8
+
+=item timescanner -z local -f="-evtx,exif" -d .
+
+=back
+
+This will run the tool against the current directory and use all of the modules available EXCEPT the evtx and exif ones.  
+
+=item B<-f NAME OF A LIST>
+
+There exist few available presets, or lists of available modules that can be used.  See the available lists by issuing B<timescanner -f list>.  An example
+
+=over 8
+
+=item timescanner -z local -f winxp -d /mnt/xpimage 
+
+=back
+
+This will run the tool against the directory /mnt/xpimage, and only use the modules that are associated to a Windows XP system, according to the winxp list file.
+
+=back
+
+=item B<-e|--exclude STRING>
+
+A comma separated list of files to exclude from the scan.  If a particular file has caused the tool to crash or not work, or you simply want to exclude some documents from the scan it is possible to exclude some 
+
+Example:
+
+=over 8
+
+I<timescanner -f winvista -z local -d /mnt/windows -e 'Windows-Diagnosis,secret[0-3]'>
+
+This would scan all the directory /mnt/windows recursively, using only modules associated to a Windows Vista or later operating system, and excluding all filenames that have "Windows-Diagnosis" in them or contain the word secret0/secret1/secret2 or secret3 in it.
+
+=back
+
+=back
+
+=head1 AUTHOR
+
+Kristinn Gudjonsson <kristinn (a t) log2timeline ( d o t ) net> is the original author of the program.
+
+=head1 COPYRIGHT
+
+The tool is released under GPL so anyone can contribute to the tool.  Some parts of the code have been copied from other GPL'ed programs, such as RegRipper written by H. Carvey.
+
+=head1 SEE ALSO
+
+L<log2timeline>
+
+=cut
