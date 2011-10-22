@@ -1,3 +1,6 @@
+Version 0.62
+	- [FF_CACHE input] New input module, designed to parse the cache files of Firefox. Contributed by John Ritchie
+
 Version 0.61 (26/09/2011)
 	- [log2timeline] Small changes to the version printing (now prints just the last portion of the path)
 		- Now the engine checks if the format field is set and omits it if its set (to facilitate input modules like CSV that define it)
