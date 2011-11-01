@@ -168,7 +168,7 @@ if ( $keyword_file )
 		next if /^#/;
 
 		# and then to check the keyword itself
-		if( /^[a-zA-Z0-9\@_\-\.\/=]+$/ )
+		if( /^[a-zA-Z0-9\@_\-\.\/\[\]:=]+$/ )
 		{
 			push( @keywords, lc( $_ ) );
 		}
