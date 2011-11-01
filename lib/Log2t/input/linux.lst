@@ -3,3 +3,4 @@ apache2_error
 pcap
 syslog
 generic_linux
+proftpd_xferlog
