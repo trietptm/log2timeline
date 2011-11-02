@@ -1149,27 +1149,33 @@ sub _load_input()
 	{
 	        # we would like to include all available input modules
 	        opendir( PD, $self->{'lib_dir'} . $self->{'sep'} . 'Log2t' . $self->{'sep'} . 'input' . $self->{'sep'} ) || die( "Could not open the directory " . $self->{'lib_dir'} . $self->{'sep'} . "Log2t" . $self->{'sep'} . "input \n" );
-	        @dir_content = grep {/\.pm$/} readdir( PD );
+	        my @dir_content2 = grep {/\.pm$/} readdir( PD );
+
+		foreach( @dir_content2 )
+		{
+			s/\.pm//;
+			push( @dir_content, $_ );
+		}
 	        closedir( PD );
 	}
 	else
 	{
 		# start by splitting up variables and check them out, one by one
 		@dir_content = split( /,/, $self->{'input'} );
+	}
 
-		# go through each of the modules listed in the input
-		foreach( @dir_content )
+	# go through each of the modules listed in the input
+	foreach( @dir_content )
+	{
+		if( -f $self->{'lib_dir'} . $self->{'sep'} . 'Log2t' . $self->{'sep'} . 'input' . $self->{'sep'} . $_ . '.lst' )
 		{
-			if( -f $self->{'lib_dir'} . $self->{'sep'} . 'Log2t' . $self->{'sep'} . 'input' . $self->{'sep'} . $_ . '.lst' )
-			{
-print STDERR "BEFORE\n";
-        			$self->_load_input_list($_);
-print STDERR "AFTER\n";
-			}
-			else
-			{
-				$self->_load_input_module($_);
-			}
+			#print STDERR "BEFORE\n";
+			$self->_load_input_list($_);
+			#print STDERR "AFTER\n";
+		}
+		else
+		{
+			$self->_load_input_module($_);
 		}
 	}
 

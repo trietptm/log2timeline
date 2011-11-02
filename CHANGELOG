@@ -1,5 +1,8 @@
 Version 0.62
 	- [FF_CACHE input] New input module, designed to parse the cache files of Firefox. Contributed by John Ritchie
+	- [L2T_PROCESS] Added a few more allowed characters in the keyword list
+	- [proftpd_xferlog input] Willi Ballenthin added a new module to parse the ProFTPD XFerlog file
+	- [Log2Timeline library] Fixed a bug, when the 'all' moduiles option is used (or -f is omitted) no modules get loaded
 
 Version 0.61 (26/09/2011)
 	- [log2timeline] Small changes to the version printing (now prints just the last portion of the path)
