@@ -84,7 +84,7 @@ _log2timeline()
 		;;
 	-z|-zone)
 		cur=`_get_cword`
-		local moguleikar=$( for x in `log2timeline -z list | tail +5`; do echo ${x}; done )
+		local moguleikar=$( for x in `log2timeline -z list | tail -n +5`; do echo ${x}; done )
 
 		COMPREPLY=( $(compgen -W "${moguleikar} local list" -- "$cur" ) )
 		return 0
