@@ -37,6 +37,7 @@ use DateTime::TimeZone; # for time zones,
 use Log2t::Common;      # common shared methods in the framework
 use Digest::MD5;        # for MD5 sum calculation
 use Pod::Usage;
+use DateTime;		# for local time zone detection
 
 # the version variable
 use vars qw($VERSION);
@@ -289,9 +290,22 @@ sub _set_timezone()
 	# check the timezone
 	if( $self->{'time_zone'} eq 'local' )
 	{
-	        print STDERR "Local timezone is: " . $self->{'time_object'}->name . ' (' . $self->{'time_object'}->short_name_for_datetime( DateTime->now() ) . ")\n";
-	        $self->{'short_time_zone'} = $self->{'time_object'}->short_name_for_datetime( DateTime->now() );
-	        $self->{'time_zone'} = $self->{'time_object'}->name; 
+		eval
+		{
+	        	print STDERR "Local timezone is: " . $self->{'time_object'}->name . ' (' . $self->{'time_object'}->short_name_for_datetime( DateTime->now() ) . ")\n";
+	        	$self->{'short_time_zone'} = $self->{'time_object'}->short_name_for_datetime( DateTime->now() );
+	        	$self->{'time_zone'} = $self->{'time_object'}->name; 
+		};
+		if( $@ )
+		{
+	        	my $temp_msg = "[LOG2T] I'm sorry but the tool was unable to determine your local time zone. Please consider running the tool again using another -z option.\n";
+			$temp_msg .= "The error message was: $@\n" if $self->{debug};
+
+	        	pod2usage( {   
+				-message	=> $temp_msg,
+	        	        -verbose        => 1,
+	        	        -exitval        => 46 } );
+		}
 	}
 	else	
 	{
