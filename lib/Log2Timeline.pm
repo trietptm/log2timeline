@@ -568,6 +568,28 @@ sub start()
 	print STDERR "[LOG2T] Loading input modules (", $self->{'input'}, ")\n" if $self->{'debug'};
 	$self->_load_input;
 
+	# make a small additional check to see if we are about to run the tool against an image (run rec+pre()
+	# if we are, we will check to see if the MFT file is actually callable (and that the mft module is 
+	# loaded)
+	if ( $self->{'recursive'} and $self->{'preprocess'} and exists $self->{'input_list'}->{'mft'} )
+	{	
+		print STDERR "[LOG2T| Attempting to directly parse the \$MFT FILE.\n" if $self->{'debug'};
+		if ( -f $self->{'file'} . $self->{'sep'} . '$MFT' )
+		{
+			print STDERR "[LOG2T] The \$MFT exists, so it is parsable\n" if $self->{'debug'};
+			eval
+			{
+				my $temp = $self->{'file'};
+				$self->{'file'} = $self->{'file'} . $self->{'sep'} . '$MFT';
+				$ret = $self->_parse_file;
+			};		
+			if( $@ )
+			{	
+				print STDERR "[LOG2T] Unable to parse file, reason given: $@\n";
+			}
+		}
+	}
+
 	# check if recursive
 	if( $self->{'recursive'} )
 	{

@@ -8,7 +8,12 @@ or by implemented accordingly.  That being said, this is a dynamic roadmap, whic
 of the tool. Despite it's constant changes and updates it gives a pretty good picture of where log2timeline is headed and
 what to expect in coming releasese.
 
-Version 0.61
+Version 0.62
+	- Add a feature to l2t_process - have a parameter that can be used in conjunction with the keyword search so that the timeline
+		actually includes not only the timestamps of a keyword hit but also to include events in temporarl proximity (eg 5 or 10 min apart)
+	- Add a feature to log2timeline - allow two time zones to be defined, one (the old one) that defines the time zone of the files/image/machine
+		in question, and the second one that defines in which timezone you would like the output to be in. (this would allow people to have
+		the timeline outputed in GMT even though the original image is in another timezone)
 	- Add a feature to write all timestamps in UTC (not the chosen time zone)
 	- Add the possibility to choose list files, yet skip a module or add one just the same
 		So in the -f list: IN,-OUT (IN could be a name of a module or a list file, and OUT would be a module that is to be excluded)
