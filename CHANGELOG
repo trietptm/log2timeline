@@ -3,6 +3,7 @@ Version 0.62
 	- [L2T_PROCESS] Added a few more allowed characters in the keyword list
 	- [proftpd_xferlog input] Willi Ballenthin added a new module to parse the ProFTPD XFerlog file
 	- [Log2Timeline library] Fixed a bug, when the 'all' moduiles option is used (or -f is omitted) no modules get loaded
+		Added a small change to try to parse the MFT directly even though the $MFT might not be directly visible
 
 Version 0.61 (26/09/2011)
 	- [log2timeline] Small changes to the version printing (now prints just the last portion of the path)
