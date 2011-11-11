@@ -92,6 +92,7 @@ sub init
 
 	# the default value of loaded is 0 (not loaded the first event)
 	$self->{'loaded'} = 0;
+	$self->{'bad_event_counter'} = 0;
 
 	# code taken from evtxdump.pl from Andreas Schuster
 	#$self->{'fh'} = IO::File->new($self->{'name'}, "r");
@@ -205,9 +206,13 @@ sub get_time
 		{
 			# some error occured, unable to further process the file
 			# until a better approached has been developed, we will
-			# gracefully exit
+			# try to parse the next event, while incrementing a bad
+			# counter, and if we reach our limits, we will gracually
+			# exit
 			print STDERR "[EVTX] Error occured while parsing file: \n$@\n";
-			return \%t_line;
+			$self->{'bad_event_counter'}++;
+
+			$self->{'bad_event_counter'} == 50 ? return 0 : return \%t_line;
 		}
 	}		
 
