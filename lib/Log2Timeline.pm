@@ -324,8 +324,10 @@ sub _verify()
 	
 	if( $attr eq 'file' )
 	{
-		print STDERR "[Log2timeline] File/dir does not exist\n" unless ( -f $val or -d $val );
+		print STDERR "[Log2timeline] File/dir does not exist ($val)\n" unless ( -f $val or -d $val );
 		return 1 if ( -f $val or -d $val );
+
+		return 0;
 	}
 	elsif( $attr eq 'recursive' or $attr eq 'digest' or $attr eq 'quick' or $attr eq 'raw' or $attr eq 'preprocess' or $attr eq 'append' )
 	{

@@ -1,10 +1,14 @@
 Version 0.62
 	- [FF_CACHE input] New input module, designed to parse the cache files of Firefox. Contributed by John Ritchie
+	- [OPENVPN input] New input module, desigend to parse the OpenVPN log files.
 	- [L2T_PROCESS] Added a few more allowed characters in the keyword list
 	- [proftpd_xferlog input] Willi Ballenthin added a new module to parse the ProFTPD XFerlog file
 	- [Log2Timeline library] Fixed a bug, when the 'all' moduiles option is used (or -f is omitted) no modules get loaded
 		Added a small change to try to parse the MFT directly even though the $MFT might not be directly visible
 		Fixed a small bug whereas the tool would crash if the local timezone was used.
+		Fixed a small bug whereas the tool is not able to find the default directory (. does not exist) or if the file in 
+		question does not really exist that the tool is pointing to... that made the tool return a double error instead of 
+		just dying on the first one.
 	- [EVTX input] Fixed a bug in where the tool could go into a endless loop in the case where you have a EVTX that is 
 	somehow broken and the function get_next_event dies. If the tool runs into such occurance it returned an empty
 	timestamp object, that in turn let the tool query for it again, thus possibly getting into an endless loop.
