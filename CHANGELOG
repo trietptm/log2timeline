@@ -4,11 +4,15 @@ Version 0.62
 	- [L2T_PROCESS] Added a few more allowed characters in the keyword list
 	- [proftpd_xferlog input] Willi Ballenthin added a new module to parse the ProFTPD XFerlog file
 	- [Log2Timeline library] Fixed a bug, when the 'all' moduiles option is used (or -f is omitted) no modules get loaded
-		Added a small change to try to parse the MFT directly even though the $MFT might not be directly visible
-		Fixed a small bug whereas the tool would crash if the local timezone was used.
-		Fixed a small bug whereas the tool is not able to find the default directory (. does not exist) or if the file in 
+		-Added a small change to try to parse the MFT directly even though the $MFT might not be directly visible
+		-Fixed a small bug whereas the tool would crash if the local timezone was used.
+		-Fixed a small bug whereas the tool is not able to find the default directory (. does not exist) or if the file in 
 		question does not really exist that the tool is pointing to... that made the tool return a double error instead of 
 		just dying on the first one.
+		-The tool will now accept a separate output timezone so the tool can output in a different timezone than the hosts one.
+	- [log2timeline] Added the -Z ZONE parameter so the tool can output in a different timezone than the host timezone.
+	- [CSV output] Changed the output timezone so it now prints using the -Z definition, so it now supports different output
+	timezone than the host one.
 	- [EVTX input] Fixed a bug in where the tool could go into a endless loop in the case where you have a EVTX that is 
 	somehow broken and the function get_next_event dies. If the tool runs into such occurance it returned an empty
 	timestamp object, that in turn let the tool query for it again, thus possibly getting into an endless loop.
