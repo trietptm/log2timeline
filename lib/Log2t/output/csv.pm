@@ -168,8 +168,8 @@ sub print_line()
                 	$mactime .= $t_line->{'time'}->{$_}->{'legacy'} & 0b0100 ? 'C' : '.';
                 	$mactime .= $t_line->{'time'}->{$_}->{'legacy'} & 0b1000 ? 'B' : '.';
 
-                	my ($a,$b) = Log2t::Time::epoch2text( $t_line->{'time'}->{$_}->{'value'}, 3, $self->{'tz'} );
-                	$text .= $a . '::comma::' . $b . '::comma::' . $self->{'short_tz'}  . '::comma::' . $mactime . '::comma::';
+                	my ($a,$b) = Log2t::Time::epoch2text( $t_line->{'time'}->{$_}->{'value'}, 3, $self->{'otz'} );
+                	$text .= $a . '::comma::' . $b . '::comma::' . $self->{'short_otz'}  . '::comma::' . $mactime . '::comma::';
 			$text .=  $t_line->{'source'} . '::comma::' . $t_line->{'sourcetype'} . '::comma::' . $t_line->{'time'}->{$_}->{'type'} . '::comma::';
 
 			# now to take the values from 'extra'

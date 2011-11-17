@@ -233,6 +233,7 @@ eval
                 'input'         => $input_list,
                 'output'        => $output_file,
                 'time_zone'     => $timezone,
+                'out_time_zone' => $timezone,
                 'offset'        => $time_offset,
                 'exclusions'    => $exclude,
 		'log_file'	=> $out_file,
