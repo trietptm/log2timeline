@@ -93,6 +93,7 @@ my $temp_file = '';	# the default value for the temporary file location (it is a
 my $output;
 my $check = 0;
 my $timezone = undef;
+my $out_timezone = undef;
 my $time_object;
 my $debug = 0;
 my $digest = 0;	# defines whether or not a MD5 sum is to be calculated
@@ -130,6 +131,7 @@ GetOptions(
 	"recursive!"=>\$recursive,
 	"preprocess!"=>\$preproc,
 	"zone=s"=>\$timezone,
+	"Zone=s"=>\$out_timezone,
 	"exclude=s"=>\$exclude,
 	"temp|t=s"=> \$temp_file,
 	"args=s" => \@input_arguments,
@@ -268,7 +270,7 @@ if( $output_file eq "list" )
 }
 
 # check if we are about to list timezone settings
-if( $timezone eq "list" )
+if( $timezone eq "list" or $out_timezone eq "list" )
 {
 	print $l2t->get_timezone_list;
 	exit 0;
@@ -305,6 +307,9 @@ timezone settings (and possible time skew with the -s parameter)
 -----------------------------------------------------------------\n" unless defined $timezone;
 sleep( 5 ) unless defined $timezone;
 $timezone = 'local' unless defined $timezone;
+
+# set the output timezone
+$out_timezone = $timezone unless defined $out_timezone;
 
 
 # check the timezone settings
@@ -364,6 +369,7 @@ eval
 		'input'         => $format_file,
 		'output'        => $output_file,
 		'time_zone'     => $timezone,
+		'out_time_zone' => $out_timezone,
 		'log_file'	=> $out_file,
 		'offset'        => $time_offset,
                 'exclusions'    => $exclude,
@@ -499,6 +505,10 @@ Specify a file to write output to (otherwise STDOUT will be chosen).
 
 This option defines the timezone that was used on the computer that the log files belonged to.  The default value for this variable is the local timezone of the computer B<log2timeline> is run on. There is an option to define -z list to get a list of all available timezones.
 
+=item B<-Z|-Zone TIMEZONE>
+
+This option defines the timezone that is used in the output module of the tool. The default value for this variable is the same value that is defined in the -z option or the timezone of the host. This option is used so that output modules can output in a different timezone than the host is in, for instance to output in UTC even though the timezone of the host is in another timezone.
+
 =item B<-t|-temp DIR>
 
 This option defines the temporary directory the tool uses. By default the front-end does not set the temporary directory, but allows the engine to automatically detect it. This option therefore overwrites the default temporary directory location.
@@ -617,6 +627,10 @@ This option defines the timezone that was used on the computer that the log file
 If the "-z local" timezone is chosen the tool will print the found local timezone.
 
 The option -z list prints out a list of all available timezones that can be chosen.
+
+=item B<-Z|-Zone TIMEZONE>
+
+This option defines the timezone that is used in the output module of the tool. The default value for this variable is the same value that is defined in the -z option or the timezone of the host. This option is used so that output modules can output in a different timezone than the host is in, for instance to output in UTC even though the timezone of the host is in another timezone.
 
 =item B<-t|-temp DIR>
 

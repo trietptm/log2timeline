@@ -71,6 +71,7 @@ sub _new()
 	$c{'input'}		= 'all' unless exists $c{'input'};	# use all input modules or single/list/selection/exclude
 	$c{'output'}		= 'mactime' unless exists $c{'output'};	# the name of the output module
 	$c{'time_zone'}		= 'local' unless exists $c{'time_zone'};# the timezone of the files the tool is about to read
+	$c{'out_time_zone'}	= $c{'time_zone'} unless exists $c{'out_time_zone'}; # the timezone of the output
 	$c{'offset'}		= 0 unless exists $c{'offset'};		# the time offset, that is the if the clock is incorrect on the suspect system
 	$c{'exclusions'}	= '' unless exists $c{'exclusions'};	# the files/patterns that the tool excludes in it's recursive check
 	$c{'text'}		= '' unless exists $c{'text'};		# a small text to include in each line
@@ -265,21 +266,28 @@ sub version()
 # 
 # A "private" routine that takes care of setting the timezone of the engine.
 # This is used by 
-sub _set_timezone()
+sub _set_timezone($$$)
 {
 	my $self = shift;
+	my $tz_test = shift;
+	my $tz_mode = shift;
+	my $tz_ret = '';
+	my $tz_short = '';
+	
+	my $tz_text = $tz_mode ? 'host' : 'output';
 
-	print STDERR "[LOG2T] Setting timezone (", $self->{'time_zone'}, ")\n" if $self->{'debug'};
+	print STDERR "[LOG2T] Setting $tz_text timezone (", $tz_test , ")\n" if $self->{'debug'};
+
 	# check the timezone settings
 	eval
 	{
-	        print STDERR "[LOG2TIMELINE] Testing time zone ", $self->{'time_zone'}, "\n" if $self->{debug};
-	        $self->{'time_object'} = DateTime::TimeZone->new( 'name' => $self->{'time_zone'} );
+	        print STDERR "[LOG2TIMELINE] Testing $tz_text time zone ", $tz_test, "\n" if $self->{'debug'};
+	        $self->{'time_object'} = DateTime::TimeZone->new( 'name' => $tz_test );
 	};
 	if( $@ )
 	{
 	        pod2usage( {   
-	                -message        => "Timezone [" . $self->{'time_zone'} . "] is not a valid timezone",
+	                -message        => "Timezone [" . $tz_test . "] is not a valid timezone",
 	                -verbose        => 1,
 	                -exitval        => 45 } );
 
@@ -288,13 +296,13 @@ sub _set_timezone()
 
 
 	# check the timezone
-	if( $self->{'time_zone'} eq 'local' )
+	if( $tz_test eq 'local' )
 	{
 		eval
 		{
 	        	print STDERR "Local timezone is: " . $self->{'time_object'}->name . ' (' . $self->{'time_object'}->short_name_for_datetime( DateTime->now() ) . ")\n";
-	        	$self->{'short_time_zone'} = $self->{'time_object'}->short_name_for_datetime( DateTime->now() );
-	        	$self->{'time_zone'} = $self->{'time_object'}->name; 
+	        	$tz_short = $self->{'time_object'}->short_name_for_datetime( DateTime->now() );
+	        	$tz_ret = $self->{'time_object'}->name; 
 		};
 		if( $@ )
 		{
@@ -310,10 +318,11 @@ sub _set_timezone()
 	else	
 	{
 		# if we do not use local, then we set it to the same value as the "normal" one
-		$self->{'short_time_zone'} = $self->{'time_zone'};
+		$tz_short = $tz_test;
+		$tz_ret = $tz_test;
 	}
 
-	return 1;
+	return ($tz_ret,$tz_short);
 }
 
 sub _verify()
@@ -324,8 +333,10 @@ sub _verify()
 	
 	if( $attr eq 'file' )
 	{
-		print STDERR "[Log2timeline] File/dir does not exist\n" unless ( -f $val or -d $val );
+		print STDERR "[Log2timeline] File/dir does not exist ($val)\n" unless ( -f $val or -d $val );
 		return 1 if ( -f $val or -d $val );
+
+		return 0;
 	}
 	elsif( $attr eq 'recursive' or $attr eq 'digest' or $attr eq 'quick' or $attr eq 'raw' or $attr eq 'preprocess' or $attr eq 'append' )
 	{
@@ -380,8 +391,9 @@ sub _verify()
 		print STDERR "[Log2timeline] Output module ($val) does not exist. Please check the full list of output modules (-o list)\n";
 		return 0;
 	}
-	elsif( $attr eq 'time_zone' )
+	elsif( $attr eq 'time_zone' or $attr eq 'out_time_zone' )
 	{
+		# TODO do this properly...
 		return 1;
 	}
 	elsif( $attr eq 'temp' )
@@ -477,8 +489,13 @@ sub start()
 		$self->_run_preprocess;
 	}
 
+	# set the output timezone
+	($self->{'out_time_zone'}, $self->{'short_out_time_zone'} ) = $self->_set_timezone( $self->{'out_time_zone'}, 1 );
+	return 0 unless $self->{'out_time_zone'};
+
 	# set the timezone
-	return 0 unless $self->_set_timezone;
+	($self->{'time_zone'}, $self->{'short_time_zone'} ) = $self->_set_timezone( $self->{'time_zone'}, 0 );
+	return 0 unless $self->{'time_zone'};
 
 	# check the offset
 	$self->_calc_offset;
@@ -1293,7 +1310,9 @@ sub _load_output()
 
 		# assign some variables to the output module
 		$self->{'out'}->{'tz'} = $self->{'time_zone'};
+		$self->{'out'}->{'otz'} = $self->{'out_time_zone'};
 		$self->{'out'}->{'short_tz'} = $self->{'short_time_zone'};
+		$self->{'out'}->{'short_otz'} = $self->{'short_out_time_zone'};
 		$self->{'out'}->{'debug'} = $self->{'debug'};
 		$self->{'out'}->{'sep'} = $self->{'sep'};
 	};
