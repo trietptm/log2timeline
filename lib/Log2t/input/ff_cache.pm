@@ -3,8 +3,8 @@
 # this script handles Firefox Cache entries and is a part of the log2timeline program.
 # 
 # Author: John Ritchie
-# Version : 0.1
-# Date : 2011-09-20
+# Version : 0.2
+# Date : 2011-11-17
 #
 #  Distributed with and under the same licensing terms as log2timeline
 #
@@ -36,7 +36,17 @@ use vars qw($VERSION @ISA);
 @ISA = ( "Log2t::base::input" );
 
 # version number
-$VERSION = '0.1';
+$VERSION = '0.2';
+
+
+#  These are hard-coded sanity checks against valid Mozilla version numbers from the cache headers
+#    These will need to be changed when Mozilla changes version numbers
+#   FF>=4.0 uses 19 as version.minor as of 2011. Set to 30 to give some breathing space. Don't want to
+#    set this too flexible or sanity checks may produce false positives.
+
+my $version_major_sanity = 1;
+my $version_minor_sanity = 30;
+
 
 # by default these are the global varibles that get passed to the module
 # by the engine.
@@ -147,14 +157,20 @@ sub get_time()
 	my $fh = $self->{'file'};
 
 	#  jump past header
-	seek ($fh, 4096, 0);
+	#    This is disabled for FF>=4.0 because header size varies depending upon the
+	#    file (_00[123]_).  Rather than try to figure out what version of FF this is
+	#    we'll just read the file from the beginning and trust our anti-garbage code
+	#    to tell valid from invalid metadata records
+#	seek ($fh, 4096, 0);
 
 	##  This could be set globally?
 	#  valid blocksizes for FF Cache files
 	my %bs_hash = (
 		'1',	256,
 		'2',	1024,
-		'3',	4096,
+		#  for FF>=4.0 we don't want to read past header into first record
+		'3',	1024,
+#		'3',	4096,
 	);	
 
 	#  Use the filename to determine which blocksize to use
@@ -186,11 +202,11 @@ sub get_time()
 		#  cache content
 		#	in all my testing these values have been big-endian.  This might not always be true though.
 
-		my ($header_version, $location, $fetch_count, $fetch_time, $modify_time, $expire_time, $data_size, $request_size, 
-$info_size) = unpack ('L>4 L>4 L>4 L>4 L>4 L>4 L>4 L>4 L>4', $data);
+		my ($hVer_major, $hVer_minor, $location, $fetch_count, $fetch_time, $modify_time, $expire_time, $data_size, $request_size, $info_size) = unpack ('S> S> L>4 L>4 L>4 L>4 L>4 L>4 L>4 L>4', $data);
 
-		#  check request size and info size for sanity.  Note that 6400 was PIDOMA, there may be a better value for this
-		if ($request_size < 6400 && $info_size < 6400 && $request_size > 0 && $info_size > 0)
+		#  check request size, info size and fetch_count for sanity.  Note that 6400 and 1000 were PIDOMA,
+		#     there may be better values for these
+		if ($hVer_major == $version_major_sanity && $hVer_minor < $version_minor_sanity && $request_size < 6400 && $info_size < 6400 && $request_size > 0 && $info_size > 0 && $fetch_count < 1000 && $fetch_count > 0)
 		{
 			#  check to make sure we've got the whole data packet
 			my $packet_size = (9*4) + $request_size + $info_size;
