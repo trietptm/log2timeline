@@ -37,7 +37,6 @@
 #    You should have received a copy of the GNU General Public License
 #    along with log2timeline.  If not, see <http://www.gnu.org/licenses/>.
 #
-
 use Log2Timeline;	# import the library that contains the log2timeline engine
 use strict;
 use Getopt::Long;	# for parameter parsing
@@ -47,7 +46,7 @@ use AppConfig qw/:argcount :expand/;            # To read the configuration file
 use vars qw/$VERSION/;
 
 # the version number
-$VERSION = "0.10";
+$VERSION = "0.11";
 
 # global variables that can be modified to adjust the tool are stored inside the 
 # configuration file
@@ -185,13 +184,13 @@ if ( $check eq '' )
 		{
 			# no partition number has been provided to the tool, let's print out the partition table
 			print "No partition nr. has been provided, attempting to print it out.\n";
-			$check = `$mmls $image_file 2>&1`;
+			$check = `$mmls "$image_file" 2>&1`;
 			$check =~ s/\n$//;
 
 			if( $check eq 'Cannot determine partition type' )
 			{
 				print "Is this a disk image file? Or is it perhaps a partition image?\n";
-				$check = `$fls $image_file 2>&1`;
+				$check = `$fls "$image_file" 2>&1`;
 				$check =~ s/\n$//;
 
 				if( $check eq 'Cannot determine file system type' )
@@ -241,8 +240,8 @@ if ( $check eq '' )
 						# add the offset to the icat tool
 						$image_options = ' -o ' . $parts{$check} . ' ';
 
-						$check = `sudo $mount_cmd$mount_extra_options $image_file $mount_point 2>&1`;
-						print "sudo $mount_cmd$mount_extra_options $image_file $mount_point 2>&1";
+						$check = `sudo $mount_cmd$mount_extra_options "$image_file" $mount_point 2>&1`;
+						print "sudo $mount_cmd$mount_extra_options \"$image_file\" $mount_point 2>&1";
 						
 						if ( $check ne '' )
 						{
@@ -269,7 +268,7 @@ if ( $check eq '' )
 			print "This is a partition image, let's attempt mounting it directly.\n";
 
 			# don't need to do any offset calculations...
-			$check = `sudo $mount_cmd $image_file $mount_point 2>&1`;
+			$check = `sudo $mount_cmd "$image_file" $mount_point 2>&1`;
 
 			if ( $check ne '' )
 			{
@@ -286,7 +285,7 @@ if ( $check eq '' )
 			print "WE ARE ATTEMPTING THE UNATTEMPTABLE\n";
 	
 			# we need to calculate the offset to the partition in the image file
-			my $check = `sudo $mount_cmd" . $mount_extra_options . " $image_file $mount_point 2>&1`;
+			my $check = `sudo $mount_cmd $mount_extra_options "$image_file" $mount_point 2>&1`;
 		}
 	}
 	else
@@ -305,31 +304,6 @@ pod2usage( {
         -verbose        => 1,
         -exitval        => 1 } ) if $check eq '';
 
-
-# now we've mounted the image file.... let's do the rest
-my $mft = '';
-
-# now check if we can address the $MFT directly
-if ( -f "$mount_point/\$MFT" )
-{
-	$mft = "$mount_point/\$MFT";
-} 
-else
-{
-	$mft = `mktemp`;
-	$mft =~ s/\n//g;
-
-	# extract the MFT file
-	$check = `$icat $image_options $image_file 0 > $mft 2>&1`;
-
-	$check =~ s/\n//g;
-
-	pod2usage( {
-	        -message        => "There has been a problem with extracting the MFT file, please review the error message below ($check)\n",
-	        -verbose        => 1,
-	        -exitval        => 1 } ) unless $check eq '';
-}
-
 # create folders
 mkdir $store_point unless -d $store_point;
 
@@ -339,23 +313,53 @@ open( TF, '>' . $store_point . '/' . $file_name . '_bodyfile.txt' ) or die( 'Una
 # check the type
 $type = 'win7' if $is_win_7;
 
-# now we can start to create log2timeline objects and run against the image to extract the super timeline
-my $l2t_mft = Log2Timeline->new( 
-	file => $mft,		# point to the file/directory to parse
-	'recursive' => 0,		# we want to recursively go through stuff
-	'input' => 'mft',		# which input modules to use (this is a Win XP machine)
-	'output' => 'csv',		# what is the output module to be used
-	'text' => 'C:',			# text to prepend to path of files (like c:)
-	'append' => 0,			# we are appending to an output file, instead of writing a new one
-	'time_zone' => $time_zone,	# the time zone of the image
-	'preprocess' => 0, 		# turn on pre-processing modules 
-) or die( 'unable to start log2timeline');
+# now we've mounted the image file.... let's do the rest
+my $mft = '';
+
+# now check if we can address the $MFT directly
+if ( -f "$mount_point/\$MFT" )
+{
+	# then we don't really need to parse the MFT directly (it's done by the framework)
+	print STDERR "[LOG2TIMELINE-SIFT] MFT directly callable, no need for special parsing.\n";
+} 
+else
+{
+	# we need to carve out the MFT file
+	$mft = `mktemp`;
+	$mft =~ s/\n//g;
+
+	# extract the MFT file
+	$check = `$icat $image_options "$image_file" 0 > $mft 2>&1`;
+
+	$check =~ s/\n//g;
+
+	pod2usage( {
+	        -message        => "There has been a problem with extracting the MFT file, please review the error message below ($check)\n",
+	        -verbose        => 1,
+	        -exitval        => 1 } ) unless $check eq '';
 
 
-# and to process the timestamps, or run the engine against the MFT
-$l2t_mft->start;
+	# now we can start to create log2timeline objects and run against the image to extract the super timeline
+	my $l2t_mft = Log2Timeline->new( 
+		file => $mft,		# point to the file/directory to parse
+		'recursive' => 0,		# we want to recursively go through stuff
+		'input' => 'mft',		# which input modules to use (this is a Win XP machine)
+		'output' => 'csv',		# what is the output module to be used
+		'text' => 'C:',			# text to prepend to path of files (like c:)
+		'append' => 0,			# we are appending to an output file, instead of writing a new one
+		'time_zone' => $time_zone,	# the time zone of the image
+		'preprocess' => 0, 		# turn on pre-processing modules 
+	) or die( 'unable to start log2timeline');
 
-#	print_lin
+
+	# and to process the timestamps, or run the engine against the MFT
+	$l2t_mft->start;
+
+	# delete the MFT file
+	unlink( $mft );
+}
+
+#	print_line
 my $l2t_all = Log2Timeline->new( 
 	file => $mount_point,		# point to the file/directory to parse
 	'recursive' => 1,		# we want to recursively go through stuff
@@ -370,9 +374,6 @@ my $l2t_all = Log2Timeline->new(
 
 # and to process the timestamps, or run the engine
 $l2t_all->start;
-
-# delete the MFT file
-unlink( $mft );
 
 # close the file
 close(TF);
