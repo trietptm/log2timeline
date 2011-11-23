@@ -1,4 +1,7 @@
-Version 0.62
+Version 0.63
+
+
+Version 0.62 (23/11/2011)
 	- [FF_CACHE input] New input module, designed to parse the cache files of Firefox. Contributed by John Ritchie
 	- [OPENVPN input] New input module, desigend to parse the OpenVPN log files.
 	- [L2T_PROCESS] Added a few more allowed characters in the keyword list
