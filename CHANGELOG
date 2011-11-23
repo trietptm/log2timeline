@@ -17,6 +17,9 @@ Version 0.62
 	somehow broken and the function get_next_event dies. If the tool runs into such occurance it returned an empty
 	timestamp object, that in turn let the tool query for it again, thus possibly getting into an endless loop.
 	Added a counter so the tool tries to get the next event 50 times, otherwise it will die.
+	- [log2timeline-sift] Moved the mount command out of the script and into the configuration file 
+		- Changed the mount command, since there were few errors with the previous one
+		- Added an addional check to see if the $MFT file can be directly called (and if so, skip the icat call)
 
 Version 0.61 (26/09/2011)
 	- [log2timeline] Small changes to the version printing (now prints just the last portion of the path)

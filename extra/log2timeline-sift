@@ -307,19 +307,28 @@ pod2usage( {
 
 
 # now we've mounted the image file.... let's do the rest
-my $mft = `mktemp`;
-$mft =~ s/\n//g;
+my $mft = '';
 
-# extract the MFT file
-$check = `$icat $image_options $image_file 0 > $mft 2>&1`;
+# now check if we can address the $MFT directly
+if ( -f "$mount_point/\$MFT" )
+{
+	$mft = "$mount_point/\$MFT";
+} 
+else
+{
+	$mft = `mktemp`;
+	$mft =~ s/\n//g;
 
-$check =~ s/\n//g;
+	# extract the MFT file
+	$check = `$icat $image_options $image_file 0 > $mft 2>&1`;
 
-pod2usage( {
-        -message        => "There has been a problem with extracting the MFT file, please review the error message below ($check)\n",
-        -verbose        => 1,
-        -exitval        => 1 } ) unless $check eq '';
+	$check =~ s/\n//g;
 
+	pod2usage( {
+	        -message        => "There has been a problem with extracting the MFT file, please review the error message below ($check)\n",
+	        -verbose        => 1,
+	        -exitval        => 1 } ) unless $check eq '';
+}
 
 # create folders
 mkdir $store_point unless -d $store_point;
