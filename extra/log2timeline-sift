@@ -66,8 +66,6 @@ my $is_win_7 = 0;		# are we talking about a Windows 7 image or Windows XP?
 
 # other parameters
 
-# the mount command
-my $mount_cmd = "/sbin/mount.ntfs-3g -o ro,loop,nodev,noexec,show_sys_files,streams_interface=windows" ;
 # any additional mount options
 my $mount_extra_options = "";
 # any additional options to TSK
@@ -126,6 +124,7 @@ $conf->define(
         'mmls' => { ARGCOUNT => ARGCOUNT_ONE, DEFAULT => '/usr/local/bin/mmls' },
         'fls' => { ARGCOUNT => ARGCOUNT_ONE, DEFAULT => '/usr/local/bin/fls' },
         'mount_point' => { ARGCOUNT => ARGCOUNT_ONE, DEFAULT => '/mnt/windows_mount' },
+        'mount_cmd' => { ARGCOUNT => ARGCOUNT_ONE, DEFAULT => '/bin/mount -o ro,loop,show_sys_files,streams_interface=windows' },
         'store_point' => { ARGCOUNT => ARGCOUNT_ONE, DEFAULT => '/cases/timeline/' },
 );
 
@@ -137,7 +136,7 @@ my $mmls = $conf->mmls;		# default location for mmls
 my $fls = $conf->fls;		# default location for fls
 my $mount_point = $conf->mount_point;	# the mount point of the image
 my $store_point = $conf->store_point;	# the location where the timeline data is stored
-
+my $mount_cmd = $conf->mount_cmd;	# the mount command
 
 # now to check if the image file has been mounted or not
 @t = split( /\//, $mount_point );
