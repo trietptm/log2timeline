@@ -613,6 +613,7 @@ sub start()
 				my $temp = $self->{'file'};
 				$self->{'file'} = $self->{'file'} . $self->{'sep'} . '$MFT';
 				$ret = $self->_parse_file;
+				$self->'file'} = $temp;
 			};		
 			if( $@ )
 			{	
