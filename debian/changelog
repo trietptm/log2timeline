@@ -1,3 +1,9 @@
+log2timeline-perl (0.62-3) natty hardy maverick karmic lucid; urgency=low
+
+  * Fixed a small bug, a typo that caused the tool not to work at all. 
+
+ -- Kristinn Gudjonsson <kristinn@log2timeline.net>  Wed, 24 Nov 2011 08:46:22 +0000
+
 log2timeline-perl (0.62-2) natty hardy maverick karmic lucid; urgency=low
 
   * Fixed a small bug that caused the tool to only parse the mft in some cases 
