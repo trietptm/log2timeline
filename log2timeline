@@ -101,6 +101,7 @@ my $recursive = 0;	# recursive search or not?
 my $preproc = 0;	# do we want to run pre-processing modules
 my $exclude = '';	# an exclusion list (list of files we would like to exclude from parsing)
 my @input_arguments;
+my $mft_detail = 0; 	# determine if mft module prints $FN timestamps
 
 # record the start time...
 my $start_time = time();
@@ -129,6 +130,7 @@ GetOptions(
 	"write=s"=>\$out_file,
 	"log=s"=>\$log_file,
 	"recursive!"=>\$recursive,
+	"detail!"=>\$mft_detail,
 	"preprocess!"=>\$preproc,
 	"zone=s"=>\$timezone,
 	"Zone=s"=>\$out_timezone,
@@ -380,6 +382,7 @@ eval
 		'digest'        => $digest,
 		'quick'         => $detail,
                 'raw'           => 0,
+		'detailed_time'	=> $mft_detail,
 		'hostname'      => $hostname,
 		'preprocess'    => $preproc,
 	);
@@ -497,6 +500,10 @@ Define the host name that the information is extracted from.
 
 Use the following output format.  By default B<log2timeline> uses the CSV output.  To see a list of all available output formats, use -o list
 
+=item B<-d|-detail>
+
+Only applicable with the MFT input module. This switch will instruct the MFT module to include the $FN timestamps, or more detailed timestamps.
+
 =item B<-w|-write FILENAME>
 
 Specify a file to write output to (otherwise STDOUT will be chosen).
@@ -589,6 +596,14 @@ Example of this usage is: B<log2timeline> -t 1243 (a time skew of +1243 seconds 
 =item B<-m TEXT>
 
 Prepend the filename with the B<TEXT>.  That is B<TEXT> is a string that is prepended in front of the file name to provide a path.  Examples are -m C: to prepend the C:/ in front of each file name to indicate the partition the file came from.
+
+=item B<-d|-detail>
+
+Only applicable with the MFT input module. This switch will instruct the MFT module to include the $FN timestamps, or more detailed timestamps. 
+
+By default the MFT input module will only include the $STANDARD_INFORMATION timestamps, not the $FILE_NAME. This is due to the fact that in most cases these timestamps may not matter as much. However, especially in intrusion cases, these timestamps play a valiable role. Therefore this option exists to indicate to the tool that it should include the $FN timestamps in addition to the $SN ones.
+
+So this parameter is only applicable if the tool is parsing a $MFT file (NTFS filesystem).
 
 =item B<-u|-upgrade>
 

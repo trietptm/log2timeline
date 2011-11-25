@@ -83,6 +83,7 @@ sub _new()
 	$c{'raw'}		= FALSE unless exists $c{'raw'};	# indicates that we would like to skip the output file mechanism and just return the 
 									# timestamp object directly, making it possible to create your own output mechanism
 	$c{'append'}		= FALSE unless exists $c{'append'};	# indicates that we are appending to the output file (instead of creating a new one)
+	$c{'detailed_time'}	= FALSE unless exists $c{'detailed_time'};# indicates that we want $FN times added to the MFT parsing (only applicable when MFT is parsed)
 	$c{'hostname'}		= 'unknown' unless exists $c{'hostname'};# add information about the hostname to the fields
 	$c{'preprocess'}	= FALSE unless exists $c{'preprocess'};	# do we want to call the preprocessing modules or not
 
@@ -348,6 +349,12 @@ sub _verify()
 	elsif( $attr eq 'debug' )
 	{
 		return 1 if ( $val ge 0 and $val le 4 );
+
+		return 0;
+	}
+	elsif( $attr eq 'detailed_time' )
+	{
+		return 1 if ( $val == TRUE or $val == FALSE );
 
 		return 0;
 	}
@@ -1278,6 +1285,7 @@ sub _load_input()
 			$self->{'in'}->{$_}->{'quick'} = 1 if $self->{'quick'};
 			$self->{'in'}->{$_}->{'tz'} = $self->{'time_zone'};
 			$self->{'in'}->{$_}->{'path'} = $self->{'text'};
+			$self->{'in'}->{$_}->{'detailed_time'} = $self->{'detailed_time'};
 			$self->{'in'}->{$_}->{'temp'} = $self->{'temp'};
 			$self->{'in'}->{$_}->{'sep'} = $self->{'sep'};
 			# add the default user browser if the information is available (through pre-processing)

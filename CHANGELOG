@@ -14,6 +14,7 @@ Version 0.62 (23/11/2011)
 		just dying on the first one.
 		-The tool will now accept a separate output timezone so the tool can output in a different timezone than the hosts one.
 	- [log2timeline] Added the -Z ZONE parameter so the tool can output in a different timezone than the host timezone.
+		- added a -d parameter (detail) that instructs the MFT input module to include $FN timestamps in addition to $SN
 	- [CSV output] Changed the output timezone so it now prints using the -Z definition, so it now supports different output
 	timezone than the host one.
 	- [EVTX input] Fixed a bug in where the tool could go into a endless loop in the case where you have a EVTX that is 
@@ -23,6 +24,9 @@ Version 0.62 (23/11/2011)
 	- [log2timeline-sift] Moved the mount command out of the script and into the configuration file 
 		- Changed the mount command, since there were few errors with the previous one
 		- Added an addional check to see if the $MFT file can be directly called (and if so, skip the icat call)
+	- [MFT input] Change the mft parser so it doesn't include the $FN timestamps by default (need an additional parameter)
+		- Therefore the default behavior of the module has changed. By default it only includes $SN timestamps. An additional
+		parameter to the engine needs to be passed (-d to main front-end or detailed_time to the engine).
 
 Version 0.61 (26/09/2011)
 	- [log2timeline] Small changes to the version printing (now prints just the last portion of the path)

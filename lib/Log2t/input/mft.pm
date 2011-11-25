@@ -509,20 +509,23 @@ sub get_time()
                 };  
         }   
 
-        # and now to include the timestamps
-        foreach( keys %fn_time )
-        {   
-                my $t = ''; 
-                $t .= ( $fn_time{$_} & 0x01 ) ? 'M' : '.';
-                $t .= ( $fn_time{$_} & 0x02 ) ? 'A' : '.';
-                $t .= ( $fn_time{$_} & 0x04 ) ? 'C' : '.';
-                $t .= ( $fn_time{$_} & 0x08 ) ? 'B' : '.';
-
-                $t_line{'time'}->{$i++} = { 
-                        'value' => $_, 
-                        'type' => '$FN [' . $t . '] time',
-                        'legacy' => $fn_time{$_}
-                };  
+        # and now to include the timestamp (if we want to)
+	if( $self->{'detailed_time'} )
+	{
+        	foreach( keys %fn_time )
+        	{   
+        	        my $t = ''; 
+        	        $t .= ( $fn_time{$_} & 0x01 ) ? 'M' : '.';
+        	        $t .= ( $fn_time{$_} & 0x02 ) ? 'A' : '.';
+        	        $t .= ( $fn_time{$_} & 0x04 ) ? 'C' : '.';
+        	        $t .= ( $fn_time{$_} & 0x08 ) ? 'B' : '.';
+	
+	                $t_line{'time'}->{$i++} = { 
+	                        'value' => $_, 
+	                        'type' => '$FN [' . $t . '] time',
+	                        'legacy' => $fn_time{$_}
+	                };  
+		}
 	}
 
 	return \%t_line;
