@@ -119,7 +119,7 @@ Getopt::Long::Configure("no_ignore_case");
 GetOptions( 
 	"skew=s"=>\$time_offset,
 	"m=s"=>\$textfield,
-	"verbose|debug+"=>\$debug,
+	"verbose+"=>\$debug,
 	"upgrade!" => \$check,
 	"calculate!" => \$digest,
 	"format|f=s"=>\$format_file,

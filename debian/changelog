@@ -1,3 +1,9 @@
+log2timeline-perl (0.62-4) natty hardy maverick karmic lucid; urgency=low
+
+  * Changed the default behavior of the mft input module (not print FN timestamps)
+
+ -- Kristinn Gudjonsson <kristinn@log2timeline.net>  Mon, 28 Nov 2011 11:32:02 +0000
+
 log2timeline-perl (0.62-3) natty hardy maverick karmic lucid; urgency=low
 
   * Fixed a small bug, a typo that caused the tool not to work at all. 
