@@ -31,7 +31,7 @@ _log2timeline()
 	COMPREPLY=()
 	cur="${COMP_WORDS[COMP_CWORD]}"
 	prev="${COMP_WORDS[COMP_CWORD-1]}"
-	opts="-s -skew -m -debug -d -f -format -x -u -upgrade -name -o -output -l -w -write -z -zone -r -recursive -p -preprocess -log -c -calculate -x -exclude -t -temp -args -v -verbose -V -Version -h -help -?"
+	opts="-s -skew -m -detail -d -f -format -x -u -upgrade -name -o -output -l -w -write -z -zone -Z -Zone -r -recursive -p -preprocess -log -c -calculate -x -exclude -t -temp -args -v -verbose -V -Version -h -help -?"
 	
 	# check the previous option/parameter
 	case "$prev" in
@@ -82,7 +82,7 @@ _log2timeline()
 		_filedir 
 		return 0
 		;;
-	-z|-zone)
+	-z|-zone|-Z|-Zone)
 		cur=`_get_cword`
 		local moguleikar=$( for x in `log2timeline -z list | tail -n +5`; do echo ${x}; done )
 
