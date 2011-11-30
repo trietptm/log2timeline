@@ -315,6 +315,7 @@ $type = 'win7' if $is_win_7;
 
 # now we've mounted the image file.... let's do the rest
 my $mft = '';
+my $append_status = 0;
 
 # now check if we can address the $MFT directly
 if ( -f "$mount_point/\$MFT" )
@@ -350,7 +351,10 @@ else
 		'time_zone' => $time_zone,	# the time zone of the image
 		'preprocess' => 0, 		# turn on pre-processing modules 
 	) or die( 'unable to start log2timeline');
-
+	
+	# since we need to do this in two parts, let's indicate that we are about to append
+	# in the next round of events
+	$append_status = 1;
 
 	# and to process the timestamps, or run the engine against the MFT
 	$l2t_mft->start;
@@ -366,7 +370,7 @@ my $l2t_all = Log2Timeline->new(
 	'input' => $type,		# which input modules to use (this is a Win XP machine)
 	'output' => 'csv',		# what is the output module to be used
 	'text' => 'C:',			# text to prepend to path of files (like c:)
-	'append' => 1,			# we are appending to an output file, instead of writing a new one
+	'append' => $append_status,	# we might need to append (depending on the need to parse the MFT) 
 	'time_zone' => $time_zone,	# the time zone of the image
 	'preprocess' => 1, 		# turn on pre-processing modules 
 ) or die( 'unable to start log2timeline');
