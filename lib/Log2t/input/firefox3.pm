@@ -655,8 +655,8 @@ sub verify
 	{
 		# we know that this is a SQLite database, but is it a Firefox3 database?
 	
-		# start by checking if we have a database journal as well
-		if ( -f ${$self->{'name'}} . "-journal" )
+		# start by checking if we have a database journal as well (or other read-only attributes)
+		if ( -f ${$self->{'name'}} . "-journal" or -f ${$self->{'name'}} . "-shm" or -f ${$self->{'name'}} . "-wal" )
 		{
 			eval
 			{
@@ -671,7 +671,7 @@ sub verify
 
 				# we need to copy the file to a temp location and start again
 				copy( ${$self->{'name'}}, $temp ) or $msg = 'unable to copy database file. ';
-				copy( ${$self->{'name'}} . "-journal", $temp . "-journal" ) or $msg .=  'unable to copy journal file to temporary directory'; 
+				#copy( ${$self->{'name'}} . "-journal", $temp . "-journal" ) or $msg .=  'unable to copy journal file to temporary directory'; 
 
 				# we are trying to copy temporary data, and if the msg variable is defined, then we have a problem
 				if( defined $msg )

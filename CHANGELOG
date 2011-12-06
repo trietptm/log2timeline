@@ -1,4 +1,8 @@
 Version 0.63
+	- [WIN7 list] Fixed a small bug in Win7 list file (and win7_noreg). The evt module was loaded up and not the evtx one.
+	- [FIREFOX3 input] Added a check to see if the SQlite database contains a -wal or -shm (in addition to -journal)
+	And if it does, then do the same procedure as if it was a -journal (read-only database that gets copied to a temp location)
+	This was pointed to me by Svante
 
 
 Version 0.62 (23/11/2011)
