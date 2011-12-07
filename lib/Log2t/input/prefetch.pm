@@ -190,12 +190,23 @@ sub get_time
 			# now we need to fix this fpath variable
 			$fpath =~ s/\\DEVICE\\HARDDISKVOLUME\d\\/\n/g;
 
-			while( $fpath =~ m/(^.+DLL$)/gm )
+			# don't want to add this, unless we are using the detailed option
+			if ( $self->{'detailed_time'} )
 			{
-				$text .= $1 . ' - ';
+				$text = ' - DLLs loaded: {';
+
+				while( $fpath =~ m/(^.+DLL$)/gm )
+				{
+					$text .= $1 . ' - ';
+				}
+				# fix the last one
+				$text =~ s/ - $//;
+				$text .= '}';
 			}
-			# fix the last one
-			$text =~ s/ - $//;
+			else
+			{
+				$text = '';
+			}
 
 		        # content of array t_line ([optional])
 		        # %t_line {        #       time
@@ -227,7 +238,7 @@ sub get_time
 		        # create the t_line variable
 		        $container{$cont_index++}= {
 		                'time' => { 0 => { 'value' => $runtime, 'type' => 'Last run', 'legacy' => 15 } },
-		                'desc' => $self->{'files'}->{$key}. ' - [' . $exe . '] was executed - run count [' . $runcount . '], full path: [' . $path . '] - DLLs loaded: {' . $text . '}',
+		                'desc' => $self->{'files'}->{$key}. ' - [' . $exe . '] was executed - run count [' . $runcount . '], full path: [' . $path . ']',
 		                'short' => $self->{'files'}->{$key} . ': ' . $exe . ' was executed',
 		                'source' => 'PRE',
 		                'sourcetype' => $st . ' Prefetch',

@@ -502,7 +502,7 @@ Use the following output format.  By default B<log2timeline> uses the CSV output
 
 =item B<-d|-detail>
 
-Only applicable with the MFT input module. This switch will instruct the MFT module to include the $FN timestamps, or more detailed timestamps.
+Some input modules have the capability to include very detailed amount of information (such as MFT and prefetch). This switch will instruct modules to include those details in the timeline, so for instance to tell the MFT module to include the $FN timestamps, or the prefetch one to include loaded DLLs.
 
 =item B<-w|-write FILENAME>
 
@@ -599,11 +599,13 @@ Prepend the filename with the B<TEXT>.  That is B<TEXT> is a string that is prep
 
 =item B<-d|-detail>
 
-Only applicable with the MFT input module. This switch will instruct the MFT module to include the $FN timestamps, or more detailed timestamps. 
+Some input modules have the capability to include very detailed amount of information (such as MFT and prefetch). This switch will instruct modules to include those details in the timeline, so for instance to tell the MFT module to include the $FN timestamps, or the prefetch one to include loaded DLLs.
 
 By default the MFT input module will only include the $STANDARD_INFORMATION timestamps, not the $FILE_NAME. This is due to the fact that in most cases these timestamps may not matter as much. However, especially in intrusion cases, these timestamps play a valiable role. Therefore this option exists to indicate to the tool that it should include the $FN timestamps in addition to the $SN ones.
 
-So this parameter is only applicable if the tool is parsing a $MFT file (NTFS filesystem).
+The same goes with the prefetch module. It can potentially include information about all DLLs each prefetch loads up. This might be a very useful information to have when dealing with malware cases, but it might be too much details in most cases. Hence this is omitted now by default, unless the -d parameter is set.
+
+So this parameter tells input modules to include more detailed information about the events. Not all input modules will honor this option, however more might come, and by default this option is not set.
 
 =item B<-u|-upgrade>
 
