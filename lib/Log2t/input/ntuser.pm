@@ -2061,7 +2061,7 @@ sub _parse_ua()
 				}
 	
 				# make an extra check
-				if( $values[0] == 0 )
+				if( $values[0] == 0 or $values[0] == 0xa )
 				{
 					$time_value = Log2t::Time::Win2Unix( $values[15], $values[16] );
 					$text = $value_name . ' [Count: ' . $values[1] . ']  nr. of times app had focus: ' . $values[2] . ' and duration of focus: ' . $values[3] . 'ms';	
