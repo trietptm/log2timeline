@@ -8,6 +8,7 @@ Version 0.63
 	- [SAM input] Changed the handling of SAM database data, it did not properly parse the SAM database file in certain cases
 	due to the keys being prefilled with the CMI-CREATE....
 	- [NTUSER input] Changed a value check in UserAssist key parsing causing UserAssist keys not properly being parsed.
+	- [WIN_LINK input] The values for mtime and atime got swapped (the correct order is CAM not CMA like it was)
 
 
 Version 0.62 (23/11/2011)

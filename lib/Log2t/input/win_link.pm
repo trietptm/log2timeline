@@ -610,8 +610,8 @@ sub _parseHeader {
 	$hdr{flags}    = $hd[1];
 	$hdr{attr}     = $hd[2];
 	$hdr{ctime}    = Log2t::Time::Win2Unix($hd[3],$hd[4]);
-	$hdr{mtime}    = Log2t::Time::Win2Unix($hd[5],$hd[6]);
-	$hdr{atime}    = Log2t::Time::Win2Unix($hd[7],$hd[8]);
+	$hdr{atime}    = Log2t::Time::Win2Unix($hd[5],$hd[6]);
+	$hdr{mtime}    = Log2t::Time::Win2Unix($hd[7],$hd[8]);
 	$hdr{length}   = $hd[9];
 	$hdr{icon_num} = $hd[10];
 	$hdr{showwnd}  = $hd[11];
