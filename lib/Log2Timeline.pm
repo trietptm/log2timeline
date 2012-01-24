@@ -1095,7 +1095,7 @@ sub _input_exists()
 	return 0 if $in eq 'all';
 
 	# the list might contain a minus sign, let's remove them all 
-	$in =~ s/-//;
+	$in =~ s/-//g;
 
 	# we might be using several modules
 	my @s = split( /,/, $in );
