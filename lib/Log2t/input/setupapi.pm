@@ -49,7 +49,7 @@ use vars qw($VERSION @ISA);
 @ISA = ( "Log2t::base::input" );
 
 # version number
-$VERSION = '0.5';
+$VERSION = '0.6';
 
 my %structure;
 my $line_loaded;
@@ -390,6 +390,7 @@ sub get_time()
         #               [size]
         #               [...]
         # }
+	$text = $self->{'detailed_time'} ? $text : $title;
 
         # create the t_line variable
         %t_line = (

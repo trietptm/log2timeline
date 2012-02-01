@@ -9,6 +9,9 @@ Version 0.63
 	due to the keys being prefilled with the CMI-CREATE....
 	- [NTUSER input] Changed a value check in UserAssist key parsing causing UserAssist keys not properly being parsed.
 	- [WIN_LINK input] The values for mtime and atime got swapped (the correct order is CAM not CMA like it was)
+	- [SETUPAPI input] Added a 'detailed_time' check, to reduce the text inside the alert by default, unless detail option used.
+	- [log2timeline] Updated the man page to reflect updates to the 'detailed_time' changes to setupapi input module.
+	- [WIN library] Added a mapping to map up all Windows use of timezones to the one used in the DateTime library.
 
 
 Version 0.62 (23/11/2011)
