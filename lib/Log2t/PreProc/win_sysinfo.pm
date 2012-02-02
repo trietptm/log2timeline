@@ -35,6 +35,7 @@ package Log2t::PreProc::win_sysinfo;
 
 use strict;
 use Parse::Win32Registry qw(:REG_);	# to be able to read the registry
+use Log2t::Win;
 
 
 sub get_info($)
@@ -152,9 +153,29 @@ sub get_info($)
 				$tz =~ s/\s//g;
 
 				# we do not set the time zone right now
-				#$l2t->set( 'time_zone' => $tz );
-				print STDERR "[PreProcessing] The timezone according to registry is: ($tz) " . $tz_vals{'StandardName'} . "\n";
-				print STDERR "[PreProcessing] The timezone settings are NOT overwritten so the settings might have to be adjusted.\n";
+				my $trans_tz = Log2t::Win::get_win_tz($tz_vals{'StandardName'});
+
+				# check if the transform exists
+				# then check if it's the same as the one chosen
+				if ( $trans_tz ) 
+				{
+					if ("$trans_tz" eq "$l2t->{'time_zone'}" )
+					{
+						print STDERR "[PreProcessing] The timezone according to the registry is the same as the one chosen ($trans_tz)\n";
+					}
+					else
+					{
+						print STDERR "[PreProcessing] The timezone according to registry is: ($tz) " . $tz_vals{'StandardName'} . "\n";
+						print STDERR "[PreProcessing] The chosen timezone does NOT match the one in the registry, changing values.\n";
+						$l2t->set( 'time_zone' => $trans_tz );
+						print STDERR "[PreProcessing] Time zone changed to: $trans_tz.\n";
+					}
+				}
+				else
+				{
+					print STDERR "[PreProcessing] The timezone according to registry is: ($tz) " . $tz_vals{'StandardName'} . "\n";
+					print STDERR "[PreProcessing] The timezone settings are NOT overwritten so the settings might have to be adjusted.\n";
+				}
                         }
                 }
 

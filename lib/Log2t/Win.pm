@@ -37,8 +37,11 @@ package Log2t::Win;
 use strict;
 use Exporter qw(import);
 
+# transform gathered from these sources:
+# http://www.pcreview.co.uk/forums/return-system-timezone-abbreviation-format-e-cst-t2788903.html
+# http://msdn.microsoft.com/en-us/library/ms912391(v=winembedded.11).aspx
 my %known_timezone_transforms = (
-	'India Standard Time' => '',
+	'India Standard Time' => 'Asia/Kolkata',
 	'Eastern Standard Time' => 'EST5EDT',
 	'Eastern Daylight Time' => 'EST5EDT',
 	'Mountain Standard Time' => 'MST7MDT',
@@ -47,7 +50,6 @@ my %known_timezone_transforms = (
 	'Pacific Daylight Time' => 'PST7PDT',
 	'Central Standard Time' => 'CST6CDT',
 	'Central Daylight Time' => 'CST6CDT',
-	'Dateline Standard Time' => 'IDLE'
 	'Samoa Standard Time' => 'US/Samoa',
 	'Hawaiian Standard Time' => 'US/Hawaii',
 	'Alaskan Standard Time' => 'US/Alaska',
@@ -60,66 +62,66 @@ my %known_timezone_transforms = (
 	'Central America Standard Time' => 'CST6CDT',
 	'US Eastern Standard Time' => 'EST5EDT',
 	'SA Pacific Standard Time' => 'EST5EDT',
-	'Pacific SA Standard Time' => 'AST',
-	'Atlantic Standard Time' => 'AST',
-	'SA Western Standard Time' => 'AST',
-	'Newfoundland Standard Time' => 'NWF',
-	'Greenland Standard Time' => 'BBA',
-	'SA Eastern Standard Time' => 'BBA',
-	'E. South America Standard Time' => 'BBA',
-	'Mid-Atlantic Standard Time' => 'MAT',
-	'Azores Standard Time' => 'AZO',
-	'Cape Verde Standard Time' => 'AZO',
+#	'Pacific SA Standard Time' => 'AST',
+#	'Atlantic Standard Time' => 'AST',
+#	'SA Western Standard Time' => 'AST',
+#	'Newfoundland Standard Time' => 'NWF',
+#	'Greenland Standard Time' => 'BBA',
+#	'SA Eastern Standard Time' => 'BBA',
+#	'E. South America Standard Time' => 'BBA',
+#	'Mid-Atlantic Standard Time' => 'MAT',
+#	'Azores Standard Time' => 'AZO',
+#	'Cape Verde Standard Time' => 'AZO',
 	'GMT Standard Time' => 'GMT',
 	'Greenwich Standard Time' => 'GMT',
-	'W. Central Africa Standard Time' => 'AMS',
-	'W. Europe Standard Time' => 'AMS',
-	'Central Europe Standard Time' => 'AMS',
-	'Romance Standard Time' => 'AMS',
-	'Central European Standard Time' => 'AMS',
-	'GTB Standard Time' => 'AIM',
-	'E. Europe Standard Time' => 'BCP',
-	'South Africa Standard Time' => 'BCP',
-	'Israel Standard Time' => 'BCP',
-	'Egypt Standard Time' => 'BCP',
-	'FLE Standard Time' => 'HRI',
-	'Arabic Standard Time' => 'BKR',
-	'Arab Standard Time' => 'BKR',
-	'Russian Standard Time' => 'MSV',
-	'E. Africa Standard Time' => 'BKR',
-	'Iran Standard Time' => 'THE',
-	'Arabian Standard Time' => 'ABT',
-	'Caucasus Standard Time' => 'ABT',
-	'Afghanistan Standard Time' => 'KAB',
-	'Ekaterinburg Standard Time' => 'EIK',
-	'West Asia Standard Time' => 'EIK',
-	'India Standard Time' => 'BCD',
-	'Nepal Standard Time' => 'NPT',
-	'N. Central Asia Standard Time' => 'ADC',
-	'Central Asia Standard Time' => 'ADC',
-	'Sri Lanka Standard Time' => 'ADC',
-	'Myanmar Standard Time' => 'MMT',
-	'SE Asia Standard Time' => 'BHJ',
-	'North Asia Standard Time' => 'BHJ',
-	'North Asia East Standard Time' => 'SST',
-	'Singapore Standard Time' => 'SST',
-	'China Standard Time' => 'SST',
-	'W. Australia Standard Time' => 'SST',
-	'Taipei Standard Time' => 'SST',
-	'Tokyo Standard Time' => 'OST',
-	'Korea Standard Time' => 'SYA',
-	'Yakutsk Standard Time' => 'SYA',
-	'Cen. Australia Standard Time' => 'ADA',
-	'AUS Central Standard Time' => 'ADA',
-	'E. Australia Standard Time' => 'BGP',
-	'West Pacific Standard Time' => 'BGP',
-	'AUS Eastern Standard Time' => 'CMS',
-	'Tasmania Standard Time' => 'HVL',
-	'Vladivostok Standard Time' => 'HVL',
-	'Central Pacific Standard Time' => 'MSN',
-	'New Zealand Standard Time' => 'AWE',
-	'Fiji Standard Time' => 'FKM',
-	'Tonga Standard Time' => 'TOT',
+#	'W. Central Africa Standard Time' => 'AMS',
+#	'W. Europe Standard Time' => 'AMS',
+#	'Central Europe Standard Time' => 'AMS',
+#	'Romance Standard Time' => 'AMS',
+#	'Central European Standard Time' => 'AMS',
+#	'GTB Standard Time' => 'AIM',
+#	'E. Europe Standard Time' => 'BCP',
+#	'South Africa Standard Time' => 'BCP',
+#	'Israel Standard Time' => 'BCP',
+#	'Egypt Standard Time' => 'BCP',
+#	'FLE Standard Time' => 'HRI',
+#	'Arabic Standard Time' => 'BKR',
+#	'Arab Standard Time' => 'BKR',
+#	'Russian Standard Time' => 'MSV',
+#	'E. Africa Standard Time' => 'BKR',
+#	'Iran Standard Time' => 'THE',
+#	'Arabian Standard Time' => 'ABT',
+#	'Caucasus Standard Time' => 'ABT',
+#	'Afghanistan Standard Time' => 'KAB',
+#	'Ekaterinburg Standard Time' => 'EIK',
+#	'West Asia Standard Time' => 'EIK',
+#	'India Standard Time' => 'BCD',
+#	'Nepal Standard Time' => 'NPT',
+#	'N. Central Asia Standard Time' => 'ADC',
+#	'Central Asia Standard Time' => 'ADC',
+#	'Sri Lanka Standard Time' => 'ADC',
+#	'Myanmar Standard Time' => 'MMT',
+#	'SE Asia Standard Time' => 'BHJ',
+#	'North Asia Standard Time' => 'BHJ',
+#	'North Asia East Standard Time' => 'SST',
+#	'Singapore Standard Time' => 'SST',
+#	'China Standard Time' => 'SST',
+#	'W. Australia Standard Time' => 'SST',
+#	'Taipei Standard Time' => 'SST',
+#	'Tokyo Standard Time' => 'OST',
+#	'Korea Standard Time' => 'SYA',
+#	'Yakutsk Standard Time' => 'SYA',
+#	'Cen. Australia Standard Time' => 'ADA',
+#	'AUS Central Standard Time' => 'ADA',
+#	'E. Australia Standard Time' => 'BGP',
+#	'West Pacific Standard Time' => 'BGP',
+#	'AUS Eastern Standard Time' => 'CMS',
+#	'Tasmania Standard Time' => 'HVL',
+#	'Vladivostok Standard Time' => 'HVL',
+#	'Central Pacific Standard Time' => 'MSN',
+#	'New Zealand Standard Time' => 'AWE',
+#	'Fiji Standard Time' => 'FKM',
+#	'Tonga Standard Time' => 'TOT',
 );
 # A list of known guids in Windows Vista and newer Windows operating systems
 my %known_guids = (
@@ -388,6 +390,19 @@ my %known_guids = (
 
 );
 
+sub get_win_tz($)
+{
+	my $tz_check = shift;
+
+	if (defined $known_timezone_transforms{"$tz_check"})
+	{
+		return $known_timezone_transforms{"$tz_check"};
+	}
+	else
+	{
+		return 0;
+	}
+}
 
 #	guid_exists
 #
