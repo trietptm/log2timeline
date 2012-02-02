@@ -235,6 +235,21 @@ sub _parse_timestamp
 		# the meaning of each timestamps differ between these files
 		# check the filename
 		# we are dealing with a file inside the history.ie5 path
+		# information used here are from Rob Lee based on the SANS forensic courses:
+		# File			Time 1			Time 2
+		# History.IE5 (master)	Last Access (UTC)	Last Access (UTC)
+		# Daily History		Last Access (local)	Last Access (UTC)
+		# Weekly History	Last Access (local)	Index.dat creation time (UTC)
+		# 
+		# normally timestamps are stored in UTC, so to compensate for that a small hack
+		# called Log2t::Time::fix_epoch is used to 'fix' or adjust the timestamp to the
+		# local timezone.
+		#
+		# A variable called $fix is used to indicate which timestamp should be compensated
+		# The variable is a really a simple binary variable:
+		#	Bit 1: time 1
+		#	Bit 2: time 2
+		# So, $fix = 1 -> 0b01 => 'fix' time 2, etc..... (so $fix = 2 -> 0b10, fix time_1)
 
 		# now to check if this is a daily, master or weekly file
 		if( ${$self->{'name'}} =~ m/MSHist01\d{6}(\d{2})\d{6}(\d{2})/i )
@@ -245,12 +260,12 @@ sub _parse_timestamp
 				# daily one	
 				$time1 = 'Last Access';
 				$time2 = 'Last Access';
-				$fix = 2;
+				$fix = 2; # fix time1
 			}
 			else
 			{
 				# weekly
-				$fix = 2;
+				$fix = 2; # fix time1
 				$time1 = 'Last Access';
 				$time2 = 'index.dat creation time';
 			}
@@ -400,6 +415,7 @@ sub _parse_timestamp
 	if( $fix & 0b01 )
 	{
 		# we need to fix time2
+		print STDERR "[IEHISTORY] Adjusting timestamp to local timezone (time2 - $time2)\n";
 		#print STDERR "FIXING EPOCH2: ", $r{'time2'};
 		Log2t::Time::fix_epoch( \$r{'time2'}, $self->{'tz'} );
 		#print STDERR " - now ", $r{'time2'}, "\n";
@@ -407,6 +423,7 @@ sub _parse_timestamp
 	if( $fix & 0b10 )
 	{
 		# we need to fix time1
+		print STDERR "[IEHISTORY] Adjusting timestamp to local timezone (time1 - $time1)\n";
 		#print STDERR "FIXING EPOCH1: ", $r{'time1'};
 		Log2t::Time::fix_epoch( \$r{'time1'}, $self->{'tz'} );
 		#print STDERR " - now ", $r{'time1'}, "\n";
