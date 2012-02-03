@@ -340,13 +340,15 @@ sub _parse_timestamp
 		$text = 'LEAK record ' if $r{'type'} eq 'LEAK';
 
 		# read the time
+		# Last Modified Time Stamp - 0x08 0x08 8 This is the Last Modified time stamp, in FILETIME format.
+		# Last Accessed Time Stamp - 0x10 0x10 8 This is the Last Accessed time stamp, in FILETIME format
 		$r{'mod_1'} = Log2t::BinRead::read_32($self->{'file'},\$ofs);
 		$r{'mod_2'} = Log2t::BinRead::read_32($self->{'file'},\$ofs);
 		$r{'acc_1'} = Log2t::BinRead::read_32($self->{'file'},\$ofs);
 		$r{'acc_2'} = Log2t::BinRead::read_32($self->{'file'},\$ofs);
 
-		$r{time2} = Log2t::Time::Win2Unix( $r{'mod_1'}, $r{'mod_2'} ); 
-		$r{time1} = Log2t::Time::Win2Unix( $r{'acc_1'}, $r{'acc_2'} ); 
+		$r{time1} = Log2t::Time::Win2Unix( $r{'mod_1'}, $r{'mod_2'} ); 
+		$r{time2} = Log2t::Time::Win2Unix( $r{'acc_1'}, $r{'acc_2'} ); 
 
 		# the rest of the values depends upon the version 
 		$ofs = $self->{'struct'}->{'version'} gt 5 ? $r{'start'} + 0x34: $r{'start'} + 0x38;
