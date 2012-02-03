@@ -1,11 +1,6 @@
 #################################################################################################
 #		IEHISTORY	
-#################################################################################################
-# This script reads the index.dat file that contain Internet Explorer history files
-#
-# Based partly on the information found in the document: "Forensic Analysis of Internet Explorer 
-# Activity Files" written by Keith J Jones (3/19/03 revised 5/6/03)
-# 
+################################################################################################# 
 # Author: Kristinn Gudjonsson
 # Version : 0.8
 # Date : 24/08/11
@@ -26,6 +21,23 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with log2timeline.  If not, see <http://www.gnu.org/licenses/>.
+
+=pod
+
+=head1 NAME
+
+iehistory - A module that parses an index.dat file that Internet Explorer creates.
+
+=head1 DESCRIPTION
+
+This script reads the index.dat file that contain Internet Explorer history files
+
+Based partly on the information found in the document: "Forensic Analysis of Internet Explorer 
+Activity Files" written by Keith J Jones (3/19/03 revised 5/6/03)
+
+=head1 METHODS
+
+=cut 
 
 package Log2t::input::iehistory;
 
@@ -59,32 +71,37 @@ sub new()
         return $self;
 }
 
+=head2 get_description
 
-#       get_description
-# A simple subroutine that returns a string containing a description of 
-# the funcionality of the format file. This string is used when a list of
-# all available format files is printed out
-#
-# @return A string containing a description of the format file's functionality
+A simple subroutine that returns a string containing a description of the funcionality of the format file. This string is used when a list of all available format files is printed out
+
+=head3 Returns:
+
+=head4 A string containing a description of the format file's functionality
+
+=cut
 sub get_description()
 {
 	return "Parse the content of an index.dat file containg IE history"; 
 }
 
-#       init
-# This subroutine starts by reading the parameters passed to the function
-# then it opens the index.dat file and starts reading the header information
-# found inside the file.
-#
-# The function prints out minimum information about the index file to STDERR
-# for informational value.
-#
-# It then parses all the HASH tables found inside the index.dat file and constructs
-# an hash containing pointers to URL activities
-# 
-# @params One parameter is defined, the path to the file name 
-# @return An integer is returned to indicate whether the file preparation was 
-#       successful or not.
+=head2 init
+
+This subroutine starts by reading the parameters passed to the function
+then it opens the index.dat file and starts reading the header information
+found inside the file.
+
+The function prints out minimum information about the index file to STDERR
+for informational value.
+
+It then parses all the HASH tables found inside the index.dat file and constructs
+an hash containing pointers to URL activities
+ 
+=head3 Returns:
+
+=head4 An integer is returned to indicate whether the file preparation was successful or not.
+
+=cut
 sub init
 {
 	my $self = shift;
@@ -98,6 +115,15 @@ sub init
 	return 1;
 }
 
+=head2 get_time
+
+This is the main method that actually reads each entry and ...
+
+=head3 Returns:
+
+=head4 A timestamp object.
+
+=cut
 sub get_time
 {
 	my $self = shift;
@@ -651,3 +677,27 @@ sub _read_hash_table($)
 }
 
 1;
+
+__END__
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright 2009-2011 Kristinn Gudjonsson (kristinn ( a t ) log2timeline (d o t) net)
+
+  This file is part of log2timeline.
+
+    log2timeline is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    log2timeline is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with log2timeline.  If not, see <http://www.gnu.org/licenses/>.
+
+
+=cut
