@@ -1,11 +1,6 @@
 #################################################################################################
 #		IEHISTORY	
-#################################################################################################
-# This script reads the index.dat file that contain Internet Explorer history files
-#
-# Based partly on the information found in the document: "Forensic Analysis of Internet Explorer 
-# Activity Files" written by Keith J Jones (3/19/03 revised 5/6/03)
-# 
+################################################################################################# 
 # Author: Kristinn Gudjonsson
 # Version : 0.8
 # Date : 24/08/11
@@ -26,6 +21,23 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with log2timeline.  If not, see <http://www.gnu.org/licenses/>.
+
+=pod
+
+=head1 NAME
+
+iehistory - A module that parses an index.dat file that Internet Explorer creates.
+
+=head1 DESCRIPTION
+
+This script reads the index.dat file that contain Internet Explorer history files
+
+Based partly on the information found in the document: "Forensic Analysis of Internet Explorer 
+Activity Files" written by Keith J Jones (3/19/03 revised 5/6/03)
+
+=head1 METHODS
+
+=cut 
 
 package Log2t::input::iehistory;
 
@@ -59,32 +71,37 @@ sub new()
         return $self;
 }
 
+=head2 get_description
 
-#       get_description
-# A simple subroutine that returns a string containing a description of 
-# the funcionality of the format file. This string is used when a list of
-# all available format files is printed out
-#
-# @return A string containing a description of the format file's functionality
+A simple subroutine that returns a string containing a description of the funcionality of the format file. This string is used when a list of all available format files is printed out
+
+=head3 Returns:
+
+=head4 A string containing a description of the format file's functionality
+
+=cut
 sub get_description()
 {
 	return "Parse the content of an index.dat file containg IE history"; 
 }
 
-#       init
-# This subroutine starts by reading the parameters passed to the function
-# then it opens the index.dat file and starts reading the header information
-# found inside the file.
-#
-# The function prints out minimum information about the index file to STDERR
-# for informational value.
-#
-# It then parses all the HASH tables found inside the index.dat file and constructs
-# an hash containing pointers to URL activities
-# 
-# @params One parameter is defined, the path to the file name 
-# @return An integer is returned to indicate whether the file preparation was 
-#       successful or not.
+=head2 init
+
+This subroutine starts by reading the parameters passed to the function
+then it opens the index.dat file and starts reading the header information
+found inside the file.
+
+The function prints out minimum information about the index file to STDERR
+for informational value.
+
+It then parses all the HASH tables found inside the index.dat file and constructs
+an hash containing pointers to URL activities
+ 
+=head3 Returns:
+
+=head4 An integer is returned to indicate whether the file preparation was successful or not.
+
+=cut
 sub init
 {
 	my $self = shift;
@@ -98,6 +115,15 @@ sub init
 	return 1;
 }
 
+=head2 get_time
+
+This is the main method that actually reads each entry and ...
+
+=head3 Returns:
+
+=head4 A timestamp object.
+
+=cut
 sub get_time
 {
 	my $self = shift;
@@ -235,6 +261,21 @@ sub _parse_timestamp
 		# the meaning of each timestamps differ between these files
 		# check the filename
 		# we are dealing with a file inside the history.ie5 path
+		# information used here are from Rob Lee based on the SANS forensic courses:
+		# File			Time 1			Time 2
+		# History.IE5 (master)	Last Access (UTC)	Last Access (UTC)
+		# Daily History		Last Access (local)	Last Access (UTC)
+		# Weekly History	Last Access (local)	Index.dat creation time (UTC)
+		# 
+		# normally timestamps are stored in UTC, so to compensate for that a small hack
+		# called Log2t::Time::fix_epoch is used to 'fix' or adjust the timestamp to the
+		# local timezone.
+		#
+		# A variable called $fix is used to indicate which timestamp should be compensated
+		# The variable is a really a simple binary variable:
+		#	Bit 1: time 1
+		#	Bit 2: time 2
+		# So, $fix = 1 -> 0b01 => 'fix' time 2, etc..... (so $fix = 2 -> 0b10, fix time_1)
 
 		# now to check if this is a daily, master or weekly file
 		if( ${$self->{'name'}} =~ m/MSHist01\d{6}(\d{2})\d{6}(\d{2})/i )
@@ -245,12 +286,12 @@ sub _parse_timestamp
 				# daily one	
 				$time1 = 'Last Access';
 				$time2 = 'Last Access';
-				$fix = 2;
+				$fix = 2; # fix time1
 			}
 			else
 			{
 				# weekly
-				$fix = 2;
+				$fix = 2; # fix time1
 				$time1 = 'Last Access';
 				$time2 = 'index.dat creation time';
 			}
@@ -299,13 +340,15 @@ sub _parse_timestamp
 		$text = 'LEAK record ' if $r{'type'} eq 'LEAK';
 
 		# read the time
+		# Last Modified Time Stamp - 0x08 0x08 8 This is the Last Modified time stamp, in FILETIME format.
+		# Last Accessed Time Stamp - 0x10 0x10 8 This is the Last Accessed time stamp, in FILETIME format
 		$r{'mod_1'} = Log2t::BinRead::read_32($self->{'file'},\$ofs);
 		$r{'mod_2'} = Log2t::BinRead::read_32($self->{'file'},\$ofs);
 		$r{'acc_1'} = Log2t::BinRead::read_32($self->{'file'},\$ofs);
 		$r{'acc_2'} = Log2t::BinRead::read_32($self->{'file'},\$ofs);
 
-		$r{time2} = Log2t::Time::Win2Unix( $r{'mod_1'}, $r{'mod_2'} ); 
-		$r{time1} = Log2t::Time::Win2Unix( $r{'acc_1'}, $r{'acc_2'} ); 
+		$r{time1} = Log2t::Time::Win2Unix( $r{'mod_1'}, $r{'mod_2'} ); 
+		$r{time2} = Log2t::Time::Win2Unix( $r{'acc_1'}, $r{'acc_2'} ); 
 
 		# the rest of the values depends upon the version 
 		$ofs = $self->{'struct'}->{'version'} gt 5 ? $r{'start'} + 0x34: $r{'start'} + 0x38;
@@ -400,6 +443,7 @@ sub _parse_timestamp
 	if( $fix & 0b01 )
 	{
 		# we need to fix time2
+		print STDERR "[IEHISTORY] Adjusting timestamp to local timezone (time2 - $time2)\n";
 		#print STDERR "FIXING EPOCH2: ", $r{'time2'};
 		Log2t::Time::fix_epoch( \$r{'time2'}, $self->{'tz'} );
 		#print STDERR " - now ", $r{'time2'}, "\n";
@@ -407,6 +451,7 @@ sub _parse_timestamp
 	if( $fix & 0b10 )
 	{
 		# we need to fix time1
+		print STDERR "[IEHISTORY] Adjusting timestamp to local timezone (time1 - $time1)\n";
 		#print STDERR "FIXING EPOCH1: ", $r{'time1'};
 		Log2t::Time::fix_epoch( \$r{'time1'}, $self->{'tz'} );
 		#print STDERR " - now ", $r{'time1'}, "\n";
@@ -634,3 +679,27 @@ sub _read_hash_table($)
 }
 
 1;
+
+__END__
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright 2009-2011 Kristinn Gudjonsson (kristinn ( a t ) log2timeline (d o t) net)
+
+  This file is part of log2timeline.
+
+    log2timeline is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    log2timeline is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with log2timeline.  If not, see <http://www.gnu.org/licenses/>.
+
+
+=cut

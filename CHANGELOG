@@ -16,6 +16,8 @@ Version 0.63
 	timezone information is available and if it is it will compare it to the chosen timezone (and change it if they differ).
 	- [LOG2TIMELINE] Small bug in the log2timeline library, causing input modules list that has more than one - sign in it
 	not properly verified.
+	- [IEHISTORY input] Switched time1 and time2, and started to update the module so it adheres to the newly released, not
+	yet complete, style guide.
 
 
 Version 0.62 (23/11/2011)

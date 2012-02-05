@@ -50,10 +50,12 @@
 # This modules is largely built upon the tool analyzeMFT by David Kovar
 # porting done by Kristinn Gudjonsson, with permissions from David.
 #
-# analyzeMFT:
+# David has provided explicit rights to release this port under the
+# GPL license (same license as log2timeline), so his code is now dual-licensed.
+# 
+# The original license of analyzeMFT:
 # 	Copyright (c) 2010 David Kovar. All rights reserved.
 # 	This software is distributed under the Common Public License 1.0
-# and 
 
 
 package Log2t::input::mft;

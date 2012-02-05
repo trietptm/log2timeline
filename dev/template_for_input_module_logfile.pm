@@ -26,6 +26,22 @@
 #    You should have received a copy of the GNU General Public License
 #    along with log2timeline.  If not, see <http://www.gnu.org/licenses/>.
 
+=pod
+
+=head1 NAME
+
+INPUT_MODULE - A small one-line description of the module. 
+
+=head1 DESCRIPTION
+
+Small description of the module, what it's purpose is, how it does stuff, etc.... links to relevant 
+information, such as links that describe the structure, or it's evidentiary values, blog posts
+discussing how to interpret the results, etc....
+
+=head1 METHODS
+
+=cut
+
 package Log2t::input::logfile;
 
 use strict;
@@ -59,12 +75,33 @@ $VERSION = '0.1';
 #
 
 
-#	new
-# this is the constructor for the subroutine.  
-#
-# If this input module uses all of the default values and does not need to define any new value, it is best to 
-# skip implementing it altogether (just remove it), since we are inheriting this subroutine from the SUPER
-# class
+=head2 new
+
+This is the constructor for the subroutine.  
+
+If this input module uses all of the default values and does not need to define any new value, it is best to 
+skip implementing it altogether (just remove it), since we are inheriting this subroutine from the SUPER class
+
+There are some variables that can be set here that affect the flow of information for the module.
+
+An examples of such variables are: $self->{'multi_line'} = defines how the get_time method is called and what
+it should return. The default value is 1, which makes the tool read the file line-by-line, so the method
+get_time is called for each line of the file that is being parsed (and it returns a single object). Otherwise
+it is read as a single call to get_time, which then returns a hash or collection of timestamp objects.
+
+Another variable that can be set, $self->{'type'}, which should be set as file, unless we are dealing with
+a directory.
+
+Since we might be dealing with files that are not readily accessible, such as files within an image file
+(might come in the future), we need to define a tag if we really need to have access to the file (for instance
+in the case of a SQLIite database that might have to be copied so it can be read). This is controlled in the
+variable $self->{'file_access'}, which defaults to 0, or not allow access to the file.
+
+=head3 Returns:
+
+=head4 An instance of the class.
+
+=cut
 sub new()
 {
 	my $class = shift;
@@ -101,16 +138,20 @@ sub new()
 	return $self;
 }
 
-# 	init
-#
-# The init call resets all variables that are global and might mess up with recursive
-# scans.  
-#
-# This subroutine is called after the file has been verified, and before it is parsed.
-#
-# If there is no need for this subroutine to do anything, it is best to skip implementing
-# it altogether (just remove it), since we are inheriting this subroutine from the SUPER
-# class
+=head2 init
+
+The init call resets all variables that are global and might mess up with recursive
+scans.  
+
+This subroutine is called after the file has been verified, and before it is parsed.
+
+If there is no need for this subroutine to do anything, it is best to skip implementing
+it altogether (just remove it), since we are inheriting this subroutine from the SUPER
+class.
+
+The method can be used to create any global variables, or to initialize them.
+
+=cut
 sub init()
 {
 	my $self = shift;
