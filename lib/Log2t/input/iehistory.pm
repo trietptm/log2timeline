@@ -35,6 +35,10 @@ This script reads the index.dat file that contain Internet Explorer history file
 Based partly on the information found in the document: "Forensic Analysis of Internet Explorer 
 Activity Files" written by Keith J Jones (3/19/03 revised 5/6/03)
 
+Another great source of information was the:
+"MSIE Cache File (index.dat) format specification: Analysis of the index.dat file format" 
+written By Joachim Metz.
+
 =head1 METHODS
 
 =cut 
@@ -56,7 +60,16 @@ use vars qw($VERSION @ISA);
 
 $VERSION = '0.8';
 
-# default constructor
+=head2 new
+
+A simple constructor for the input module.
+
+The constructor simply calls the super class and changes one value.
+The value that get's changed is the multi_line attribute, indicating to the 
+main engine that this module parses binary files (as opposed to line-by-line
+log file).
+
+=cut
 sub new()
 {
         my $class = shift;
@@ -117,11 +130,28 @@ sub init
 
 =head2 get_time
 
-This is the main method that actually reads each entry and ...
+A method that returns a reference to a hash that contains all the timestamp objects in the index.dat file.
+
+This method is called once by the main engine and it set's up all the parsing of the module. It's mostly used
+to call other methods that take care of the actual parsing.
+
+It starts by parsing the header information of the index.dat file. The header contains information such as
+the offset to the first hash table.
+
+That offset is used to call the method _read_hash_table to read the first hash table in the index.dat file.
+
+Each hash table has a reference to the location/offset to the next hash table inside the history file.
+After reading the first hash table, we enter a loop that continues until there are no more next entries
+for a hash table. 
+
+Within the loop the next hash table is read and parsed, all the time filling the container, or the hash
+table that contains all the timestamp objects.
+
+When all the hash tables have been parsed we return the container to the main engine for further processing.
 
 =head3 Returns:
 
-=head4 A timestamp object.
+=head4 A container, or a reference to a hash variable that contains all the timestamp objects.
 
 =cut
 sub get_time
@@ -179,18 +209,49 @@ sub get_time
 	return $self->{'container'};
 }
 
-#       get_version
-# A simple subroutine that returns the version number of the format file
-# There shouldn't be any need to change this routine, it serves its purpose 
-# just the way it is defined right now.
-#
-# @return A version number
+=head2 get_version
+
+A method that returns the version number.
+
+A simple subroutine that returns the version number of the format file
+There shouldn't be any need to change this routine, it serves its purpose 
+just the way it is defined right now.
+
+=head3 Returns:
+
+=head4 A string that contains the version number of the module.
+
+=cut#
 sub get_version()
 {
         return $VERSION;
 }
 
 
+
+=head2 _parse_timestamp
+
+A method that parses a URL record from an index.dat file.
+
+This method parses the URL record from the history file.
+
+The format of an URL record is the following:
+Offset	Size	Value	Description
+0	4
+4	4
+8	8
+16	8
+24	4
+28	4
+32	4
+36	4
+40	4
+44	4
+48	4	
+52	4
+56	4
+
+=cut
 
 #       _parse_timestamp
 # This is the main "juice" of the format file.  It reads the index variable that 
@@ -292,15 +353,15 @@ sub _parse_timestamp
 			{
 				# weekly
 				$fix = 2; # fix time1
-				$time1 = 'Last Access';
+				$time1 = 'Last Visited';
 				$time2 = 'index.dat creation time';
 			}
 		}
 		else
 		{
 			# a master
-			$time1 = 'Last Access';
-			$time2 = 'Last Access'
+			$time1 = 'Last Visited';
+			$time2 = 'Last Visited'
 		}
 	}
 	elsif( ${$self->{'name'}} =~ m/Cookies/ )
@@ -312,8 +373,8 @@ sub _parse_timestamp
 	elsif( ${$self->{'name'}} =~ m/Temporary/ )
 	{
 		# we have a cache
-		$time1 = 'Content saved to drive';
-		$time2 = 'Content viewed';
+		$time1 = 'Server Modified';
+		$time2 = 'Client Last Accessed';
 	}
 	else
 	{
