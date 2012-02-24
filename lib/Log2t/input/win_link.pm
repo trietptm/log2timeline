@@ -1,5 +1,5 @@
 #################################################################################################
-#		WIN_LINK
+#    WIN_LINK
 #################################################################################################
 # this script reads a Windows shortcut file (lnk) and produces a bodyfile containing the 
 # timeline information found inside it.  The timeline information can be used directly with 
@@ -8,7 +8,7 @@
 #
 # The structure of a Windows LNK file has been reversed engineered by Jesse Hager, a document
 # that was used to fix and create this parser
-# 	http://www.i2s-lab.com/Papers/The_Windows_Shortcut_File_Format.pdf
+#   http://www.i2s-lab.com/Papers/The_Windows_Shortcut_File_Format.pdf
 # 
 # Since H. Carvey already created a Perl script to parse shortcut files there was no need
 # to re-create it.  So this script is more or less using the script lslnk.pl, originally
@@ -81,7 +81,7 @@ my %vol_type;
 # @return A string containing a description of the format file's functionality
 sub get_description()
 {
-	return "Parse the content of a Windows shortcut file (or a link file)"; 
+  return "Parse the content of a Windows shortcut file (or a link file)"; 
 }
 
 #       get_version
@@ -105,24 +105,24 @@ sub new()
         # bless the class ;)
         my $self = $class->SUPER::new();
 
-	# indicate this is a binary file
+  # indicate this is a binary file
         $self->{'multi_line'} = 0;
 
-	# variable for encoding
-	$self->{'encoding'} = 'UTF-8';
+  # variable for encoding
+  $self->{'encoding'} = 'UTF-8';
 
-	bless($self,$class);
+  bless($self,$class);
 
-	# begin with original description from H. Carvey
-#	%flags = (0x01 => "Shell Item ID List exists",
-#	           0x02 => "Shortcut points to a file or directory",
-#	           0x04 => "The shortcut has a descriptive string",
-#	           0x08 => "The shortcut has a relative path string",
-#	           0x10 => "The shortcut has working directory",
-#	           0x20 => "The shortcut has command line arguments",
-#	           0x40 => "The shortcut has a custom icon");
+  # begin with original description from H. Carvey
+#  %flags = (0x01 => "Shell Item ID List exists",
+#             0x02 => "Shortcut points to a file or directory",
+#             0x04 => "The shortcut has a descriptive string",
+#             0x08 => "The shortcut has a relative path string",
+#             0x10 => "The shortcut has working directory",
+#             0x20 => "The shortcut has command line arguments",
+#             0x40 => "The shortcut has a custom icon");
 #
-#	%fileattr = (0x01 => "Target is read only",
+#  %fileattr = (0x01 => "Target is read only",
 #                0x02 => "Target is hidden",
 #                0x04 => "Target is a system file",
 #                0x08 => "Target is a volume label",
@@ -136,7 +136,7 @@ sub new()
 #                0x800 => "Target is compressed",
 #                0x1000 => "Target is offline");
 #
-#	%showwnd = (0 => "SW_HIDE",
+#  %showwnd = (0 => "SW_HIDE",
 #               1 => "SW_NORMAL",
 #               2 => "SW_SHOWMINIMIZED",
 #               3 => "SW_SHOWMAXIMIZED",
@@ -148,7 +148,7 @@ sub new()
 #               9 => "SW_RESTORE",
 #               10 => "SHOWDEFAULT");
 #
-#	%vol_type = (0 => "Unknown",
+#  %vol_type = (0 => "Unknown",
 #                1 => "No root directory",
 #                2 => "Removable",
 #                3 => "Fixed",
@@ -156,16 +156,16 @@ sub new()
 #                5 => "CD-ROM",
 #                6 => "Ram drive");
 
-	# and now move to the abbreviated version (to fit in one line)
-	%flags = (0x01 => "SI ID exists",
-	           0x02 => "points to a file or dir",
-	           0x04 => "a descr. str",
-	           0x08 => "a rel. path str",
-	           0x10 => "working dir.",
-	           0x20 => "cmd line args",
-	           0x40 => "custom icon");
+  # and now move to the abbreviated version (to fit in one line)
+  %flags = (0x01 => "SI ID exists",
+             0x02 => "points to a file or dir",
+             0x04 => "a descr. str",
+             0x08 => "a rel. path str",
+             0x10 => "working dir.",
+             0x20 => "cmd line args",
+             0x40 => "custom icon");
 
-	%fileattr = (0x01 => "read only",
+  %fileattr = (0x01 => "read only",
                 0x02 => "hidden",
                 0x04 => "system file",
                 0x08 => "volume label",
@@ -179,7 +179,7 @@ sub new()
                 0x800 => "compressed",
                 0x1000 => "is offline");
 
-	%showwnd = (0 => "SW_HIDE",
+  %showwnd = (0 => "SW_HIDE",
                1 => "SW_NORMAL",
                2 => "SW_SHOWMINIMIZED",
                3 => "SW_SHOWMAXIMIZED",
@@ -191,7 +191,7 @@ sub new()
                9 => "SW_RESTORE",
                10 => "SHOWDEFAULT");
 
-	%vol_type = (0 => "Unknown",
+  %vol_type = (0 => "Unknown",
                 1 => "No root directory",
                 2 => "Removable",
                 3 => "Fixed",
@@ -199,7 +199,7 @@ sub new()
                 5 => "CD-ROM",
                 6 => "Ram drive");
 
-	return $self;
+  return $self;
 }
 
 #       get_time
@@ -213,191 +213,191 @@ sub new()
 
 sub get_time()
 {
-	my $self = shift;
+  my $self = shift;
 
-	# the timestamp object
-	my %t_line;
-	my %container;
-	my $flag = '';
-	my $attr = '';
-	my $show = '';
-	my $loc = 'stored in a unknown location';
-	my $path = '';
-	my $extra = '';
-	my $text;
-	my $line;
-	my %ret;
-	my $fh = $self->{'file'};
+  # the timestamp object
+  my %t_line;
+  my %container;
+  my $flag = '';
+  my $attr = '';
+  my $show = '';
+  my $loc = 'stored in a unknown location';
+  my $path = '';
+  my $extra = '';
+  my $text;
+  my $line;
+  my %ret;
+  my $fh = $self->{'file'};
 
-	print STDERR "[WIN_LNK] Starting to read time.\n" if $self->{'debug'};
+  print STDERR "[WIN_LNK] Starting to read time.\n" if $self->{'debug'};
 
-	# get some information about the file itself
-	my ($inode,$size,$atime,$mtime,$ctime) = (stat(${$self->{'name'}}))[1,7,8,9,10];
+  # get some information about the file itself
+  my ($inode,$size,$atime,$mtime,$ctime) = (stat(${$self->{'name'}}))[1,7,8,9,10];
 
-	# Setup some variables 
-	my $record;
-	my %hdr;
-	my $ofs = 0;
+  # Setup some variables 
+  my $record;
+  my %hdr;
+  my $ofs = 0;
 
-	# Get info about the file
+  # Get info about the file
 
-	# Open file in binary mode
-	seek($fh,$ofs,0);
-	read($fh,$record,0x4c);
-	if (unpack("Vx72",$record) == 0x4c) {
-		%hdr = _parseHeader($record);
-		# fetch summary info from header
-		foreach my $i (keys %flags) {
-			if ($hdr{flags} & $i)
-			{
-				if( $flag eq '' )
-				{
-					$flag = $flags{$i};
-				}
-				else
-			{
-					$flag = $flag . ',' . $flags{$i};
-				}
-			}
-		}
-		if (scalar keys %fileattr > 0) {
-			foreach my $i (keys %fileattr) {
-				if ($hdr{attr} & $i)
-				{
-					if( $attr eq '' )
-					{
-						$attr = $fileattr{$i};
-					} else {
-						$attr = $attr . ',' .  $fileattr{$i};
-					}
-				}
-			}
-		}
-		foreach my $i (keys %showwnd) {
-			if ($hdr{showwnd} & $i)
-			{
-				if( $show eq '' )
-				{
-					$show = $showwnd{$i};
-				} else {
-					$show = $show . ',' . $showwnd{$i};
-				}
-			} 
-		}
-		
-		$ofs += 0x4c;
-		# Check to see if Shell Item ID List exists.  If so, get the length
-		# and skip it.	
-		if ($hdr{flags} & 0x01) {
-			#		print "Shell Item ID List exists.\n";
-			seek($fh,$ofs,0);
-			read($fh,$record,2);
-			# Note: add 2 to the offset as the Shell Item ID list length is not included in the
-			#       structure itself
-			$ofs += unpack("v",$record) + 2;
-		}
-	
-		# Check File Location Info
-		if ($hdr{flags} & 0x02) {
-			seek($fh,$ofs,0);
-			read($fh,$record,4);
-			my $l = unpack("V",$record);
-			if ($l > 0) {
-				seek($fh,$ofs,0);
-				read($fh,$record,0x1c);
-				my %li = _fileLocInfo($record);
-				
-				if ($li{flags} & 0x1) {
-					# Get the local volume table
-					my %lvt = _localVolTable($ofs + $li{vol_ofs}, $fh);
-					# modifications made by Kristinn
-					if( $lvt{name} eq 0x00 )
-					{
-						$loc = 'stored on a local vol (' . $lvt{name} . ') type ' . $vol_type{$lvt{type}} . ', SN ' . sprintf "0x%x",$lvt{vol_sn};
-					} 
-					else
-					{
-						$loc = 'stored on a local vol type - ' . $vol_type{$lvt{type}} . ', SN ' . sprintf "0x%x",$lvt{vol_sn};
-					}
-					#$loc = 'stored on a local vol (' . $lvt{name} . ') type ' . $vol_type{$lvt{type}} . ', SN ' . $lvt{vol_sn};
-					#$loc = 'stored on a local vol (' . $lvt{name} . ') type ' . $vol_type{$lvt{type}} . ', SN 0x' . unpack ( 'H*', $lvt{vol_sn});
-					#printf "Volume SN   = 0x%x\n",$lvt{vol_sn};
-				}
-			
-				if ($li{flags} & 0x2) {
-					# Get the network volume table				
-					my %nvt = _netVolTable($ofs + $li{network_ofs}, $fh);
-					if( $nvt{name} eq 0x00 )
-					{
-						$loc = 'stored on a net. share. ';
-					}
-					else
-					{
-						$line = $nvt{name};
-						$line =~ s/\00//g;
+  # Open file in binary mode
+  seek($fh,$ofs,0);
+  read($fh,$record,0x4c);
+  if (unpack("Vx72",$record) == 0x4c) {
+    %hdr = _parseHeader($record);
+    # fetch summary info from header
+    foreach my $i (keys %flags) {
+      if ($hdr{flags} & $i)
+      {
+        if( $flag eq '' )
+        {
+          $flag = $flags{$i};
+        }
+        else
+      {
+          $flag = $flag . ',' . $flags{$i};
+        }
+      }
+    }
+    if (scalar keys %fileattr > 0) {
+      foreach my $i (keys %fileattr) {
+        if ($hdr{attr} & $i)
+        {
+          if( $attr eq '' )
+          {
+            $attr = $fileattr{$i};
+          } else {
+            $attr = $attr . ',' .  $fileattr{$i};
+          }
+        }
+      }
+    }
+    foreach my $i (keys %showwnd) {
+      if ($hdr{showwnd} & $i)
+      {
+        if( $show eq '' )
+        {
+          $show = $showwnd{$i};
+        } else {
+          $show = $show . ',' . $showwnd{$i};
+        }
+      } 
+    }
+    
+    $ofs += 0x4c;
+    # Check to see if Shell Item ID List exists.  If so, get the length
+    # and skip it.  
+    if ($hdr{flags} & 0x01) {
+      #    print "Shell Item ID List exists.\n";
+      seek($fh,$ofs,0);
+      read($fh,$record,2);
+      # Note: add 2 to the offset as the Shell Item ID list length is not included in the
+      #       structure itself
+      $ofs += unpack("v",$record) + 2;
+    }
+  
+    # Check File Location Info
+    if ($hdr{flags} & 0x02) {
+      seek($fh,$ofs,0);
+      read($fh,$record,4);
+      my $l = unpack("V",$record);
+      if ($l > 0) {
+        seek($fh,$ofs,0);
+        read($fh,$record,0x1c);
+        my %li = _fileLocInfo($record);
+        
+        if ($li{flags} & 0x1) {
+          # Get the local volume table
+          my %lvt = _localVolTable($ofs + $li{vol_ofs}, $fh);
+          # modifications made by Kristinn
+          if( $lvt{name} eq 0x00 )
+          {
+            $loc = 'stored on a local vol (' . $lvt{name} . ') type ' . $vol_type{$lvt{type}} . ', SN ' . sprintf "0x%x",$lvt{vol_sn};
+          } 
+          else
+          {
+            $loc = 'stored on a local vol type - ' . $vol_type{$lvt{type}} . ', SN ' . sprintf "0x%x",$lvt{vol_sn};
+          }
+          #$loc = 'stored on a local vol (' . $lvt{name} . ') type ' . $vol_type{$lvt{type}} . ', SN ' . $lvt{vol_sn};
+          #$loc = 'stored on a local vol (' . $lvt{name} . ') type ' . $vol_type{$lvt{type}} . ', SN 0x' . unpack ( 'H*', $lvt{vol_sn});
+          #printf "Volume SN   = 0x%x\n",$lvt{vol_sn};
+        }
+      
+        if ($li{flags} & 0x2) {
+          # Get the network volume table        
+          my %nvt = _netVolTable($ofs + $li{network_ofs}, $fh);
+          if( $nvt{name} eq 0x00 )
+          {
+            $loc = 'stored on a net. share. ';
+          }
+          else
+          {
+            $line = $nvt{name};
+            $line =~ s/\00//g;
 
-						$loc = 'stored on a net. share: ' . $line;
-					}
-				} 
-				if ($li{base_ofs} > 0) {
-					$path = _getBasePathName($ofs + $li{base_ofs}, $li{len}+$ofs, $fh );
+            $loc = 'stored on a net. share: ' . $line;
+          }
+        } 
+        if ($li{base_ofs} > 0) {
+          $path = _getBasePathName($ofs + $li{base_ofs}, $li{len}+$ofs, $fh );
 
-					# increment the offset (read the name part)
-					$ofs = $ofs + $li{len};
+          # increment the offset (read the name part)
+          $ofs = $ofs + $li{len};
 
-					# check to see if there are extra strings
-					if( $hdr{flags} & 0x04 )
-					{
-						# there is a description flag set
-						%ret = _getString( $ofs, $fh );
-						$ofs = $ret{ofs};
-	
-						$extra .= 'Desc: ' . $ret{line} . ' ';
-					}
-					if( $hdr{flags} & 0x08 )
-					{
-						# there is a relative path string
-						%ret = _getString( $ofs, $fh );
-						$ofs = $ret{ofs};
+          # check to see if there are extra strings
+          if( $hdr{flags} & 0x04 )
+          {
+            # there is a description flag set
+            %ret = _getString( $ofs, $fh );
+            $ofs = $ret{ofs};
+  
+            $extra .= 'Desc: ' . $ret{line} . ' ';
+          }
+          if( $hdr{flags} & 0x08 )
+          {
+            # there is a relative path string
+            %ret = _getString( $ofs, $fh );
+            $ofs = $ret{ofs};
 
-						$extra .= 'Rel path: ' . $ret{line} . ' ';
-					}
-					if( $hdr{flags} & 0x10 )
-					{
-						# there is a working directory
-						%ret = _getString( $ofs, $fh );
-						$ofs = $ret{ofs};
+            $extra .= 'Rel path: ' . $ret{line} . ' ';
+          }
+          if( $hdr{flags} & 0x10 )
+          {
+            # there is a working directory
+            %ret = _getString( $ofs, $fh );
+            $ofs = $ret{ofs};
 
-						$extra .= 'Working dir: ' . $ret{line} . ' ';
-					}
-					if( $hdr{flags} & 0x20 )
-					{
-						# there are some cmd line arguments
-						%ret = _getString( $ofs, $fh );
-						$ofs = $ret{ofs};
+            $extra .= 'Working dir: ' . $ret{line} . ' ';
+          }
+          if( $hdr{flags} & 0x20 )
+          {
+            # there are some cmd line arguments
+            %ret = _getString( $ofs, $fh );
+            $ofs = $ret{ofs};
 
-						$extra .= 'CMD arg: ' . $ret{line} . ' ';
-					}
+            $extra .= 'CMD arg: ' . $ret{line} . ' ';
+          }
 
-				}
-			}
-		
-		}
-		else
-		{
-			$path = "Shortcut file does not point to a file";
-		} 	
+        }
+      }
+    
+    }
+    else
+    {
+      $path = "Shortcut file does not point to a file";
+    }   
 
-	}
-	else {
-		print STDERR "[WIN_LNK] " . ${$self->{'name'}} . " does not have a valid shortcut header.\n";
-		return \%t_line;
-	}
+  }
+  else {
+    print STDERR "[WIN_LNK] " . ${$self->{'name'}} . " does not have a valid shortcut header.\n";
+    return \%t_line;
+  }
 
-	$text = encode( $self->{'encoding'}, $path ) . ' <-' . ${$self->{'name'}} . ', which is ' . encode( $self->{'encoding'}, $loc ). ' - ' . $extra . ' [' . $flag . '] - ' . $attr; 
-	#$text = '[LNK] ' . $file  . ' points to {' . encode( $self->{'encoding'}, $path ) . '}, which is ' . encode( $self->{'encoding'}, $loc ). ' - ' . $extra . ' [' . $flag . '] - ' . $attr; 
-	#$text = '[LNK] ' . $file . ' points to {' . $path . '}, which is ' . $loc . ' [' . $flag . '] - ' . $attr . ' - ' . $show; 
-	
+  $text = encode( $self->{'encoding'}, $path ) . ' <-' . ${$self->{'name'}} . ', which is ' . encode( $self->{'encoding'}, $loc ). ' - ' . $extra . ' [' . $flag . '] - ' . $attr; 
+  #$text = '[LNK] ' . $file  . ' points to {' . encode( $self->{'encoding'}, $path ) . '}, which is ' . encode( $self->{'encoding'}, $loc ). ' - ' . $extra . ' [' . $flag . '] - ' . $attr; 
+  #$text = '[LNK] ' . $file . ' points to {' . $path . '}, which is ' . $loc . ' [' . $flag . '] - ' . $attr . ' - ' . $show; 
+  
         # content of array t_line ([optional])
         # %t_line {        #       time
         #               index
@@ -424,10 +424,10 @@ sub get_time()
         # create the t_line variable
         %t_line = (
                 'time' => { 
-			0 => { 'value' => $hdr{atime}, 'type' => 'Access', 'legacy' => 2 },
-			1 => { 'value' => $hdr{mtime}, 'type' => 'Modified', 'legacy' => 1 },
-			2 => { 'value' => $hdr{ctime}, 'type' => 'Created', 'legacy' => 12 },
-		},
+      0 => { 'value' => $hdr{atime}, 'type' => 'Access', 'legacy' => 2 },
+      1 => { 'value' => $hdr{mtime}, 'type' => 'Modified', 'legacy' => 1 },
+      2 => { 'value' => $hdr{ctime}, 'type' => 'Created', 'legacy' => 12 },
+    },
                 'desc' => $text,
                 'short' => encode( $self->{'encoding'}, $path ),
                 'source' => 'LNK',
@@ -436,9 +436,9 @@ sub get_time()
                 'extra' => { 'inode' => $inode, 'size' => $size  }
         );
 
-	$container{1} = \%t_line;
+  $container{1} = \%t_line;
 
-	return \%container;
+  return \%container;
 }
 
 #       get_help
@@ -447,15 +447,15 @@ sub get_time()
 # @return A string containing a help file for this format file
 sub get_help()
 {
-	return "This format file parses the content of a Windows shortcut file (LNK) 
+  return "This format file parses the content of a Windows shortcut file (LNK) 
 and produces a single line (body file).
 
 This code is build originally using code from H. Carvey (lslnk.pl) but has since then been
 modified to correct errors and add additional context 
 
 This format file accepts the following parameters 
-	--host HOST
-	-u|--user USERNAME\n";
+  --host HOST
+  -u|--user USERNAME\n";
 
 }
 
@@ -467,135 +467,135 @@ This format file accepts the following parameters
 #       string is the error message (if the file is not correctly formed)
 sub verify
 {
-	# define an array to keep
-	my %return;
-	my $temp;
+  # define an array to keep
+  my %return;
+  my $temp;
 
-	my $self = shift;
-	my $fh = $self->{'file'};
+  my $self = shift;
+  my $fh = $self->{'file'};
 
-	return \%return unless -f ${$self->{'name'}};
+  return \%return unless -f ${$self->{'name'}};
 
-	# default values
-	$return{'success'} = 1;		# start by assumming we have a link file
-	$return{'msg'} = 'success';
-	
-	my %magic = (
-		'0'	=> 76,
-		'2'	=> 0,
-		'4'	=> 5121,
-		'6'	=> 2,
-		'8'	=> 0,
-		'10'	=> 0,
-		'12'	=> 192
-	);
-	my $ofs;
+  # default values
+  $return{'success'} = 1;    # start by assumming we have a link file
+  $return{'msg'} = 'success';
+  
+  my %magic = (
+    '0'  => 76,
+    '2'  => 0,
+    '4'  => 5121,
+    '6'  => 2,
+    '8'  => 0,
+    '10'  => 0,
+    '12'  => 192
+  );
+  my $ofs;
 
-	# open the file (at least try to open it)
-	eval
-	{
-		for( $ofs = 0; $ofs < 13; $ofs+=2 )
-		{
-			next unless $return{'success'};
+  # open the file (at least try to open it)
+  eval
+  {
+    for( $ofs = 0; $ofs < 13; $ofs+=2 )
+    {
+      next unless $return{'success'};
 
-			seek($fh,$ofs,0);
-			read($fh,$temp,2);
+      seek($fh,$ofs,0);
+      read($fh,$temp,2);
 
-			$return{'success'} = 0 if unpack("v",$temp) ne $magic{$ofs};
-		}
+      $return{'success'} = 0 if unpack("v",$temp) ne $magic{$ofs};
+    }
 
-		if( ! $return{'success'} )
-		{
-			$return{'msg'} = "Wrong magic value in file.  Is this really a shortcut (LNK) file?\n";
-		}
+    if( ! $return{'success'} )
+    {
+      $return{'msg'} = "Wrong magic value in file.  Is this really a shortcut (LNK) file?\n";
+    }
 
-	};
-	if ( $@ )
-	{
-		$return{'success'} = 0;
-		$return{'msg'} = "Unable to open file";
-	}
+  };
+  if ( $@ )
+  {
+    $return{'success'} = 0;
+    $return{'msg'} = "Unable to open file";
+  }
 
-	return \%return;
+  return \%return;
 }
 
 # a function that reads a Unicode string from the shortcut,
 # examples of such a string are:
-# 	description string
-#	relative path string
-#	working directory
-#	command line string
+#   description string
+#  relative path string
+#  working directory
+#  command line string
 sub _getString {
-	my $ofs = shift;
-	my $fh = shift;
-	my $data;
-	my @char;
-	my $line;
-	my %return;
+  my $ofs = shift;
+  my $fh = shift;
+  my $data;
+  my @char;
+  my $line;
+  my %return;
 
-	my $length;
-	my $i;
+  my $length;
+  my $i;
 
-	# read the total length of string
-	seek($fh,$ofs,0);
-	read($fh,$data,2);
-	$length = unpack( "v", $data );
-	# increment the offset (since the length has been read)
-	$ofs = $ofs+2;
+  # read the total length of string
+  seek($fh,$ofs,0);
+  read($fh,$data,2);
+  $length = unpack( "v", $data );
+  # increment the offset (since the length has been read)
+  $ofs = $ofs+2;
 
-	# get the returning offset
-	$return{ofs} = $ofs + 2*$length;
+  # get the returning offset
+  $return{ofs} = $ofs + 2*$length;
 
-	# read the entire name
-	for( $i=$ofs; $i < $length*2+$ofs; $i=$i+2 )
-	{
-		seek($fh,$i,0);
-		read($fh,$data,2);
-		push(@char,$data);
-	}
+  # read the entire name
+  for( $i=$ofs; $i < $length*2+$ofs; $i=$i+2 )
+  {
+    seek($fh,$i,0);
+    read($fh,$data,2);
+    push(@char,$data);
+  }
 
-	# fix the end line, remove control characters, etc.
-	$line = join('',@char);
-	$line =~ s/\00//g;
-	$line =~ s/\n/  /g;
-	$line =~ s/[[:cntrl:]]/ /g;;
+  # fix the end line, remove control characters, etc.
+  $line = join('',@char);
+  $line =~ s/\00//g;
+  $line =~ s/\n/  /g;
+  $line =~ s/[[:cntrl:]]/ /g;;
 
-	$return{line} =  $line;
-	
-	return %return;
-	
+  $return{line} =  $line;
+  
+  return %return;
+  
 }
 
 # originally a function from H. Carvey, but modified to read ASCII strings,
 # since the name is in ASCII, not Unicode, and adding a length variable instead
 # of just blindly read to the end (and removing control characters from name)
 sub _getBasePathName {
-	my $ofs = shift;
-	my $end_ofs = shift;
-	my $fh = shift;
-	my $data;
-	my @char;
-	my $line;
+  my $ofs = shift;
+  my $end_ofs = shift;
+  my $fh = shift;
+  my $data;
+  my @char;
+  my $line;
 
-	# the path name is an ASCII name 
-	while( $ofs < $end_ofs ) {
-		seek($fh,$ofs,0);
-		read($fh,$data,1);
+  # the path name is an ASCII name 
+  while( $ofs < $end_ofs ) {
+    seek($fh,$ofs,0);
+    read($fh,$data,1);
 
-		$ofs = $end_ofs if $data eq "\0";
-		
-		next unless $ofs ne $end_ofs;
-		push(@char,$data);
-		$ofs ++;
-	}
+    $ofs = $end_ofs if $data eq "\0";
+    
+    next unless $ofs ne $end_ofs;
+    push(@char,$data);
+    $ofs ++;
+  }
 
-	# fix the end line, remove control characters, etc.
-	$line = join('',@char);
-	$line =~ s/\00//g;
-	$line =~ s/\n/  /g;
-	$line =~ s/[[:cntrl:]]/ /g;;
+  # fix the end line, remove control characters, etc.
+  $line = join('',@char);
+  $line =~ s/\00//g;
+  $line =~ s/\n/  /g;
+  $line =~ s/[[:cntrl:]]/ /g;;
 
-	return $line;
+  return $line;
 }
 
 # the following subroutines are all taken from lslnk.pl from H. Carvey
@@ -603,60 +603,60 @@ sub _getBasePathName {
 # that was modified considerably)
 
 sub _parseHeader {
-	my $data = shift;
-	my %hdr;
-	my @hd = unpack("Vx16V12x8",$data);
-	$hdr{id}       = $hd[0];
-	$hdr{flags}    = $hd[1];
-	$hdr{attr}     = $hd[2];
-	$hdr{ctime}    = Log2t::Time::Win2Unix($hd[3],$hd[4]);
-	$hdr{atime}    = Log2t::Time::Win2Unix($hd[5],$hd[6]);
-	$hdr{mtime}    = Log2t::Time::Win2Unix($hd[7],$hd[8]);
-	$hdr{length}   = $hd[9];
-	$hdr{icon_num} = $hd[10];
-	$hdr{showwnd}  = $hd[11];
-	$hdr{hotkey}   = $hd[12];
-	undef @hd;
-	return %hdr;
+  my $data = shift;
+  my %hdr;
+  my @hd = unpack("Vx16V12x8",$data);
+  $hdr{id}       = $hd[0];
+  $hdr{flags}    = $hd[1];
+  $hdr{attr}     = $hd[2];
+  $hdr{ctime}    = Log2t::Time::Win2Unix($hd[3],$hd[4]);
+  $hdr{atime}    = Log2t::Time::Win2Unix($hd[5],$hd[6]);
+  $hdr{mtime}    = Log2t::Time::Win2Unix($hd[7],$hd[8]);
+  $hdr{length}   = $hd[9];
+  $hdr{icon_num} = $hd[10];
+  $hdr{showwnd}  = $hd[11];
+  $hdr{hotkey}   = $hd[12];
+  undef @hd;
+  return %hdr;
 }
 
 sub _fileLocInfo {
-	my $data = $_[0];
-	my %fl;
-	($fl{len},$fl{ptr},$fl{flags},$fl{vol_ofs},$fl{base_ofs},$fl{network_ofs},
-	 $fl{path_ofs}) = unpack("V7",$data);
-	return %fl;
+  my $data = $_[0];
+  my %fl;
+  ($fl{len},$fl{ptr},$fl{flags},$fl{vol_ofs},$fl{base_ofs},$fl{network_ofs},
+   $fl{path_ofs}) = unpack("V7",$data);
+  return %fl;
 }
 
 sub _localVolTable {
-	my $offset = shift;
-	my $fh = shift;
-	my $data;
-	my %lv;
-	seek($fh,$offset,0);
-	read($fh,$data,0x10);
-	($lv{len},$lv{type},$lv{vol_sn},$lv{ofs}) = unpack("V4",$data);
-	seek($fh,$offset + $lv{ofs},0);
-	read($fh,$data, $lv{len} - 0x10);
-	$lv{name} = $data;
-	return %lv;
+  my $offset = shift;
+  my $fh = shift;
+  my $data;
+  my %lv;
+  seek($fh,$offset,0);
+  read($fh,$data,0x10);
+  ($lv{len},$lv{type},$lv{vol_sn},$lv{ofs}) = unpack("V4",$data);
+  seek($fh,$offset + $lv{ofs},0);
+  read($fh,$data, $lv{len} - 0x10);
+  $lv{name} = $data;
+  return %lv;
 }
 
 
 sub _netVolTable {
-	my $offset = shift;
-	my $fh = shift;
-	my $data;
-	my %nv;
-	seek($fh,$offset,0);
-	read($fh,$data,0x14);
-	($nv{len},$nv{ofs}) = unpack("Vx4Vx8",$data);
-#	printf "Length of the network volume table = 0x%x\n",$nv{len};
-#	printf "Offset to the network share name   = 0x%x\n",$nv{ofs};
-	seek($fh,$offset + $nv{ofs},0);
-	read($fh,$data, $nv{len} - 0x14);
-	$nv{name} = $data;
-	return %nv;
+  my $offset = shift;
+  my $fh = shift;
+  my $data;
+  my %nv;
+  seek($fh,$offset,0);
+  read($fh,$data,0x14);
+  ($nv{len},$nv{ofs}) = unpack("Vx4Vx8",$data);
+#  printf "Length of the network volume table = 0x%x\n",$nv{len};
+#  printf "Offset to the network share name   = 0x%x\n",$nv{ofs};
+  seek($fh,$offset + $nv{ofs},0);
+  read($fh,$data, $nv{len} - 0x14);
+  $nv{name} = $data;
+  return %nv;
 }
 
 1;

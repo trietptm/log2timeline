@@ -1,5 +1,5 @@
 #################################################################################################
-#		SOL / LSO
+#    SOL / LSO
 #################################################################################################
 # This script is a part of the log2timeline framework for timeline creation and analysis.
 # This script implements an input module, or a parser capable of parsing a single log file (or 
@@ -10,14 +10,14 @@
 # files are usually called Flash cookies, as they often contain the same content as regular cookies.
 #
 # Information about the structure of LSO can be found here:
-# 	http://sourceforge.net/docman/display_doc.php?docid=27026&group_id=131628
-#			(site available through Google Cache)
+#   http://sourceforge.net/docman/display_doc.php?docid=27026&group_id=131628
+#      (site available through Google Cache)
 #
 # Information from Adobe about how to create a tracking Flash banner can be found here:
-# 	http://www.adobe.com/resources/richmedia/tracking/designers_guide/
+#   http://www.adobe.com/resources/richmedia/tracking/designers_guide/
 #
 # And information from Adobe can be found here:
-# 	http://www.adobe.com/products/flashplayer/articles/lso/
+#   http://www.adobe.com/products/flashplayer/articles/lso/
 #
 # Information about version 10.1 of the Flash Player and how it will implement
 # privacy browsing, 
@@ -28,8 +28,8 @@
 # from the project, just the layout and structure of the LSO files.
 # 
 # The files read are:
-#	datatypes/Types.java		- for the available data types
-#	fileformat/TCSOFileReader.java	- to analyse the structure of each data type 
+#  datatypes/Types.java    - for the available data types
+#  fileformat/TCSOFileReader.java  - to analyse the structure of each data type 
 # 
 # Author: Kristinn Gudjonsson
 # Version : 0.5
@@ -59,9 +59,9 @@ package Log2t::input::sol;
 use strict;
 use Log2t::base::input; # the SUPER class or parent
 use Log2t::Common qw/LITTLE_E BIG_E/;
-use Log2t::Time;	# to manipulate time
-#use Log2t::Numbers;	# to manipulate numbers
-use Log2t::BinRead;	# methods to read binary files
+use Log2t::Time;  # to manipulate time
+#use Log2t::Numbers;  # to manipulate numbers
+use Log2t::BinRead;  # methods to read binary files
 
 # for reading and parsing the XML schema
 use XML::LibXML;
@@ -81,8 +81,8 @@ my $file;
 my $loaded;
 my $path;
 
-my %date;	# a hash that stores all available dates
-my $d_index;	# an index to that hash
+my %date;  # a hash that stores all available dates
+my $d_index;  # an index to that hash
 
 # the constructor
 sub new()
@@ -107,7 +107,7 @@ sub new()
 # @return A version number
 sub get_version()
 {
-	return $VERSION;
+  return $VERSION;
 }
 
 #       get_description
@@ -118,10 +118,10 @@ sub get_version()
 # @return A string containing a description of the format file's functionality
 sub get_description()
 {
-	return "Parse the content of a .sol (LSO) or a Flash cookie file"; 
+  return "Parse the content of a .sol (LSO) or a Flash cookie file"; 
 }
 
-#	get_time
+#  get_time
 #
 # The purpose of this subfunction is to prepare the log file or artifact for parsing
 # Usually this involves just opening the file (if plain text) or otherwise building a 
@@ -136,108 +136,108 @@ sub get_description()
 #       successful or not.
 sub get_time
 {
-	# read the paramaters passed to the script
-	my $self = shift;
+  # read the paramaters passed to the script
+  my $self = shift;
 
-	# default values
-	my $ofs = 0;
-	my $temp;
-	my $index;
-	$self->{'cont_index'} = 0;	# counter to the container
+  # default values
+  my $ofs = 0;
+  my $temp;
+  my $index;
+  $self->{'cont_index'} = 0;  # counter to the container
 
-	$d_index = 0;	# set the date index to zero
+  $d_index = 0;  # set the date index to zero
 
-	# default values
+  # default values
 
-	# indication that the line has not been read
-	$loaded = 0;
+  # indication that the line has not been read
+  $loaded = 0;
 
-	# read the file's content
-	$ofs = 16; # skip the header (already verified)
-	
-	# read the first part of the file
-	$temp = Log2t::BinRead::read_16( $self->{'file'},\$ofs );
+  # read the file's content
+  $ofs = 16; # skip the header (already verified)
+  
+  # read the first part of the file
+  $temp = Log2t::BinRead::read_16( $self->{'file'},\$ofs );
 
-	# construct a hash that contains all the needed information about the
-	# the LSO file
-	%data = (
-		'size' => $temp, 
-		'name' => Log2t::BinRead::read_ascii( $self->{'file'}, \$ofs, $temp ),
-		'nothing' => Log2t::BinRead::read_32( $self->{'file'},\$ofs ),
-	);
-	
-	# initialize the index variable
-	$index = 0;
+  # construct a hash that contains all the needed information about the
+  # the LSO file
+  %data = (
+    'size' => $temp, 
+    'name' => Log2t::BinRead::read_ascii( $self->{'file'}, \$ofs, $temp ),
+    'nothing' => Log2t::BinRead::read_32( $self->{'file'},\$ofs ),
+  );
+  
+  # initialize the index variable
+  $index = 0;
 
-	# now we need to read in the variable part
+  # now we need to read in the variable part
 
-	# read in the variables
-	my $tag = 1;
+  # read in the variables
+  my $tag = 1;
 
-	# read until we have reached the end of the flash cookie
-	while( $tag )
-	{
-		$tag = 0 unless $ofs < $self->{'header'}->{'size'};
-		$tag = 0 if $ofs eq $self->{'header'}->{'size'};
-		next unless $tag;
+  # read until we have reached the end of the flash cookie
+  while( $tag )
+  {
+    $tag = 0 unless $ofs < $self->{'header'}->{'size'};
+    $tag = 0 if $ofs eq $self->{'header'}->{'size'};
+    next unless $tag;
 
-		printf STDERR "[LSO] Reading the SOL (ofs: 0%x)\n",$ofs if $self->{'debug'};
+    printf STDERR "[LSO] Reading the SOL (ofs: 0%x)\n",$ofs if $self->{'debug'};
 
-		# read the length variable as a temporary status
-		$temp = Log2t::BinRead::read_16( $self->{'file'}, \$ofs );
+    # read the length variable as a temporary status
+    $temp = Log2t::BinRead::read_16( $self->{'file'}, \$ofs );
 
-		# check to see if we have reached the end of file
-		$tag = 0 if $temp eq 0;
-		next unless $tag;
+    # check to see if we have reached the end of file
+    $tag = 0 if $temp eq 0;
+    next unless $tag;
 
-		# start creating the variable
-		$data{'variable'}->{$index} = {
-			'name' => Log2t::BinRead::read_ascii( $self->{'file'}, \$ofs, $temp ),
-			'length' => $temp,
-			'type' => Log2t::BinRead::read_8( $self->{'file'}, \$ofs )
-		};
+    # start creating the variable
+    $data{'variable'}->{$index} = {
+      'name' => Log2t::BinRead::read_ascii( $self->{'file'}, \$ofs, $temp ),
+      'length' => $temp,
+      'type' => Log2t::BinRead::read_8( $self->{'file'}, \$ofs )
+    };
 
-		printf STDERR "[LSO] Reading:\nType:\t%s\nName:\t%s\nLength:\t%s\n",$data{'variable'}->{$index}->{'type'}, $data{'variable'}->{$index}->{'name'},$data{'variable'}->{$index}->{'length'} if $self->{'debug'};
+    printf STDERR "[LSO] Reading:\nType:\t%s\nName:\t%s\nLength:\t%s\n",$data{'variable'}->{$index}->{'type'}, $data{'variable'}->{$index}->{'name'},$data{'variable'}->{$index}->{'length'} if $self->{'debug'};
 
-		# read the data type
-		$data{'variable'}->{$index}->{'data'} = $self->_lso_read_data_type(\$ofs,$data{'variable'}->{$index}->{'type'},$data{'variable'}->{$index}->{'name'});
+    # read the data type
+    $data{'variable'}->{$index}->{'data'} = $self->_lso_read_data_type(\$ofs,$data{'variable'}->{$index}->{'type'},$data{'variable'}->{$index}->{'name'});
 
-		return undef unless defined $data{'variable'}->{$index}->{'data'};
+    return undef unless defined $data{'variable'}->{$index}->{'data'};
 
-		# special date handling 
-		if( $data{'variable'}->{$index}->{'type'} eq 11 )
-		{
-			# fill in the date hash
-			$date{$d_index++} = {
-				'date' => $data{'variable'}->{$index}->{'data'},
-				'name' => $data{'variable'}->{$index}->{'name'}
-			};
+    # special date handling 
+    if( $data{'variable'}->{$index}->{'type'} eq 11 )
+    {
+      # fill in the date hash
+      $date{$d_index++} = {
+        'date' => $data{'variable'}->{$index}->{'data'},
+        'name' => $data{'variable'}->{$index}->{'name'}
+      };
 
-		}
+    }
 
-		# each data blocks ends (or begins with four bytes that are not used)
-		$ofs++;
-		$index++;
-	}
+    # each data blocks ends (or begins with four bytes that are not used)
+    $ofs++;
+    $index++;
+  }
 
-	# special case, now we include the file's creation time
-	$self->{'g_date'} = (stat(${$self->{'name'}}))[10];
-	$self->{'g_name'} = 'LSO created';
-	$self->_parse_timestamp;
+  # special case, now we include the file's creation time
+  $self->{'g_date'} = (stat(${$self->{'name'}}))[10];
+  $self->{'g_name'} = 'LSO created';
+  $self->_parse_timestamp;
 
-	# we have two varibles
-	#	loaded - indicates the number of loaded lines
-	#	d_index	- indicates the number of available date objects
-	foreach( keys %date )
-	{
-		
-		print STDERR "[LSO] LOADING: LOADED $_ INDEX G DATE " . $date{$_}->{'data'} . " G NAME " . $date{$_}->{'name'} . "\n" if $self->{'debug'};
-		$self->{'g_date'} = $date{$_}->{'date'};
-		$self->{'g_name'} = $date{$_}->{'name'};
-		$self->_parse_timestamp
-	}
+  # we have two varibles
+  #  loaded - indicates the number of loaded lines
+  #  d_index  - indicates the number of available date objects
+  foreach( keys %date )
+  {
+    
+    print STDERR "[LSO] LOADING: LOADED $_ INDEX G DATE " . $date{$_}->{'data'} . " G NAME " . $date{$_}->{'name'} . "\n" if $self->{'debug'};
+    $self->{'g_date'} = $date{$_}->{'date'};
+    $self->{'g_name'} = $date{$_}->{'name'};
+    $self->_parse_timestamp
+  }
 
-	return $self->{'container'};
+  return $self->{'container'};
 }
 
 #       parse_line
@@ -250,65 +250,65 @@ sub get_time
 # @return Returns a reference to a hash containing the needed values to print a body file
 sub _parse_timestamp
 {
-	my $self = shift;
-	my $text;
+  my $self = shift;
+  my $text;
 
-	# check for inf or nan
-	return 0 if $self->{'g_date'} eq 'inf';
-	return 0 if $self->{'g_date'} eq 'nan';
+  # check for inf or nan
+  return 0 if $self->{'g_date'} eq 'inf';
+  return 0 if $self->{'g_date'} eq 'nan';
 
-	# get information about dates (std. filesystem timestamps)
-	#my ($atime,$mtime,$ctime) = (stat( $file ) )[8,9,10];
+  # get information about dates (std. filesystem timestamps)
+  #my ($atime,$mtime,$ctime) = (stat( $file ) )[8,9,10];
 
-	# check for global names (should be assigned)
-	if( $self->{'g_name'} ne '' )
-	{
-		$text = $self->{'g_name'} . ' -> ';
-	}
-	else
-	{
-		$text = 'LSO created -> ';
-	}
+  # check for global names (should be assigned)
+  if( $self->{'g_name'} ne '' )
+  {
+    $text = $self->{'g_name'} . ' -> ';
+  }
+  else
+  {
+    $text = 'LSO created -> ';
+  }
 
-	# construct the text variable
-	$text .= 'File: ' . ${$self->{'name'}} . ' and object name: ' . $data{'name'} . ' variable: {' if $self->{'path'} eq '';
-	$text .= 'File: ' . $self->{'path'} .  $self->{'sep'} . ${$self->{'name'}} . ' and object name: ' . $data{'name'} . ' variable: {' unless $self->{'path'} eq '';
+  # construct the text variable
+  $text .= 'File: ' . ${$self->{'name'}} . ' and object name: ' . $data{'name'} . ' variable: {' if $self->{'path'} eq '';
+  $text .= 'File: ' . $self->{'path'} .  $self->{'sep'} . ${$self->{'name'}} . ' and object name: ' . $data{'name'} . ' variable: {' unless $self->{'path'} eq '';
 
-	# go through each variable found inside the flash cookie
-	foreach( keys %{ $data{'variable'} } )
-	{
-		# check if we have a date object (or any other kind)
-		# we need to construct the date object in a different manner ("resolve" the date, or write it in a human readable format)
-		if( $data{'variable'}->{$_}->{'type'} eq 11 )
-		{
-			# then we have a date
-			if( ( $data{'variable'}->{$_}->{'data'} eq 'inf' ) || ($data{'variable'}->{$_}->{'data'} eq 'nan' ) )
-			{
-				$text .= $data{'variable'}->{$_}->{'name'} . ' = (';
-				$text .= $data{'variable'}->{$_}->{'data'} eq 'inf' ? 'infinite' : 'not a number';
-				$text .= '), ' 
-			}
-			else
-			{
-				$text .= $data{'variable'}->{$_}->{'name'} . ' = (' . Log2t::Time::epoch2text($data{'variable'}->{$_}->{'data'},1, $self->{'tz'}) . ') ' ;
-			}
-		}
-		else
-		{
-			# not a date, so just process it "normally"
-			$text .= $data{'variable'}->{$_}->{'name'} . ' = (' . $self->_dump_value( $data{'variable'}->{$_}->{'data'}, $data{'variable'}->{$_}->{'type'} ) . ') ';
-		}
-	}
-	chomp( $text );
-	$text =~ s/, $//;
-	# remove new line characters
-	$text =~ s/\n//;
-	$text =~ s/\r//;
-	$text .= '}';
+  # go through each variable found inside the flash cookie
+  foreach( keys %{ $data{'variable'} } )
+  {
+    # check if we have a date object (or any other kind)
+    # we need to construct the date object in a different manner ("resolve" the date, or write it in a human readable format)
+    if( $data{'variable'}->{$_}->{'type'} eq 11 )
+    {
+      # then we have a date
+      if( ( $data{'variable'}->{$_}->{'data'} eq 'inf' ) || ($data{'variable'}->{$_}->{'data'} eq 'nan' ) )
+      {
+        $text .= $data{'variable'}->{$_}->{'name'} . ' = (';
+        $text .= $data{'variable'}->{$_}->{'data'} eq 'inf' ? 'infinite' : 'not a number';
+        $text .= '), ' 
+      }
+      else
+      {
+        $text .= $data{'variable'}->{$_}->{'name'} . ' = (' . Log2t::Time::epoch2text($data{'variable'}->{$_}->{'data'},1, $self->{'tz'}) . ') ' ;
+      }
+    }
+    else
+    {
+      # not a date, so just process it "normally"
+      $text .= $data{'variable'}->{$_}->{'name'} . ' = (' . $self->_dump_value( $data{'variable'}->{$_}->{'data'}, $data{'variable'}->{$_}->{'type'} ) . ') ';
+    }
+  }
+  chomp( $text );
+  $text =~ s/, $//;
+  # remove new line characters
+  $text =~ s/\n//;
+  $text =~ s/\r//;
+  $text .= '}';
 
         # content of the timestamp object, t_line ([optional])
         # %t_line {        
-	#       time
+  #       time
         #               index
         #                       value
         #                       type
@@ -333,7 +333,7 @@ sub _parse_timestamp
         # create the t_line variable
         $self->{'container'}->{$self->{'cont_index'}++}  = {
                 'desc' => $text,
-		'time' => { 0 => { 'value' => $self->{'g_date'}, 'type' => $self->{'g_name'}, 'legacy' => 15 } },
+    'time' => { 0 => { 'value' => $self->{'g_date'}, 'type' => $self->{'g_name'}, 'legacy' => 15 } },
                 'short' => 'Flash Cookie: site ' . $data{'name'},
                 'source' => 'LSO',
                 'sourcetype' => 'Flash Cookie',
@@ -341,27 +341,27 @@ sub _parse_timestamp
                 'extra' => {  }
         };
 
-	# check for date variable (use filesystem or extracted timestamp)
-	#if( $g_date ne '' && $g_date ne 'inf' && $g_date ne 'nan' )
-	#{
-	#	# use extracted 
-	#	$t_line{'time'} = { 0 => { 'value' => $g_date, 'type' => $g_name, 'legacy' => 15 } };
-	#}
-	#else
-	#{
-	#	# traditional filesystem timestamps
-	#	$t_line{'time'} = {
-	#		0 => { 'value' => $atime, 'type' => 'atime', 'legacy' => 2 }, 
-	#		1 => { 'value' => $mtime, 'type' => 'mtime', 'legacy' => 1 }, 
-	#		2 => { 'value' => $ctime, 'type' => 'ctime', 'legacy' => 4 }, 
-	#		3 => { 'value' => $ctime, 'type' => 'crtime', 'legacy' => 8 }, 
-	#	};
-	#}
+  # check for date variable (use filesystem or extracted timestamp)
+  #if( $g_date ne '' && $g_date ne 'inf' && $g_date ne 'nan' )
+  #{
+  #  # use extracted 
+  #  $t_line{'time'} = { 0 => { 'value' => $g_date, 'type' => $g_name, 'legacy' => 15 } };
+  #}
+  #else
+  #{
+  #  # traditional filesystem timestamps
+  #  $t_line{'time'} = {
+  #    0 => { 'value' => $atime, 'type' => 'atime', 'legacy' => 2 }, 
+  #    1 => { 'value' => $mtime, 'type' => 'mtime', 'legacy' => 1 }, 
+  #    2 => { 'value' => $ctime, 'type' => 'ctime', 'legacy' => 4 }, 
+  #    3 => { 'value' => $ctime, 'type' => 'crtime', 'legacy' => 8 }, 
+  #  };
+  #}
 
-	return 1;
+  return 1;
 }
 
-#	dump_value
+#  dump_value
 #
 # This function simply takes as an argument the data part of the variable found
 # inside the flash cookie and checks if it is a string or a reference to a hash.
@@ -375,40 +375,40 @@ sub _parse_timestamp
 # @return Return a string containing the content of the value parameter
 sub _dump_value($)
 {
-	my $self = shift;
-	my $value = shift;
-	my $type = shift;
-	my $t;
+  my $self = shift;
+  my $value = shift;
+  my $type = shift;
+  my $t;
 
-	# check the data type
-	if( ref( $value ) eq 'HASH' )
-	{
-		foreach ( keys %$value )
-		{
-			$t .= $_ . ' => ';
-			if( scalar( $value->{$_} ) && ( ref( $value->{$_}) eq 'HASH' ) )
-			{
-				$t .= $self->_dump_value( $value->{$_}->{'data'}, $value->{$_}->{'type'} );
-			}
-			else
-			{
-				$t .= sprintf "0x%x ", $type;
-				$t .= Log2t::Time::epoch2text( $value->{$_}, 1, $self->{'tz'} ) if $type eq 0xb ;
-				$t .= $value->{$_} unless $type eq 0xb;
-			}
+  # check the data type
+  if( ref( $value ) eq 'HASH' )
+  {
+    foreach ( keys %$value )
+    {
+      $t .= $_ . ' => ';
+      if( scalar( $value->{$_} ) && ( ref( $value->{$_}) eq 'HASH' ) )
+      {
+        $t .= $self->_dump_value( $value->{$_}->{'data'}, $value->{$_}->{'type'} );
+      }
+      else
+      {
+        $t .= sprintf "0x%x ", $type;
+        $t .= Log2t::Time::epoch2text( $value->{$_}, 1, $self->{'tz'} ) if $type eq 0xb ;
+        $t .= $value->{$_} unless $type eq 0xb;
+      }
 
-			$t .= ', ';
-		}
+      $t .= ', ';
+    }
 
-		return $t;
-	}
-	else
-	{
-		return $value unless $type eq 0xb;
-		return Log2t::Time::epoch2text( $value, 1, $self->{'tz'} ) unless $value eq ( 'inf' or 'nan' );
+    return $t;
+  }
+  else
+  {
+    return $value unless $type eq 0xb;
+    return Log2t::Time::epoch2text( $value, 1, $self->{'tz'} ) unless $value eq ( 'inf' or 'nan' );
 
-		return $value;
-	}
+    return $value;
+  }
 }
 
 #       get_help
@@ -419,7 +419,7 @@ sub _dump_value($)
 # @return A string containing a help file for this format file
 sub get_help()
 {
-	return "This is an input module that parses Local Shared Objects (LSO) or 
+  return "This is an input module that parses Local Shared Objects (LSO) or 
 a flash cookie.  It parses the cookie and prints the output on the timeline along with
 the filesystem timestamps for the file itself.\n";
 
@@ -440,67 +440,67 @@ the filesystem timestamps for the file itself.\n";
 # without taking too long time
 #
 # @return A reference to a hash that contains an integer indicating whether or not the 
-#	file/dir/artifact is supporter by this input module as well as a reason why 
-#	it failed (if it failed) 
+#  file/dir/artifact is supporter by this input module as well as a reason why 
+#  it failed (if it failed) 
 sub verify
 {
-	my $self = shift;
+  my $self = shift;
 
-	# define an array to keep
-	my %return;
+  # define an array to keep
+  my %return;
 
-	my $ofs = 0;
+  my $ofs = 0;
 
-	# default values
-	$return{'success'} = 0;
-	$return{'msg'} = 'success';
+  # default values
+  $return{'success'} = 0;
+  $return{'msg'} = 'success';
 
-	# reset variables
-	%header = undef;
-	%data = undef;
+  # reset variables
+  %header = undef;
+  %data = undef;
 
         return \%return unless -f ${$self->{'name'}};
 
-	# open the file (at least try to open it)
-	eval
-	{
-		# fix the "endian"
-		Log2t::BinRead::set_endian( Log2t::Common::BIG_E );
+  # open the file (at least try to open it)
+  eval
+  {
+    # fix the "endian"
+    Log2t::BinRead::set_endian( Log2t::Common::BIG_E );
 
-		# read the header of the SOL
-		$self->{'header'}->{'header'} = Log2t::BinRead::read_16( $self->{'file'}, \$ofs );
+    # read the header of the SOL
+    $self->{'header'}->{'header'} = Log2t::BinRead::read_16( $self->{'file'}, \$ofs );
 
-		# check the magic value
-		$return{'msg'} = 'Wrong magic value';
-		return \%return unless $self->{'header'}->{'header'} == 0xbf;
+    # check the magic value
+    $return{'msg'} = 'Wrong magic value';
+    return \%return unless $self->{'header'}->{'header'} == 0xbf;
 
-		$self->{'header'}->{'size'} = Log2t::BinRead::read_32( $self->{'file'}, \$ofs );
-		$self->{'header'}->{'magic'} = Log2t::BinRead::read_ascii( $self->{'file'}, \$ofs, 4 );
-		$self->{'header'}->{'pad'} = Log2t::BinRead::read_32( $self->{'file'}, \$ofs );  # the padding is really 6 bytes, not 4
-	};
-	if ( $@ )
-	{
-		$return{'success'} = 0;
-		$return{'msg'} = "Unable to open file";
-	}
+    $self->{'header'}->{'size'} = Log2t::BinRead::read_32( $self->{'file'}, \$ofs );
+    $self->{'header'}->{'magic'} = Log2t::BinRead::read_ascii( $self->{'file'}, \$ofs, 4 );
+    $self->{'header'}->{'pad'} = Log2t::BinRead::read_32( $self->{'file'}, \$ofs );  # the padding is really 6 bytes, not 4
+  };
+  if ( $@ )
+  {
+    $return{'success'} = 0;
+    $return{'msg'} = "Unable to open file";
+  }
 
 
-	# check the magic value and verify that we have a correct header
-	if( ($self->{'header'}->{'magic'} eq 'TCSO') and ($self->{'header'}->{'header'} == 0xbf ) and ( $self->{'header'}->{'pad'} == 0x40000 ) )
-	{
-		$return{'success'} = 1;
-		$self->{'header'}->{'size'} += 6; # to get the correct size
-	}
-	else
-	{
-		$return{'success'} = 0;
-		$return{'msg'} = 'Wrong magic value (' . $self->{'header'}->{'magic'} . ')';
-	}
+  # check the magic value and verify that we have a correct header
+  if( ($self->{'header'}->{'magic'} eq 'TCSO') and ($self->{'header'}->{'header'} == 0xbf ) and ( $self->{'header'}->{'pad'} == 0x40000 ) )
+  {
+    $return{'success'} = 1;
+    $self->{'header'}->{'size'} += 6; # to get the correct size
+  }
+  else
+  {
+    $return{'success'} = 0;
+    $return{'msg'} = 'Wrong magic value (' . $self->{'header'}->{'magic'} . ')';
+  }
 
-	return \%return;
+  return \%return;
 }
 
-#	lso_read_double
+#  lso_read_double
 #
 # A function that takes as a parameter the offset to the flash cookie file (the
 # current location) as well as the name of the variable and reads a double 
@@ -516,45 +516,45 @@ sub verify
 # or 'nan' (not a number)
 sub _lso_read_double($$$)
 {
-	my $self = shift;
-	my $o = shift;
-	my $name = shift;
+  my $self = shift;
+  my $o = shift;
+  my $name = shift;
 
-	my $num = undef;
+  my $num = undef;
 
-	# read the double
-	$num = Log2t::BinRead::read_double( $self->{'file'}, $o );
+  # read the double
+  $num = Log2t::BinRead::read_double( $self->{'file'}, $o );
 
-	print STDERR "[LSO] Reading a double number ($name) = $num\n" if $self->{'debug'};
+  print STDERR "[LSO] Reading a double number ($name) = $num\n" if $self->{'debug'};
 
-	return 'nan' unless defined $num;
+  return 'nan' unless defined $num;
 
-	# check if the number is either infinite or not a number
-	if( $num ne 'inf' && $num ne 'nan' )
-	{
-		# check if this is really a date
-		my $check =  Log2t::Time::sol_date_calc($num, 0);
+  # check if the number is either infinite or not a number
+  if( $num ne 'inf' && $num ne 'nan' )
+  {
+    # check if this is really a date
+    my $check =  Log2t::Time::sol_date_calc($num, 0);
 
-		# if it looks like a date, then we fill it up
-		if( $check ne 'inf' && $check ne 'nan' && $check gt 0 )
-		{
-			print STDERR "[LSO] The double number is a date $check\n" if $self->{'debug'};
+    # if it looks like a date, then we fill it up
+    if( $check ne 'inf' && $check ne 'nan' && $check gt 0 )
+    {
+      print STDERR "[LSO] The double number is a date $check\n" if $self->{'debug'};
 
-        		# fill in the date hash
-        		$date{$d_index++} = {
-        			'date' => $check,
-        			'name' => $name
-        		};
+            # fill in the date hash
+            $date{$d_index++} = {
+              'date' => $check,
+              'name' => $name
+            };
 
-			# return the value in a human readable format
-			return Log2t::Time::epoch2text( $check, 1, $self->{'tz'} ); 
-		}
-	}
+      # return the value in a human readable format
+      return Log2t::Time::epoch2text( $check, 1, $self->{'tz'} ); 
+    }
+  }
 
-	return $num;
+  return $num;
 }
 
-#	lso_read_boolean
+#  lso_read_boolean
 #
 # A function that takes as an input the current offset into the flash cookie and reads
 # a boolean value from it.
@@ -563,19 +563,19 @@ sub _lso_read_double($$$)
 # @return A string containing the words 'FALSE' or 'TRUE', depending on the value found inside
 sub _lso_read_boolean($)
 {
-	my $self = shift;
-	my $o = shift;
-	my $t;
+  my $self = shift;
+  my $o = shift;
+  my $t;
 
-	$t = Log2t::BinRead::read_8($self->{'file'},$o);
-	
-	printf STDERR "[LSO] BOOLEAN 0x%x\n", $t if $self->{'debug'};
+  $t = Log2t::BinRead::read_8($self->{'file'},$o);
+  
+  printf STDERR "[LSO] BOOLEAN 0x%x\n", $t if $self->{'debug'};
 
-	return 'FALSE' if $t eq 00;
-	return 'TRUE';
+  return 'FALSE' if $t eq 00;
+  return 'TRUE';
 }
 
-#	lso_read_string
+#  lso_read_string
 #
 # A function that takes as an input the current offset into the flash cookie and reads
 # a string value from it.
@@ -586,11 +586,11 @@ sub _lso_read_boolean($)
 # @return The string as it was read 
 sub _lso_read_string($)
 {
-	my $self = shift;
-	my $o = shift;
-	my $t = Log2t::BinRead::read_16( $self->{'file'}, $o );
+  my $self = shift;
+  my $o = shift;
+  my $t = Log2t::BinRead::read_16( $self->{'file'}, $o );
 
-	return Log2t::BinRead::read_ascii( $self->{'file'},$o,$t);
+  return Log2t::BinRead::read_ascii( $self->{'file'},$o,$t);
 }
 
 #       _lso_read_data_type
@@ -605,116 +605,116 @@ sub _lso_read_string($)
 # either be a variable (string/int/..) or a reference to a hash 
 sub _lso_read_data_type
 {
-	my $self = shift;
-	my $o = shift;
-	my $type = shift;
-	my $name = shift;
+  my $self = shift;
+  my $o = shift;
+  my $type = shift;
+  my $name = shift;
 
-	printf STDERR "[LSO] READING DATA TYPE 0x%x at offset: 0x%x\n",$type,$$o if $self->{'debug'};
+  printf STDERR "[LSO] READING DATA TYPE 0x%x at offset: 0x%x\n",$type,$$o if $self->{'debug'};
 
-	# 	--- the available types ---
-	#
-	#	0x00 - NUMBER
-	#	0x01 - BOOLEAN
-	#	0x02 - STRING
-	# 	0x03 - OBJECT
-	#	0x05 - NULL
-	#	0x06 - UNDEFINED
-	#	0x08 - ARRAY
-	#	0x0B - DATE
-	#	0x0F - XML
-	#	0x10 - CLASS
-	#
-	#
-	#	0x0D - NULL REALLY
+  #   --- the available types ---
+  #
+  #  0x00 - NUMBER
+  #  0x01 - BOOLEAN
+  #  0x02 - STRING
+  #   0x03 - OBJECT
+  #  0x05 - NULL
+  #  0x06 - UNDEFINED
+  #  0x08 - ARRAY
+  #  0x0B - DATE
+  #  0x0F - XML
+  #  0x10 - CLASS
+  #
+  #
+  #  0x0D - NULL REALLY
 
-	# check the type of the variable (data part is of variable length, depending on the type)
-	# no switch sentence in Perl... so a long if..elsif..else sentence instead
-	# wanted to do code reference instead, but somehow I'm getting it wrong....
-	my $typecheck = {
-		0x00 	=> \&_lso_read_double( $self, $o, $name ),
-		0x01 	=> \&_lso_read_boolean( $self, $o ),
-		0x02 	=> \&_lso_read_string( $self, $o ),
-		0x03 	=> \&_lso_read_object( $self, $o ),
-		0x05	=> sub { return 'type 5 (none)' },
-		0x06	=> sub { return 'type 6 (undefined)' },
-		0x08	=> \&_lso_read_array( $self, $o ),
-		0x0D	=> sub { return 'NULL' },
-		0x0B	=> \&_lso_read_date( $self, $o ),
-		0x0F	=> \&_lso_read_xml( $self, $o ),
-		0x10 	=> \&_lso_read_class( $self, $o ),
-		DEFAULT	=> sub { printf STDERR "[LSO] unknown data type found (0x%x). Unable to process file [$file] further\n", $type; return undef }
-	};
+  # check the type of the variable (data part is of variable length, depending on the type)
+  # no switch sentence in Perl... so a long if..elsif..else sentence instead
+  # wanted to do code reference instead, but somehow I'm getting it wrong....
+  my $typecheck = {
+    0x00   => \&_lso_read_double( $self, $o, $name ),
+    0x01   => \&_lso_read_boolean( $self, $o ),
+    0x02   => \&_lso_read_string( $self, $o ),
+    0x03   => \&_lso_read_object( $self, $o ),
+    0x05  => sub { return 'type 5 (none)' },
+    0x06  => sub { return 'type 6 (undefined)' },
+    0x08  => \&_lso_read_array( $self, $o ),
+    0x0D  => sub { return 'NULL' },
+    0x0B  => \&_lso_read_date( $self, $o ),
+    0x0F  => \&_lso_read_xml( $self, $o ),
+    0x10   => \&_lso_read_class( $self, $o ),
+    DEFAULT  => sub { printf STDERR "[LSO] unknown data type found (0x%x). Unable to process file [$file] further\n", $type; return undef }
+  };
 
-	#my $func = $typecheck->{$type} || $typecheck->{DEFAULT};
-	##return $func->();
-	
-	if( $type eq 0x00 )
-	{
-		# here we get a number (double)
-		return $self->_lso_read_double( $o, $name );
-	}
-	elsif( $type eq 0x01 )
-	{
-		# the data part is either FALSE or TRUE	 (BOOLEAN)
-		return $self->_lso_read_boolean( $o );
-	}
-	elsif( $type eq 0x02 )
-	{
-		# we get a string value (so read the lenght in a temporary value)
-		return $self->_lso_read_string( $o );
-	}
-	elsif( $type eq 0x03 )
-	{
-		# this type is an OBJECT, read the object
-		return $self->_lso_read_object( $o );
-	}
-	elsif( $type eq 0x05 )
-	{
-		# nothing
-		return 'type 5 (none)';
-	}
-	elsif( $type eq 0x06 )
-	{
-		# nothing
-		return 'type 6 (undefined)';
-	}
-	elsif( $type eq 0x08 )
-	{
-		# array
-		return $self->_lso_read_array( $o );
-	}
-	elsif( $type eq 0x0D )
-	{	
-		# observed type in one instance
-		return 'NULL';
-	}
-	elsif( $type eq 11 )
-	{
-		# and we've got a DATE
-		return $self->_lso_read_date( $o );
-	}
-	elsif( $type eq 0x0F )
-	{
-		# a XML document
-		return $self->_lso_read_xml( $o );
-	}
-	elsif( $type eq 0x10 )
-	{
-		# CLASS
-		return $self->_lso_read_class( $o );
-	}
-	else
-	{
-		printf STDERR "[LSO] unknown data type found (0x%x). Unable to process file [" . ${$self->{'name'}} . "] further\n", $type;
-		return undef;
-	}
+  #my $func = $typecheck->{$type} || $typecheck->{DEFAULT};
+  ##return $func->();
+  
+  if( $type eq 0x00 )
+  {
+    # here we get a number (double)
+    return $self->_lso_read_double( $o, $name );
+  }
+  elsif( $type eq 0x01 )
+  {
+    # the data part is either FALSE or TRUE   (BOOLEAN)
+    return $self->_lso_read_boolean( $o );
+  }
+  elsif( $type eq 0x02 )
+  {
+    # we get a string value (so read the lenght in a temporary value)
+    return $self->_lso_read_string( $o );
+  }
+  elsif( $type eq 0x03 )
+  {
+    # this type is an OBJECT, read the object
+    return $self->_lso_read_object( $o );
+  }
+  elsif( $type eq 0x05 )
+  {
+    # nothing
+    return 'type 5 (none)';
+  }
+  elsif( $type eq 0x06 )
+  {
+    # nothing
+    return 'type 6 (undefined)';
+  }
+  elsif( $type eq 0x08 )
+  {
+    # array
+    return $self->_lso_read_array( $o );
+  }
+  elsif( $type eq 0x0D )
+  {  
+    # observed type in one instance
+    return 'NULL';
+  }
+  elsif( $type eq 11 )
+  {
+    # and we've got a DATE
+    return $self->_lso_read_date( $o );
+  }
+  elsif( $type eq 0x0F )
+  {
+    # a XML document
+    return $self->_lso_read_xml( $o );
+  }
+  elsif( $type eq 0x10 )
+  {
+    # CLASS
+    return $self->_lso_read_class( $o );
+  }
+  else
+  {
+    printf STDERR "[LSO] unknown data type found (0x%x). Unable to process file [" . ${$self->{'name'}} . "] further\n", $type;
+    return undef;
+  }
 
-	# return the content
-	return '';
+  # return the content
+  return '';
 }
 
-#	lso_read_class
+#  lso_read_class
 #
 # A function that takes as an input the current offset into the flash cookie and reads
 # an class object from it.
@@ -732,91 +732,91 @@ sub _lso_read_data_type
 # @return A reference to a hash that stores all of the values inside the array
 sub _lso_read_class($)
 {
-	my $self = shift;
-	my $o = shift;
-	my $t;
-	my $tag;
-	my %content;
-	my $name;
-	my $oname;
+  my $self = shift;
+  my $o = shift;
+  my $t;
+  my $tag;
+  my %content;
+  my $name;
+  my $oname;
 
-	# read the name of the object
-	$oname = $self->_lso_read_string( $o );
+  # read the name of the object
+  $oname = $self->_lso_read_string( $o );
 
-	# check if we've reached the "magic", meaning we've reached the end
-	$tag = $self->_lso_reached_magic($o);
+  # check if we've reached the "magic", meaning we've reached the end
+  $tag = $self->_lso_reached_magic($o);
 
-	# read the object until we've reached the end
-	while( $tag )
-	{
-		# check if we've reached the "magic", meaning we've reached the end
-		$tag = $self->_lso_reached_magic($o);
-		next unless $tag;
+  # read the object until we've reached the end
+  while( $tag )
+  {
+    # check if we've reached the "magic", meaning we've reached the end
+    $tag = $self->_lso_reached_magic($o);
+    next unless $tag;
 
-		# read the objects name
-		$name = $self->_lso_read_string( $o );
+    # read the objects name
+    $name = $self->_lso_read_string( $o );
 
-		# read the data type
-		$t = Log2t::BinRead::read_8( $self->{'file'}, $o );
-		
-		$content{"$oname/$name"} = {
-			'data' => $self->_lso_read_data_type( $o, $t,$oname . '/' . $name ),
-			'type' => $t };
+    # read the data type
+    $t = Log2t::BinRead::read_8( $self->{'file'}, $o );
+    
+    $content{"$oname/$name"} = {
+      'data' => $self->_lso_read_data_type( $o, $t,$oname . '/' . $name ),
+      'type' => $t };
 
-		# check if we've read an undefined data type
-		return undef unless defined $content{"$oname/$name"};
+    # check if we've read an undefined data type
+    return undef unless defined $content{"$oname/$name"};
 
-		if( $t eq 11 )
-		{
-			# fill in the date hash
-			$date{$d_index++} = {
-				'date' => $content{"$oname/$name"}->{'data'},
-				'name' => $oname . '/' . $name
-			};
-		}
-	}
+    if( $t eq 11 )
+    {
+      # fill in the date hash
+      $date{$d_index++} = {
+        'date' => $content{"$oname/$name"}->{'data'},
+        'name' => $oname . '/' . $name
+      };
+    }
+  }
 
-	# we don't want to be sending an object down 
-	return \%content;
+  # we don't want to be sending an object down 
+  return \%content;
 }
 
-# 	lso_read_xml
+#   lso_read_xml
 #
 # This function reads the LSO file and reads an XML structure from it
 sub _lso_read_xml( $ )
 {
-	my $self = shift;
-	my $t;
-	my $o = shift;
-	my $string;
-	my $xml_text;
+  my $self = shift;
+  my $t;
+  my $o = shift;
+  my $string;
+  my $xml_text;
 
-	printf STDERR "[LSO] Parse XML offset 0x%x\n",$$o if $self->{'debug'};
+  printf STDERR "[LSO] Parse XML offset 0x%x\n",$$o if $self->{'debug'};
 
-	# xml variables
-	my ($xml,$xml_parsed,$prop);
-	my (@prop_array);
+  # xml variables
+  my ($xml,$xml_parsed,$prop);
+  my (@prop_array);
 
-	$t = Log2t::BinRead::read_16( $self->{'file'}, $o );	
+  $t = Log2t::BinRead::read_16( $self->{'file'}, $o );  
 
-	if( $t ne 0x00 )
-	{
-		printf STDERR  "[LSO] Reading XML - value should be zero, 0x%x\n",$t if $self->{'debug'};
-	}
+  if( $t ne 0x00 )
+  {
+    printf STDERR  "[LSO] Reading XML - value should be zero, 0x%x\n",$t if $self->{'debug'};
+  }
 
-	# read the XML structure
-	$t = $self->_lso_read_string( $o ); 
-	$t =~ s/\n//g;
-	$t =~ s/\r//g;
+  # read the XML structure
+  $t = $self->_lso_read_string( $o ); 
+  $t =~ s/\n//g;
+  $t =~ s/\r//g;
 
-	return $t;
+  return $t;
 
-	$xml_text = "<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\" ?>\n" . $t . "</xml>"; 
+  $xml_text = "<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\" ?>\n" . $t . "</xml>"; 
 
-   	# get the XML
+     # get the XML
         $xml = XML::LibXML->new();
 
-	print STDERR "[LSO] XML [$t]\n" if $self->{'debug'};
+  print STDERR "[LSO] XML [$t]\n" if $self->{'debug'};
 
         $xml_parsed = $xml->parse_string( $xml_text );
 
@@ -829,55 +829,55 @@ sub _lso_read_xml( $ )
         {
                 if( $_->nodeType == ELEMENT_NODE )
                 {
-   			$string .= $self->_parse_xml( $_ );
-		}
-	}
+         $string .= $self->_parse_xml( $_ );
+    }
+  }
 
-	return $string;
+  return $string;
 }
 
 sub _parse_xml($)
 {
-	my $self = shift;
-	my $node = shift;
-	my $string;
-	my @attrs;
-	my $temp;
-	my @children;
+  my $self = shift;
+  my $node = shift;
+  my $string;
+  my @attrs;
+  my $temp;
+  my @children;
 
-	$temp = '';
+  $temp = '';
 
-	# we will go through each of the supplied value
+  # we will go through each of the supplied value
         # check if the node has attributes
         if( $node->hasAttributes() )
         {
-        	@attrs = $node->attributes();
-        	foreach my $attr (@attrs)
-        	{
-        		$temp .= $attr->nodeName . ' = ' . $attr->value . '- ';
-        	}
-        	# remove the last '- ' from the temp variable
-        	$temp =~ s/- $//;
+          @attrs = $node->attributes();
+          foreach my $attr (@attrs)
+          {
+            $temp .= $attr->nodeName . ' = ' . $attr->value . '- ';
+          }
+          # remove the last '- ' from the temp variable
+          $temp =~ s/- $//;
         }
 
-	if( $node->hasChildNodes() )
-	{
-		@children = $node->childNodes;
+  if( $node->hasChildNodes() )
+  {
+    @children = $node->childNodes;
 
-		foreach( @children )
-		{
-			$string .= $self->_parse_xml( $_ );	
-		}
-	}
-	else
-	{
-		$string = $temp eq '' ? $node->nodeName . ' = ' . $node->textContent : $node->nodeName . ' (' . $temp . ') = ' . $node->textContent;
+    foreach( @children )
+    {
+      $string .= $self->_parse_xml( $_ );  
+    }
+  }
+  else
+  {
+    $string = $temp eq '' ? $node->nodeName . ' = ' . $node->textContent : $node->nodeName . ' (' . $temp . ') = ' . $node->textContent;
         }
 
         $string  =~ s/\r//g;
         $string  =~ s/\n//g;
-	return $string;
-	
+  return $string;
+  
 }
 
 # lso_read_date
@@ -895,23 +895,23 @@ sub _parse_xml($)
 # nan - not a number) 
 sub _lso_read_date($)
 {
-	my $self = shift;
-	my $o = shift;
-	my ($time, $utcofs, $time_ofs);
+  my $self = shift;
+  my $o = shift;
+  my ($time, $utcofs, $time_ofs);
 
-	# read the time or the actual double number representing the date
-	$time = Log2t::BinRead::read_double( $self->{'file'}, $o );
+  # read the time or the actual double number representing the date
+  $time = Log2t::BinRead::read_double( $self->{'file'}, $o );
 
-	# read the current offset from UTC
-	#$utcofs = Log2t::BinRead::read_16(\*FILE, $o );
-	$utcofs = Log2t::BinRead::read_short($self->{'file'}, $o );
-	
-	# calculate the time offset	
-	$time_ofs = - $utcofs / 60;
+  # read the current offset from UTC
+  #$utcofs = Log2t::BinRead::read_16(\*FILE, $o );
+  $utcofs = Log2t::BinRead::read_short($self->{'file'}, $o );
+  
+  # calculate the time offset  
+  $time_ofs = - $utcofs / 60;
 
-	print STDERR "[LSO - DATE] Time: $time - $time_ofs (" . Log2t::Time::sol_date_calc($time, $time_ofs) . ")\n" if $self->{'debug'};
+  print STDERR "[LSO - DATE] Time: $time - $time_ofs (" . Log2t::Time::sol_date_calc($time, $time_ofs) . ")\n" if $self->{'debug'};
 
-	return Log2t::Time::sol_date_calc($time, $time_ofs);
+  return Log2t::Time::sol_date_calc($time, $time_ofs);
 }
 
 #       lso_read_array
@@ -928,61 +928,61 @@ sub _lso_read_date($)
 # @return A reference to a hash that stores all of the values inside the array
 sub _lso_read_array($)
 {
-	my $self = shift;
-	my $o = shift;
-	my $t;
-	my $tag;
-	my %content;
-	my $name;
+  my $self = shift;
+  my $o = shift;
+  my $t;
+  my $tag;
+  my %content;
+  my $name;
 
-	# read the number of items to process			
-	$t = Log2t::BinRead::read_32( $self->{'file'},$o );
+  # read the number of items to process      
+  $t = Log2t::BinRead::read_32( $self->{'file'},$o );
 
-	print STDERR '[LSO] Array with ',$t, ' items.', "\n" if $self->{'debug'};
+  print STDERR '[LSO] Array with ',$t, ' items.', "\n" if $self->{'debug'};
 
-	# check if we've reached the "magic", meaning we've reached the end
-	$tag = $self->_lso_reached_magic($o);
+  # check if we've reached the "magic", meaning we've reached the end
+  $tag = $self->_lso_reached_magic($o);
 
-	# read the object until we've reached the end
-	while( $tag )
-	{
-		# check if we've reached the "magic", meaning we've reached the end
-		$tag = $self->_lso_reached_magic($o);
-		next unless $tag;
+  # read the object until we've reached the end
+  while( $tag )
+  {
+    # check if we've reached the "magic", meaning we've reached the end
+    $tag = $self->_lso_reached_magic($o);
+    next unless $tag;
 
-		# read the variable's name 
-		$name = $self->_lso_read_string( $o );
+    # read the variable's name 
+    $name = $self->_lso_read_string( $o );
 
-		print STDERR "[LSO] READING NAME [$name]\n" if $self->{'debug'};
-		# read the data type
-		$t = Log2t::BinRead::read_8( $self->{'file'}, $o );
-		
-		$content{"$name"} = {
-			'data' => $self->_lso_read_data_type( $o, $t, $name ),
-			'type' => $t };
+    print STDERR "[LSO] READING NAME [$name]\n" if $self->{'debug'};
+    # read the data type
+    $t = Log2t::BinRead::read_8( $self->{'file'}, $o );
+    
+    $content{"$name"} = {
+      'data' => $self->_lso_read_data_type( $o, $t, $name ),
+      'type' => $t };
 
-		# check if we've read an undefined data type
-		return undef unless defined $content{"$name"};
-	
-		# check if we have reached an undefined type
-		return undef unless defined $content{"$name"}->{'data'};
+    # check if we've read an undefined data type
+    return undef unless defined $content{"$name"};
+  
+    # check if we have reached an undefined type
+    return undef unless defined $content{"$name"}->{'data'};
 
-		if( $t eq 11 )
-		{
-			print STDERR "[LSO] OBJECT IS A TIME OBJECT, AKA A DATE\n" if $self->{'debug'};
+    if( $t eq 11 )
+    {
+      print STDERR "[LSO] OBJECT IS A TIME OBJECT, AKA A DATE\n" if $self->{'debug'};
 
-			# fill in the date hash
-			$date{$d_index++} = {
-				'date' => $content{"$name"}->{'data'},
-				'name' => $name
-			};
-		}
-	}
+      # fill in the date hash
+      $date{$d_index++} = {
+        'date' => $content{"$name"}->{'data'},
+        'name' => $name
+      };
+    }
+  }
 
-	return \%content;
+  return \%content;
 }
 
-#	lso_reached_magic
+#  lso_reached_magic
 # 
 # A simple function that takes as an input the current offset into the LSO file
 # and reads three bytes to determine whether or not they contain the magic value
@@ -991,32 +991,32 @@ sub _lso_read_array($)
 # @param o A reference to an integer that contains the current offset into the LSO file
 # @return Returns TRUE (1) if the magic value is not found and FALSE (0) if it is found
 sub _lso_reached_magic($)
-{	
-	my $self = shift;
-	my $o = shift;
-	my $t; # temp
+{  
+  my $self = shift;
+  my $o = shift;
+  my $t; # temp
 
-	# check if we find the magic value
+  # check if we find the magic value
         seek($self->{'file'},$$o,0);
         read($self->{'file'},$t,1) or return 0;
 
-	# check the first value 
-	if( unpack( "s", $t ) == 0x0 )
-	{
-		# check the next two bytes
-		seek($self->{'file'}, $$o+1, 0 );
-		read($self->{'file'},$t,2) or return 0;
-	
-		# check the last two bytes
-		if( unpack( "n", $t ) == 0x0009 )
-		{
-			$$o += 3;
-			return 0;
-		}
-	}
+  # check the first value 
+  if( unpack( "s", $t ) == 0x0 )
+  {
+    # check the next two bytes
+    seek($self->{'file'}, $$o+1, 0 );
+    read($self->{'file'},$t,2) or return 0;
+  
+    # check the last two bytes
+    if( unpack( "n", $t ) == 0x0009 )
+    {
+      $$o += 3;
+      return 0;
+    }
+  }
 
-	# did not find the magic value
-	return 1;
+  # did not find the magic value
+  return 1;
 }
 
 
@@ -1034,48 +1034,48 @@ sub _lso_reached_magic($)
 # @return A reference to a hash that stores all of the values inside the array
 sub _lso_read_object($)
 {
-	my $self =shift;
-	my $o = shift;
-	my $t;
-	my $tag;
-	my %content;
-	my $name;
+  my $self =shift;
+  my $o = shift;
+  my $t;
+  my $tag;
+  my %content;
+  my $name;
 
-	# check if we've reached the "magic", meaning we've reached the end
-	$tag = $self->_lso_reached_magic($o);
+  # check if we've reached the "magic", meaning we've reached the end
+  $tag = $self->_lso_reached_magic($o);
 
-	# read the object until we've reached the end
-	while( $tag )
-	{
-		# check if we've reached the "magic", meaning we've reached the end
-		$tag = $self->_lso_reached_magic($o);
-		next unless $tag;
+  # read the object until we've reached the end
+  while( $tag )
+  {
+    # check if we've reached the "magic", meaning we've reached the end
+    $tag = $self->_lso_reached_magic($o);
+    next unless $tag;
 
-		# read the objects name
-		$name = $self->_lso_read_string( $o );
+    # read the objects name
+    $name = $self->_lso_read_string( $o );
 
-		# read the data type
-		$t = Log2t::BinRead::read_8( $self->{'file'}, $o );
-		
-		$content{"$name"} = {
-			'data' => $self->_lso_read_data_type( $o, $t,$name ),
-			'type' => $t };
+    # read the data type
+    $t = Log2t::BinRead::read_8( $self->{'file'}, $o );
+    
+    $content{"$name"} = {
+      'data' => $self->_lso_read_data_type( $o, $t,$name ),
+      'type' => $t };
 
-		# check if we've read an undefined data type
-		return undef unless defined $content{"$name"};
+    # check if we've read an undefined data type
+    return undef unless defined $content{"$name"};
 
-		if( $t eq 11 )
-		{
-			# fill in the date hash
-			$date{$d_index++} = {
-				'date' => $content{"$name"}->{'data'},
-				'name' => $name
-			};
-		}
-	}
+    if( $t eq 11 )
+    {
+      # fill in the date hash
+      $date{$d_index++} = {
+        'date' => $content{"$name"}->{'data'},
+        'name' => $name
+      };
+    }
+  }
 
-	# we don't want to be sending an object down 
-	return \%content;
+  # we don't want to be sending an object down 
+  return \%content;
 }
 
 1;
@@ -1091,17 +1091,17 @@ B<sol> - an input module B<log2timeline> that parses Local Shared Objects (LSO) 
 
 =head1 SYNOPSIS
 
-	my $format = structure;
-	require $format_dir . '/' . $format . ".pl" ;
+  my $format = structure;
+  require $format_dir . '/' . $format . ".pl" ;
 
-	$format->verify( $log_file );
-	$format->prepare_file( $log_file, @ARGV )
+  $format->verify( $log_file );
+  $format->prepare_file( $log_file, @ARGV )
 
         $line = $format->load_line()
 
-	$t_line = $format->parse_line();
+  $t_line = $format->parse_line();
 
-	$format->close_file();
+  $format->close_file();
 
 =head1 DESCRIPTION
 
@@ -1145,23 +1145,23 @@ This is the main subroutine of the format file (or often it is).  It depends on 
 
 The content of the hash t_line is the following:
 
-	%t_line {
-		md5,		# MD5 sum of the file
-		name,		# the main text that appears in the timeline
-		title,		# short description used by some output modules
-		source,		# the source of the timeline, usually the same name or similar to the name of the package
-		user,		# the username that owns the file or produced the artifact
-		host,		# the hostname that the file belongs to
-		inode,		# the inode number of the file that contains the artifact
-		mode,		# the access rights of the file
-		uid,		# the UID of the user that owns the file/artifact
-		gid,		# the GID of the user that owns the file/artifact
-		size,		# the size of the file/artifact
-		atime,		# Time in epoch representing the last ACCESS time
-		mtime,		# Time in epoch representing the last MODIFICATION time
-		ctime,		# Time in epoch representing the CREATION time (or MFT/INODE modification time)
-		crtime		# Time in epoch representing the CREATION time
-	}
+  %t_line {
+    md5,    # MD5 sum of the file
+    name,    # the main text that appears in the timeline
+    title,    # short description used by some output modules
+    source,    # the source of the timeline, usually the same name or similar to the name of the package
+    user,    # the username that owns the file or produced the artifact
+    host,    # the hostname that the file belongs to
+    inode,    # the inode number of the file that contains the artifact
+    mode,    # the access rights of the file
+    uid,    # the UID of the user that owns the file/artifact
+    gid,    # the GID of the user that owns the file/artifact
+    size,    # the size of the file/artifact
+    atime,    # Time in epoch representing the last ACCESS time
+    mtime,    # Time in epoch representing the last MODIFICATION time
+    ctime,    # Time in epoch representing the CREATION time (or MFT/INODE modification time)
+    crtime    # Time in epoch representing the CREATION time
+  }
 
 The subroutine return a reference to the hash (t_line) that will be used by the main script (B<log2timeline>) to produce the actual timeline.  The hash is processed by the main script before forwarding it to an output module for the actual printing of a bodyfile.
 
@@ -1178,8 +1178,8 @@ This is needed since there is no need to try to parse the file/directory/artifac
 It is also important to validate the file since the scanner function will try to parse every file it finds, and uses this verify function to determine whether or not a particular file/dir/artifact is supported or not. It is therefore very important to implement this function and make it verify the file structure without false positives and without taking too long time
 
 This subroutine returns a reference to a hash that contains two values
-	success		An integer indicating whether not the input module is able to parse the file/directory/artifact
-	msg		A message indicating the reason why the input module was not able to parse the file/directory/artifact
+  success    An integer indicating whether not the input module is able to parse the file/directory/artifact
+  msg    A message indicating the reason why the input module was not able to parse the file/directory/artifact
 
 =back
 

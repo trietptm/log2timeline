@@ -1,5 +1,5 @@
 #################################################################################################
-#		ENCASE_DIRLISTING
+#    ENCASE_DIRLISTING
 #################################################################################################
 # This script is a part of the log2timeline framework for timeline creation and analysis.
 # This script implements an input module, or a parser capable of parsing a single log file (or 
@@ -32,11 +32,11 @@ package Log2t::input::encase_dirlisting;
 use strict;
 use Log2t::base::input; # the SUPER class or parent
 use Log2t::Common ':binary';
-use Log2t::Time;	# to manipulate time
-#use Log2t::Win;	# Windows specific information
-#use Log2t::Numbers;	# to manipulate numbers
-use Log2t::BinRead;	# methods to read binary files (it is preferable to always load this library)
-#use Log2t::Network;	# information about network traffic 
+use Log2t::Time;  # to manipulate time
+#use Log2t::Win;  # Windows specific information
+#use Log2t::Numbers;  # to manipulate numbers
+use Log2t::BinRead;  # methods to read binary files (it is preferable to always load this library)
+#use Log2t::Network;  # information about network traffic 
 
 # define the VERSION variable
 use vars qw($VERSION @ISA);
@@ -55,7 +55,7 @@ $VERSION = '0.2';
 # @return A string containing a description of the format file's functionality
 sub get_description()
 {
-	return "Parse the content of a CSV file that is exported from FTK Imager (dirlisting)"; 
+  return "Parse the content of a CSV file that is exported from FTK Imager (dirlisting)"; 
 }
 
 #       get_version
@@ -72,17 +72,17 @@ sub get_version()
 
 sub init
 {
-	my $self = shift;
+  my $self = shift;
 
         # get the filehandle and read the next line
         my $fh = $self->{'file'};
 
-	# the first line is this:
-	#  Name	Filter	In Report	File Ext	File Type	File Category	Signature	Description	Is Deleted	Last Accessed	File Created	Last Written	Entry Modified	File Deleted	File Acquired	Logical Size	Initialized Size	Physical Size	Starting Extent	File Extents	Permissions	References	Physical Location	Physical Sector	Evidence File	File Identifier	Code Page	Hash Value	Hash Set	Hash Category	Hash Properties	Full Path	Short Name	Unique Name	Original Path	Symbolic Link	Is Duplicate	Is Internal	Is Overwritten
-	# so we want to read that one before continuing on processing each line
+  # the first line is this:
+  #  Name  Filter  In Report  File Ext  File Type  File Category  Signature  Description  Is Deleted  Last Accessed  File Created  Last Written  Entry Modified  File Deleted  File Acquired  Logical Size  Initialized Size  Physical Size  Starting Extent  File Extents  Permissions  References  Physical Location  Physical Sector  Evidence File  File Identifier  Code Page  Hash Value  Hash Set  Hash Category  Hash Properties  Full Path  Short Name  Unique Name  Original Path  Symbolic Link  Is Duplicate  Is Internal  Is Overwritten
+  # so we want to read that one before continuing on processing each line
         my $line = <$fh> or return undef;
 
-	return 1;
+  return 1;
 }
 
 #       get_time
@@ -95,65 +95,65 @@ sub init
 # @return Returns a reference to a hash containing the needed values to print a body file
 sub get_time
 {
-	my $self = shift;
+  my $self = shift;
 
-	# the timestamp object
-	my %t_line;
-	my %info;
-	my $text;
+  # the timestamp object
+  my %t_line;
+  my %info;
+  my $text;
 
         # get the filehandle and read the next line
         my $fh = $self->{'file'};
         my $line = <$fh> or return undef;
 
-	# so we've got the line with the following format (tab to separate fields)
-	#  Name	Filter	In Report	File Ext	File Type	File Category	Signature	Description	Is Deleted	Last Accessed	File Created	Last Written	Entry Modified	File Deleted	File Acquired	Logical Size	Initialized Size	Physical Size	Starting Extent	File Extents	Permissions	References	Physical Location	Physical Sector	Evidence File	File Identifier	Code Page	Hash Value	Hash Set	Hash Category	Hash Properties	Full Path	Short Name	Unique Name	Original Path	Symbolic Link	Is Duplicate	Is Internal	Is Overwritten
+  # so we've got the line with the following format (tab to separate fields)
+  #  Name  Filter  In Report  File Ext  File Type  File Category  Signature  Description  Is Deleted  Last Accessed  File Created  Last Written  Entry Modified  File Deleted  File Acquired  Logical Size  Initialized Size  Physical Size  Starting Extent  File Extents  Permissions  References  Physical Location  Physical Sector  Evidence File  File Identifier  Code Page  Hash Value  Hash Set  Hash Category  Hash Properties  Full Path  Short Name  Unique Name  Original Path  Symbolic Link  Is Duplicate  Is Internal  Is Overwritten
 
-	my $i = 0;
+  my $i = 0;
 
-	%info = map { $self->_get_key($i++) => $_ } split( /\t/, $line );
+  %info = map { $self->_get_key($i++) => $_ } split( /\t/, $line );
 
-	#foreach( keys %info )
-	#{
-	#	print STDERR "Key {$_} (" . $info{$_} . ")\n";
-	#}
+  #foreach( keys %info )
+  #{
+  #  print STDERR "Key {$_} (" . $info{$_} . ")\n";
+  #}
 
-	$info{'acc'} = Log2t::Time::encase2date(\$info{'Last Accessed'}, $self->{'tz'});
-	$info{'mod'} = Log2t::Time::encase2date(\$info{'Last Written'}, $self->{'tz'});
-	$info{'cre'} = Log2t::Time::encase2date(\$info{'File Created'}, $self->{'tz'});
-	$info{'mft'} = Log2t::Time::encase2date(\$info{'Entry Modified'}, $self->{'tz'});
+  $info{'acc'} = Log2t::Time::encase2date(\$info{'Last Accessed'}, $self->{'tz'});
+  $info{'mod'} = Log2t::Time::encase2date(\$info{'Last Written'}, $self->{'tz'});
+  $info{'cre'} = Log2t::Time::encase2date(\$info{'File Created'}, $self->{'tz'});
+  $info{'mft'} = Log2t::Time::encase2date(\$info{'Entry Modified'}, $self->{'tz'});
 
-	# date is: 07/02/11 11:35:12
-	
-#	if( $line =~ m/([^\t]+)\t([^\t]+)\t([^\t]+)\t([^\t]+)\t([^\t]+)\t([^\t]+)\t([^\t]+)$/ )
-#	{
-#		%info = (
-#			'name' => $1,
-#			'path' => $2,
-#			'size' => $3,
-#			'cre' => Log2t::Time::ftk2date(\$4),
-#			'mod' => Log2t::Time::ftk2date(\$5),
-#			'acc' => Log2t::Time::ftk2date(\$6),
-#			'del' => $7	
-#		);
-#		print STDERR "[FTK] DATE ($4 - " . $info{'cre'} . ") ($5 - " . $info{'mod'} . ") ($6 - " . $info{'acc'} . ")\n" if $self->{'debug'};
-#			
-#	}
-#	else
-#	{
-#		print STDERR "[FTK] Line does not match criteria given to it\n";
-#		return \%t_line;
-#	}
+  # date is: 07/02/11 11:35:12
+  
+#  if( $line =~ m/([^\t]+)\t([^\t]+)\t([^\t]+)\t([^\t]+)\t([^\t]+)\t([^\t]+)\t([^\t]+)$/ )
+#  {
+#    %info = (
+#      'name' => $1,
+#      'path' => $2,
+#      'size' => $3,
+#      'cre' => Log2t::Time::ftk2date(\$4),
+#      'mod' => Log2t::Time::ftk2date(\$5),
+#      'acc' => Log2t::Time::ftk2date(\$6),
+#      'del' => $7  
+#    );
+#    print STDERR "[FTK] DATE ($4 - " . $info{'cre'} . ") ($5 - " . $info{'mod'} . ") ($6 - " . $info{'acc'} . ")\n" if $self->{'debug'};
+#      
+#  }
+#  else
+#  {
+#    print STDERR "[FTK] Line does not match criteria given to it\n";
+#    return \%t_line;
+#  }
 
-	$text = $info{'Full Path'};
-	$text .= ' (file deleted)' if $info{'Is Deleted'} == 1;
+  $text = $info{'Full Path'};
+  $text .= ' (file deleted)' if $info{'Is Deleted'} == 1;
 
 
-	# content of the timestamp object t_line 
-	# optional fields are marked with [] 
-	# 
+  # content of the timestamp object t_line 
+  # optional fields are marked with [] 
+  # 
         # %t_line {        
-	#       time
+  #       time
         #               index
         #                       value
         #                       type
@@ -175,35 +175,35 @@ sub get_time
         #               [...]
         # }
 
-	# create the t_line variable
-	%t_line = (
-		'time' => { 
-			0 => { 'value' => $info{'acc'}, 'type' => 'Accessed', 'legacy' => 2 },
-			1 => { 'value' => $info{'mod'}, 'type' => 'Modified', 'legacy' => 1 },
-			2 => { 'value' => $info{'mft'}, 'type' => 'MFT Modified', 'legacy' => 4 },
-			3 => { 'value' => $info{'cre'}, 'type' => 'Created', 'legacy' => 8 } 
-		},
-		'desc' => $text,
-		'short' => $info{'Name'},
-		'source' => 'FILE',
-		'sourcetype' => 'Encase Imager FolderPath',
-		'version' => 2,
-		'extra' => { 'size' => $info{'Logical Size'}  }
-	);
+  # create the t_line variable
+  %t_line = (
+    'time' => { 
+      0 => { 'value' => $info{'acc'}, 'type' => 'Accessed', 'legacy' => 2 },
+      1 => { 'value' => $info{'mod'}, 'type' => 'Modified', 'legacy' => 1 },
+      2 => { 'value' => $info{'mft'}, 'type' => 'MFT Modified', 'legacy' => 4 },
+      3 => { 'value' => $info{'cre'}, 'type' => 'Created', 'legacy' => 8 } 
+    },
+    'desc' => $text,
+    'short' => $info{'Name'},
+    'source' => 'FILE',
+    'sourcetype' => 'Encase Imager FolderPath',
+    'version' => 2,
+    'extra' => { 'size' => $info{'Logical Size'}  }
+  );
 
-	return \%t_line;
+  return \%t_line;
 }
 
 sub _get_key()
 {
-	#  Name	Filter	In Report	File Ext	File Type	File Category	Signature	Description	Is Deleted	Last Accessed	File Created	Last Written	Entry Modified	File Deleted	File Acquired	Logical Size	Initialized Size	Physical Size	Starting Extent	File Extents	Permissions	References	Physical Location	Physical Sector	Evidence File	File Identifier	Code Page	Hash Value	Hash Set	Hash Category	Hash Properties	Full Path	Short Name	Unique Name	Original Path	Symbolic Link	Is Duplicate	Is Internal	Is Overwritten
+  #  Name  Filter  In Report  File Ext  File Type  File Category  Signature  Description  Is Deleted  Last Accessed  File Created  Last Written  Entry Modified  File Deleted  File Acquired  Logical Size  Initialized Size  Physical Size  Starting Extent  File Extents  Permissions  References  Physical Location  Physical Sector  Evidence File  File Identifier  Code Page  Hash Value  Hash Set  Hash Category  Hash Properties  Full Path  Short Name  Unique Name  Original Path  Symbolic Link  Is Duplicate  Is Internal  Is Overwritten
 
-	my $self = shift;
-	my $k = shift;
-	my @a = ( 'Name', 'Filter', 'In Report','File Ext', 'File Type', 'File Category', 'Signature', 'Description', 'Is Deleted', 'Last Accessed', 'File Created', 'Last Written','Entry Modified', 'File Deleted', 'File Acquired', 'Logical Size', 'Initialized Size', 'Physical Size', 'Starting Extent', 'File Extents', 'Permissions', 'References', 'Physical Location', 'Physical Sector', 'Evidence File', 'File Identifier', 'Code Page', 'Hash Value', 'Hash Set', 'Hash Category', 'Hash Properties', 'Full Path', 'Short Name', 'Unique Name', 'Original Path', 'Symbolic Link', 'Is Duplicate', 'Is Internal', 'Is Overwritten' );
+  my $self = shift;
+  my $k = shift;
+  my @a = ( 'Name', 'Filter', 'In Report','File Ext', 'File Type', 'File Category', 'Signature', 'Description', 'Is Deleted', 'Last Accessed', 'File Created', 'Last Written','Entry Modified', 'File Deleted', 'File Acquired', 'Logical Size', 'Initialized Size', 'Physical Size', 'Starting Extent', 'File Extents', 'Permissions', 'References', 'Physical Location', 'Physical Sector', 'Evidence File', 'File Identifier', 'Code Page', 'Hash Value', 'Hash Set', 'Hash Category', 'Hash Properties', 'Full Path', 'Short Name', 'Unique Name', 'Original Path', 'Symbolic Link', 'Is Duplicate', 'Is Internal', 'Is Overwritten' );
 
-	#print STDERR "K IS $k (" . $a[$k] . ")\n";
-	return $a[$k];
+  #print STDERR "K IS $k (" . $a[$k] . ")\n";
+  return $a[$k];
 
 }
 
@@ -215,7 +215,7 @@ sub _get_key()
 # @return A string containing a help file for this format file
 sub get_help()
 {
-	return "This input module parses the TXT file that can be exported from Encase 
+  return "This input module parses the TXT file that can be exported from Encase 
 with all columns selected";
 }
 
@@ -234,70 +234,70 @@ with all columns selected";
 # without taking too long time
 #
 # @return A reference to a hash that contains an integer indicating whether or not the 
-#	file/dir/artifact is supporter by this input module as well as a reason why 
-#	it failed (if it failed) 
+#  file/dir/artifact is supporter by this input module as well as a reason why 
+#  it failed (if it failed) 
 sub verify
 {
-	my $self = shift;
+  my $self = shift;
 
-	# define an array to keep
-	my %return;
-	my $vline;
+  # define an array to keep
+  my %return;
+  my $vline;
 
-	# default values
-	$return{'success'} = 0;
-	$return{'msg'} = 'success';
+  # default values
+  $return{'success'} = 0;
+  $return{'msg'} = 'success';
 
-	# depending on which type you are examining, directory or a file
+  # depending on which type you are examining, directory or a file
         return \%return unless -f ${$self->{'name'}};
 
         # start by setting the endian correctly
         #Log2t::BinRead::set_endian( LITTLE_E );
 
-	my $ofs = 0;
+  my $ofs = 0;
 
         # start by setting the endian correctly
         Log2t::BinRead::set_endian( BIG_E );
 
-	eval 
-	{	
-		unless( $self->{'quick'} )
-		{
-			# here we need to do a quick test, such as to test the first
-			# letter of the file to see if it matches what we expect
-			# this is done to speed up the verification process, so this
-			# is a preliminery test done before the more detailed one is performed
-			$vline = Log2t::BinRead::read_16($self->{'file'},\$ofs);
+  eval 
+  {  
+    unless( $self->{'quick'} )
+    {
+      # here we need to do a quick test, such as to test the first
+      # letter of the file to see if it matches what we expect
+      # this is done to speed up the verification process, so this
+      # is a preliminery test done before the more detailed one is performed
+      $vline = Log2t::BinRead::read_16($self->{'file'},\$ofs);
 
-			$return{'msg'} = "Wrong MAGIC value (not 0xfffe) [" . sprintf "0x%x", $vline . "]\n";
-			return \%return unless $vline == 0xfffe;
-		}
-		else
-		{
-			$ofs+=2;
-		}
-	
-		# read a line from the file as it were a binary file
-		# it does not matter if the file is ASCII based or binary, 
-		# lines are read as they were a binary one, since trying to load up large
-		# binary documents using <FILE> can cause log2timeline/timescanner to 
-		# halt for a long while before dying (memory exhaustion)
+      $return{'msg'} = "Wrong MAGIC value (not 0xfffe) [" . sprintf "0x%x", $vline . "]\n";
+      return \%return unless $vline == 0xfffe;
+    }
+    else
+    {
+      $ofs+=2;
+    }
+  
+    # read a line from the file as it were a binary file
+    # it does not matter if the file is ASCII based or binary, 
+    # lines are read as they were a binary one, since trying to load up large
+    # binary documents using <FILE> can cause log2timeline/timescanner to 
+    # halt for a long while before dying (memory exhaustion)
 
-		#  Name	Filter	In Report	File Ext	File Type	File Category	Signature	Description	Is Deleted	Last Accessed	File Created	Last Written	Entry Modified	File Deleted	File Acquired	Logical Size	Initialized Size	Physical Size	Starting Extent	File Extents	Permissions	References	Physical Location	Physical Sector	Evidence File	File Identifier	Code Page	Hash Value	Hash Set	Hash Category	Hash Properties	Full Path	Short Name	Unique Name	Original Path	Symbolic Link	Is Duplicate	Is Internal	Is Overwritten
+    #  Name  Filter  In Report  File Ext  File Type  File Category  Signature  Description  Is Deleted  Last Accessed  File Created  Last Written  Entry Modified  File Deleted  File Acquired  Logical Size  Initialized Size  Physical Size  Starting Extent  File Extents  Permissions  References  Physical Location  Physical Sector  Evidence File  File Identifier  Code Page  Hash Value  Hash Set  Hash Category  Hash Properties  Full Path  Short Name  Unique Name  Original Path  Symbolic Link  Is Duplicate  Is Internal  Is Overwritten
 
-		$return{'msg'} = 'Incorrect file structure' . "\n";
+    $return{'msg'} = 'Incorrect file structure' . "\n";
 
-		$vline = Log2t::BinRead::read_unicode_until( $self->{'file'}, \$ofs,"\n", 400 );
+    $vline = Log2t::BinRead::read_unicode_until( $self->{'file'}, \$ofs,"\n", 400 );
 
-		$return{'success'} = 1 if $vline =~ m/^Name\tFilter/ ;
-	};
-	if ( $@ )
-	{
-		$return{'success'} = 0;
-		$return{'msg'} = "An error occured during the validation process (error $@)";
-	}
+    $return{'success'} = 1 if $vline =~ m/^Name\tFilter/ ;
+  };
+  if ( $@ )
+  {
+    $return{'success'} = 0;
+    $return{'msg'} = "An error occured during the validation process (error $@)";
+  }
 
-	return \%return;
+  return \%return;
 }
 
 1;
@@ -313,17 +313,17 @@ B<structure> - an input module B<log2timeline> that parses X
 
 =head1 SYNOPSIS
 
-	my $format = structure;
-	require $format_dir . '/' . $format . ".pl" ;
+  my $format = structure;
+  require $format_dir . '/' . $format . ".pl" ;
 
-	$format->verify( $log_file );
-	$format->prepare_file( $log_file, @ARGV )
+  $format->verify( $log_file );
+  $format->prepare_file( $log_file, @ARGV )
 
         $line = $format->load_line()
 
-	$t_line = $format->parse_line();
+  $t_line = $format->parse_line();
 
-	$format->close_file();
+  $format->close_file();
 
 =head1 DESCRIPTION
 
@@ -367,23 +367,23 @@ This is the main subroutine of the format file (or often it is).  It depends on 
 
 The content of the hash t_line is the following:
 
-	%t_line {
-		md5,		# MD5 sum of the file
-		name,		# the main text that appears in the timeline
-		title,		# short description used by some output modules
-		source,		# the source of the timeline, usually the same name or similar to the name of the package
-		user,		# the username that owns the file or produced the artifact
-		host,		# the hostname that the file belongs to
-		inode,		# the inode number of the file that contains the artifact
-		mode,		# the access rights of the file
-		uid,		# the UID of the user that owns the file/artifact
-		gid,		# the GID of the user that owns the file/artifact
-		size,		# the size of the file/artifact
-		atime,		# Time in epoch representing the last ACCESS time
-		mtime,		# Time in epoch representing the last MODIFICATION time
-		ctime,		# Time in epoch representing the CREATION time (or MFT/INODE modification time)
-		crtime		# Time in epoch representing the CREATION time
-	}
+  %t_line {
+    md5,    # MD5 sum of the file
+    name,    # the main text that appears in the timeline
+    title,    # short description used by some output modules
+    source,    # the source of the timeline, usually the same name or similar to the name of the package
+    user,    # the username that owns the file or produced the artifact
+    host,    # the hostname that the file belongs to
+    inode,    # the inode number of the file that contains the artifact
+    mode,    # the access rights of the file
+    uid,    # the UID of the user that owns the file/artifact
+    gid,    # the GID of the user that owns the file/artifact
+    size,    # the size of the file/artifact
+    atime,    # Time in epoch representing the last ACCESS time
+    mtime,    # Time in epoch representing the last MODIFICATION time
+    ctime,    # Time in epoch representing the CREATION time (or MFT/INODE modification time)
+    crtime    # Time in epoch representing the CREATION time
+  }
 
 The subroutine return a reference to the hash (t_line) that will be used by the main script (B<log2timeline>) to produce the actual timeline.  The hash is processed by the main script before forwarding it to an output module for the actual printing of a bodyfile.
 
@@ -400,8 +400,8 @@ This is needed since there is no need to try to parse the file/directory/artifac
 It is also important to validate the file since the scanner function will try to parse every file it finds, and uses this verify function to determine whether or not a particular file/dir/artifact is supported or not. It is therefore very important to implement this function and make it verify the file structure without false positives and without taking too long time
 
 This subroutine returns a reference to a hash that contains two values
-	success		An integer indicating whether not the input module is able to parse the file/directory/artifact
-	msg		A message indicating the reason why the input module was not able to parse the file/directory/artifact
+  success    An integer indicating whether not the input module is able to parse the file/directory/artifact
+  msg    A message indicating the reason why the input module was not able to parse the file/directory/artifact
 
 =back
 

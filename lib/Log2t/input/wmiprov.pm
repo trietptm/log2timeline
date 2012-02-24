@@ -1,5 +1,5 @@
 #################################################################################################
-#		wmiprov	
+#    wmiprov  
 #################################################################################################
 # This script is a part of the log2timeline framework for timeline creation and analysis.
 # This script implements an input module, or a parser capable of parsing a single log file (or 
@@ -31,11 +31,11 @@ package Log2t::input::wmiprov;
 use strict;
 use Log2t::base::input; # the SUPER class or parent
 use Log2t::Common ':binary';
-use Log2t::Time;	# to manipulate time
-#use Log2t::Win;	# Windows specific information
-#use Log2t::Numbers;	# to manipulate numbers
-use Log2t::BinRead;	# methods to read binary files (it is preferable to always load this library)
-#use Log2t::Network;	# information about network traffic 
+use Log2t::Time;  # to manipulate time
+#use Log2t::Win;  # Windows specific information
+#use Log2t::Numbers;  # to manipulate numbers
+use Log2t::BinRead;  # methods to read binary files (it is preferable to always load this library)
+#use Log2t::Network;  # information about network traffic 
 
 # define the VERSION variable
 use vars qw($VERSION @ISA);
@@ -67,7 +67,7 @@ sub get_version()
 # @return A string containing a description of the format file's functionality
 sub get_description()
 {
-	return "Parse the content of the wmiprov log file"; 
+  return "Parse the content of the wmiprov log file"; 
 }
 
 #       get_time
@@ -80,44 +80,44 @@ sub get_description()
 # @return Returns a reference to a hash containing the needed values to print a body file
 sub get_time
 {
-	my $self = shift;
+  my $self = shift;
 
-	# the timestamp object
-	my %t_line;
-	my $date;
-	my $msg;
+  # the timestamp object
+  my %t_line;
+  my $date;
+  my $msg;
 
         # get the filehandle and read the next line
         my $fh = $self->{'file'};
         my $line = <$fh> or return undef;
 
-	# remove new line chars
-	$line =~ s/\n//g;
-	$line =~ s/\r//g;
+  # remove new line chars
+  $line =~ s/\n//g;
+  $line =~ s/\r//g;
 
-	# check the line
-	if( $line =~ m/^\(([\w :]+)\.\d+\) : (.+)/ )
-	#if( $line =~ m/^\((\s+)\.\d+\) : \((\w+)\)/ )
-	{
-		print STDERR "[WMIPROV] Date ($1) and message ($2)\n" if $self->{'debug'};
-		# now to transform the textual representation of the date into a more proper form
-		$date = Log2t::Time::text2epoch( $1, $self->{'tz'} );
-		$msg = $2;		
-	}
-	else
-	{
-		print STDERR "[WMIPROV] Line [$line] does not match the correct structure\n" if $self->{'debug'};
-		return \%t_line;
-	}
+  # check the line
+  if( $line =~ m/^\(([\w :]+)\.\d+\) : (.+)/ )
+  #if( $line =~ m/^\((\s+)\.\d+\) : \((\w+)\)/ )
+  {
+    print STDERR "[WMIPROV] Date ($1) and message ($2)\n" if $self->{'debug'};
+    # now to transform the textual representation of the date into a more proper form
+    $date = Log2t::Time::text2epoch( $1, $self->{'tz'} );
+    $msg = $2;    
+  }
+  else
+  {
+    print STDERR "[WMIPROV] Line [$line] does not match the correct structure\n" if $self->{'debug'};
+    return \%t_line;
+  }
 
-	# dont want the line to contain only * (asterisk)
-	return \%t_line if $msg =~ m/^\*+$/;
+  # dont want the line to contain only * (asterisk)
+  return \%t_line if $msg =~ m/^\*+$/;
 
-	# content of the timestamp object t_line 
-	# optional fields are marked with [] 
-	# 
+  # content of the timestamp object t_line 
+  # optional fields are marked with [] 
+  # 
         # %t_line {        
-	#       time
+  #       time
         #               index
         #                       value
         #                       type
@@ -139,18 +139,18 @@ sub get_time
         #               [...]
         # }
 
-	# create the t_line variable
-	%t_line = (
-		'time' => { 0 => { 'value' => $date, 'type' => 'Time Written', 'legacy' => 15 } },
-		'desc' => 'Entry in log file: ' . $msg,
-		'short' => $msg,
-		'source' => 'LOG',
-		'sourcetype' => 'WMIprov Log file',
-		'version' => 2,
-		'extra' => { 'url' => 'http://msdn.microsoft.com/en-us/library/aa827354%28VS.85%29.aspx' }
-	);
+  # create the t_line variable
+  %t_line = (
+    'time' => { 0 => { 'value' => $date, 'type' => 'Time Written', 'legacy' => 15 } },
+    'desc' => 'Entry in log file: ' . $msg,
+    'short' => $msg,
+    'source' => 'LOG',
+    'sourcetype' => 'WMIprov Log file',
+    'version' => 2,
+    'extra' => { 'url' => 'http://msdn.microsoft.com/en-us/library/aa827354%28VS.85%29.aspx' }
+  );
 
-	return \%t_line;
+  return \%t_line;
 }
 
 #       get_help
@@ -161,7 +161,7 @@ sub get_time
 # @return A string containing a help file for this format file
 sub get_help()
 {
-	return "This module parses the WMIprov file in Windows\n";
+  return "This module parses the WMIprov file in Windows\n";
 
 }
 
@@ -180,59 +180,59 @@ sub get_help()
 # without taking too long time
 #
 # @return A reference to a hash that contains an integer indicating whether or not the 
-#	file/dir/artifact is supporter by this input module as well as a reason why 
-#	it failed (if it failed) 
+#  file/dir/artifact is supporter by this input module as well as a reason why 
+#  it failed (if it failed) 
 sub verify
 {
-	my $self = shift;
+  my $self = shift;
 
-	# define an array to keep
-	my %return;
-	my $vline;
+  # define an array to keep
+  my %return;
+  my $vline;
 
-	# default values
-	$return{'success'} = 0;
-	$return{'msg'} = 'Wrong File Name';
+  # default values
+  $return{'success'} = 0;
+  $return{'msg'} = 'Wrong File Name';
 
-	# depending on which type you are examining, directory or a file
-	return \%return unless -f ${$self->{'name'}};
+  # depending on which type you are examining, directory or a file
+  return \%return unless -f ${$self->{'name'}};
 
         # start by setting the endian correctly
         Log2t::BinRead::set_endian( LITTLE_E );
 
-	my $ofs = 0;
+  my $ofs = 0;
 
-	# check the name of the file (first thing)
-	return \%return unless ${$self->{'name'}} =~ m/wmiprov\.log/i;
+  # check the name of the file (first thing)
+  return \%return unless ${$self->{'name'}} =~ m/wmiprov\.log/i;
 
-	# open the file (at least try to open it)
-	eval
-	{
-		# read a line from the file as it were a binary file
-		# it does not matter if the file is ASCII based or binary, 
-		# lines are read as they were a binary one, since trying to load up large
-		# binary documents using <FILE> can cause log2timeline/timescanner to 
-		# halt for a long while before dying (memory exhaustion)
-		$vline = Log2t::BinRead::read_ascii_until( $self->{'file'}, \$ofs, "\n", 100 );
-	};
-	if ( $@ )
-	{
-		$return{'success'} = 0;
-		$return{'msg'} = "Unable to open file";
-	}
+  # open the file (at least try to open it)
+  eval
+  {
+    # read a line from the file as it were a binary file
+    # it does not matter if the file is ASCII based or binary, 
+    # lines are read as they were a binary one, since trying to load up large
+    # binary documents using <FILE> can cause log2timeline/timescanner to 
+    # halt for a long while before dying (memory exhaustion)
+    $vline = Log2t::BinRead::read_ascii_until( $self->{'file'}, \$ofs, "\n", 100 );
+  };
+  if ( $@ )
+  {
+    $return{'success'} = 0;
+    $return{'msg'} = "Unable to open file";
+  }
 
-	# check the line
-	if( $vline =~ m/^\(.+\) : .+/ )
-	{
-		$return{'success'} = 1;
-	}
-	else
-	{
-		$return{'success'} = 0;
-		$return{'msg'} = 'wrong content in file';
-	}
+  # check the line
+  if( $vline =~ m/^\(.+\) : .+/ )
+  {
+    $return{'success'} = 1;
+  }
+  else
+  {
+    $return{'success'} = 0;
+    $return{'msg'} = 'wrong content in file';
+  }
 
-	return \%return;
+  return \%return;
 }
 
 1;
@@ -248,17 +248,17 @@ B<structure> - an input module B<log2timeline> that parses X
 
 =head1 SYNOPSIS
 
-	my $format = structure;
-	require $format_dir . '/' . $format . ".pl" ;
+  my $format = structure;
+  require $format_dir . '/' . $format . ".pl" ;
 
-	$format->verify( $log_file );
-	$format->prepare_file( $log_file, @ARGV )
+  $format->verify( $log_file );
+  $format->prepare_file( $log_file, @ARGV )
 
         $line = $format->load_line()
 
-	$t_line = $format->parse_line();
+  $t_line = $format->parse_line();
 
-	$format->close_file();
+  $format->close_file();
 
 =head1 DESCRIPTION
 
@@ -302,23 +302,23 @@ This is the main subroutine of the format file (or often it is).  It depends on 
 
 The content of the hash t_line is the following:
 
-	%t_line {
-		md5,		# MD5 sum of the file
-		name,		# the main text that appears in the timeline
-		title,		# short description used by some output modules
-		source,		# the source of the timeline, usually the same name or similar to the name of the package
-		user,		# the username that owns the file or produced the artifact
-		host,		# the hostname that the file belongs to
-		inode,		# the inode number of the file that contains the artifact
-		mode,		# the access rights of the file
-		uid,		# the UID of the user that owns the file/artifact
-		gid,		# the GID of the user that owns the file/artifact
-		size,		# the size of the file/artifact
-		atime,		# Time in epoch representing the last ACCESS time
-		mtime,		# Time in epoch representing the last MODIFICATION time
-		ctime,		# Time in epoch representing the CREATION time (or MFT/INODE modification time)
-		crtime		# Time in epoch representing the CREATION time
-	}
+  %t_line {
+    md5,    # MD5 sum of the file
+    name,    # the main text that appears in the timeline
+    title,    # short description used by some output modules
+    source,    # the source of the timeline, usually the same name or similar to the name of the package
+    user,    # the username that owns the file or produced the artifact
+    host,    # the hostname that the file belongs to
+    inode,    # the inode number of the file that contains the artifact
+    mode,    # the access rights of the file
+    uid,    # the UID of the user that owns the file/artifact
+    gid,    # the GID of the user that owns the file/artifact
+    size,    # the size of the file/artifact
+    atime,    # Time in epoch representing the last ACCESS time
+    mtime,    # Time in epoch representing the last MODIFICATION time
+    ctime,    # Time in epoch representing the CREATION time (or MFT/INODE modification time)
+    crtime    # Time in epoch representing the CREATION time
+  }
 
 The subroutine return a reference to the hash (t_line) that will be used by the main script (B<log2timeline>) to produce the actual timeline.  The hash is processed by the main script before forwarding it to an output module for the actual printing of a bodyfile.
 
@@ -335,8 +335,8 @@ This is needed since there is no need to try to parse the file/directory/artifac
 It is also important to validate the file since the scanner function will try to parse every file it finds, and uses this verify function to determine whether or not a particular file/dir/artifact is supported or not. It is therefore very important to implement this function and make it verify the file structure without false positives and without taking too long time
 
 This subroutine returns a reference to a hash that contains two values
-	success		An integer indicating whether not the input module is able to parse the file/directory/artifact
-	msg		A message indicating the reason why the input module was not able to parse the file/directory/artifact
+  success    An integer indicating whether not the input module is able to parse the file/directory/artifact
+  msg    A message indicating the reason why the input module was not able to parse the file/directory/artifact
 
 =back
 

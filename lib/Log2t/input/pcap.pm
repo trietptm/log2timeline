@@ -1,11 +1,11 @@
 #################################################################################################
-#		PCAP	
+#    PCAP  
 #################################################################################################
 # This is a PCAP parser, that is a parser that reads a pacp file to produce a timeline
 # data extracted from the traffic
 #
 # In Debian install the package
-#	libnet-pcap-perl
+#  libnet-pcap-perl
 # 
 # Author: Kristinn Gudjonsson
 # Version : 0.5
@@ -52,17 +52,17 @@ sub new
         # bless the class ;)
         my $self = $class->SUPER::new();
 
-	# add to the self object
-	$self->{'flags'} = {
-		0x01	=> 'FIN',
-		0x02 	=> 'SYN',
-		0x04	=> 'RESET',
-		0x08	=> 'PUSH',
-		0x10	=> 'ACK',
-		0x20	=> 'URGENT',
-		0x40	=> 'ECN-ECHO',
-		0x80	=> 'CWR'
-	};
+  # add to the self object
+  $self->{'flags'} = {
+    0x01  => 'FIN',
+    0x02   => 'SYN',
+    0x04  => 'RESET',
+    0x08  => 'PUSH',
+    0x10  => 'ACK',
+    0x20  => 'URGENT',
+    0x40  => 'ECN-ECHO',
+    0x80  => 'CWR'
+  };
 
         $self->{'file_access'} = 1;     # do we need to parse the actual file or is it enough to get a file handle
 
@@ -79,7 +79,7 @@ sub new
 
 sub get_version()
 {
-	return $VERSION;
+  return $VERSION;
 }
 
 #       get_description
@@ -90,7 +90,7 @@ sub get_version()
 # @return A string containing a description of the format file's functionality
 sub get_description()
 {
-	return "Parse the content of a PCAP file"; 
+  return "Parse the content of a PCAP file"; 
 }
 
 #       init
@@ -102,26 +102,26 @@ sub get_description()
 #       successful or not.
 sub init
 {
-	my $self = shift;
-	my $err;
-	my ($filter,$filter_c);
+  my $self = shift;
+  my $err;
+  my ($filter,$filter_c);
 
-	# open the access file and read all the lines
-	$self->{'packets'} = Net::Pcap::open_offline( ${$self->{'name'}}, \$err );
-	if( defined $err )
-	{
-		print STDERR '[ERROR] Unable to read the PCAP file: ', $err, "\n";
-		return 0;
-	}
-	
-	if( defined $filter )
-	{
-		# create the filter
-		Net::Pcap::setfilter( $self->{'packets'}, $filter_c );
-		Net::Pcap::compile( $self->{'packets'}, \$filter_c, $filter, 1, undef );
-	}
+  # open the access file and read all the lines
+  $self->{'packets'} = Net::Pcap::open_offline( ${$self->{'name'}}, \$err );
+  if( defined $err )
+  {
+    print STDERR '[ERROR] Unable to read the PCAP file: ', $err, "\n";
+    return 0;
+  }
+  
+  if( defined $filter )
+  {
+    # create the filter
+    Net::Pcap::setfilter( $self->{'packets'}, $filter_c );
+    Net::Pcap::compile( $self->{'packets'}, \$filter_c, $filter, 1, undef );
+  }
 
-	return 1;
+  return 1;
 }
 
 #       end
@@ -129,12 +129,12 @@ sub init
 # @return An integer indicating that the close operation was successful
 sub end
 {
-	my $self = shift;
+  my $self = shift;
 
-	# close the network file (since we have finished our processing)
-	Net::Pcap::close( $self->{'packets'} ) if defined $self->{'packets'};
-	
-	return 1;
+  # close the network file (since we have finished our processing)
+  Net::Pcap::close( $self->{'packets'} ) if defined $self->{'packets'};
+  
+  return 1;
 }
 
 #       get_time
@@ -150,64 +150,64 @@ sub end
 
 sub get_time
 {
-	my $self = shift;
+  my $self = shift;
 
-	my %t_line;
-	my ($ether,$ip,$trans);
-	my $fcheck;
-	my $text = '';
-	my %hdr;
-	my $packet;
+  my %t_line;
+  my ($ether,$ip,$trans);
+  my $fcheck;
+  my $text = '';
+  my %hdr;
+  my $packet;
 
-	# get the next packet
-	return undef unless $packet = Net::Pcap::next($self->{'packets'}, \%hdr);
+  # get the next packet
+  return undef unless $packet = Net::Pcap::next($self->{'packets'}, \%hdr);
 
-	# we have a packet ($packet) to examine	
-	$ether = NetPacket::Ethernet->decode( $packet );	
-	$ip = NetPacket::IP->decode( $ether->{'data'} );
+  # we have a packet ($packet) to examine  
+  $ether = NetPacket::Ethernet->decode( $packet );  
+  $ip = NetPacket::IP->decode( $ether->{'data'} );
 
-	# check if TCP or UDP
-	if( $ip->{'proto'} eq 6 )
-	{
-		# TCP
-		$trans = NetPacket::TCP->decode( $ip->{'data'} );
+  # check if TCP or UDP
+  if( $ip->{'proto'} eq 6 )
+  {
+    # TCP
+    $trans = NetPacket::TCP->decode( $ip->{'data'} );
 
-		# we don't care about ECN bits
-		$fcheck = $trans->{'flags'} & 0x3f;
+    # we don't care about ECN bits
+    $fcheck = $trans->{'flags'} & 0x3f;
 
-		# check if we have a SYN packet
-		if( $fcheck == 0x02  )
-		{
-			$text .= 'TCP SYN packet';
-		}
-		else
-		{
-			$text .= 'TCP packet flags [' .  sprintf("0x%x",$trans->{'flags'}) . ': ';
+    # check if we have a SYN packet
+    if( $fcheck == 0x02  )
+    {
+      $text .= 'TCP SYN packet';
+    }
+    else
+    {
+      $text .= 'TCP packet flags [' .  sprintf("0x%x",$trans->{'flags'}) . ': ';
 
-			foreach( keys %{$self->{'flags'}} )
-			{
-				$text .= $self->{'flags'}->{$_} . ' ' if( ($trans->{'flags'} & $_ ) == $_ )
-			}
-			$text .=  '] ';
-		}
+      foreach( keys %{$self->{'flags'}} )
+      {
+        $text .= $self->{'flags'}->{$_} . ' ' if( ($trans->{'flags'} & $_ ) == $_ )
+      }
+      $text .=  '] ';
+    }
 
-		$text .=  $ip->{'src_ip'}  . ':' . $trans->{'src_port'} .  ' -> ' . $ip->{'dest_ip'} . ':' . $trans->{'dest_port'} . ' seq [' . $trans->{'seqnum'} . ']';
+    $text .=  $ip->{'src_ip'}  . ':' . $trans->{'src_port'} .  ' -> ' . $ip->{'dest_ip'} . ':' . $trans->{'dest_port'} . ' seq [' . $trans->{'seqnum'} . ']';
 
-	}
-	elsif( $ip->{'proto'} eq 17 )
-	{
-		# UDP
-		$trans = NetPacket::UDP->decode( $ip->{'data'} );
-		$text .= 'UDP packet ' . $ip->{'src_ip'}  . ':' . $trans->{'src_port'} .  ' -> ' . $ip->{'dest_ip'} . ':' . $trans->{'dest_port'};
-	}
-	elsif( $ip->{'proto'} eq 1 )
-	{
-		$text .= 'ICMP packet ' . $ip->{'src_ip'} . ' -> ' . $ip->{'dest_ip'};
-	}
-	else
-	{
-		$text .= 'IP packet protocol ' . $ip->{'proto'} . ' ' . $ip->{'src_ip'} . '->' .$ip->{'dest_ip'};
-	}
+  }
+  elsif( $ip->{'proto'} eq 17 )
+  {
+    # UDP
+    $trans = NetPacket::UDP->decode( $ip->{'data'} );
+    $text .= 'UDP packet ' . $ip->{'src_ip'}  . ':' . $trans->{'src_port'} .  ' -> ' . $ip->{'dest_ip'} . ':' . $trans->{'dest_port'};
+  }
+  elsif( $ip->{'proto'} eq 1 )
+  {
+    $text .= 'ICMP packet ' . $ip->{'src_ip'} . ' -> ' . $ip->{'dest_ip'};
+  }
+  else
+  {
+    $text .= 'IP packet protocol ' . $ip->{'proto'} . ' ' . $ip->{'src_ip'} . '->' .$ip->{'dest_ip'};
+  }
 
         # content of array t_line ([optional])
         # %t_line {        #       time
@@ -243,7 +243,7 @@ sub get_time
                 'extra' => { 'host' => $ip->{'src_ip'}, 'src-ip' => $ip->{'src_ip'}, 'dst-ip' => $ip->{'dst_ip'} }
         );
 
-	return \%t_line;
+  return \%t_line;
 }
 
 #       get_help
@@ -252,7 +252,7 @@ sub get_time
 # @return A string containing a help file for this format file
 sub get_help()
 {
-	return "This plugin parses a PCAP file and displays timeline data extracted from the file.
+  return "This plugin parses a PCAP file and displays timeline data extracted from the file.
 What the parser does is to display timeline data from every packet that it sees.\n";
 
 
@@ -270,39 +270,39 @@ What the parser does is to display timeline data from every packet that it sees.
 #       string is the error message (if the file is not correctly formed)
 sub verify
 {
-	my $self = shift;
-	# define an array to keep
-	my %return;
-	my $magic;
-	my $temp;
+  my $self = shift;
+  # define an array to keep
+  my %return;
+  my $magic;
+  my $temp;
 
-	# default values
-	$return{'success'} = 0;
-	$return{'msg'} = 'success';
+  # default values
+  $return{'success'} = 0;
+  $return{'msg'} = 'success';
 
         return \%return unless -f ${$self->{'name'}};
 
-	# try to read from the file
-	eval
-	{
-		seek($self->{'file'},0,0 );
-		read($self->{'file'},$temp,4);
-	};
-	if ( $@ )
-	{
-		$return{'success'} = 0;
-		$return{'msg'} = "Unable to open file";
-	}
+  # try to read from the file
+  eval
+  {
+    seek($self->{'file'},0,0 );
+    read($self->{'file'},$temp,4);
+  };
+  if ( $@ )
+  {
+    $return{'success'} = 0;
+    $return{'msg'} = "Unable to open file";
+  }
 
-	# now we have one line of the file, let's read it and verify
-	# and here we have an error checking routine... (witch success = 1 if we are able to verify)
-	$magic = unpack( "V", $temp  );
+  # now we have one line of the file, let's read it and verify
+  # and here we have an error checking routine... (witch success = 1 if we are able to verify)
+  $magic = unpack( "V", $temp  );
 
-	# verify the magic value
-	$return{'success'} = 1 if $magic eq 0xa1b2c3d4;
-	$return{'msg'} = 'Wrong magic value, not really a pcap file' unless $return{'success'};
+  # verify the magic value
+  $return{'success'} = 1 if $magic eq 0xa1b2c3d4;
+  $return{'msg'} = 'Wrong magic value, not really a pcap file' unless $return{'success'};
 
-	return \%return;
+  return \%return;
 }
 
 1;

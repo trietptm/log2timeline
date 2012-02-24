@@ -1,5 +1,5 @@
 #################################################################################################
-#		jp_ntfs_change
+#    jp_ntfs_change
 #################################################################################################
 # this script is a part of the log2timeline program.
 # 
@@ -36,13 +36,13 @@ package Log2t::input::jp_ntfs_change;
 
 use strict;
 use Log2t::base::input; # the SUPER class or parent
-#use Log2t::Numbers;	# work with numbers, round-up, etc...
-#use Log2t::Network;	# some routines that deal with network information
-use Log2t::BinRead;	# to work with binary files (during verification all files are treaded as such)
+#use Log2t::Numbers;  # work with numbers, round-up, etc...
+#use Log2t::Network;  # some routines that deal with network information
+use Log2t::BinRead;  # to work with binary files (during verification all files are treaded as such)
 use Log2t::Common ':binary';
-use Log2t::Time;	# for time manipulations
-#use Log2t:Win;		# for few Windows related operations, GUID translations, etc..
-#use Log2t:WinReg;	# to recover deleted information from registry
+use Log2t::Time;  # for time manipulations
+#use Log2t:Win;    # for few Windows related operations, GUID translations, etc..
+#use Log2t:WinReg;  # to recover deleted information from registry
 use vars qw($VERSION @ISA);
 
 # inherit the base input module, or the super class.
@@ -56,16 +56,16 @@ $VERSION = '0.1';
 # These variables can therefore be used in the module without needing to 
 # do anything to initalize them.
 #
-#	$self->{'debug'}	- (int) Indicates whether or not debug is turned on or off
-#	$self->{'quick'} 	- (int) Indicates if we will like to do a quick verification
-#	$self->{'tz'}		- (string) The timezone that got passed to the tool
-#	$self->{'temp'}		- (string) The name of the temporary directory that can be used
-#	$self->{'text'}		- (string) The path that is possible to add to the input (-m parameter) 
-#	$self->{'sep'} 		- (string) The separator used (/ in Linux, \ in Windows for instance)
+#  $self->{'debug'}  - (int) Indicates whether or not debug is turned on or off
+#  $self->{'quick'}   - (int) Indicates if we will like to do a quick verification
+#  $self->{'tz'}    - (string) The timezone that got passed to the tool
+#  $self->{'temp'}    - (string) The name of the temporary directory that can be used
+#  $self->{'text'}    - (string) The path that is possible to add to the input (-m parameter) 
+#  $self->{'sep'}     - (string) The separator used (/ in Linux, \ in Windows for instance)
 #
 
 
-#	new
+#  new
 # this is the constructor for the subroutine.  
 #
 # If this input module uses all of the default values and does not need to define any new value, it is best to 
@@ -73,41 +73,41 @@ $VERSION = '0.1';
 # class
 sub new()
 {
-	my $class = shift;
+  my $class = shift;
 
-	# now we call the SUPER class's new function, since we are inheriting all the 
-	# functions from the SUPER class (input.pm), we start by inheriting it's calls
-	# and if we would like to overwrite some of its subroutines we can do that, otherwise
-	# we don't need to include that subroutine
+  # now we call the SUPER class's new function, since we are inheriting all the 
+  # functions from the SUPER class (input.pm), we start by inheriting it's calls
+  # and if we would like to overwrite some of its subroutines we can do that, otherwise
+  # we don't need to include that subroutine
         my $self = $class->SUPER::new();
 
-	# indicate that this is a text based file, with one line per call to get_time
-	#	This option determines the behaviour of the engine. If this variable is set
-	# 	to 0 it means that we return a single hash that contains multiple timstamp objects
-	#	Setting it to 1 means that we return a single timesetamp object for each line that
-	# 	contains a timestamp in the file.
-	# 	
-	# 	So if this is a traditional log file, it is usually better to leave this as 1 and 
-	# 	process one line at a time.  Otherwise the tool might use too much memory and become
-	#	slow (storing all the lines in a large log file in memory might not be such a good idea).
-	#
-	#	However if you are parsing a binary file, or a file that you know contains few timestamps
-	# 	in it, it might make more sense to just parse the entire file and return a single value
-	#	instead of making the engine call the module in a loop. 
-	
-	#$self->{'multi_line'} = 1;	# default value is 1 - only need to change from the default value
+  # indicate that this is a text based file, with one line per call to get_time
+  #  This option determines the behaviour of the engine. If this variable is set
+  #   to 0 it means that we return a single hash that contains multiple timstamp objects
+  #  Setting it to 1 means that we return a single timesetamp object for each line that
+  #   contains a timestamp in the file.
+  #   
+  #   So if this is a traditional log file, it is usually better to leave this as 1 and 
+  #   process one line at a time.  Otherwise the tool might use too much memory and become
+  #  slow (storing all the lines in a large log file in memory might not be such a good idea).
+  #
+  #  However if you are parsing a binary file, or a file that you know contains few timestamps
+  #   in it, it might make more sense to just parse the entire file and return a single value
+  #  instead of making the engine call the module in a loop. 
+  
+  #$self->{'multi_line'} = 1;  # default value is 1 - only need to change from the default value
 
-	#$self->{'type'} = 'file';	# it's a file type, not a directory (default file)
+  #$self->{'type'} = 'file';  # it's a file type, not a directory (default file)
         #$self->{'file_access'} = 0;    # do we need to parse the actual file or is it enough to get a file handle
-					# defaults to 0
+          # defaults to 0
 
         # bless the class ;)
         bless($self,$class);
 
-	return $self;
+  return $self;
 }
 
-# 	init
+#   init
 #
 # The init call resets all variables that are global and might mess up with recursive
 # scans.  
@@ -119,31 +119,31 @@ sub new()
 # class
 sub init()
 {
-	my $self = shift;
-	# there shouldn't be any need to create any global variables.  It might be best to
-	# save all such variables inside the $self object
-	# Creating such a variable is very simple:
-	#	$self->{'new_variable'} = 'value'
-	#
-	# sometimes it might be good to initialize these global variables, to make sure they 
-	# are not used again when parsing a new file.
-	#
-	# This method, init, is called by the engine before parsing any new file.  That makes
-	# this method ideal to initialize or null the values of global variables if they are used.
-	# This is especially cruical when recursive parsing is used, to make sure that when the next file 
-	# is being parsed by the module there isn't any mix-up between files.
+  my $self = shift;
+  # there shouldn't be any need to create any global variables.  It might be best to
+  # save all such variables inside the $self object
+  # Creating such a variable is very simple:
+  #  $self->{'new_variable'} = 'value'
+  #
+  # sometimes it might be good to initialize these global variables, to make sure they 
+  # are not used again when parsing a new file.
+  #
+  # This method, init, is called by the engine before parsing any new file.  That makes
+  # this method ideal to initialize or null the values of global variables if they are used.
+  # This is especially cruical when recursive parsing is used, to make sure that when the next file 
+  # is being parsed by the module there isn't any mix-up between files.
 
-	# read the first three lines (header)
+  # read the first three lines (header)
         my $fh = $self->{'file'};
         my $line = <$fh> or return undef; 
         $line = <$fh> or return undef; 
         $line = <$fh> or return undef; 
 
-	return 1;
+  return 1;
 }
 
 
-# 	get_version
+#   get_version
 # A simple subroutine that returns the version number of the format file
 # There shouldn't be any need to change this routine, it serves its purpose 
 # just the way it is defined right now. (so it shouldn't be changed)
@@ -151,10 +151,10 @@ sub init()
 # @return A version number
 sub get_version()
 {
-	return $VERSION;
+  return $VERSION;
 }
 
-# 	get_description
+#   get_description
 # A simple subroutine that returns a string containing a description of 
 # the funcionality of the format file. This string is used when a list of
 # all available format files is printed out
@@ -162,11 +162,11 @@ sub get_version()
 # @return A string containing a description of the input module
 sub get_description()
 {
-	# change this value so it reflects the purpose of this module
-	return "Parse the content of a CSV output file from JP (NTFS Change log)";
+  # change this value so it reflects the purpose of this module
+  return "Parse the content of a CSV output file from JP (NTFS Change log)";
 }
 
-#	get_time
+#  get_time
 # This is the main "juice" of the input module. It parses the input file
 # and produces a timestamp object that get's returned (or if we said that
 # self->{'multi_line'} = 0 it will return a single hash reference that contains
@@ -175,68 +175,68 @@ sub get_description()
 # This subroutine needs to be implemented at all times
 sub get_time()
 {
-	my $self = shift;
+  my $self = shift;
 
-	# the timestamp object
-	my %t_line;
-	my $text;
-	my $date;
+  # the timestamp object
+  my %t_line;
+  my $text;
+  my $date;
 
-	# get the filehandle and read the next line
-	my $fh = $self->{'file'};
-	my $line = <$fh> or return undef; 
-	$line =~ s/\n//g;
-	$line =~ s/\r//g;
+  # get the filehandle and read the next line
+  my $fh = $self->{'file'};
+  my $line = <$fh> or return undef; 
+  $line =~ s/\n//g;
+  $line =~ s/\r//g;
 
-	# check line, to see if there are any comments or other such non-related stuff
-	if( $line =~ m/^#/ )
-	{
-		# comment, let's skip that one
-		return \%t_line; 
-	}
-	elsif( $line =~ m/^$/ or $line =~ m/^\s+$/ )
-	{
-		# empty line
-		return \%t_line;
-	}
+  # check line, to see if there are any comments or other such non-related stuff
+  if( $line =~ m/^#/ )
+  {
+    # comment, let's skip that one
+    return \%t_line; 
+  }
+  elsif( $line =~ m/^$/ or $line =~ m/^\s+$/ )
+  {
+    # empty line
+    return \%t_line;
+  }
 
-	# split the line (comma based)
-	my @l = split( /,/, $line );
+  # split the line (comma based)
+  my @l = split( /,/, $line );
 
-	# date field: 06/19/2009, 05:17:14.984,
-	# 	or  : MM/DD/YYYY	-> $l[0]
-	#	and : HH:MM:SS.ms	-> $l[1]
-	# convert to ISO8601 (YYYY-MM-DD...)
-	my ($m,$d,$y) = split( /\//, $l[0] );
-	my ($t,$r) = split( /\./, $l[1] );
-	# remove spaces from timestamp
-	$t =~ s/\s//g;
+  # date field: 06/19/2009, 05:17:14.984,
+  #   or  : MM/DD/YYYY  -> $l[0]
+  #  and : HH:MM:SS.ms  -> $l[1]
+  # convert to ISO8601 (YYYY-MM-DD...)
+  my ($m,$d,$y) = split( /\//, $l[0] );
+  my ($t,$r) = split( /\./, $l[1] );
+  # remove spaces from timestamp
+  $t =~ s/\s//g;
 
-	# calculate the date
-	$date = Log2t::Time::iso2epoch( "$y-$m-$d" . 'T' . $t . 'Z', $self->{'tz'} );
+  # calculate the date
+  $date = Log2t::Time::iso2epoch( "$y-$m-$d" . 'T' . $t . 'Z', $self->{'tz'} );
 
-	# the file name is in l[2], then the rest is to be joined back together (type change)
-	my $type = join ( '/', @l[3..10] );
-	# fix the "type" field
-	$type =~ s/\s//g;
-	$type =~ s/\/+$//;
+  # the file name is in l[2], then the rest is to be joined back together (type change)
+  my $type = join ( '/', @l[3..10] );
+  # fix the "type" field
+  $type =~ s/\s//g;
+  $type =~ s/\/+$//;
 
-	# get the file name and remove spaces that occur in front of it
-	my $file = $l[2];
-	$file =~ s/^\s+//;
-	
-	# The timestamp object looks something like this:
-	# The fields denoted by [] are optional and might be used by some modules and not others.
-	# The extra field gets in part populated by the main engine, however some fields might be created in the module,
-	# for instance if it is possible to extract the username it gets there, or the hostname. Other values might be
-	# source ip (src-ip) or some other values that might be of interest yet are not part of the main variables.
-	# Another interesting field that might be included in the extra field is the URL ('url').  If it is possible to 
-	# show the user where he or she can get additional information regarding the event that is being produced 
-	# this is a good place to put it in, for example Windows events found inside the Windows Event Log contain 
-	# valuable information that can be further read... so in the evt.pm module a reference to the particular event is 
-	# placed inside this variable:
-	#   $t_line{'extra'}->{'url'} =http://eventid.net/display.asp?eventid=' . $r{evt_id} . '&source=' . $source
-	# 
+  # get the file name and remove spaces that occur in front of it
+  my $file = $l[2];
+  $file =~ s/^\s+//;
+  
+  # The timestamp object looks something like this:
+  # The fields denoted by [] are optional and might be used by some modules and not others.
+  # The extra field gets in part populated by the main engine, however some fields might be created in the module,
+  # for instance if it is possible to extract the username it gets there, or the hostname. Other values might be
+  # source ip (src-ip) or some other values that might be of interest yet are not part of the main variables.
+  # Another interesting field that might be included in the extra field is the URL ('url').  If it is possible to 
+  # show the user where he or she can get additional information regarding the event that is being produced 
+  # this is a good place to put it in, for example Windows events found inside the Windows Event Log contain 
+  # valuable information that can be further read... so in the evt.pm module a reference to the particular event is 
+  # placed inside this variable:
+  #   $t_line{'extra'}->{'url'} =http://eventid.net/display.asp?eventid=' . $r{evt_id} . '&source=' . $source
+  # 
         # %t_line {      
         #               index
         #                       value
@@ -258,7 +258,7 @@ sub get_time()
         #               [size]
         #               [...]
         # }
-	#
+  #
 
         # create the t_line variable
         %t_line = (
@@ -271,26 +271,26 @@ sub get_time()
                 'extra' => {  } 
         );
 
-	return \%t_line;
+  return \%t_line;
 }
 
-#	get_help
+#  get_help
 # A simple subroutine that returns a string containing the help 
 # message for this particular format file.
 # @return A string containing a help file for this input module
 sub get_help()
 {
-	# this message contains the full message that gest printed 
-	# when the user calls for a help on a particular module.
-	# 
-	# So this text that needs to be changed contains more information
-	# than the description field.  It might contain information about the
-	# path names that the file might be found that this module parses, or
-	# URLs for additional information regarding the structure or forensic value of it.
-	return "This parser parses the log file X and it might be found on location Y.";
+  # this message contains the full message that gest printed 
+  # when the user calls for a help on a particular module.
+  # 
+  # So this text that needs to be changed contains more information
+  # than the description field.  It might contain information about the
+  # path names that the file might be found that this module parses, or
+  # URLs for additional information regarding the structure or forensic value of it.
+  return "This parser parses the log file X and it might be found on location Y.";
 }
 
-#	verify
+#  verify
 # This subroutine is very important.  Its purpose is to check the file or directory that is passed 
 # to the tool and verify its structure. If the structure is correct, then this module is suited to 
 # parse said file or directory.
@@ -301,57 +301,57 @@ sub get_help()
 # could also lead to the module trying to parse files that it is not capable of parsing.
 #
 # The subroutine returns a reference to a hash that contains two keys, 
-#	success		-> INT, either 0 or 1 (meaning not the correct structure, or the correct one)
-#	msg		-> A short description why the verification failed (if the value of success
-#			is zero that is).
+#  success    -> INT, either 0 or 1 (meaning not the correct structure, or the correct one)
+#  msg    -> A short description why the verification failed (if the value of success
+#      is zero that is).
 sub verify
 {
-	my $self = shift;
+  my $self = shift;
 
-	# define an array to keep
-	my %return;
-	my $line;
+  # define an array to keep
+  my %return;
+  my $line;
 
-	# defines the maximum amount of lines that we read until we determine that this is not the log file of question
-	my $max = 15;
-	my $i = 0;
-	
-	$return{'success'} = 0;
-	$return{'msg'} = 'success';
+  # defines the maximum amount of lines that we read until we determine that this is not the log file of question
+  my $max = 15;
+  my $i = 0;
+  
+  $return{'success'} = 0;
+  $return{'msg'} = 'success';
 
-	# to make things faster, start by checking if this is a file or a directory, depending on what this
-	# modules is about to parse (and to eliminate shortcut files, devices or other non-files immediately)
-	return \%return unless -f ${$self->{'name'}};
+  # to make things faster, start by checking if this is a file or a directory, depending on what this
+  # modules is about to parse (and to eliminate shortcut files, devices or other non-files immediately)
+  return \%return unless -f ${$self->{'name'}};
 
         # start by setting the endian correctly
         Log2t::BinRead::set_endian( LITTLE_E );
 
-	my $ofs = 0;
-	
-	# now we try to read from the file
-	eval
-	{
-		# First line should be "jp ver: "
-		$line = Log2t::BinRead::read_ascii( $self->{'file'}, \$ofs, 8 );
+  my $ofs = 0;
+  
+  # now we try to read from the file
+  eval
+  {
+    # First line should be "jp ver: "
+    $line = Log2t::BinRead::read_ascii( $self->{'file'}, \$ofs, 8 );
 
-		if( $line =~ m/^jp ver: $/ )
-		{
-			$return{'success'} = 1;
-		}
-		else
-		{
-			$return{'msg'} = 'Wrong magic ' . sprintf "%s\n", $line;
-		}
-	};
-	if ( $@ )
-	{
-		$return{'success'} = 0;
-		$return{'msg'} = "Unable to process file ($@)";
+    if( $line =~ m/^jp ver: $/ )
+    {
+      $return{'success'} = 1;
+    }
+    else
+    {
+      $return{'msg'} = 'Wrong magic ' . sprintf "%s\n", $line;
+    }
+  };
+  if ( $@ )
+  {
+    $return{'success'} = 0;
+    $return{'msg'} = "Unable to process file ($@)";
 
-		return \%return;
-	}
+    return \%return;
+  }
 
-	return \%return;
+  return \%return;
 }
 
 1;

@@ -1,5 +1,5 @@
 #################################################################################################
-#		SAM
+#    SAM
 #################################################################################################
 # This script parses the SAM registry file
 #
@@ -27,11 +27,11 @@
 package Log2t::input::sam;
 
 use strict;
-use Log2t::base::input; 	# the SUPER class or parent
+use Log2t::base::input;   # the SUPER class or parent
 use Parse::Win32Registry qw(:REG_);
 use Log2t::Common ':binary';
 use Log2t::BinRead;
-use Log2t::WinReg;	# for deleted entries
+use Log2t::WinReg;  # for deleted entries
 use Log2t::Time;
 use Log2t::Win;
 use Encode;
@@ -46,19 +46,19 @@ use vars qw($VERSION @ISA);
 $VERSION = '0.1';
 
 my %acb_flags = (0x0001 => "Account Disabled",
-	0x0002 => "Home directory required",
-	0x0004 => "Password not required",
-	0x0008 => "Temporary duplicate account",
-	0x0010 => "Normal user account",
-	0x0020 => "MNS logon user account",
-	0x0040 => "Interdomain trust account",
-	0x0080 => "Workstation trust account",
-	0x0100 => "Server trust account",
-	0x0200 => "Password does not expire",
-	0x0400 => "Account auto locked");
+  0x0002 => "Home directory required",
+  0x0004 => "Password not required",
+  0x0008 => "Temporary duplicate account",
+  0x0010 => "Normal user account",
+  0x0020 => "MNS logon user account",
+  0x0040 => "Interdomain trust account",
+  0x0080 => "Workstation trust account",
+  0x0100 => "Server trust account",
+  0x0200 => "Password does not expire",
+  0x0400 => "Account auto locked");
 
 ##########################################################################################################################
-#		PARSING FUNCTIONS
+#    PARSING FUNCTIONS
 #------------------------------------------------------------------------------------------------------------------------#
 
 # this is borrowed from H. Carvey's samparse.pl (plugin from RegRipper)
@@ -212,93 +212,93 @@ sub _parseF {
 
 sub _parse_sam
 {
-	my $self = shift;
-	my $name = shift;
-	my $text;
+  my $self = shift;
+  my $name = shift;
+  my $text;
 
-	my $root_key = $self->{'reg'}->get_root_key;
-	my @user_list = $self->{'value'}->get_list_of_subkeys();
+  my $root_key = $self->{'reg'}->get_root_key;
+  my @user_list = $self->{'value'}->get_list_of_subkeys();
 
-	if (scalar(@user_list) > 0) 
-	{
-		foreach my $u (@user_list) 
-		{
-			my $rid = $u->get_name();
-			my $ts  = $u->get_timestamp();
-			my $tag = "0000";
-			if ($rid =~ m/^$tag/) 
-			{
-				my $v_value = $u->get_value("V");
-				my $v = $v_value->get_data();
-				my %v_val = _parseV($v);
-				$rid =~ s/^0000//;
-				$rid = hex($rid);
+  if (scalar(@user_list) > 0) 
+  {
+    foreach my $u (@user_list) 
+    {
+      my $rid = $u->get_name();
+      my $ts  = $u->get_timestamp();
+      my $tag = "0000";
+      if ($rid =~ m/^$tag/) 
+      {
+        my $v_value = $u->get_value("V");
+        my $v = $v_value->get_data();
+        my %v_val = _parseV($v);
+        $rid =~ s/^0000//;
+        $rid = hex($rid);
 
-				my $c_date;
-				eval 
-				{
-					my $create_path = $self->{'key_name'} ."\\Names\\".$v_val{name};
-					if (my $create = $root_key->get_subkey($create_path)) 
-					{
-						$c_date = $create->get_timestamp();
-					}
-				};
+        my $c_date;
+        eval 
+        {
+          my $create_path = $self->{'key_name'} ."\\Names\\".$v_val{name};
+          if (my $create = $root_key->get_subkey($create_path)) 
+          {
+            $c_date = $create->get_timestamp();
+          }
+        };
 
 
-				$self->{'username'} = $v_val{name}." [".$rid."]";
+        $self->{'username'} = $v_val{name}." [".$rid."]";
 
-				$text = $v_val{fullname} . ' (' . $self->{'username'} . ')';
-				$text .= ' [' . $v_val{comment} . ']' unless $v_val{comment} eq '';
-		
-				my $f_value = $u->get_value("F");
-				my $f = $f_value->get_data();
-				my %f_val = _parseF($f);
+        $text = $v_val{fullname} . ' (' . $self->{'username'} . ')';
+        $text .= ' [' . $v_val{comment} . ']' unless $v_val{comment} eq '';
+    
+        my $f_value = $u->get_value("F");
+        my $f = $f_value->get_data();
+        my %f_val = _parseF($f);
 
-				my $pw_hint;
-				eval 
-				{
-					$pw_hint = $u->get_value("UserPasswordHint")->get_data();
-					$pw_hint =~ s/\00//g;
-				};
+        my $pw_hint;
+        eval 
+        {
+          $pw_hint = $u->get_value("UserPasswordHint")->get_data();
+          $pw_hint =~ s/\00//g;
+        };
 
-				$text .= ' - pwd hint: ' . $pw_hint unless ($@);
+        $text .= ' - pwd hint: ' . $pw_hint unless ($@);
 
-				$text .= ' - Login count: ' . $f_val{login_count};
+        $text .= ' - Login count: ' . $f_val{login_count};
 
-				foreach my $flag (keys %acb_flags) 	
-				{
-					$text .= ("  --> ".$acb_flags{$flag}) if ($f_val{acb_flags} & $flag);
-				}
+        foreach my $flag (keys %acb_flags)   
+        {
+          $text .= ("  --> ".$acb_flags{$flag}) if ($f_val{acb_flags} & $flag);
+        }
 
-			        $self->{'container'}->{$self->{'cont_index'}++} = {
-			                'time' => { 
-			                        0 => { 'value' => $c_date, 'type' => 'Account Created', 'legacy' => 8 },
-			                        1 => { 'value' => $f_val{last_login_date}, 'type' => 'Last Login', 'legacy' => 2 },
-			                        2 => { 'value' => $f_val{pwd_reset_date}, 'type' => 'Pwd Reset', 'legacy' => 1 },
-			                        3 => { 'value' => $f_val{pwd_fail_date}, 'type' => '', 'Pwd Fail' => 4 },
-			                },   
-			                'desc' => "SAM: " . $text ,
-			                'short' => $v_val{fullname} . ' count: ' . $f_val{login_count},
-			                'source' => 'REG',
-			                'sourcetype' => 'SAM key',
-			                'version' => 2,
-			                'extra' => { 'user' => $self->{'username'}, }
-			        };   				
+              $self->{'container'}->{$self->{'cont_index'}++} = {
+                      'time' => { 
+                              0 => { 'value' => $c_date, 'type' => 'Account Created', 'legacy' => 8 },
+                              1 => { 'value' => $f_val{last_login_date}, 'type' => 'Last Login', 'legacy' => 2 },
+                              2 => { 'value' => $f_val{pwd_reset_date}, 'type' => 'Pwd Reset', 'legacy' => 1 },
+                              3 => { 'value' => $f_val{pwd_fail_date}, 'type' => '', 'Pwd Fail' => 4 },
+                      },   
+                      'desc' => "SAM: " . $text ,
+                      'short' => $v_val{fullname} . ' count: ' . $f_val{login_count},
+                      'source' => 'REG',
+                      'sourcetype' => 'SAM key',
+                      'version' => 2,
+                      'extra' => { 'user' => $self->{'username'}, }
+              };           
 
-			}
-		}
-	}
-	
+      }
+    }
+  }
+  
 }
 
 # the default parsing of an object
 sub _parse_default
 {
-	my $self = shift;
+  my $self = shift;
 
-  	my $ts = $self->{'value'}->get_timestamp();
-  	my $name = shift; 
-  	#my $name = $self-{'key_name'};
+    my $ts = $self->{'value'}->get_timestamp();
+    my $name = shift; 
+    #my $name = $self-{'key_name'};
 
         # content of array t_line ([optional])
         # %t_line {        #       time
@@ -322,12 +322,12 @@ sub _parse_default
         #               [size]
         #               [...]
         # }
-	# we've got all the values
+  # we've got all the values
         # create the t_line variable
-	$self->{'container'}->{$self->{'cont_index'}++} = {
+  $self->{'container'}->{$self->{'cont_index'}++} = {
                 'time' => { 
-			0 => { 'value' => $ts, 'type' => 'Last Written', 'legacy' => 15 },
-		},
+      0 => { 'value' => $ts, 'type' => 'Last Written', 'legacy' => 15 },
+    },
                 'desc' => "Key name: HKLM/SAM$name" ,
                 'short' => $name,
                 'source' => 'REG',
@@ -336,7 +336,7 @@ sub _parse_default
                 'extra' => {  }
         };
 
-	return 1;
+  return 1;
 
 }
 
@@ -356,9 +356,9 @@ sub new()
 
         # TEMPORARY - remove when FH is accepted through Parse::Win32Registry
         $self->{'file_access'} = 1;     # do we need to parse the actual file or is it enough to get a file handle
-	
-	# set some default variables
-	$self->{'verify_key'} = 'SAM\\Domains\\Account\\Users';
+  
+  # set some default variables
+  $self->{'verify_key'} = 'SAM\\Domains\\Account\\Users';
 
         bless($self,$class);
 
@@ -371,7 +371,7 @@ sub new()
 # @return A version number
 sub get_version()
 {
-	return $VERSION;
+  return $VERSION;
 }
 
 #       get_description
@@ -382,74 +382,74 @@ sub get_version()
 # @return A string containing a description of the format file's functionality
 sub get_description()
 {
-	return "Parses the SAM registry file";	
+  return "Parses the SAM registry file";  
 }
 
 sub _regscan
 {
-	my $self = shift;
-	my $key = shift;
+  my $self = shift;
+  my $key = shift;
 
-  	my $name = $key->as_string();
-  	$name =~ s/\$\$\$PROTO\.HIV//;
-	#$name =~ s/^SAM//;
-  	$name = (split(/\[/,$name))[0];
-	$name =~ s/^CMI-CreateHive{[A-F0-9_\-]+}//;
-	$name =~ s/^\\//;
-	$name =~ s/\s//g;
-	
-	$self->{'key_name'} = $name;
+    my $name = $key->as_string();
+    $name =~ s/\$\$\$PROTO\.HIV//;
+  #$name =~ s/^SAM//;
+    $name = (split(/\[/,$name))[0];
+  $name =~ s/^CMI-CreateHive{[A-F0-9_\-]+}//;
+  $name =~ s/^\\//;
+  $name =~ s/\s//g;
+  
+  $self->{'key_name'} = $name;
 
-	#print STDERR "\n\n";
-	#print STDERR "[SYSTEM] We are about to load record nr. " . $self->{'counter'}++ . "\n" ;#if $self->{'debug'};
+  #print STDERR "\n\n";
+  #print STDERR "[SYSTEM] We are about to load record nr. " . $self->{'counter'}++ . "\n" ;#if $self->{'debug'};
 
-	#print STDERR "TESTING AGAINST [$name]\n";
-	#foreach( keys %{$self->{'key_parse'}} )
-	#{
-	#	print STDERR "\t($_)\n";
-	#}
+  #print STDERR "TESTING AGAINST [$name]\n";
+  #foreach( keys %{$self->{'key_parse'}} )
+  #{
+  #  print STDERR "\t($_)\n";
+  #}
 
-	# check the key
-	if( defined $self->{'key_parse'}->{$name} )
-	{
-		# key defined, we are about to do some parsing here
-		$self->{'value'} = $key;
-		eval 
-		{
-			$self->{'key_parse'}->{$name}->( $self );
-		};
-		if( $@ )
-		{
-			print STDERR "[SYSTEM] Unable to parse the registry key $name. Error $@\n";
-			return 1;
-		}
-	}
-	else
-	{
-		#print STDERR "[NTUSER] <$name> NOT DEFINED\n";
-		# not defined, we need the default behaviour (print this particular key and then find all the sub keys
-		$self->{'value'} = $key;
-		eval
-		{
-			$self->{'key_parse'}->{'DEFAULT'}->($self, $name);
-		};
-		if( $@ )
-		{
-			print STDERR "[SYSTEM] Unable to parse the registry key $name. Error $@\n";
-			return 1;
-		}
+  # check the key
+  if( defined $self->{'key_parse'}->{$name} )
+  {
+    # key defined, we are about to do some parsing here
+    $self->{'value'} = $key;
+    eval 
+    {
+      $self->{'key_parse'}->{$name}->( $self );
+    };
+    if( $@ )
+    {
+      print STDERR "[SYSTEM] Unable to parse the registry key $name. Error $@\n";
+      return 1;
+    }
+  }
+  else
+  {
+    #print STDERR "[NTUSER] <$name> NOT DEFINED\n";
+    # not defined, we need the default behaviour (print this particular key and then find all the sub keys
+    $self->{'value'} = $key;
+    eval
+    {
+      $self->{'key_parse'}->{'DEFAULT'}->($self, $name);
+    };
+    if( $@ )
+    {
+      print STDERR "[SYSTEM] Unable to parse the registry key $name. Error $@\n";
+      return 1;
+    }
 
-		# and now to find the subkeys
-		foreach my $subkey ( $key->get_list_of_subkeys() ) 
-		{
-			$self->_regscan( $subkey );
-		}
-	}
+    # and now to find the subkeys
+    foreach my $subkey ( $key->get_list_of_subkeys() ) 
+    {
+      $self->_regscan( $subkey );
+    }
+  }
 
-	return 1;
+  return 1;
 }
 
-#	get_time
+#  get_time
 # This subroutine starts by reading the NTUSER.DAT registry file and parse it
 # using the Win32Registry library.  It then retrives the UserAssist part of the
 # registry and stores it's values in the array @vals (which is global)
@@ -458,48 +458,48 @@ sub _regscan
 # objects to the main engine for further processing
 sub get_time()
 {
-	my $self = shift;
-	my $key;
-	my $root_key;
-	my @extra;
-	my $path;
-	my @t_array;
-	my %t_hash;
+  my $self = shift;
+  my $key;
+  my $root_key;
+  my @extra;
+  my $path;
+  my @t_array;
+  my %t_hash;
 
-	# set the default values
-	$self->{'no_go'} = 0;
+  # set the default values
+  $self->{'no_go'} = 0;
 
-	# initialize
-	$self->{'container'} = undef;
-	$self->{'cont_index'} = 0;
-	$self->{'counter'} = 1;
+  # initialize
+  $self->{'container'} = undef;
+  $self->{'cont_index'} = 0;
+  $self->{'counter'} = 1;
 
-	# get the root key
-	$root_key = $self->{'reg'}->get_root_key;
+  # get the root key
+  $root_key = $self->{'reg'}->get_root_key;
 
-	# define a dispatch table, or a code reference table
-	$self->{'key_parse'} = {
-		'SAM\\Domains\\Account\\Users'	=> \&_parse_sam,
-		'DEFAULT' => \&_parse_default 	# default parsing (not a known key)
-	};
-	
-	# if no_go is set, then we just return with no line
-	return undef if $self->{'no_go'};
+  # define a dispatch table, or a code reference table
+  $self->{'key_parse'} = {
+    'SAM\\Domains\\Account\\Users'  => \&_parse_sam,
+    'DEFAULT' => \&_parse_default   # default parsing (not a known key)
+  };
+  
+  # if no_go is set, then we just return with no line
+  return undef if $self->{'no_go'};
 
-	# now we've confirmed everything, set up all the needed functions, no we just need to do some recursive scan through the registry
-	# parsing the keys we can, and make a simple gesture for the rest
-	$self->_regscan( $root_key );
+  # now we've confirmed everything, set up all the needed functions, no we just need to do some recursive scan through the registry
+  # parsing the keys we can, and make a simple gesture for the rest
+  $self->_regscan( $root_key );
 
-	# now we've done the recursive scan, let's try to recover deleted information
-	my $deleted_entries = Log2t::WinReg::get_deleted_entries( $self );
+  # now we've done the recursive scan, let's try to recover deleted information
+  my $deleted_entries = Log2t::WinReg::get_deleted_entries( $self );
 
-	# add the deleted entries into the pile...
-	foreach my $h ( keys %{$deleted_entries} )
-	{
-		$self->{'container'}->{$self->{'cont_index'}++} = $deleted_entries->{$h};
-	}
+  # add the deleted entries into the pile...
+  foreach my $h ( keys %{$deleted_entries} )
+  {
+    $self->{'container'}->{$self->{'cont_index'}++} = $deleted_entries->{$h};
+  }
 
-	return $self->{'container'};
+  return $self->{'container'};
 }
 
 
@@ -509,10 +509,10 @@ sub get_time()
 # @return A string containing a help file for this format file
 sub get_help()
 {
-	return "This input module parses the SAM registry file.
+  return "This input module parses the SAM registry file.
 It extracts data from 'known' keys and then displays the last written time and 
 name of the rest of the keys.
-	";
+  ";
 }
 
 #       verify
@@ -522,110 +522,110 @@ name of the rest of the keys.
 #       string is the error message (if the file is not correctly formed)
 sub verify
 {
-	my $self = shift;
-	# define an array to keep
-	my %return;
-	my $line;
-	my @words;
-	my $root_key;
-	my $key;
+  my $self = shift;
+  # define an array to keep
+  my %return;
+  my $line;
+  my @words;
+  my $root_key;
+  my $key;
 
-	# start by setting the endian correctly
-	#Log2t::BinRead::set_endian( Log2t::Common::LITTLE_E );
-	#Log2t::BinRead::set_endian( LITTLE_E );
+  # start by setting the endian correctly
+  #Log2t::BinRead::set_endian( Log2t::Common::LITTLE_E );
+  #Log2t::BinRead::set_endian( LITTLE_E );
 
-	# default values
-	$return{'success'} = 0;
-	$return{'msg'} = 'not a file';
-	
-	return \%return unless -f ${$self->{'name'}};
+  # default values
+  $return{'success'} = 0;
+  $return{'msg'} = 'not a file';
+  
+  return \%return unless -f ${$self->{'name'}};
 
-	my $ofs = 0;
+  my $ofs = 0;
 
-	# start by checking if this is a file or not
-	if( -f ${$self->{'name'}} )
-	{
-		# this is a file, check further
-		eval
-		{
-			$line = Log2t::BinRead::read_ascii( $self->{'file'},\$ofs,4 );
-		};
-		if ( $@ )
-		{
-			$return{'success'} = 0;
-			$return{'msg'} = "Unable to open the file ($@)";
-			return \%return;
-		}
+  # start by checking if this is a file or not
+  if( -f ${$self->{'name'}} )
+  {
+    # this is a file, check further
+    eval
+    {
+      $line = Log2t::BinRead::read_ascii( $self->{'file'},\$ofs,4 );
+    };
+    if ( $@ )
+    {
+      $return{'success'} = 0;
+      $return{'msg'} = "Unable to open the file ($@)";
+      return \%return;
+    }
 
-		# the content of these bytes should be
-		# regf = 7265 6766
-		if( $line eq 'regf' )
-		{
-			# load the array ( or try to at least )
-			eval 
-			{
-				$self->{'reg'} = Parse::Win32Registry->new(${$self->{'name'}});
-			};
-			if( $@ )
-			{
-				# an error occured, return from this mess ;)
-				$return{'msg'} = "[UserAssist] Unable to load registry file";
-				$return{'success'} = 0;
+    # the content of these bytes should be
+    # regf = 7265 6766
+    if( $line eq 'regf' )
+    {
+      # load the array ( or try to at least )
+      eval 
+      {
+        $self->{'reg'} = Parse::Win32Registry->new(${$self->{'name'}});
+      };
+      if( $@ )
+      {
+        # an error occured, return from this mess ;)
+        $return{'msg'} = "[UserAssist] Unable to load registry file";
+        $return{'success'} = 0;
 
-				return \%return;
-			}
+        return \%return;
+      }
 
                         # sometimes there might be false positives here, so let's try to get the root key
                         eval
                         {
                                 # the registry is now loaded, check the existance of a UserAssist key
                                 $root_key = $self->{'reg'}->get_root_key;
-			};
-			if( $@ )
-			{
+      };
+      if( $@ )
+      {
                                 $return{'msg'} = 'Unable to retrieve the root key, this might not be a registry file (' . ${$self->{'name'}} .')';
                                 $return{'success'} = 0;
                                 return \%return;
                         }
 
-			eval 
-			{
-				# now we need to test for the existance of the keys in question
-				# one test
-				# get the userassist key
+      eval 
+      {
+        # now we need to test for the existance of the keys in question
+        # one test
+        # get the userassist key
 
-				$key = $root_key->get_subkey($self->{'verify_key'});
+        $key = $root_key->get_subkey($self->{'verify_key'});
 
-				if( defined $key )
-				{
-					$return{'success'} = 1;
-				}
-				else
-				{
-					$return{'success'} = 0;
-					$return{'msg'} = 'The verification key does not exist';
-				}
-			};
-			if( $@ )
-			{
-				$return{'msg'} = 'Unable to load the verification key, not a SYSTEM file';
-				$return{'success'} = 0;
-			}
-		}
-		else
-		{
-			$return{'success'} = 0;
-			$return{'msg'} = 'File not a registry file.';
-		}
-	}
-	else
-	{
-		# not a file, so back out
-		$return{'success'} = 0;
-		$return{'msg'} = ${$self->{'name'}} . ' is not a file. ';
-	}
+        if( defined $key )
+        {
+          $return{'success'} = 1;
+        }
+        else
+        {
+          $return{'success'} = 0;
+          $return{'msg'} = 'The verification key does not exist';
+        }
+      };
+      if( $@ )
+      {
+        $return{'msg'} = 'Unable to load the verification key, not a SYSTEM file';
+        $return{'success'} = 0;
+      }
+    }
+    else
+    {
+      $return{'success'} = 0;
+      $return{'msg'} = 'File not a registry file.';
+    }
+  }
+  else
+  {
+    # not a file, so back out
+    $return{'success'} = 0;
+    $return{'msg'} = ${$self->{'name'}} . ' is not a file. ';
+  }
 
-	return \%return;
+  return \%return;
 }
 
 

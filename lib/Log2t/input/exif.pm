@@ -1,5 +1,5 @@
 #################################################################################################
-#		EXIF	
+#    EXIF  
 #################################################################################################
 # This script is a part of the log2timeline project and provides a parser for exif information
 # found inside various media files, such as JPEG,PNG,and others
@@ -30,9 +30,9 @@ use strict;
 use Log2t::base::input; # the SUPER class or parent
 use Image::ExifTool qw(:Public);
 use Log2t::Common qw/LITTLE_E BIG_E/;
-use Log2t::Time;	# to manipulate time
-#use Log2t::Numbers;	# to manipulate numbers
-use Log2t::BinRead;	# methods to read binary files
+use Log2t::Time;  # to manipulate time
+#use Log2t::Numbers;  # to manipulate numbers
+use Log2t::BinRead;  # methods to read binary files
 
 use vars qw($VERSION @ISA);
 
@@ -52,7 +52,7 @@ sub new()
         $self->{'multi_line'} = 0;
         $self->{'type'} = 'file';       # it's a file type, not a directory
 
-	bless ($self, $class); 
+  bless ($self, $class); 
 
         return $self;
 }
@@ -78,7 +78,7 @@ sub get_version()
 # @return A string containing a description of the format file's functionality
 sub get_description
 {
-	return "Extract metadata information from files using ExifTool"; 
+  return "Extract metadata information from files using ExifTool"; 
 }
 
 
@@ -95,77 +95,77 @@ sub get_description
 
 sub get_time
 {
-	my $self = shift;
-	
-	my %container;	# the container of timestamp objects
-	my $count_index = 0;	# index to the container
-	my $value;
-	my $etext = '';		# extra text
+  my $self = shift;
+  
+  my %container;  # the container of timestamp objects
+  my $count_index = 0;  # index to the container
+  my $value;
+  my $etext = '';    # extra text
 
-	foreach my $i ( keys %{$self->{'info'}} )
-	{
-		# just to check if this is the file modification
-		next if $self->{'info'}->{$i}->{'key'} eq 'FileModifyDate';
-	
-		# otherwise we will just continue on
+  foreach my $i ( keys %{$self->{'info'}} )
+  {
+    # just to check if this is the file modification
+    next if $self->{'info'}->{$i}->{'key'} eq 'FileModifyDate';
+  
+    # otherwise we will just continue on
 
-		$value = $self->{'info'}->{$i}->{'key'};
+    $value = $self->{'info'}->{$i}->{'key'};
 
-		#if ( $meta->{'FileType'} =~ m/EXE|DLL/ )	# unable to do since we do not receive File tags
-		if ( ( ${$self->{'name'}} =~ m/\.dll|exe|sys/i ) )# || ( $info{'file_name'} =~ m/\.exe/i ) )
-		{
-			# we have an executable, let's check if we have the timestamp "TimeStamp"
-			if ( lc( $value ) eq 'timestamp' )
-			{
-				# modify the timestamp value to a more descriptive value
-				$etext = 'PE header TimeDate Stamp (when application was linked/compiled)';
-			}
-			else
-			{
-				# we are still left with a PE header, so let's make it more descriptive
-				$etext = 'PE Header: ' . $self->{'info'}->{$i}->{'key'};
-			}
-		}
+    #if ( $meta->{'FileType'} =~ m/EXE|DLL/ )  # unable to do since we do not receive File tags
+    if ( ( ${$self->{'name'}} =~ m/\.dll|exe|sys/i ) )# || ( $info{'file_name'} =~ m/\.exe/i ) )
+    {
+      # we have an executable, let's check if we have the timestamp "TimeStamp"
+      if ( lc( $value ) eq 'timestamp' )
+      {
+        # modify the timestamp value to a more descriptive value
+        $etext = 'PE header TimeDate Stamp (when application was linked/compiled)';
+      }
+      else
+      {
+        # we are still left with a PE header, so let's make it more descriptive
+        $etext = 'PE Header: ' . $self->{'info'}->{$i}->{'key'};
+      }
+    }
 
-        	# content of array t_line ([optional])
-        	# %t_line {        #       time
-        	#               index
-        	#                       value
-        	#                       type
-        	#                       legacy
-        	#       desc
-        	#       short
-        	#       source
-        	#       sourcetype
-        	#       version
-        	#       [notes]
-        	#       extra
-        	#               [filename]
-        	#               [md5]
-        	#               [mode]
-        	#               [host]
-        	#               [user]
-        	#               [url]
-        	#               [size]
-        	#               [...]
-        	# }
-	
-	        # create the t_line variable
-	        $container{$count_index} = {
-	                'time' => { 0 => { 'value' => $self->{'info'}->{$i}->{'time'}, 'type' => $self->{'info'}->{$i}->{'group'} . '/' . $value, 'legacy' => 15 } },
-	                'desc' => $value . ' ' . $etext,
-	                'short' => $value,
-	                'source' => 'EXIF',
-	                'sourcetype' => 'EXIF metadata',
-	                'version' => 2,
-	        };
+          # content of array t_line ([optional])
+          # %t_line {        #       time
+          #               index
+          #                       value
+          #                       type
+          #                       legacy
+          #       desc
+          #       short
+          #       source
+          #       sourcetype
+          #       version
+          #       [notes]
+          #       extra
+          #               [filename]
+          #               [md5]
+          #               [mode]
+          #               [host]
+          #               [user]
+          #               [url]
+          #               [size]
+          #               [...]
+          # }
+  
+          # create the t_line variable
+          $container{$count_index} = {
+                  'time' => { 0 => { 'value' => $self->{'info'}->{$i}->{'time'}, 'type' => $self->{'info'}->{$i}->{'group'} . '/' . $value, 'legacy' => 15 } },
+                  'desc' => $value . ' ' . $etext,
+                  'short' => $value,
+                  'source' => 'EXIF',
+                  'sourcetype' => 'EXIF metadata',
+                  'version' => 2,
+          };
 
-		# we sometimes get empty lines, check for that (and ignore)
-		$container{$count_index}->{'desc'} = '' unless defined $self->{'info'}->{$i}->{'time'};
-		$count_index++;
-	}
+    # we sometimes get empty lines, check for that (and ignore)
+    $container{$count_index}->{'desc'} = '' unless defined $self->{'info'}->{$i}->{'time'};
+    $count_index++;
+  }
 
-	return \%container;
+  return \%container;
 }
 
 #       get_help
@@ -174,7 +174,7 @@ sub get_time
 # @return A string containing a help file for this format file
 sub get_help()
 {
-	return "This input module parses files to search for metadata information embedded in the file.  All metadata information that contains date values is then processes.
+  return "This input module parses files to search for metadata information embedded in the file.  All metadata information that contains date values is then processes.
 The format file extracts all metadata information that the library Image::ExifTool is capable of reading.  That means that not only JPG or other image formats can be read, ExifTool is capable of reading metadata from various sources.";
 
 }
@@ -187,126 +187,126 @@ The format file extracts all metadata information that the library Image::ExifTo
 #       string is the error message (if the file is not correctly formed)
 sub verify
 {
-	# define an array to keep
-	my %return;
-	my $self= shift;
-	my @tags;
-	my $count;
-	my $meta;
+  # define an array to keep
+  my %return;
+  my $self= shift;
+  my @tags;
+  my $count;
+  my $meta;
 
-	my $exif;
+  my $exif;
 
-	# this needs to be a file to be included
+  # this needs to be a file to be included
         return \%return unless -f ${$self->{'name'}};
 
-	# create an exif object
-	$exif = new Image::ExifTool;
+  # create an exif object
+  $exif = new Image::ExifTool;
 
-	$return{'success'} = 0;
-	$return{'msg'} = 'unable to open file';
+  $return{'success'} = 0;
+  $return{'msg'} = 'unable to open file';
 
-	# check if this is a XML file, we don't want to spend time parsing them
-	unless( $self->{'quick'})	
-	{
+  # check if this is a XML file, we don't want to spend time parsing them
+  unless( $self->{'quick'})  
+  {
 
-		# check the name (does it end with a .xml)
-		return \%return if ${$self->{'name'}} =~ m/\.xml$/i;
+    # check the name (does it end with a .xml)
+    return \%return if ${$self->{'name'}} =~ m/\.xml$/i;
 
-		# check to see if it is a XML file nonetheless
+    # check to see if it is a XML file nonetheless
 
-	        # start by setting the endian correctly
-	        Log2t::BinRead::set_endian( LITTLE_E );
+          # start by setting the endian correctly
+          Log2t::BinRead::set_endian( LITTLE_E );
 
-		# read the temporary value
-		my $ofs = 0;
-		my $temp = Log2t::BinRead::read_ascii_until( $self->{'file'}, \$ofs, "\n", 10 );
+    # read the temporary value
+    my $ofs = 0;
+    my $temp = Log2t::BinRead::read_ascii_until( $self->{'file'}, \$ofs, "\n", 10 );
 
-		# we don't want to parse XML files (even if they are called manifest or xib)
-		if( lc($temp) =~ m/<\?xml/ )
-		{
-			$return{'msg'} = 'Parsing XML files using ExifTools takes too long time';
-			return \%return;
-		}
-	}
+    # we don't want to parse XML files (even if they are called manifest or xib)
+    if( lc($temp) =~ m/<\?xml/ )
+    {
+      $return{'msg'} = 'Parsing XML files using ExifTools takes too long time';
+      return \%return;
+    }
+  }
 
-	# let's rewind the file to the beginning, since we now need to read it again
-	seek($self->{'file'},0,0);
+  # let's rewind the file to the beginning, since we now need to read it again
+  seek($self->{'file'},0,0);
 
-	# set the date variable
-	$exif->Options( DateFormat => "%Y:%m:%d %H:%M:%S" );
-	# processing would be considerably easier using Epoch from the gecko
-	#$exif->Options( DateFormat => "%s" );
-	
-	# we don't care about filesystem timestamps
-	$exif->Options( Group0 => [ '-File', '-ZIP' ] );
+  # set the date variable
+  $exif->Options( DateFormat => "%Y:%m:%d %H:%M:%S" );
+  # processing would be considerably easier using Epoch from the gecko
+  #$exif->Options( DateFormat => "%s" );
+  
+  # we don't care about filesystem timestamps
+  $exif->Options( Group0 => [ '-File', '-ZIP' ] );
 
-	# reset the info hash (since we could be recursively going through)
+  # reset the info hash (since we could be recursively going through)
 
-	# default values
-	$return{'success'} = 0;
-	$return{'msg'} = 'Did not find any valid dates (except filesystem modification date)';
+  # default values
+  $return{'success'} = 0;
+  $return{'msg'} = 'Did not find any valid dates (except filesystem modification date)';
 
-	# try to get metadata information from the file
-	eval
-	{
-		#print STDERR "[EXIF] Trying to read metadata information from file\n";
-		$meta = $exif->ImageInfo( $self->{'file'} );
-		#print STDERR "[EXIF] Successfully read the metadata, now moving on to parsing it\n";
-	};
-	if ( $@ )
-	{
-		$return{'success'} = 0;
-		$return{'msg'} = "Unable to obtain metadata information";
-	}
+  # try to get metadata information from the file
+  eval
+  {
+    #print STDERR "[EXIF] Trying to read metadata information from file\n";
+    $meta = $exif->ImageInfo( $self->{'file'} );
+    #print STDERR "[EXIF] Successfully read the metadata, now moving on to parsing it\n";
+  };
+  if ( $@ )
+  {
+    $return{'success'} = 0;
+    $return{'msg'} = "Unable to obtain metadata information";
+  }
 
-	# now we need to verify that meta is of the correct format
-	# since we can read metadata information from all files, this will
-	# always return 1, even though the file will not produce any valid data
+  # now we need to verify that meta is of the correct format
+  # since we can read metadata information from all files, this will
+  # always return 1, even though the file will not produce any valid data
 
-	# we therefore start by constructing the file for later use ( instead of 
-	# using the prepare function )
-	# since we want to know if there are any time values that we can use
-	
-	# initialize the info hash
-	$self->{'info'} = undef;
+  # we therefore start by constructing the file for later use ( instead of 
+  # using the prepare function )
+  # since we want to know if there are any time values that we can use
+  
+  # initialize the info hash
+  $self->{'info'} = undef;
 
-	# set the counter up
-	$count = 0;
+  # set the counter up
+  $count = 0;
 
-	# get all the tags (just interested in Group0 information
-	@tags = $exif->GetTagList($meta,'Group0');
+  # get all the tags (just interested in Group0 information
+  @tags = $exif->GetTagList($meta,'Group0');
 
-	# find all dates inside the meta
-	foreach my $t ( @tags ) 
-	{
-		#print STDERR "[EXIF] Parsing tag $t\n";
+  # find all dates inside the meta
+  foreach my $t ( @tags ) 
+  {
+    #print STDERR "[EXIF] Parsing tag $t\n";
 
-		# verify that we have a valid date
-		if( $meta->{$t} =~ m/\d+:\d+:\d+/ )
-		{
-			#print STDERR "[EXIF] Perhaps a date\n";
+    # verify that we have a valid date
+    if( $meta->{$t} =~ m/\d+:\d+:\d+/ )
+    {
+      #print STDERR "[EXIF] Perhaps a date\n";
 
-			# try to parse
-			if( Log2t::Time::is_date( $meta->{$t} ) )
-			{
-				#print STDERR "[EXIF] We have a date ($t) " . $meta->{$t} . "\n";
+      # try to parse
+      if( Log2t::Time::is_date( $meta->{$t} ) )
+      {
+        #print STDERR "[EXIF] We have a date ($t) " . $meta->{$t} . "\n";
 
-				$self->{'info'}->{$count++} = {
-					'time' => Log2t::Time::exif_to_epoch( $meta->{$t}, $self->{'tz'} ),
-					'key' => $t,
-					'org' => $meta->{$t},
-					'group' => $exif->GetGroup( $t, 0 )
-				};
-			}
-		}		
-	}
+        $self->{'info'}->{$count++} = {
+          'time' => Log2t::Time::exif_to_epoch( $meta->{$t}, $self->{'tz'} ),
+          'key' => $t,
+          'org' => $meta->{$t},
+          'group' => $exif->GetGroup( $t, 0 )
+        };
+      }
+    }    
+  }
 
 
-	# now we've got the structure up and running, let's find out
-	# if we have a valid file that we would like to examine
-	$return{'success'} = 1 if $count > 0;
+  # now we've got the structure up and running, let's find out
+  # if we have a valid file that we would like to examine
+  $return{'success'} = 1 if $count > 0;
 
-	return \%return;
+  return \%return;
 }
 
 1;

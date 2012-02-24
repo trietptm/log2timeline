@@ -53,10 +53,10 @@ sub new()
         # bless the class ;)
         my $self = $class->SUPER::new();
 
-	# indicate that we would like to parse this file in one attempt, and return it in a single hash
+  # indicate that we would like to parse this file in one attempt, and return it in a single hash
         $self->{'multi_line'} = 0;
 
-	bless($self,$class);
+  bless($self,$class);
 
         return $self;
 }
@@ -80,7 +80,7 @@ this file is typically in /User/<username>/Library/Safari";
 # Check the preamble of the file to see if we're looking at the right thing.
 sub verify
 {
-	my $self = shift;
+  my $self = shift;
     my $buf = undef;
 
     my %return = ('success' => 0, 'msg' => 'No such file or directory');
@@ -89,8 +89,8 @@ sub verify
     read($self->{'file'}, $buf, 32);
 
     unless ($buf =~ /^bplist00.*WebHistoryFile/) {
-	$return{'msg'} = 'Does not appear to be a History.plist file';
-	return \%return;
+  $return{'msg'} = 'Does not appear to be a History.plist file';
+  return \%return;
     }
 
     $return{'success'} = 1;
@@ -100,14 +100,14 @@ sub verify
 
 sub init
 {
-	my $self = shift;
+  my $self = shift;
 
     # Try really hard to get a user name
     unless (defined($self->{'username'})) {
-	$self->{'username'} = Log2t::Common::get_username_from_path(${$self->{'name'}});
+  $self->{'username'} = Log2t::Common::get_username_from_path(${$self->{'name'}});
     }
 
-	return 1;
+  return 1;
 }
 
 # Use Mac::PropertyList::parse_plist_file() to scarf in the plist file.
@@ -121,45 +121,45 @@ sub get_time
 {
     my $self = shift;
     my $Data = undef;         # Perl data structure produced from plist file
-	my %container = undef;	# the container that stores all the timestamp data
-	my $cont_index = 0;	# index into the container
+  my %container = undef;  # the container that stores all the timestamp data
+  my $cont_index = 0;  # index into the container
 
     my $objects;
 
     eval { $objects = Mac::PropertyList::parse_plist_file($self->{'file'}); };
     if( $@ ) {
-	print STDERR "[Safari] Error $@\n";
-	return undef;
+  print STDERR "[Safari] Error $@\n";
+  return undef;
     }
     if( ref($objects) ne 'Mac::PropertyList::dict') {
-	print STDERR "[Safari] Error.  Object reference is not of type Mac::PropertyList::dict\n";
-	return undef;
+  print STDERR "[Safari] Error.  Object reference is not of type Mac::PropertyList::dict\n";
+  return undef;
     }
 
     eval { $Data = $objects->as_perl; };
     if( $@ ) {
-	print STDERR "[Safari] Error occured.  Error message: $@\n";
-   	return(undef);
+  print STDERR "[Safari] Error occured.  Error message: $@\n";
+     return(undef);
     }
 
-	print STDERR "[SAFARI] LAST CHECK\n";
+  print STDERR "[SAFARI] LAST CHECK\n";
     return(undef) unless (ref($$Data{'WebHistoryDates'}));
     
-	print STDERR "[SAFARI] NOW THE PARSING BEGINS...\n";
+  print STDERR "[SAFARI] NOW THE PARSING BEGINS...\n";
     # Get a new history record (go through all of them)
     foreach my $ref (@{$$Data{'WebHistoryDates'}}) {
-    	# New %t_line structure.  Most of the basic information is fixed.
+      # New %t_line structure.  Most of the basic information is fixed.
 ###  this syntax seems to be broken for 0.60.  Breaking this out into
 ###   individual components (edited by John Ritchie)
-#	$container{$cont_index} =  ('source' => 'WEBHIST',
-#		  'sourcetype' => 'Safari history',
-#		  'version' => 2,
-#		  'extra' => { 'user' => $self->{'username'}, },
-#	);
-	$container{$cont_index}->{'source'} = 'WEBHIST';
-	$container{$cont_index}->{'sourcetype'} = 'Safari history';
-	$container{$cont_index}->{'version'} = 2;
-	$container{$cont_index}->{'extra'} = { 'user' => $self->{'username'}, };
+#  $container{$cont_index} =  ('source' => 'WEBHIST',
+#      'sourcetype' => 'Safari history',
+#      'version' => 2,
+#      'extra' => { 'user' => $self->{'username'}, },
+#  );
+  $container{$cont_index}->{'source'} = 'WEBHIST';
+  $container{$cont_index}->{'sourcetype'} = 'Safari history';
+  $container{$cont_index}->{'version'} = 2;
+  $container{$cont_index}->{'extra'} = { 'user' => $self->{'username'}, };
 
         # check the existence of a default browser for this particular user (added by Kristinn)
         if( defined $self->{'defbrowser'}->{lc($self->{'username'})} )
@@ -173,19 +173,19 @@ sub get_time
         } 
 
 
-	    # Populate fields of %t_list structure from history record
-	    $container{$cont_index}->{'short'} = encode('utf-8', "URL: $$ref{''}" );
-	    $container{$cont_index}->{'desc'} = "$$ref{''} ($$ref{'title'}) [Visit Count: $$ref{'visitCount'}]";
-	    $container{$cont_index}->{'desc'} .= " (redirected from " . join(', ', @{$$ref{'redirectURLs'}}) . ")"
-		if (ref($$ref{'redirectURLs'}));
-	    $container{$cont_index}->{'desc'} .= " [Non-GET request]" 
-		if ($$ref{'lastVisitWasHTTPNonGet'} eq 'true');
-	    $container{$cont_index}->{'desc'} = encode( 'utf-8', $container{$cont_index}->{'desc'} );
-	
-	    $container{$cont_index}->{'time'}{0} = { 'value'  => Log2t::Time::mac2epoch($$ref{'lastVisitedDate'}),
-				   'type'   => 'Last visited',
-				   'legacy' => 15 };
-	    $cont_index++;
+      # Populate fields of %t_list structure from history record
+      $container{$cont_index}->{'short'} = encode('utf-8', "URL: $$ref{''}" );
+      $container{$cont_index}->{'desc'} = "$$ref{''} ($$ref{'title'}) [Visit Count: $$ref{'visitCount'}]";
+      $container{$cont_index}->{'desc'} .= " (redirected from " . join(', ', @{$$ref{'redirectURLs'}}) . ")"
+    if (ref($$ref{'redirectURLs'}));
+      $container{$cont_index}->{'desc'} .= " [Non-GET request]" 
+    if ($$ref{'lastVisitWasHTTPNonGet'} eq 'true');
+      $container{$cont_index}->{'desc'} = encode( 'utf-8', $container{$cont_index}->{'desc'} );
+  
+      $container{$cont_index}->{'time'}{0} = { 'value'  => Log2t::Time::mac2epoch($$ref{'lastVisitedDate'}),
+           'type'   => 'Last visited',
+           'legacy' => 15 };
+      $cont_index++;
    }
 
    return \%container;

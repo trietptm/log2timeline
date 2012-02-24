@@ -1,11 +1,11 @@
 #################################################################################################
-#			mactime	
+#      mactime  
 #################################################################################################
 # this script reads a bodyfile in the mactime (timeline) format and produces a bodyfile as defined in
 # the output plugin. 
 # 
 # The structure of the body file is defined here:
-# 	http://wiki.sleuthkit.org/index.php?title=Body_file
+#   http://wiki.sleuthkit.org/index.php?title=Body_file
 #
 # Author: Kristinn Gudjonsson
 # Version : 0.6
@@ -51,7 +51,7 @@ $VERSION = '0.6';
 # @return A string containing a description of the format file's functionality
 sub get_description()
 {
-	return "Parse the content of a body file in the mactime format"; 
+  return "Parse the content of a body file in the mactime format"; 
 }
 
 #       get_version
@@ -80,12 +80,12 @@ sub get_version()
 
 sub get_time
 {
-	my $self = shift;
-	# timestamp object
-	my %t_line;
-	my ($MD5,$name,$inode,$mode_as_string,$UID,$GID,$size,$atime,$mtime,$ctime,$crtime );
+  my $self = shift;
+  # timestamp object
+  my %t_line;
+  my ($MD5,$name,$inode,$mode_as_string,$UID,$GID,$size,$atime,$mtime,$ctime,$crtime );
 
-	my $text;
+  my $text;
 
         # get the filehandle and read the next line
         my $fh = $self->{'file'};
@@ -98,14 +98,14 @@ sub get_time
                 return \%t_line;
         }
 
-	# substitute multiple spaces with one for splitting the string into variables
-	$line =~ s/\n//g; 
-	
-	# let's split the line into an array
-	($MD5,$name,$inode,$mode_as_string,$UID,$GID,$size,$atime,$mtime,$ctime,$crtime) = split( /\|/, $line );
+  # substitute multiple spaces with one for splitting the string into variables
+  $line =~ s/\n//g; 
+  
+  # let's split the line into an array
+  ($MD5,$name,$inode,$mode_as_string,$UID,$GID,$size,$atime,$mtime,$ctime,$crtime) = split( /\|/, $line );
 
-	# the structure of the format
-	# MD5|name|inode|mode_as_string|UID|GID|size|atime|mtime|ctime|crtime
+  # the structure of the format
+  # MD5|name|inode|mode_as_string|UID|GID|size|atime|mtime|ctime|crtime
 
         # content of array t_line ([optional])
         # %t_line {        #       time
@@ -130,13 +130,13 @@ sub get_time
         #               [...]
         # }
 
-	# check and combine identical time values
-	my %time;
-	$time{$mtime} += 1;
-	$time{$atime} += 2;
-	$time{$ctime} += 4;
-	$time{$crtime} += 8;
-	
+  # check and combine identical time values
+  my %time;
+  $time{$mtime} += 1;
+  $time{$atime} += 2;
+  $time{$ctime} += 4;
+  $time{$crtime} += 8;
+  
         # create the t_line variable
         %t_line = (
                 'desc' => $name,
@@ -147,24 +147,24 @@ sub get_time
                 'extra' => { 'md5' => $MD5, 'inode' => $inode, 'mode' => $mode_as_string, 'uid' => $UID, 'gid' => $GID, 'size' => $size  }
         );
 
-	my $i = 0;
-	# and now to include the timestamps
-	foreach( keys %time )
-	{
-		my $t = '';
-		$t .= 'M' if ( $time{$_} & 0x01 );
-		$t .= 'A' if ( $time{$_} & 0x02 );
-		$t .= 'C' if ( $time{$_} & 0x04 );
-		$t .= 'B' if ( $time{$_} & 0x08 );
+  my $i = 0;
+  # and now to include the timestamps
+  foreach( keys %time )
+  {
+    my $t = '';
+    $t .= 'M' if ( $time{$_} & 0x01 );
+    $t .= 'A' if ( $time{$_} & 0x02 );
+    $t .= 'C' if ( $time{$_} & 0x04 );
+    $t .= 'B' if ( $time{$_} & 0x08 );
 
-		$t_line{'time'}->{$i++} = {
-			'value' => $_,
-			'type' => '[' . $t . '] time',
-			'legacy' => $time{$_}
-		};
-	}
+    $t_line{'time'}->{$i++} = {
+      'value' => $_,
+      'type' => '[' . $t . '] time',
+      'legacy' => $time{$_}
+    };
+  }
 
-	return \%t_line;
+  return \%t_line;
 }
 
 #       get_help
@@ -173,16 +173,16 @@ sub get_time
 # @return A string containing a help file for this format file
 sub get_help()
 {
-	return "This format file parses the content of a body file in the mactime
+  return "This format file parses the content of a body file in the mactime
 format, as defined in the SleuthKit by Brian Carrier 
 
- 	http://wiki.sleuthkit.org/index.php?title=Body_file
+   http://wiki.sleuthkit.org/index.php?title=Body_file
 
 This format file accepts two parameters:
-	-h|--host HOST
-		To add a host name to the output (for certain output files)
-	-u|--user USER
-		To add a user name to the output (for certain output files)\n";
+  -h|--host HOST
+    To add a host name to the output (for certain output files)
+  -u|--user USER
+    To add a user name to the output (for certain output files)\n";
 }
 
 #       verify
@@ -193,50 +193,50 @@ This format file accepts two parameters:
 #       string is the error message (if the file is not correctly formed)
 sub verify
 {
-	# define an array to keep
-	my %return;
-	my $line;
-	my @words;
-	my $tag;
+  # define an array to keep
+  my %return;
+  my $line;
+  my @words;
+  my $tag;
 
-	my $self = shift;
+  my $self = shift;
 
         return \%return unless -f ${$self->{'name'}};
 
-	# this defines the maximum amount of lines that we read in the file before finding a line
-	# that does not contain comments
-	my $max = 10;
-	my $i = 0;
+  # this defines the maximum amount of lines that we read in the file before finding a line
+  # that does not contain comments
+  my $max = 10;
+  my $i = 0;
 
-	# default values
-	$return{'success'} = 0;
-	$return{'msg'} = 'success';
+  # default values
+  $return{'success'} = 0;
+  $return{'msg'} = 'success';
 
         # start by setting the endian correctly
         Log2t::BinRead::set_endian( LITTLE_E );
 
-	my $ofs = 0;
-	# open the file (at least try to open it)
-	eval
-	{
-		unless( $self->{'quick'} )
-		{
-			# the first field is the MD5 sum, so it is a number
-			seek($self->{'file'},0,0);
-			read($self->{'file'},$tag,1);
-			
-			# so we have a possible MD5 sum, which is in hex
-			if( $tag !~ m/[0-9A-Fa-f]/ )
-			{
-				$return{'msg'} = 'Wrong magic value, not a MD5 sum';
-				return \%return; 
-			}
-		}
+  my $ofs = 0;
+  # open the file (at least try to open it)
+  eval
+  {
+    unless( $self->{'quick'} )
+    {
+      # the first field is the MD5 sum, so it is a number
+      seek($self->{'file'},0,0);
+      read($self->{'file'},$tag,1);
+      
+      # so we have a possible MD5 sum, which is in hex
+      if( $tag !~ m/[0-9A-Fa-f]/ )
+      {
+        $return{'msg'} = 'Wrong magic value, not a MD5 sum';
+        return \%return; 
+      }
+    }
 
-		# let's continue
-		$tag = 1;
-		while( $tag )
-		{
+    # let's continue
+    $tag = 1;
+    while( $tag )
+    {
                         $tag = 0 unless $line =  Log2t::BinRead::read_ascii_until( $self->{'file'}, \$ofs, "\n", 800 );
                         next unless $tag;
 
@@ -244,75 +244,75 @@ sub verify
                         $tag = 0 if( $i++) eq $max;
                         next unless $tag;
 
-			$tag = 0 if $line !~ m/^#/;
-		}
+      $tag = 0 if $line !~ m/^#/;
+    }
 
-		# split the line
-		@words = split( /\|/, $line );
+    # split the line
+    @words = split( /\|/, $line );
 
 
-		if( $#words eq 10 )
-		{
-			# now we take one examle field to confirm
+    if( $#words eq 10 )
+    {
+      # now we take one examle field to confirm
 
-			# check the first field (md5 to verify it is a hex number)
-			if( $words[0] =~ m/^[0-9A-Fa-f]+$/ )
-			{
-				# now we have a correctly formed MD5 sum, check another field
-				if( $words[6] =~ m/^\d+$/ )
-				{
-					# the size is an integer, check next field
-					if( $words[8] =~ /^\d+$/ )
-					{
-						# now, to verify it's an epoch format
-						if( $words[8] >= 0 && $words[8] < time )
-						{
-							$return{'success'} = 1;
-						}
-						else
-						{
-							$return{'success'} = 0;
-							$return{'msg'} = 'Time value not correctly formed';
-						}
-					}
-					else
-					{
-						$return{'success'} = 0;
-						$return{'msg'} = 'Time value not an integer';
-					}
-					
-				}
-				else
-				{
-					$return{'success'} = 0;
-					$return{'msg'} = 'Size value not correctly formed';
-				}
-				
-			}
-			else
-			{
-				$return{'success'} = 0;
-				$return{'msg'} = 'Not the correct format (MD5 sum incorrectly formatted - [' . $words[0] . '])';
-			}
-		}
-		else
-		{
-			$return{'success'} = 0;
-			$return{'msg'} = "The file is not of the correct format ($#words fields instead of 10)";
-		}
+      # check the first field (md5 to verify it is a hex number)
+      if( $words[0] =~ m/^[0-9A-Fa-f]+$/ )
+      {
+        # now we have a correctly formed MD5 sum, check another field
+        if( $words[6] =~ m/^\d+$/ )
+        {
+          # the size is an integer, check next field
+          if( $words[8] =~ /^\d+$/ )
+          {
+            # now, to verify it's an epoch format
+            if( $words[8] >= 0 && $words[8] < time )
+            {
+              $return{'success'} = 1;
+            }
+            else
+            {
+              $return{'success'} = 0;
+              $return{'msg'} = 'Time value not correctly formed';
+            }
+          }
+          else
+          {
+            $return{'success'} = 0;
+            $return{'msg'} = 'Time value not an integer';
+          }
+          
+        }
+        else
+        {
+          $return{'success'} = 0;
+          $return{'msg'} = 'Size value not correctly formed';
+        }
+        
+      }
+      else
+      {
+        $return{'success'} = 0;
+        $return{'msg'} = 'Not the correct format (MD5 sum incorrectly formatted - [' . $words[0] . '])';
+      }
+    }
+    else
+    {
+      $return{'success'} = 0;
+      $return{'msg'} = "The file is not of the correct format ($#words fields instead of 10)";
+    }
 
-		# verify that this line is of correct value
-	};
-	if ( $@ )
-	{
-		$return{'success'} = 0;
-		$return{'msg'} = "Unable to open file";
-	}
+    # verify that this line is of correct value
+  };
+  if ( $@ )
+  {
+    $return{'success'} = 0;
+    $return{'msg'} = "Unable to open file";
+  }
 
-	# now we have one line of the file, let's read it and verify
-	# and here we have an error checking routine... (witch success = 1 if we are able to verify)
+  # now we have one line of the file, let's read it and verify
+  # and here we have an error checking routine... (witch success = 1 if we are able to verify)
 
-	return \%return;
+  return \%return;
 }
 
 1;

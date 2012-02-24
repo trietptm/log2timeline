@@ -1,5 +1,5 @@
 #################################################################################################
-#		ff_bookmark
+#    ff_bookmark
 #################################################################################################
 # This script is a part of the log2timeline framework for timeline creation and analysis.
 # This script implements an input module, or a parser capable of parsing a single log file (or 
@@ -35,10 +35,10 @@ package Log2t::input::ff_bookmark;
 use strict;
 use Log2t::base::input; # the SUPER class or parent
 use Log2t::Common ':binary';
-#use Log2t::Time;	# to manipulate time
-#use Log2t::Numbers;	# to manipulate numbers
-use Log2t::BinRead;	# methods to read binary files
-#use Log2t::Network;	# information about network traffic 
+#use Log2t::Time;  # to manipulate time
+#use Log2t::Numbers;  # to manipulate numbers
+use Log2t::BinRead;  # methods to read binary files
+#use Log2t::Network;  # information about network traffic 
 use HTML::Parser;
 use Encode;
 
@@ -54,7 +54,7 @@ $VERSION = '0.3';
 # other global variables that are needed for this input module
 my @lines;
 my %records;
-my $object;	# storing the self variable
+my $object;  # storing the self variable
 
 # the constructor...
 sub new()
@@ -64,10 +64,10 @@ sub new()
         # bless the class ;)
         my $self = $class->SUPER::new(); 
 
-	# we have a file that will be returned as a single object, not parsed line-by-line
+  # we have a file that will be returned as a single object, not parsed line-by-line
         $self->{'multi_line'} = 0;
 
-	bless($self,$class);
+  bless($self,$class);
 
         return $self;
 }
@@ -81,28 +81,28 @@ sub new()
 # @return A string containing a description of the format file's functionality
 sub get_description()
 {
-	return "Parse the content of a Firefox bookmark file"; 
+  return "Parse the content of a Firefox bookmark file"; 
 }
 
-#	init
+#  init
 #
 # Initialize the needed variables
 sub init
 {
-	# read the paramaters passed to the script
-	my $self = shift;
+  # read the paramaters passed to the script
+  my $self = shift;
 
-	# start by checking out the username
+  # start by checking out the username
         # check if we need to "guess" the username of the user
-	$self->{'username'} = Log2t::Common::get_username_from_path( ${$self->{'name'}} );
+  $self->{'username'} = Log2t::Common::get_username_from_path( ${$self->{'name'}} );
 
-	# initialize variables
-	%records = undef;
-	$self->{'index'} = 0;
+  # initialize variables
+  %records = undef;
+  $self->{'index'} = 0;
 
-	$object = $self;
+  $object = $self;
 
-	return 1;
+  return 1;
 }
 
 #       get_version
@@ -120,162 +120,162 @@ sub get_version()
 
 sub get_time
 {
-	my $self = shift;
+  my $self = shift;
 
-	# the container that stores all the timestamp objects
-	my %container = undef;
-	my $ret = 1;
+  # the container that stores all the timestamp objects
+  my %container = undef;
+  my $ret = 1;
 
-	# now we reinitialize the index variable
-	$self->{'index'} = 0;
+  # now we reinitialize the index variable
+  $self->{'index'} = 0;
 
-	print STDERR "[FF_BOOKMARK] Starting the parser.\n" if $self->{'debug'};
+  print STDERR "[FF_BOOKMARK] Starting the parser.\n" if $self->{'debug'};
 
-	# prepare the parsing
-	$self->{'parser'} = HTML::Parser->new( 
-		api_version => 3,
-		start_h     => [\&_do_parse,"tagname, attr, text "],
-		#start_h     => [\$self->_do_parse,"tagname, attr, text "],
-		#default_h   => [sub {print "PARSING: ", shift, "\n" }, "text"],
-		#default_h   => [\@lines, "text"],
-		default_h   => [\&_parse_default, "text"],
-	);
+  # prepare the parsing
+  $self->{'parser'} = HTML::Parser->new( 
+    api_version => 3,
+    start_h     => [\&_do_parse,"tagname, attr, text "],
+    #start_h     => [\$self->_do_parse,"tagname, attr, text "],
+    #default_h   => [sub {print "PARSING: ", shift, "\n" }, "text"],
+    #default_h   => [\@lines, "text"],
+    default_h   => [\&_parse_default, "text"],
+  );
 
-	print STDERR "[FF_BOOKMARK] Done setting up the parser, start to parse the file itself.\n" if $self->{'debug'};
+  print STDERR "[FF_BOOKMARK] Done setting up the parser, start to parse the file itself.\n" if $self->{'debug'};
 
-	$self->{'parser'}->parse_file( $self->{'file'} ) or $ret = 0;
-	
-	print STDERR "[FF_BOOKMARK] The file has been parsed.\n" if $self->{'debug'};
+  $self->{'parser'}->parse_file( $self->{'file'} ) or $ret = 0;
+  
+  print STDERR "[FF_BOOKMARK] The file has been parsed.\n" if $self->{'debug'};
 
-	if( $ret eq 0 )
-	{
-		# an error has occured
-		print STDERR "[FF BOOKMARK] Error occured: $!\n";
-		return 0;
-	}
+  if( $ret eq 0 )
+  {
+    # an error has occured
+    print STDERR "[FF BOOKMARK] Error occured: $!\n";
+    return 0;
+  }
 
-	print STDERR "[FF_BOOKMARK] Number of entries parsed: " . $self->{'index'} . "\n" if $self->{'debug'};
+  print STDERR "[FF_BOOKMARK] Number of entries parsed: " . $self->{'index'} . "\n" if $self->{'debug'};
 
-	# go through each of the timestamps
-	for ( my $i = 0; $i < $self->{'index'} ; $i++ )
-	{
-		# set the current record parsing
-		$self->{'current_index'} = $i;
+  # go through each of the timestamps
+  for ( my $i = 0; $i < $self->{'index'} ; $i++ )
+  {
+    # set the current record parsing
+    $self->{'current_index'} = $i;
 
-		$container{$i} = $self->_parse_timestamp;
-	#	print STDERR "[FF_BOOKMARK] Going through: " . $self->{'index'} . "\n" if $self->{'debug'};
-	}
+    $container{$i} = $self->_parse_timestamp;
+  #  print STDERR "[FF_BOOKMARK] Going through: " . $self->{'index'} . "\n" if $self->{'debug'};
+  }
 
-	return \%container;
+  return \%container;
 }
 
 sub _parse_default()
 {
-	my $text = shift;
+  my $text = shift;
 
-	# remove end of line
-	$text =~ s/\n//g;
-	$text =~ s/\r//g;
+  # remove end of line
+  $text =~ s/\n//g;
+  $text =~ s/\r//g;
 
-	# remove double spaces
-	$text =~ s/\s+/ /g;
+  # remove double spaces
+  $text =~ s/\s+/ /g;
 
-	if( $text ne ' ' && $text ne '' )
-	{
-		push( @lines, $text );
-	}
+  if( $text ne ' ' && $text ne '' )
+  {
+    push( @lines, $text );
+  }
 
 }
 
 sub _do_parse()
 {
-	my ($tag, $attr, $origtext) = @_;
-	my $date;
-	my $text;
-	my $type;
+  my ($tag, $attr, $origtext) = @_;
+  my $date;
+  my $text;
+  my $type;
 
-	# check if we have H1, which means possibly the main file itself
-	if( $tag eq 'h1' )
-	{
-		# check the date
-		$date = $attr->{last_modified};
+  # check if we have H1, which means possibly the main file itself
+  if( $tag eq 'h1' )
+  {
+    # check the date
+    $date = $attr->{last_modified};
 
-		$records{$object->{'index'}++} = {
-			'name' => 'Bookmark file last modified',
-			'date' => $date,
-			'dtype' => 'm',
-			'type' => 'file'
-		};
+    $records{$object->{'index'}++} = {
+      'name' => 'Bookmark file last modified',
+      'date' => $date,
+      'dtype' => 'm',
+      'type' => 'file'
+    };
 
-		#print STDERR "Bookmark file last modified ($date)\n";
-	}
-	elsif( $tag eq 'meta' )
-	{
-		# we want to get the file encoding
-		$text = $attr->{'content'};
-		($date,$object->{'encoding'}) = split( /charset=/, $text);
+    #print STDERR "Bookmark file last modified ($date)\n";
+  }
+  elsif( $tag eq 'meta' )
+  {
+    # we want to get the file encoding
+    $text = $attr->{'content'};
+    ($date,$object->{'encoding'}) = split( /charset=/, $text);
 
-		#print STDERR "ENCODING [$self->{'encoding'}]\n";
-	}
-	elsif( $tag eq 'h3' )
-	{
-		# here we have a folder strcture (and some dates associated with it)
+    #print STDERR "ENCODING [$self->{'encoding'}]\n";
+  }
+  elsif( $tag eq 'h3' )
+  {
+    # here we have a folder strcture (and some dates associated with it)
 
-		# add date variables
-		if( defined $attr->{'add_date'} )
-		{
-			$records{$object->{'index'}++} = {
-				'date' => $attr->{'add_date'},
-				'dtype' => 'c',
-				'type' => 'folder',
-				'encoding' => $attr->{'last_charset'},
-				'line' => $#lines+1
-			};
-		}
-		if( defined $attr->{'last_modified'} )
-		{
-			$records{$object->{'index'}++} = {
-				'date' => $attr->{'last_modified'},
-				'dtype' => 'm',
-				'type' => 'folder',
-				'encoding' => $attr->{'last_charset'},
-				'line' => $#lines+1
-			};
-		}
-	}
-	elsif( $tag eq 'a' )
-	{
-		# here we have the records themselves
+    # add date variables
+    if( defined $attr->{'add_date'} )
+    {
+      $records{$object->{'index'}++} = {
+        'date' => $attr->{'add_date'},
+        'dtype' => 'c',
+        'type' => 'folder',
+        'encoding' => $attr->{'last_charset'},
+        'line' => $#lines+1
+      };
+    }
+    if( defined $attr->{'last_modified'} )
+    {
+      $records{$object->{'index'}++} = {
+        'date' => $attr->{'last_modified'},
+        'dtype' => 'm',
+        'type' => 'folder',
+        'encoding' => $attr->{'last_charset'},
+        'line' => $#lines+1
+      };
+    }
+  }
+  elsif( $tag eq 'a' )
+  {
+    # here we have the records themselves
 
-		# assign variables
-		$text = $attr->{'href'};
-		
-		#print STDERR "TEXT IS [$text] (" . $attr->{'href'} . ")\n";
-		# add date attributes
-		if( defined $attr->{'add_date'} )
-		{
-			$records{$object->{'index'}++} = {
-				'href' => $text,
-				'date' => $attr->{'add_date'},
-				'dtype' => 'c',
-				'type' => 'bookmark',
-				'line' => $#lines+1,
-				'encoding' => $attr->{'last_charset'}
-			};
-		}
+    # assign variables
+    $text = $attr->{'href'};
+    
+    #print STDERR "TEXT IS [$text] (" . $attr->{'href'} . ")\n";
+    # add date attributes
+    if( defined $attr->{'add_date'} )
+    {
+      $records{$object->{'index'}++} = {
+        'href' => $text,
+        'date' => $attr->{'add_date'},
+        'dtype' => 'c',
+        'type' => 'bookmark',
+        'line' => $#lines+1,
+        'encoding' => $attr->{'last_charset'}
+      };
+    }
 
-		if( defined $attr->{'last_visit'} )
-		{
-			$records{$object->{'index'}++} = {
-				'name' => $text,
-				'date' => $attr->{'last_visit'},
-				'dtype' => 'a',
-				'type' => 'bookmark',
-				'line' => $#lines+1,
-				'encoding' => $attr->{'last_charset'}
-			};
-		}
-	}
+    if( defined $attr->{'last_visit'} )
+    {
+      $records{$object->{'index'}++} = {
+        'name' => $text,
+        'date' => $attr->{'last_visit'},
+        'dtype' => 'a',
+        'type' => 'bookmark',
+        'line' => $#lines+1,
+        'encoding' => $attr->{'last_charset'}
+      };
+    }
+  }
 }
 
 #       close_file
@@ -284,11 +284,11 @@ sub _do_parse()
 # @return An integer indicating that the close operation was successful
 sub end
 {
-	my $self = shift;
+  my $self = shift;
 
-	$self->{'parser'}->eof if defined $self->{'parser'};
+  $self->{'parser'}->eof if defined $self->{'parser'};
 
-	return 1;
+  return 1;
 }
 
 #       parse_line
@@ -301,59 +301,59 @@ sub end
 # @return Returns a reference to a hash containing the needed values to print a body file
 sub _parse_timestamp
 {
-	my $self = shift;
-	# timestamp object
-	my %t_line;
-	my $text;
-	my $date;
-	my $coding;
-	my $type;
+  my $self = shift;
+  # timestamp object
+  my %t_line;
+  my $text;
+  my $date;
+  my $coding;
+  my $type;
 
-	# fix the encoding
-	$coding = $records{$self->{'current_index'}}->{'encoding'} eq '' ? $self->{'encoding'} : $records{$self->{'current_index'}}->{'encoding'};
+  # fix the encoding
+  $coding = $records{$self->{'current_index'}}->{'encoding'} eq '' ? $self->{'encoding'} : $records{$self->{'current_index'}}->{'encoding'};
 
-	$date = $records{$self->{'current_index'}}->{'date'};
+  $date = $records{$self->{'current_index'}}->{'date'};
 
-	if( $records{$self->{'current_index'}}->{'dtype'} eq 'm' )
-	{
-		# we have modified a record
-		$type .= 'modified';
-	}
-	elsif( $records{$self->{'current_index'}}->{'dtype'} eq 'a' )
-	{
-		# we have visited a URL
-		$type .= 'visited';
-	}
-	elsif( $records{$self->{'current_index'}}->{'dtype'} eq 'c' )
-	{
-		# we've created
-		$type .= 'created';
-	}
+  if( $records{$self->{'current_index'}}->{'dtype'} eq 'm' )
+  {
+    # we have modified a record
+    $type .= 'modified';
+  }
+  elsif( $records{$self->{'current_index'}}->{'dtype'} eq 'a' )
+  {
+    # we have visited a URL
+    $type .= 'visited';
+  }
+  elsif( $records{$self->{'current_index'}}->{'dtype'} eq 'c' )
+  {
+    # we've created
+    $type .= 'created';
+  }
 
-	# check the type
-	if( $records{$self->{'current_index'}}->{'type'} eq 'file' )
-	{
-		$text .= 'file';
-	}
-	elsif( $records{$self->{'current_index'}}->{'type'} eq 'folder' )
-	{
-		# need to know the folder name
-		$text .= $lines[$records{$self->{'current_index'}}->{'line'}];
-		$type = 'folder ' . $type;
+  # check the type
+  if( $records{$self->{'current_index'}}->{'type'} eq 'file' )
+  {
+    $text .= 'file';
+  }
+  elsif( $records{$self->{'current_index'}}->{'type'} eq 'folder' )
+  {
+    # need to know the folder name
+    $text .= $lines[$records{$self->{'current_index'}}->{'line'}];
+    $type = 'folder ' . $type;
 
-		#$text .= 'the bookmark folder [' . encode( $coding, $lines[$records{$self->{'current_index'}}->{'line'}])  . ']';
-		#print STDERR "LINE " . $lines[$records{$self->{'current_index'}}->{'line'}] . " was encoded according to : $coding [$self->{'encoding'}]\n";
-	}
-	elsif( $records{$self->{'current_index'}}->{'type'} eq 'bookmark' )
-	{
-		# we need to read a line number
-		$text .= $lines[$records{$self->{'current_index'}}->{'line'}]. ' [' . $records{$self->{'current_index'}}->{'href'} . ']' unless $records{$self->{'current_index'}}->{'dtype'} eq 'a';
-		$text .= $lines[$records{$self->{'current_index'}}->{'line'}] if $records{$self->{'current_index'}}->{'dtype'} eq 'a';
+    #$text .= 'the bookmark folder [' . encode( $coding, $lines[$records{$self->{'current_index'}}->{'line'}])  . ']';
+    #print STDERR "LINE " . $lines[$records{$self->{'current_index'}}->{'line'}] . " was encoded according to : $coding [$self->{'encoding'}]\n";
+  }
+  elsif( $records{$self->{'current_index'}}->{'type'} eq 'bookmark' )
+  {
+    # we need to read a line number
+    $text .= $lines[$records{$self->{'current_index'}}->{'line'}]. ' [' . $records{$self->{'current_index'}}->{'href'} . ']' unless $records{$self->{'current_index'}}->{'dtype'} eq 'a';
+    $text .= $lines[$records{$self->{'current_index'}}->{'line'}] if $records{$self->{'current_index'}}->{'dtype'} eq 'a';
 
-		#$text .= 'the bookmark ' . encode( $coding, $lines[$records{$self->{'current_index'}}->{'line'}] ). ' [' . $records{$self->{'current_index'}}->{'href'} . ']' unless $records{$self->{'current_index'}}->{'dtype'} eq 'a';
-		#$text .= 'the bookmark [' . encode( $coding,  $lines[$records{$self->{'current_index'}}->{'line'}]) . ']' if $records{$self->{'current_index'}}->{'dtype'} eq 'a';
-		#print STDERR "LINE " . $lines[$records{$self->{'current_index'}}->{'line'}] . " was encoded according to : $coding [$self->{'encoding'}]\n";
-	}
+    #$text .= 'the bookmark ' . encode( $coding, $lines[$records{$self->{'current_index'}}->{'line'}] ). ' [' . $records{$self->{'current_index'}}->{'href'} . ']' unless $records{$self->{'current_index'}}->{'dtype'} eq 'a';
+    #$text .= 'the bookmark [' . encode( $coding,  $lines[$records{$self->{'current_index'}}->{'line'}]) . ']' if $records{$self->{'current_index'}}->{'dtype'} eq 'a';
+    #print STDERR "LINE " . $lines[$records{$self->{'current_index'}}->{'line'}] . " was encoded according to : $coding [$self->{'encoding'}]\n";
+  }
 
         # content of array t_line ([optional])
         # %t_line {        #       time
@@ -382,7 +382,7 @@ sub _parse_timestamp
         %t_line = (
                 'time' => { 0 => { 'value' => $date, 'type' => 'bookmark ' . $type, 'legacy' => 15 } },
                 'desc' => $text,
-	      	'short' => 'File ' . $lines[$records{$self->{'current_index'}}->{'line'}] . '(' . $records{$self->{'current_index'}}->{'dtype'} . ')',
+          'short' => 'File ' . $lines[$records{$self->{'current_index'}}->{'line'}] . '(' . $records{$self->{'current_index'}}->{'dtype'} . ')',
                 'source' => 'WEBHIST',
                 'sourcetype' => 'Firefox',
                 'version' => 2,
@@ -401,7 +401,7 @@ sub _parse_timestamp
         } 
 
 
-	return \%t_line;
+  return \%t_line;
 }
 
 #       get_help
@@ -412,7 +412,7 @@ sub _parse_timestamp
 # @return A string containing a help file for this format file
 sub get_help
 {
-	return "This input module parses the bookmarks.html document that Firefox 
+  return "This input module parses the bookmarks.html document that Firefox 
 version 2.x and older use to store their bookmarks in.  The bookmarks.html is stored
 in the Firefox user's profile.
 
@@ -438,42 +438,42 @@ the content of the bookmarks but also the web history of that particular user.\n
 # without taking too long time
 #
 # @return A reference to a hash that contains an integer indicating whether or not the 
-#	file/dir/artifact is supporter by this input module as well as a reason why 
-#	it failed (if it failed) 
+#  file/dir/artifact is supporter by this input module as well as a reason why 
+#  it failed (if it failed) 
 sub verify
 {
-	my $self = shift;
+  my $self = shift;
 
-	# define an array to keep
-	my %return;
-	my $line;
+  # define an array to keep
+  my %return;
+  my $line;
 
-	# default values
-	$return{'success'} = 0;
-	$return{'msg'} = 'success';
+  # default values
+  $return{'success'} = 0;
+  $return{'msg'} = 'success';
 
         return \%return unless -f ${$self->{'name'}};
 
         # start by setting the endian correctly
         Log2t::BinRead::set_endian( LITTLE_E );
 
-	my $ofs = 0;
+  my $ofs = 0;
 
-	# we don't need more than 30 chars	
-	$line = Log2t::BinRead::read_ascii_until( $self->{'file'}, \$ofs, "\n", 50 );
+  # we don't need more than 30 chars  
+  $line = Log2t::BinRead::read_ascii_until( $self->{'file'}, \$ofs, "\n", 50 );
 
-	# check the loaded line
-	if( $line =~ m/NETSCAPE-Bookmark-file-1/ )
-	{
-		$return{'success'} = 1;
-	}
-	else
-	{
-		$return{'success'} = 0;
-		$return{'msg'} = 'Not the correct format';
-	}
+  # check the loaded line
+  if( $line =~ m/NETSCAPE-Bookmark-file-1/ )
+  {
+    $return{'success'} = 1;
+  }
+  else
+  {
+    $return{'success'} = 0;
+    $return{'msg'} = 'Not the correct format';
+  }
 
-	return \%return;
+  return \%return;
 }
 
 1;
@@ -489,17 +489,17 @@ B<structure> - an input module B<log2timeline> that parses X
 
 =head1 SYNOPSIS
 
-	my $format = structure;
-	require $format_dir . '/' . $format . ".pl" ;
+  my $format = structure;
+  require $format_dir . '/' . $format . ".pl" ;
 
-	$format->verify( $log_file );
-	$format->prepare_file( $log_file, @ARGV )
+  $format->verify( $log_file );
+  $format->prepare_file( $log_file, @ARGV )
 
         $line = $format->load_line()
 
-	$t_line = $format->parse_line();
+  $t_line = $format->parse_line();
 
-	$format->close_file();
+  $format->close_file();
 
 =head1 DESCRIPTION
 
@@ -543,23 +543,23 @@ This is the main subroutine of the format file (or often it is).  It depends on 
 
 The content of the hash t_line is the following:
 
-	%t_line {
-		md5,		# MD5 sum of the file
-		name,		# the main text that appears in the timeline
-		title,		# short description used by some output modules
-		source,		# the source of the timeline, usually the same name or similar to the name of the package
-		user,		# the username that owns the file or produced the artifact
-		host,		# the hostname that the file belongs to
-		inode,		# the inode number of the file that contains the artifact
-		mode,		# the access rights of the file
-		uid,		# the UID of the user that owns the file/artifact
-		gid,		# the GID of the user that owns the file/artifact
-		size,		# the size of the file/artifact
-		atime,		# Time in epoch representing the last ACCESS time
-		mtime,		# Time in epoch representing the last MODIFICATION time
-		ctime,		# Time in epoch representing the CREATION time (or MFT/INODE modification time)
-		crtime		# Time in epoch representing the CREATION time
-	}
+  %t_line {
+    md5,    # MD5 sum of the file
+    name,    # the main text that appears in the timeline
+    title,    # short description used by some output modules
+    source,    # the source of the timeline, usually the same name or similar to the name of the package
+    user,    # the username that owns the file or produced the artifact
+    host,    # the hostname that the file belongs to
+    inode,    # the inode number of the file that contains the artifact
+    mode,    # the access rights of the file
+    uid,    # the UID of the user that owns the file/artifact
+    gid,    # the GID of the user that owns the file/artifact
+    size,    # the size of the file/artifact
+    atime,    # Time in epoch representing the last ACCESS time
+    mtime,    # Time in epoch representing the last MODIFICATION time
+    ctime,    # Time in epoch representing the CREATION time (or MFT/INODE modification time)
+    crtime    # Time in epoch representing the CREATION time
+  }
 
 The subroutine return a reference to the hash (t_line) that will be used by the main script (B<log2timeline>) to produce the actual timeline.  The hash is processed by the main script before forwarding it to an output module for the actual printing of a bodyfile.
 
@@ -576,8 +576,8 @@ This is needed since there is no need to try to parse the file/directory/artifac
 It is also important to validate the file since the scanner function will try to parse every file it finds, and uses this verify function to determine whether or not a particular file/dir/artifact is supported or not. It is therefore very important to implement this function and make it verify the file structure without false positives and without taking too long time
 
 This subroutine returns a reference to a hash that contains two values
-	success		An integer indicating whether not the input module is able to parse the file/directory/artifact
-	msg		A message indicating the reason why the input module was not able to parse the file/directory/artifact
+  success    An integer indicating whether not the input module is able to parse the file/directory/artifact
+  msg    A message indicating the reason why the input module was not able to parse the file/directory/artifact
 
 =back
 

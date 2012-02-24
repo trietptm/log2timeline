@@ -1,5 +1,5 @@
 #################################################################################################
-#			PDF
+#      PDF
 #################################################################################################
 # This script is a part of the log2timeline framework for timeline creation and analysis.
 # This script implements an input module, or a parser capable of parsing a single log file (or 
@@ -10,7 +10,7 @@
 # PDF documents
 #
 # Specifications for the PDF document format can be found here:
-# 	http://www.adobe.com/devnet/pdf/pdf_reference.html
+#   http://www.adobe.com/devnet/pdf/pdf_reference.html
 # 
 # Author: Kristinn Gudjonsson
 # Version : 0.3
@@ -37,11 +37,11 @@ package Log2t::input::pdf;
 use strict;
 use Log2t::base::input; # the SUPER class or parent
 use Log2t::Common ':binary';
-use Log2t::Time;	# to manipulate time
-#use Log2t::Win;	# Windows specific information
-#use Log2t::Numbers;	# to manipulate numbers
-use Log2t::BinRead;	# methods to read binary files (it is preferable to always load this library)
-#use Log2t::Network;	# information about network traffic 
+use Log2t::Time;  # to manipulate time
+#use Log2t::Win;  # Windows specific information
+#use Log2t::Numbers;  # to manipulate numbers
+use Log2t::BinRead;  # methods to read binary files (it is preferable to always load this library)
+#use Log2t::Network;  # information about network traffic 
 use Encode;
 
 # define the VERSION variable
@@ -61,10 +61,10 @@ sub new()
         # bless the class ;)
         my $self = $class->SUPER::new();
 
-	# indicate that we would like to return a single hash reference (container)
+  # indicate that we would like to return a single hash reference (container)
         $self->{'multi_line'} = 0;
 
-	bless($self,$class);
+  bless($self,$class);
 
         return $self;
 }
@@ -77,159 +77,159 @@ sub new()
 # @return A string containing a description of the format file's functionality
 sub get_description()
 {
-	return "Parse some of the available PDF document metadata"; 
+  return "Parse some of the available PDF document metadata"; 
 }
 
 sub get_time
 {
-	my $self = shift;
+  my $self = shift;
 
-	# reset variables
-	$self->{'container'} = undef;
-	$self->{'cont_index'} = 0;
-	$self->{'lines'} = 0;
+  # reset variables
+  $self->{'container'} = undef;
+  $self->{'cont_index'} = 0;
+  $self->{'lines'} = 0;
 
         # get the filehandle 
         my $fh = $self->{'file'};
 
-	# read all lines
-	while( <$fh> )
-	{
-		$_ =~ s/\n//g;
-		$_ =~ s/\r//g;
+  # read all lines
+  while( <$fh> )
+  {
+    $_ =~ s/\n//g;
+    $_ =~ s/\r//g;
 
-		if( /\/Creator\s?\(([^\)]+)\)/i )
-		{
-			# /Creator (stuff)
-			$self->{'creator'} = $1;
-			print STDERR "[PDF] Found creator: [$1]\n" if $self->{'debug'};		
-		}
-		if( /\/CreationDate\s?\(([^\)]+)\)/i )
-		{
-			$self->{'creationdate'} = $1;
-			$self->{'lines'}++;
-			push( @{$self->{'dates'}}, 'creationdate' );
-			print STDERR "[PDF] Found creation date: $1\n" if $self->{'debug'};		
-		}
+    if( /\/Creator\s?\(([^\)]+)\)/i )
+    {
+      # /Creator (stuff)
+      $self->{'creator'} = $1;
+      print STDERR "[PDF] Found creator: [$1]\n" if $self->{'debug'};    
+    }
+    if( /\/CreationDate\s?\(([^\)]+)\)/i )
+    {
+      $self->{'creationdate'} = $1;
+      $self->{'lines'}++;
+      push( @{$self->{'dates'}}, 'creationdate' );
+      print STDERR "[PDF] Found creation date: $1\n" if $self->{'debug'};    
+    }
 
-		if( /\/ModDate\s?\(([^\)]+)\)/i )
-		{
-			$self->{'moddate'} = $1;
-			$self->{'lines'}++;
-			push( @{$self->{'dates'}}, 'moddate' );
-			print STDERR "[PDF] Found mod date: $1\n" if $self->{'debug'};		
-		}
+    if( /\/ModDate\s?\(([^\)]+)\)/i )
+    {
+      $self->{'moddate'} = $1;
+      $self->{'lines'}++;
+      push( @{$self->{'dates'}}, 'moddate' );
+      print STDERR "[PDF] Found mod date: $1\n" if $self->{'debug'};    
+    }
 
-		if( /\/Producer\s?\(([^\)]+)\)/i )
-		{
-			$self->{'producer'} = $1;
-			print STDERR "[PDF] Found producer: $1\n" if $self->{'debug'};		
-		}
+    if( /\/Producer\s?\(([^\)]+)\)/i )
+    {
+      $self->{'producer'} = $1;
+      print STDERR "[PDF] Found producer: $1\n" if $self->{'debug'};    
+    }
 
-		if( /\/LastModified\s?\(([^\)]+)\)/i )
-		{
-			$self->{'lastmodified'} = $1;
-			push( @{$self->{'dates'}}, 'lastmodified' );
-			$self->{'lines'}++;
-			print STDERR "[PDF] Found last modified: $1\n" if $self->{'debug'};		
-		}
+    if( /\/LastModified\s?\(([^\)]+)\)/i )
+    {
+      $self->{'lastmodified'} = $1;
+      push( @{$self->{'dates'}}, 'lastmodified' );
+      $self->{'lines'}++;
+      print STDERR "[PDF] Found last modified: $1\n" if $self->{'debug'};    
+    }
 
-		if( /\/Author\s?\(([^\)]+)\)/i )
-		{
-			$self->{'author'} = $1;
-			print STDERR "[PDF] Found author: $1\n" if $self->{'debug'};		
-		}
+    if( /\/Author\s?\(([^\)]+)\)/i )
+    {
+      $self->{'author'} = $1;
+      print STDERR "[PDF] Found author: $1\n" if $self->{'debug'};    
+    }
 
-		if( /\/Title\s?\(([^\)]+)\)/i )
-		{
-			$self->{'title'} = $1;
-			print STDERR "[PDF] Found title: $1\n" if $self->{'debug'};		
-		}
-	}
+    if( /\/Title\s?\(([^\)]+)\)/i )
+    {
+      $self->{'title'} = $1;
+      print STDERR "[PDF] Found title: $1\n" if $self->{'debug'};    
+    }
+  }
 
-	# go through each date object
-	for ( my $i = 0; $i < $self->{'lines'}; $i++ )
-	{
-		my $text;
-		my $date = 0;
-		my $d_type = pop( @{$self->{'dates'}} );
-		my $type;
+  # go through each date object
+  for ( my $i = 0; $i < $self->{'lines'}; $i++ )
+  {
+    my $text;
+    my $date = 0;
+    my $d_type = pop( @{$self->{'dates'}} );
+    my $type;
 
-		$date = Log2t::Time::pdf_to_date( $self->{"$d_type"} );
+    $date = Log2t::Time::pdf_to_date( $self->{"$d_type"} );
 
-		print STDERR "[PDF] Parsing $d_type [$date]\n" if $self->{'debug'};
+    print STDERR "[PDF] Parsing $d_type [$date]\n" if $self->{'debug'};
 
-		# check for valid dates
-		next unless defined $date;
+    # check for valid dates
+    next unless defined $date;
 
-		# check date stuff
-		$type = 'File created' if( $d_type eq 'creationdate' );
-		$type = 'File modified' if( $d_type eq 'moddate' );
-		$type = 'File modified' if( $d_type eq 'lastmodified' );
+    # check date stuff
+    $type = 'File created' if( $d_type eq 'creationdate' );
+    $type = 'File modified' if( $d_type eq 'moddate' );
+    $type = 'File modified' if( $d_type eq 'lastmodified' );
 
-		$text = $type . '.';
+    $text = $type . '.';
 
-		if( defined $self->{'title'} )
-		{
-			$text .= ' Title : (' . $self->{'title'}. ')';
-		}
+    if( defined $self->{'title'} )
+    {
+      $text .= ' Title : (' . $self->{'title'}. ')';
+    }
 
-		if( defined $self->{'author'} )
-		{
-			$self->{'username'} = $self->{'author'};
-			$text .= ' Author: [' . $self->{'author'}. ']';
-		}
+    if( defined $self->{'author'} )
+    {
+      $self->{'username'} = $self->{'author'};
+      $text .= ' Author: [' . $self->{'author'}. ']';
+    }
 
-		if( defined $self->{'creator'} )
-		{
-			$text .= ' Creator: [' . $self->{'creator'}  .']';
-		}
+    if( defined $self->{'creator'} )
+    {
+      $text .= ' Creator: [' . $self->{'creator'}  .']';
+    }
 
-		if( defined $self->{'producer'} )
-		{
-			$text .= ' produced by: [' . $self->{'producer'} . ']';
-		}
-	
-		$text = encode( 'utf-8', $text );
+    if( defined $self->{'producer'} )
+    {
+      $text .= ' produced by: [' . $self->{'producer'} . ']';
+    }
+  
+    $text = encode( 'utf-8', $text );
 
-        	# content of array t_line ([optional])
-        	# %t_line {        #       time
-        	#               index
-        	#                       value
-        	#                       type
-        	#                       legacy
-        	#       desc
-        	#       short
-        	#       source
-        	#       sourcetype
-        	#       version
-        	#       [notes]
-        	#       extra
-        	#               [filename]
-        	#               [md5]
-        	#               [mode]
-        	#               [host]
-        	#               [user]
-        	#               [url]
-        	#               [size]
-        	#               [...]
-        	# }
-	
-	        # create the t_line variable
-	        $self->{'container'}->{$self->{'cont_index'}++} = {
-	                'time' => { 0 => { 'value' => $date, 'type' => $d_type, 'legacy' => 15 } },
-	                'desc' => $text,
-	                'short' => $type,
-	                'source' => 'PDF',
-	                'sourcetype' => 'PDF Metadata',
-	                'version' => 2,
-	                'extra' => { 'user' => $self->{'username'},  }
-	        };
-	}
+          # content of array t_line ([optional])
+          # %t_line {        #       time
+          #               index
+          #                       value
+          #                       type
+          #                       legacy
+          #       desc
+          #       short
+          #       source
+          #       sourcetype
+          #       version
+          #       [notes]
+          #       extra
+          #               [filename]
+          #               [md5]
+          #               [mode]
+          #               [host]
+          #               [user]
+          #               [url]
+          #               [size]
+          #               [...]
+          # }
+  
+          # create the t_line variable
+          $self->{'container'}->{$self->{'cont_index'}++} = {
+                  'time' => { 0 => { 'value' => $date, 'type' => $d_type, 'legacy' => 15 } },
+                  'desc' => $text,
+                  'short' => $type,
+                  'source' => 'PDF',
+                  'sourcetype' => 'PDF Metadata',
+                  'version' => 2,
+                  'extra' => { 'user' => $self->{'username'},  }
+          };
+  }
 
-#	printf STDERR "[PDF] There are %d timestamps parsed.\n", $self->{'cont_index'};
+#  printf STDERR "[PDF] There are %d timestamps parsed.\n", $self->{'cont_index'};
 
-	return $self->{'container'};
+  return $self->{'container'};
 }
 
 #       get_version
@@ -253,7 +253,7 @@ sub get_version()
 # @return A string containing a help file for this format file
 sub get_help()
 {
-	return "An input module that parses some of the metadata content that is stored
+  return "An input module that parses some of the metadata content that is stored
 inside PDF documents.\n";
 
 }
@@ -273,63 +273,63 @@ inside PDF documents.\n";
 # without taking too long time
 #
 # @return A reference to a hash that contains an integer indicating whether or not the 
-#	file/dir/artifact is supporter by this input module as well as a reason why 
-#	it failed (if it failed) 
+#  file/dir/artifact is supporter by this input module as well as a reason why 
+#  it failed (if it failed) 
 sub verify
 {
-	my $self = shift;
+  my $self = shift;
 
-	# define an array to keep
-	my %return;
-	my $vline;
+  # define an array to keep
+  my %return;
+  my $vline;
 
-	# default values
-	$return{'success'} = 0;
-	$return{'msg'} = 'success';
+  # default values
+  $return{'success'} = 0;
+  $return{'msg'} = 'success';
 
         return \%return unless -f ${$self->{'name'}};
 
         # start by setting the endian correctly
         Log2t::BinRead::set_endian( LITTLE_E );
 
-	my $ofs = 0;
+  my $ofs = 0;
 
-	# open the file (at least try to open it)
-	eval
-	{
-		unless( $self->{'quick'} )
-		{
-			# the first letter should be %, let's check for that
-			seek($self->{'file'},0,0);
-			read($self->{'file'},$vline,1);
-			$return{'msg'} = 'Wrong magic value';
-			return \%return unless $vline eq '%';
-		}
+  # open the file (at least try to open it)
+  eval
+  {
+    unless( $self->{'quick'} )
+    {
+      # the first letter should be %, let's check for that
+      seek($self->{'file'},0,0);
+      read($self->{'file'},$vline,1);
+      $return{'msg'} = 'Wrong magic value';
+      return \%return unless $vline eq '%';
+    }
 
-		# read a line from the file as it were a binary file
-		# it does not matter if the file is ASCII based or binary, 
-		# lines are read as they were a binary one, since trying to load up large
-		# binary documents using <FILE> can cause log2timeline/timescanner to 
-		# halt for a long while before dying (memory exhaustion)
-		$vline = Log2t::BinRead::read_ascii_until( $self->{'file'}, \$ofs, "\n", 50 );
-	};
-	if ( $@ )
-	{
-		$return{'success'} = 0;
-		$return{'msg'} = "Unable to open file";
-	}
+    # read a line from the file as it were a binary file
+    # it does not matter if the file is ASCII based or binary, 
+    # lines are read as they were a binary one, since trying to load up large
+    # binary documents using <FILE> can cause log2timeline/timescanner to 
+    # halt for a long while before dying (memory exhaustion)
+    $vline = Log2t::BinRead::read_ascii_until( $self->{'file'}, \$ofs, "\n", 50 );
+  };
+  if ( $@ )
+  {
+    $return{'success'} = 0;
+    $return{'msg'} = "Unable to open file";
+  }
 
-	if( lc( $vline ) =~ m/\%pdf-1\.\d/ )
-	{
-		$return{'success'} = 1;
-	}
-	else
-	{
-		$return{'success'} = 0;
-		$return{'msg'} = 'Not the correct magic value';
-	}
+  if( lc( $vline ) =~ m/\%pdf-1\.\d/ )
+  {
+    $return{'success'} = 1;
+  }
+  else
+  {
+    $return{'success'} = 0;
+    $return{'msg'} = 'Not the correct magic value';
+  }
 
-	return \%return;
+  return \%return;
 }
 
 1;
@@ -345,17 +345,17 @@ B<structure> - an input module B<log2timeline> that parses X
 
 =head1 SYNOPSIS
 
-	my $format = structure;
-	require $format_dir . '/' . $format . ".pl" ;
+  my $format = structure;
+  require $format_dir . '/' . $format . ".pl" ;
 
-	$format->verify( $log_file );
-	$format->prepare_file( $log_file, @ARGV )
+  $format->verify( $log_file );
+  $format->prepare_file( $log_file, @ARGV )
 
         $line = $format->load_line()
 
-	$t_line = $format->parse_line();
+  $t_line = $format->parse_line();
 
-	$format->close_file();
+  $format->close_file();
 
 =head1 DESCRIPTION
 
@@ -399,23 +399,23 @@ This is the main subroutine of the format file (or often it is).  It depends on 
 
 The content of the hash t_line is the following:
 
-	%t_line {
-		md5,		# MD5 sum of the file
-		name,		# the main text that appears in the timeline
-		title,		# short description used by some output modules
-		source,		# the source of the timeline, usually the same name or similar to the name of the package
-		user,		# the username that owns the file or produced the artifact
-		host,		# the hostname that the file belongs to
-		inode,		# the inode number of the file that contains the artifact
-		mode,		# the access rights of the file
-		uid,		# the UID of the user that owns the file/artifact
-		gid,		# the GID of the user that owns the file/artifact
-		size,		# the size of the file/artifact
-		atime,		# Time in epoch representing the last ACCESS time
-		mtime,		# Time in epoch representing the last MODIFICATION time
-		ctime,		# Time in epoch representing the CREATION time (or MFT/INODE modification time)
-		crtime		# Time in epoch representing the CREATION time
-	}
+  %t_line {
+    md5,    # MD5 sum of the file
+    name,    # the main text that appears in the timeline
+    title,    # short description used by some output modules
+    source,    # the source of the timeline, usually the same name or similar to the name of the package
+    user,    # the username that owns the file or produced the artifact
+    host,    # the hostname that the file belongs to
+    inode,    # the inode number of the file that contains the artifact
+    mode,    # the access rights of the file
+    uid,    # the UID of the user that owns the file/artifact
+    gid,    # the GID of the user that owns the file/artifact
+    size,    # the size of the file/artifact
+    atime,    # Time in epoch representing the last ACCESS time
+    mtime,    # Time in epoch representing the last MODIFICATION time
+    ctime,    # Time in epoch representing the CREATION time (or MFT/INODE modification time)
+    crtime    # Time in epoch representing the CREATION time
+  }
 
 The subroutine return a reference to the hash (t_line) that will be used by the main script (B<log2timeline>) to produce the actual timeline.  The hash is processed by the main script before forwarding it to an output module for the actual printing of a bodyfile.
 
@@ -432,8 +432,8 @@ This is needed since there is no need to try to parse the file/directory/artifac
 It is also important to validate the file since the scanner function will try to parse every file it finds, and uses this verify function to determine whether or not a particular file/dir/artifact is supported or not. It is therefore very important to implement this function and make it verify the file structure without false positives and without taking too long time
 
 This subroutine returns a reference to a hash that contains two values
-	success		An integer indicating whether not the input module is able to parse the file/directory/artifact
-	msg		A message indicating the reason why the input module was not able to parse the file/directory/artifact
+  success    An integer indicating whether not the input module is able to parse the file/directory/artifact
+  msg    A message indicating the reason why the input module was not able to parse the file/directory/artifact
 
 =back
 

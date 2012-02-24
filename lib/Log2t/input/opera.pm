@@ -1,5 +1,5 @@
 #################################################################################################
-#		OPERA
+#    OPERA
 #################################################################################################
 # This script is a part of the log2timeline framework for timeline creation and analysis.
 # This script implements an input module, or a parser capable of parsing a single log file (or 
@@ -7,12 +7,12 @@
 # to create a body file (to create a timeline) or a timeline (directly).
 #
 # This input module takes care of parsing the Opera browsing history (text files) files:
-#	Opera Global History
-#	Opera Direct History
+#  Opera Global History
+#  Opera Direct History
 #
 # In the current version (the Opera 10) the file is :
-#	global_history.dat
-#	typed_history.xml
+#  global_history.dat
+#  typed_history.xml
 #
 # The files are constructed using the same format as the older version, just a new name
 #
@@ -46,10 +46,10 @@ package Log2t::input::opera;
 use strict;
 use Log2t::base::input; # the SUPER class or parent
 use Log2t::Common ':binary';
-use Log2t::Time;	# to manipulate time
-#use Log2t::Numbers;	# to manipulate numbers
-use Log2t::BinRead;	# methods to read binary files
-#use Log2t::Network;	# information about network traffic 
+use Log2t::Time;  # to manipulate time
+#use Log2t::Numbers;  # to manipulate numbers
+use Log2t::BinRead;  # methods to read binary files
+#use Log2t::Network;  # information about network traffic 
 use XML::LibXML;
 use XML::LibXML::Common;
 use Encode;
@@ -61,8 +61,8 @@ use vars qw($VERSION @ISA);
 
 # define a constant to declare which type of document we are examinig (direct vs. global)
 use constant {
-	GLOBAL_HISTORY => 12,
-	DIRECT_HISTORY => 21
+  GLOBAL_HISTORY => 12,
+  DIRECT_HISTORY => 21
 };
 
 # indicate the version number of this input module
@@ -75,7 +75,7 @@ $VERSION = '0.2';
 # @return A version number
 sub get_version()
 {
-	return $VERSION;
+  return $VERSION;
 }
 
 #       get_description
@@ -86,7 +86,7 @@ sub get_version()
 # @return A string containing a description of the format file's functionality
 sub get_description()
 {
-	return "Parse the content of an Opera's global history file"; 
+  return "Parse the content of an Opera's global history file"; 
 }
 
 #       prepare_file
@@ -104,72 +104,72 @@ sub get_description()
 #       successful or not.
 sub init
 {
-	# read the paramaters passed to the script
-	my $self = shift;
-	my $temp;
-	my $path;
+  # read the paramaters passed to the script
+  my $self = shift;
+  my $temp;
+  my $path;
 
-	# XML elements
-	my ($propertylist,$property);
-	my (@properties,@relationships);
+  # XML elements
+  my ($propertylist,$property);
+  my (@properties,@relationships);
 
         # check if we need to "guess" the username of the user
         if( $self->{'username'} eq 'unknown' )
         {
                 # check the current working directory and try to guess the username
-		$self->{'username'} = Log2t::Common::get_username_from_path(${$self->{'name'}});
+    $self->{'username'} = Log2t::Common::get_username_from_path(${$self->{'name'}});
         }
 
-	# check the type, we might have to read the file
-	if( $self->{'type'} eq DIRECT_HISTORY )
-	{
-		# initialize the index variable
-		$self->{'index'} = 0;
+  # check the type, we might have to read the file
+  if( $self->{'type'} eq DIRECT_HISTORY )
+  {
+    # initialize the index variable
+    $self->{'index'} = 0;
 
-		# we have a XML file, let's read it
-        	$self->{'xml_object'} = XML::LibXML->new();
+    # we have a XML file, let's read it
+          $self->{'xml_object'} = XML::LibXML->new();
         
-		# read inn all the XML
-        	$self->{'direct_history'} = $self->{'xml_object'}->parse_fh( $self->{'file'} );
+    # read inn all the XML
+          $self->{'direct_history'} = $self->{'xml_object'}->parse_fh( $self->{'file'} );
 
-	        # get the encoding of the document
-	        $self->{'encoding'} = $self->{'direct_history'}->encoding();
+          # get the encoding of the document
+          $self->{'encoding'} = $self->{'direct_history'}->encoding();
 
-        	# get all the Relationship nodes
-        	$propertylist = $self->{'direct_history'}->getDocumentElement();
-        	@properties = $propertylist->childNodes;
+          # get all the Relationship nodes
+          $propertylist = $self->{'direct_history'}->getDocumentElement();
+          @properties = $propertylist->childNodes;
 
-	        # examine each record
-	        foreach $property (@properties)
-	        {
-			# for each record, let's examine the values 
-	                if( $property->nodeType==ELEMENT_NODE )
-	                {
-				# let's get all the attributes
-                        	@relationships = $property->attributes();
+          # examine each record
+          foreach $property (@properties)
+          {
+      # for each record, let's examine the values 
+                  if( $property->nodeType==ELEMENT_NODE )
+                  {
+        # let's get all the attributes
+                          @relationships = $property->attributes();
 
-				# go through each attribute
-                        	foreach ( @relationships )
-                        	{
-					$temp = $_->toString;
-					($a,$b) = split( /=/, $temp );
+        # go through each attribute
+                          foreach ( @relationships )
+                          {
+          $temp = $_->toString;
+          ($a,$b) = split( /=/, $temp );
 
-					$a =~ s/\s+//g;
-					$b =~ s/\s+//g;
+          $a =~ s/\s+//g;
+          $b =~ s/\s+//g;
 
-					$self->{'records'}->{$self->{'index'}}->{$a} = $b;
-				}
-				# increment the index variable
-				$self->{'index'}++;
-	
-			}
-		}
-	}
+          $self->{'records'}->{$self->{'index'}}->{$a} = $b;
+        }
+        # increment the index variable
+        $self->{'index'}++;
+  
+      }
+    }
+  }
 
-	# initialize the index variable again (for loading)
-	$self->{'index'} = 0;
+  # initialize the index variable again (for loading)
+  $self->{'index'} = 0;
 
-	return 1;
+  return 1;
 }
 
 #       get_time
@@ -182,59 +182,59 @@ sub init
 # @return Returns a reference to a hash containing the needed values to print a body file
 sub get_time
 {
-	my $self = shift;
-	# the timestamp object
-	my %t_line;
-	my ($url,$title,$date,$nr);
-	my $text = '';
-	my $fh = $self->{'file'};
+  my $self = shift;
+  # the timestamp object
+  my %t_line;
+  my ($url,$title,$date,$nr);
+  my $text = '';
+  my $fh = $self->{'file'};
 
-	# check the type of history file we are dealing with
-	if( $self->{'type'} eq GLOBAL_HISTORY )
-	{
-		# get the filehandle and read the next line
-		my $line = <$fh> or return undef; 
+  # check the type of history file we are dealing with
+  if( $self->{'type'} eq GLOBAL_HISTORY )
+  {
+    # get the filehandle and read the next line
+    my $line = <$fh> or return undef; 
 
-		# Title
-		$title = $line;
-		$url = <$fh>;
-		$date = <$fh>;
-		$nr = <$fh>;
+    # Title
+    $title = $line;
+    $url = <$fh>;
+    $date = <$fh>;
+    $nr = <$fh>;
 
-		# remove end line characters
-		$date =~ s/\n//g;
-		$date =~ s/\r//g;
-		$url =~ s/\n//g;
-		$url =~ s/\r//g;
-		$title =~ s/\n//g;
-		$title =~ s/\r//g;
-		$nr =~ s/\n//g;
-		$nr =~ s/\r//g;
-	
-		$text = 'URL visited ' . $url . ' (' . $title . ') [' . $nr . ']';
-	}
-	else
-	{
-		return undef unless $self->{'index'} < keys %{$self->{'records'}};
+    # remove end line characters
+    $date =~ s/\n//g;
+    $date =~ s/\r//g;
+    $url =~ s/\n//g;
+    $url =~ s/\r//g;
+    $title =~ s/\n//g;
+    $title =~ s/\r//g;
+    $nr =~ s/\n//g;
+    $nr =~ s/\r//g;
+  
+    $text = 'URL visited ' . $url . ' (' . $title . ') [' . $nr . ']';
+  }
+  else
+  {
+    return undef unless $self->{'index'} < keys %{$self->{'records'}};
 
-		# we are dealing with a DIRECT history file
-		# we know the current index into the HASH
-		$url = $self->{'records'}->{$self->{'index'}}->{'content'};
-		$url =~ s/^"//;
-		$url =~ s/"$//;
-	
-		$text = 'typed the URL ' . $url . ' directly into the browser (type ' . $self->{'records'}->{$self->{'index'}}->{'type'} . ')'; 
+    # we are dealing with a DIRECT history file
+    # we know the current index into the HASH
+    $url = $self->{'records'}->{$self->{'index'}}->{'content'};
+    $url =~ s/^"//;
+    $url =~ s/"$//;
+  
+    $text = 'typed the URL ' . $url . ' directly into the browser (type ' . $self->{'records'}->{$self->{'index'}}->{'type'} . ')'; 
 
-		$nr = $self->{'records'}->{$self->{'index'}}->{'last_typed'};
-		$nr =~ s/"//g;
+    $nr = $self->{'records'}->{$self->{'index'}}->{'last_typed'};
+    $nr =~ s/"//g;
 
-		$date = Log2t::Time::iso2epoch( $nr, ,$self->{'tz'} ); 
+    $date = Log2t::Time::iso2epoch( $nr, ,$self->{'tz'} ); 
 
-		# increment the index variable for one (if DIRECT HISTORY)
-		$self->{'index'}++;
-	}
-	
-	# create the t_line variable
+    # increment the index variable for one (if DIRECT HISTORY)
+    $self->{'index'}++;
+  }
+  
+  # create the t_line variable
         # content of array t_line ([optional])
         # %t_line {        #       time
         #               index
@@ -281,7 +281,7 @@ sub get_time
         } 
 
 
-	return \%t_line;
+  return \%t_line;
 }
 
 #       get_help
@@ -292,7 +292,7 @@ sub get_time
 # @return A string containing a help file for this format file
 sub get_help()
 {
-	return "This is a simple input module that takes as an input
+  return "This is a simple input module that takes as an input
 the Opera Global History file and prints out the associated browser
 history, as it is stored inside the file. \n";
 
@@ -313,114 +313,114 @@ history, as it is stored inside the file. \n";
 # without taking too long time
 #
 # @return A reference to a hash that contains an integer indicating whether or not the 
-#	file/dir/artifact is supporter by this input module as well as a reason why 
-#	it failed (if it failed) 
+#  file/dir/artifact is supporter by this input module as well as a reason why 
+#  it failed (if it failed) 
 sub verify
 {
-	my $self = shift;
+  my $self = shift;
 
-	# define an array to keep
-	my %return;
-	my $line;
-	my $l2;
-	my $time;
+  # define an array to keep
+  my %return;
+  my $line;
+  my $l2;
+  my $time;
 
-	# default values
-	$return{'success'} = 0;
-	$return{'msg'} = 'success';
+  # default values
+  $return{'success'} = 0;
+  $return{'msg'} = 'success';
 
         return \%return unless -f ${$self->{'name'}};
 
         # start by setting the endian correctly
         Log2t::BinRead::set_endian( LITTLE_E );
 
-	my $ofs = 0;
+  my $ofs = 0;
 
-	# open the file (at least try to open it)
-	eval
-	{
-		#unless( $self->{'quick'} )
-		#{
-		#	# this is a bit tough one to properly parse, since the first line is a URL or a web site's title
-		#	# but let's try
-		#	seek($self->{'name'},0,0);
-		#	read($self->{'name'},$line,1);
-		#	if( $line !~ m/[\w<]/ )
-		#	{
-		#		return \%return; 
-		#	}
-		#}
+  # open the file (at least try to open it)
+  eval
+  {
+    #unless( $self->{'quick'} )
+    #{
+    #  # this is a bit tough one to properly parse, since the first line is a URL or a web site's title
+    #  # but let's try
+    #  seek($self->{'name'},0,0);
+    #  read($self->{'name'},$line,1);
+    #  if( $line !~ m/[\w<]/ )
+    #  {
+    #    return \%return; 
+    #  }
+    #}
 
-		# opera consists of four lines
-		# 	Title
-		#	URL
-		# 	Epoch time
-		#	Number
-		$line = Log2t::BinRead::read_ascii_until( $self->{'file'}, \$ofs, "\n", 100 );
-	};
-	if ( $@ )
-	{
-		$return{'success'} = 0;
-		$return{'msg'} = "Unable to open file";
-	}
+    # opera consists of four lines
+    #   Title
+    #  URL
+    #   Epoch time
+    #  Number
+    $line = Log2t::BinRead::read_ascii_until( $self->{'file'}, \$ofs, "\n", 100 );
+  };
+  if ( $@ )
+  {
+    $return{'success'} = 0;
+    $return{'msg'} = "Unable to open file";
+  }
 
-	# read the URL
-	$l2 = Log2t::BinRead::read_ascii_until( $self->{'file'}, \$ofs, "\n", 200 );
+  # read the URL
+  $l2 = Log2t::BinRead::read_ascii_until( $self->{'file'}, \$ofs, "\n", 200 );
 
-	# confirm we have a URL (possibly the global history file)
-	if( $l2 =~ m/http?:\/\/.+/ )
-	{
-		# we have a URL
-		# check the next line
-		$l2 = Log2t::BinRead::read_ascii_until( $self->{'file'}, \$ofs, "\n", 200 ); # <FILE>;
-		$l2 =~ s/\n//g;
-		$l2 =~ s/\r//g;
-		
-		# this should be an epoch time format
-		$time = int( $l2 );
-		if( $l2 ne $time )
-		{
-			$return{'success'} = 0;
-			$return{'msg'} = 'Not a Opera file (time not in epoch)';
-		}
-		else
-		{	
-			# check for the time variable
-			if ( $time > 0 && $time < ( time() + 5184000 ) )
-			{
-				$return{'success'} = 1;
+  # confirm we have a URL (possibly the global history file)
+  if( $l2 =~ m/http?:\/\/.+/ )
+  {
+    # we have a URL
+    # check the next line
+    $l2 = Log2t::BinRead::read_ascii_until( $self->{'file'}, \$ofs, "\n", 200 ); # <FILE>;
+    $l2 =~ s/\n//g;
+    $l2 =~ s/\r//g;
+    
+    # this should be an epoch time format
+    $time = int( $l2 );
+    if( $l2 ne $time )
+    {
+      $return{'success'} = 0;
+      $return{'msg'} = 'Not a Opera file (time not in epoch)';
+    }
+    else
+    {  
+      # check for the time variable
+      if ( $time > 0 && $time < ( time() + 5184000 ) )
+      {
+        $return{'success'} = 1;
 
-				# we have a global history file, let's mark the type
-				$self->{'type'} = GLOBAL_HISTORY;
-			}
-		}
-		
-		
-	}
-	elsif( $line =~ m/xml version="1.0" encoding/ )
-	{
-		# we have a possible direct history file
+        # we have a global history file, let's mark the type
+        $self->{'type'} = GLOBAL_HISTORY;
+      }
+    }
+    
+    
+  }
+  elsif( $line =~ m/xml version="1.0" encoding/ )
+  {
+    # we have a possible direct history file
 
-		$l2 =~ s/\n//g;
-		$l2 =~ s/\r//g;
+    $l2 =~ s/\n//g;
+    $l2 =~ s/\r//g;
 
-		# check if we have the correct tag to show that this is truly a direct history file
-		if( $l2 =~ m/\<typed_history\>/ )
-		{
-			# we have a typed history file, let's move on
-			$return{'success'} = 1;
+    # check if we have the correct tag to show that this is truly a direct history file
+    if( $l2 =~ m/\<typed_history\>/ )
+    {
+      # we have a typed history file, let's move on
+      $return{'success'} = 1;
 
-			# indicate the type of file we have
-			$self->{'type'} = DIRECT_HISTORY;
-		}
-	}
-	else
-	{
-		$return{'success'} = 0;
-		$return{'msg'} = 'Not a History file';
-	}
-		
-	return \%return;
+      # indicate the type of file we have
+      $self->{'type'} = DIRECT_HISTORY;
+    }
+  }
+  else
+  {
+    $return{'success'} = 0;
+    $return{'msg'} = 'Not a History file';
+  }
+    
+  return \%return;
 }
 
 1;
@@ -436,17 +436,17 @@ B<structure> - an input module B<log2timeline> that parses X
 
 =head1 SYNOPSIS
 
-	my $format = structure
-	require $format_dir . '/' . $format . ".pl" ;
+  my $format = structure
+  require $format_dir . '/' . $format . ".pl" ;
 
-	$format->verify( $log_file );
-	$format->prepare_file( $log_file, @ARGV )
+  $format->verify( $log_file );
+  $format->prepare_file( $log_file, @ARGV )
 
         $line = $format->load_line()
 
-	$t_line = $format->parse_line();
+  $t_line = $format->parse_line();
 
-	$format->close_file();
+  $format->close_file();
 
 =head1 DESCRIPTION
 
@@ -490,23 +490,23 @@ This is the main subroutine of the format file (or often it is).  It depends on 
 
 The content of the hash t_line is the following:
 
-	%t_line {
-		md5,		# MD5 sum of the file
-		name,		# the main text that appears in the timeline
-		title,		# short description used by some output modules
-		source,		# the source of the timeline, usually the same name or similar to the name of the package
-		user,		# the username that owns the file or produced the artifact
-		host,		# the hostname that the file belongs to
-		inode,		# the inode number of the file that contains the artifact
-		mode,		# the access rights of the file
-		uid,		# the UID of the user that owns the file/artifact
-		gid,		# the GID of the user that owns the file/artifact
-		size,		# the size of the file/artifact
-		atime,		# Time in epoch representing the last ACCESS time
-		mtime,		# Time in epoch representing the last MODIFICATION time
-		ctime,		# Time in epoch representing the CREATION time (or MFT/INODE modification time)
-		crtime		# Time in epoch representing the CREATION time
-	}
+  %t_line {
+    md5,    # MD5 sum of the file
+    name,    # the main text that appears in the timeline
+    title,    # short description used by some output modules
+    source,    # the source of the timeline, usually the same name or similar to the name of the package
+    user,    # the username that owns the file or produced the artifact
+    host,    # the hostname that the file belongs to
+    inode,    # the inode number of the file that contains the artifact
+    mode,    # the access rights of the file
+    uid,    # the UID of the user that owns the file/artifact
+    gid,    # the GID of the user that owns the file/artifact
+    size,    # the size of the file/artifact
+    atime,    # Time in epoch representing the last ACCESS time
+    mtime,    # Time in epoch representing the last MODIFICATION time
+    ctime,    # Time in epoch representing the CREATION time (or MFT/INODE modification time)
+    crtime    # Time in epoch representing the CREATION time
+  }
 
 The subroutine return a reference to the hash (t_line) that will be used by the main script (B<log2timeline>) to produce the actual timeline.  The hash is processed by the main script before forwarding it to an output module for the actual printing of a bodyfile.
 
@@ -523,8 +523,8 @@ This is needed since there is no need to try to parse the file/directory/artifac
 It is also important to validate the file since the scanner function will try to parse every file it finds, and uses this verify function to determine whether or not a particular file/dir/artifact is supported or not. It is therefore very important to implement this function and make it verify the file structure without false positives and without taking too long time
 
 This subroutine returns a reference to a hash that contains two values
-	success		An integer indicating whether not the input module is able to parse the file/directory/artifact
-	msg		A message indicating the reason why the input module was not able to parse the file/directory/artifact
+  success    An integer indicating whether not the input module is able to parse the file/directory/artifact
+  msg    A message indicating the reason why the input module was not able to parse the file/directory/artifact
 
 =back
 
