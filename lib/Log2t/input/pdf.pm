@@ -2,7 +2,7 @@
 #      PDF
 #################################################################################################
 # This script is a part of the log2timeline framework for timeline creation and analysis.
-# This script implements an input module, or a parser capable of parsing a single log file (or 
+# This script implements an input module, or a parser capable of parsing a single log file (or
 # directory) and creating a hash that is returned to the main script.  That hash is then used
 # to create a body file (to create a timeline) or a timeline (directly).
 #
@@ -11,7 +11,7 @@
 #
 # Specifications for the PDF document format can be found here:
 #   http://www.adobe.com/devnet/pdf/pdf_reference.html
-# 
+#
 # Author: Kristinn Gudjonsson
 # Version : 0.3
 # Date : 01/05/11
@@ -35,225 +35,208 @@
 package Log2t::input::pdf;
 
 use strict;
-use Log2t::base::input; # the SUPER class or parent
+use Log2t::base::input;    # the SUPER class or parent
 use Log2t::Common ':binary';
-use Log2t::Time;  # to manipulate time
+use Log2t::Time;           # to manipulate time
+
 #use Log2t::Win;  # Windows specific information
 #use Log2t::Numbers;  # to manipulate numbers
-use Log2t::BinRead;  # methods to read binary files (it is preferable to always load this library)
-#use Log2t::Network;  # information about network traffic 
+use Log2t::BinRead;    # methods to read binary files (it is preferable to always load this library)
+
+#use Log2t::Network;  # information about network traffic
 use Encode;
 
 # define the VERSION variable
 use vars qw($VERSION @ISA);
 
 # inherit the base input module, or the super class.
-@ISA = ( "Log2t::base::input" );
+@ISA = ("Log2t::base::input");
 
 # indicate the version number of this input module
 $VERSION = '0.3';
 
 # default constructor
-sub new()
-{
-        my $class = shift;
+sub new() {
+    my $class = shift;
 
-        # bless the class ;)
-        my $self = $class->SUPER::new();
+    # bless the class ;)
+    my $self = $class->SUPER::new();
 
-  # indicate that we would like to return a single hash reference (container)
-        $self->{'multi_line'} = 0;
+    # indicate that we would like to return a single hash reference (container)
+    $self->{'multi_line'} = 0;
 
-  bless($self,$class);
+    bless($self, $class);
 
-        return $self;
+    return $self;
 }
 
 #       get_description
-# A simple subroutine that returns a string containing a description of 
+# A simple subroutine that returns a string containing a description of
 # the funcionality of the format file. This string is used when a list of
 # all available format files is printed out
 #
 # @return A string containing a description of the format file's functionality
-sub get_description()
-{
-  return "Parse some of the available PDF document metadata"; 
+sub get_description() {
+    return "Parse some of the available PDF document metadata";
 }
 
-sub get_time
-{
-  my $self = shift;
+sub get_time {
+    my $self = shift;
 
-  # reset variables
-  $self->{'container'} = undef;
-  $self->{'cont_index'} = 0;
-  $self->{'lines'} = 0;
+    # reset variables
+    $self->{'container'}  = undef;
+    $self->{'cont_index'} = 0;
+    $self->{'lines'}      = 0;
 
-        # get the filehandle 
-        my $fh = $self->{'file'};
+    # get the filehandle
+    my $fh = $self->{'file'};
 
-  # read all lines
-  while( <$fh> )
-  {
-    $_ =~ s/\n//g;
-    $_ =~ s/\r//g;
+    # read all lines
+    while (<$fh>) {
+        $_ =~ s/\n//g;
+        $_ =~ s/\r//g;
 
-    if( /\/Creator\s?\(([^\)]+)\)/i )
-    {
-      # /Creator (stuff)
-      $self->{'creator'} = $1;
-      print STDERR "[PDF] Found creator: [$1]\n" if $self->{'debug'};    
-    }
-    if( /\/CreationDate\s?\(([^\)]+)\)/i )
-    {
-      $self->{'creationdate'} = $1;
-      $self->{'lines'}++;
-      push( @{$self->{'dates'}}, 'creationdate' );
-      print STDERR "[PDF] Found creation date: $1\n" if $self->{'debug'};    
-    }
+        if (/\/Creator\s?\(([^\)]+)\)/i) {
 
-    if( /\/ModDate\s?\(([^\)]+)\)/i )
-    {
-      $self->{'moddate'} = $1;
-      $self->{'lines'}++;
-      push( @{$self->{'dates'}}, 'moddate' );
-      print STDERR "[PDF] Found mod date: $1\n" if $self->{'debug'};    
-    }
+            # /Creator (stuff)
+            $self->{'creator'} = $1;
+            print STDERR "[PDF] Found creator: [$1]\n" if $self->{'debug'};
+        }
+        if (/\/CreationDate\s?\(([^\)]+)\)/i) {
+            $self->{'creationdate'} = $1;
+            $self->{'lines'}++;
+            push(@{ $self->{'dates'} }, 'creationdate');
+            print STDERR "[PDF] Found creation date: $1\n" if $self->{'debug'};
+        }
 
-    if( /\/Producer\s?\(([^\)]+)\)/i )
-    {
-      $self->{'producer'} = $1;
-      print STDERR "[PDF] Found producer: $1\n" if $self->{'debug'};    
-    }
+        if (/\/ModDate\s?\(([^\)]+)\)/i) {
+            $self->{'moddate'} = $1;
+            $self->{'lines'}++;
+            push(@{ $self->{'dates'} }, 'moddate');
+            print STDERR "[PDF] Found mod date: $1\n" if $self->{'debug'};
+        }
 
-    if( /\/LastModified\s?\(([^\)]+)\)/i )
-    {
-      $self->{'lastmodified'} = $1;
-      push( @{$self->{'dates'}}, 'lastmodified' );
-      $self->{'lines'}++;
-      print STDERR "[PDF] Found last modified: $1\n" if $self->{'debug'};    
-    }
+        if (/\/Producer\s?\(([^\)]+)\)/i) {
+            $self->{'producer'} = $1;
+            print STDERR "[PDF] Found producer: $1\n" if $self->{'debug'};
+        }
 
-    if( /\/Author\s?\(([^\)]+)\)/i )
-    {
-      $self->{'author'} = $1;
-      print STDERR "[PDF] Found author: $1\n" if $self->{'debug'};    
-    }
+        if (/\/LastModified\s?\(([^\)]+)\)/i) {
+            $self->{'lastmodified'} = $1;
+            push(@{ $self->{'dates'} }, 'lastmodified');
+            $self->{'lines'}++;
+            print STDERR "[PDF] Found last modified: $1\n" if $self->{'debug'};
+        }
 
-    if( /\/Title\s?\(([^\)]+)\)/i )
-    {
-      $self->{'title'} = $1;
-      print STDERR "[PDF] Found title: $1\n" if $self->{'debug'};    
-    }
-  }
+        if (/\/Author\s?\(([^\)]+)\)/i) {
+            $self->{'author'} = $1;
+            print STDERR "[PDF] Found author: $1\n" if $self->{'debug'};
+        }
 
-  # go through each date object
-  for ( my $i = 0; $i < $self->{'lines'}; $i++ )
-  {
-    my $text;
-    my $date = 0;
-    my $d_type = pop( @{$self->{'dates'}} );
-    my $type;
-
-    $date = Log2t::Time::pdf_to_date( $self->{"$d_type"} );
-
-    print STDERR "[PDF] Parsing $d_type [$date]\n" if $self->{'debug'};
-
-    # check for valid dates
-    next unless defined $date;
-
-    # check date stuff
-    $type = 'File created' if( $d_type eq 'creationdate' );
-    $type = 'File modified' if( $d_type eq 'moddate' );
-    $type = 'File modified' if( $d_type eq 'lastmodified' );
-
-    $text = $type . '.';
-
-    if( defined $self->{'title'} )
-    {
-      $text .= ' Title : (' . $self->{'title'}. ')';
+        if (/\/Title\s?\(([^\)]+)\)/i) {
+            $self->{'title'} = $1;
+            print STDERR "[PDF] Found title: $1\n" if $self->{'debug'};
+        }
     }
 
-    if( defined $self->{'author'} )
-    {
-      $self->{'username'} = $self->{'author'};
-      $text .= ' Author: [' . $self->{'author'}. ']';
+    # go through each date object
+    for (my $i = 0; $i < $self->{'lines'}; $i++) {
+        my $text;
+        my $date   = 0;
+        my $d_type = pop(@{ $self->{'dates'} });
+        my $type;
+
+        $date = Log2t::Time::pdf_to_date($self->{"$d_type"});
+
+        print STDERR "[PDF] Parsing $d_type [$date]\n" if $self->{'debug'};
+
+        # check for valid dates
+        next unless defined $date;
+
+        # check date stuff
+        $type = 'File created'  if ($d_type eq 'creationdate');
+        $type = 'File modified' if ($d_type eq 'moddate');
+        $type = 'File modified' if ($d_type eq 'lastmodified');
+
+        $text = $type . '.';
+
+        if (defined $self->{'title'}) {
+            $text .= ' Title : (' . $self->{'title'} . ')';
+        }
+
+        if (defined $self->{'author'}) {
+            $self->{'username'} = $self->{'author'};
+            $text .= ' Author: [' . $self->{'author'} . ']';
+        }
+
+        if (defined $self->{'creator'}) {
+            $text .= ' Creator: [' . $self->{'creator'} . ']';
+        }
+
+        if (defined $self->{'producer'}) {
+            $text .= ' produced by: [' . $self->{'producer'} . ']';
+        }
+
+        $text = encode('utf-8', $text);
+
+        # content of array t_line ([optional])
+        # %t_line {        #       time
+        #               index
+        #                       value
+        #                       type
+        #                       legacy
+        #       desc
+        #       short
+        #       source
+        #       sourcetype
+        #       version
+        #       [notes]
+        #       extra
+        #               [filename]
+        #               [md5]
+        #               [mode]
+        #               [host]
+        #               [user]
+        #               [url]
+        #               [size]
+        #               [...]
+        # }
+
+        # create the t_line variable
+        $self->{'container'}->{ $self->{'cont_index'}++ } = {
+            'time'   => { 0 => { 'value' => $date, 'type' => $d_type, 'legacy' => 15 } },
+            'desc'   => $text,
+            'short'  => $type,
+            'source' => 'PDF',
+            'sourcetype' => 'PDF Metadata',
+            'version'    => 2,
+            'extra'      => { 'user' => $self->{'username'}, }
+                                                            };
     }
 
-    if( defined $self->{'creator'} )
-    {
-      $text .= ' Creator: [' . $self->{'creator'}  .']';
-    }
+    #  printf STDERR "[PDF] There are %d timestamps parsed.\n", $self->{'cont_index'};
 
-    if( defined $self->{'producer'} )
-    {
-      $text .= ' produced by: [' . $self->{'producer'} . ']';
-    }
-  
-    $text = encode( 'utf-8', $text );
-
-          # content of array t_line ([optional])
-          # %t_line {        #       time
-          #               index
-          #                       value
-          #                       type
-          #                       legacy
-          #       desc
-          #       short
-          #       source
-          #       sourcetype
-          #       version
-          #       [notes]
-          #       extra
-          #               [filename]
-          #               [md5]
-          #               [mode]
-          #               [host]
-          #               [user]
-          #               [url]
-          #               [size]
-          #               [...]
-          # }
-  
-          # create the t_line variable
-          $self->{'container'}->{$self->{'cont_index'}++} = {
-                  'time' => { 0 => { 'value' => $date, 'type' => $d_type, 'legacy' => 15 } },
-                  'desc' => $text,
-                  'short' => $type,
-                  'source' => 'PDF',
-                  'sourcetype' => 'PDF Metadata',
-                  'version' => 2,
-                  'extra' => { 'user' => $self->{'username'},  }
-          };
-  }
-
-#  printf STDERR "[PDF] There are %d timestamps parsed.\n", $self->{'cont_index'};
-
-  return $self->{'container'};
+    return $self->{'container'};
 }
 
 #       get_version
 # A simple subroutine that returns the version number of the format file
-# There shouldn't be any need to change this routine, it serves its purpose 
+# There shouldn't be any need to change this routine, it serves its purpose
 # just the way it is defined right now.
 #
 # @return A version number
-sub get_version()
-{
-        return $VERSION;
+sub get_version() {
+    return $VERSION;
 }
-
-
 
 #       get_help
 #
-# A simple subroutine that returns a string containing the help 
+# A simple subroutine that returns a string containing the help
 # message for this particular format file.
 #
 # @return A string containing a help file for this format file
-sub get_help()
-{
-  return "An input module that parses some of the metadata content that is stored
+sub get_help() {
+    return "An input module that parses some of the metadata content that is stored
 inside PDF documents.\n";
 
 }
@@ -266,74 +249,69 @@ inside PDF documents.\n";
 # This is needed since there is no need to parse the file if this file/dir is not the file
 # that this input module is designed to parse
 #
-# It is also important to validate the file since the scanner function will try to 
+# It is also important to validate the file since the scanner function will try to
 # parse every file it finds, and uses this verify function to determine whether or not
-# a particular file/dir/artifact is supported or not. It is therefore very important to 
+# a particular file/dir/artifact is supported or not. It is therefore very important to
 # implement this function and make it verify the file structure without false positives and
 # without taking too long time
 #
-# @return A reference to a hash that contains an integer indicating whether or not the 
-#  file/dir/artifact is supporter by this input module as well as a reason why 
-#  it failed (if it failed) 
-sub verify
-{
-  my $self = shift;
+# @return A reference to a hash that contains an integer indicating whether or not the
+#  file/dir/artifact is supporter by this input module as well as a reason why
+#  it failed (if it failed)
+sub verify {
+    my $self = shift;
 
-  # define an array to keep
-  my %return;
-  my $vline;
+    # define an array to keep
+    my %return;
+    my $vline;
 
-  # default values
-  $return{'success'} = 0;
-  $return{'msg'} = 'success';
+    # default values
+    $return{'success'} = 0;
+    $return{'msg'}     = 'success';
 
-        return \%return unless -f ${$self->{'name'}};
+    return \%return unless -f ${ $self->{'name'} };
 
-        # start by setting the endian correctly
-        Log2t::BinRead::set_endian( LITTLE_E );
+    # start by setting the endian correctly
+    Log2t::BinRead::set_endian(LITTLE_E);
 
-  my $ofs = 0;
+    my $ofs = 0;
 
-  # open the file (at least try to open it)
-  eval
-  {
-    unless( $self->{'quick'} )
-    {
-      # the first letter should be %, let's check for that
-      seek($self->{'file'},0,0);
-      read($self->{'file'},$vline,1);
-      $return{'msg'} = 'Wrong magic value';
-      return \%return unless $vline eq '%';
+    # open the file (at least try to open it)
+    eval {
+        unless ($self->{'quick'})
+        {
+
+            # the first letter should be %, let's check for that
+            seek($self->{'file'}, 0, 0);
+            read($self->{'file'}, $vline, 1);
+            $return{'msg'} = 'Wrong magic value';
+            return \%return unless $vline eq '%';
+        }
+
+        # read a line from the file as it were a binary file
+        # it does not matter if the file is ASCII based or binary,
+        # lines are read as they were a binary one, since trying to load up large
+        # binary documents using <FILE> can cause log2timeline/timescanner to
+        # halt for a long while before dying (memory exhaustion)
+        $vline = Log2t::BinRead::read_ascii_until($self->{'file'}, \$ofs, "\n", 50);
+    };
+    if ($@) {
+        $return{'success'} = 0;
+        $return{'msg'}     = "Unable to open file";
     }
 
-    # read a line from the file as it were a binary file
-    # it does not matter if the file is ASCII based or binary, 
-    # lines are read as they were a binary one, since trying to load up large
-    # binary documents using <FILE> can cause log2timeline/timescanner to 
-    # halt for a long while before dying (memory exhaustion)
-    $vline = Log2t::BinRead::read_ascii_until( $self->{'file'}, \$ofs, "\n", 50 );
-  };
-  if ( $@ )
-  {
-    $return{'success'} = 0;
-    $return{'msg'} = "Unable to open file";
-  }
+    if (lc($vline) =~ m/\%pdf-1\.\d/) {
+        $return{'success'} = 1;
+    }
+    else {
+        $return{'success'} = 0;
+        $return{'msg'}     = 'Not the correct magic value';
+    }
 
-  if( lc( $vline ) =~ m/\%pdf-1\.\d/ )
-  {
-    $return{'success'} = 1;
-  }
-  else
-  {
-    $return{'success'} = 0;
-    $return{'msg'} = 'Not the correct magic value';
-  }
-
-  return \%return;
+    return \%return;
 }
 
 1;
-
 
 __END__
 

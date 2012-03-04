@@ -5,7 +5,7 @@
 # This is a format file that implements a parser for some volatility output files.  It parses the files
 # and provides the main script with enough information to provide a body file that can be
 # used in a timeline analysis
-# 
+#
 # Author: Julien Touche
 # Updated by Kristinn Gudjonsson so that it works with the 0.50+ structure of the timestamp object
 # Version : 0.2
@@ -33,84 +33,79 @@
 package Log2t::input::volatility;
 
 use strict;
-use Log2t::base::input; # the SUPER class or parent
+use Log2t::base::input;    # the SUPER class or parent
 use Data::Dumper;
 use Log2t::Common ':binary';
-use Log2t::Time;  # to manipulate time
+use Log2t::Time;           # to manipulate time
+
 #use Log2t::Win;  # Windows specific information
 #use Log2t::Numbers;  # to manipulate numbers
-use Log2t::BinRead;  # methods to read binary files (it is preferable to always load this library)
-#use Log2t::Network;  # information about network traffic 
+use Log2t::BinRead;    # methods to read binary files (it is preferable to always load this library)
+
+#use Log2t::Network;  # information about network traffic
 
 # define the VERSION variable
 use vars qw($VERSION @ISA);
 
 # inherit the base input module, or the super class.
-@ISA = ( "Log2t::base::input" );
-
+@ISA = ("Log2t::base::input");
 
 # indicate the version number of this input module
 $VERSION = '0.2';
 
-sub new()
-{
-        my $class = shift;
+sub new() {
+    my $class = shift;
 
-        # bless the class ;)
-        my $self = $class->SUPER::new();
+    # bless the class ;)
+    my $self = $class->SUPER::new();
 
-        # indicate that this is a text based file, with one line per call to get_time
-        #       This option determines the behaviour of the engine. If this variable is set
-        #       to 0 it means that we return a single hash that contains multiple timstamp objects
-        #       Setting it to 1 means that we return a single timesetamp object for each line that
-        #       contains a timestamp in the file.
-        #       
-        #       So if this is a traditional log file, it is usually better to leave this as 1 and 
-        #       process one line at a time.  Otherwise the tool might use too much memory and become
-        #       slow (storing all the lines in a large log file in memory might not be such a good idea).
-        #
-        #       However if you are parsing a binary file, or a file that you know contains few timestamps
-        #       in it, it might make more sense to just parse the entire file and return a single value
-        #       instead of making the engine call the module in a loop. 
-  $self->{'psscan2'} = undef;
+   # indicate that this is a text based file, with one line per call to get_time
+   #       This option determines the behaviour of the engine. If this variable is set
+   #       to 0 it means that we return a single hash that contains multiple timstamp objects
+   #       Setting it to 1 means that we return a single timesetamp object for each line that
+   #       contains a timestamp in the file.
+   #
+   #       So if this is a traditional log file, it is usually better to leave this as 1 and
+   #       process one line at a time.  Otherwise the tool might use too much memory and become
+   #       slow (storing all the lines in a large log file in memory might not be such a good idea).
+   #
+   #       However if you are parsing a binary file, or a file that you know contains few timestamps
+   #       in it, it might make more sense to just parse the entire file and return a single value
+   #       instead of making the engine call the module in a loop.
+    $self->{'psscan2'} = undef;
 
-  bless($self,$class);
+    bless($self, $class);
 
-        return $self;
+    return $self;
 }
 
 # Perl trim function to remove whitespace from the start and end of the string
-sub _trim($)
-{
-  my $string = shift;
-  $string =~ s/^\s+//;
-  $string =~ s/\s+$//;
-  return $string;
+sub _trim($) {
+    my $string = shift;
+    $string =~ s/^\s+//;
+    $string =~ s/\s+$//;
+    return $string;
 }
 
 #       get_description
-# A simple subroutine that returns a string containing a description of 
+# A simple subroutine that returns a string containing a description of
 # the funcionality of the format file. This string is used when a list of
 # all available format files is printed out
 #
 # @return A string containing a description of the format file's functionality
-sub get_description()
-{
-  return 'Parse the content of a Volatility output files (psscan2, sockscan2, ...)';
+sub get_description() {
+    return 'Parse the content of a Volatility output files (psscan2, sockscan2, ...)';
 }
 
 #       get_version
 # A simple subroutine that returns the version number of the format file
-# There shouldn't be any need to change this routine, it serves its purpose 
+# There shouldn't be any need to change this routine, it serves its purpose
 # just the way it is defined right now.
 #
 # @return A version number
-sub get_version()
-{
-        return $VERSION;
+sub get_version() {
+    return $VERSION;
 }
-
-
 
 #       get_time
 #
@@ -118,182 +113,178 @@ sub get_version()
 # load_line that loads a line of the log file into a global variable and then
 # parses that line to produce the hash t_line, which is read and sent to the
 # output modules by the main script to produce a timeline or a bodyfile
-# 
+#
 # @return Returns a reference to a hash containing the needed values to print a body file
-sub get_time()
-{
-  my $self = shift;
-  # log file variables
-  my $pid;
-  my $ppid;
-  my $offset;
-  my $label;
-  my $atime = undef;  # Time Created
-  my $btime = undef;  # Time Exited
-  my $d;      # the date
-  my $line;
+sub get_time() {
+    my $self = shift;
 
+    # log file variables
+    my $pid;
+    my $ppid;
+    my $offset;
+    my $label;
+    my $atime = undef;    # Time Created
+    my $btime = undef;    # Time Exited
+    my $d;                # the date
+    my $line;
 
-  # the timestamp object
-  my %t_line = undef;
+    # the timestamp object
+    my %t_line = undef;
 
-        my $fh = $self->{'file'};
-        $line = <$fh> or return undef;
+    my $fh = $self->{'file'};
+    $line = <$fh> or return undef;
 
-  print STDERR "[PARSE VOLATILITY] Parsing line $line\n" if $self->{'debug'};
+    print STDERR "[PARSE VOLATILITY] Parsing line $line\n" if $self->{'debug'};
 
-  if( $line =~ m/^#/ ) 
-  {
-    # comment, let's skip that one
+    if ($line =~ m/^#/) {
+
+        # comment, let's skip that one
+        return \%t_line;
+    }
+    elsif ($line =~ m/^$/ or $line =~ m/^\s+$/) {
+        return \%t_line;
+    }
+    elsif ($line =~ m/^----/ or $line =~ m/^PID\s+PPID/) {
+        return \%t_line;
+    }
+
+    # check which version we are dealing with
+    if ($self->{'psscan2'}) {
+
+        # we have psscan2 output (verify line)
+        if ($line =~ m/^\s+(\d+)\s+(\d+)\s+(.*?)\s+0x([0-9a-f]+)\s+0x([0-9a-f]+)\s+(.*?)$/) {
+            $pid    = $1;
+            $ppid   = $2;
+            $offset = '0x' . $4;
+            $label  = _trim($6);
+
+# the date object is five words (each date), so we have either 5 or 10 dates
+# One date object is (may be repeated twice or only one instance) [Day Month Day Hour:Minute:Second Year]
+            $d = $3;
+        }
+        else {
+            return \%t_line;
+        }
+    }
+    else {
+
+        # we have psscan output
+        if ($line =~ m/^\s+\d+\s+(\d+)\s+(\d+)\s+(.*?)\s+0x([0-9a-f]+)\s+0x([0-9a-f]+)\s+(.*?)$/) {
+            $pid    = $1;
+            $ppid   = $2;
+            $offset = '0x' . $4;
+            $label  = _trim($6);
+
+# the date object is five words (each date), so we have either 5 or 10 dates
+# One date object is (may be repeated twice or only one instance) [Day Month Day Hour:Minute:Second Year]
+            $d = $3;
+        }
+        else {
+            return \%t_line;
+        }
+    }
+
+    # and now to continue with the common processing
+    my $count = $d =~ s/((^|\s)\S)/$1/g;
+
+    # count is either 5 (one date - Time Created or two dates - Time Exited as well)
+    if ($count == 5) {
+
+        # now we have one date, just the Time Created
+        $atime = Log2t::Time::text2epoch(_trim($d), $self->{'tz'});
+    }
+    elsif ($count == 10) {
+
+        # There are two dates, we also have the Time Exited value
+
+        # create a small array to store words
+        my @tmp = split(/\s/, _trim($d));
+
+        $atime = Log2t::Time::text2epoch(
+                            $tmp[0] . ' ' . $tmp[1] . ' ' . $tmp[2] . ' ' . $tmp[3] . ' ' . $tmp[4],
+                            $self->{'tz'});
+        $btime = Log2t::Time::text2epoch(
+                            $tmp[5] . ' ' . $tmp[6] . ' ' . $tmp[7] . ' ' . $tmp[8] . ' ' . $tmp[9],
+                            $self->{'tz'});
+    }
+    else {
+
+        # try this
+        $atime = Log2t::Time::text2epoch(_trim($d), $self->{'tz'});
+    }
+
+    # content of array t_line ([optional])
+    # %t_line {        #       time
+    #               index
+    #                       value
+    #                       type
+    #                       legacy
+    #       desc
+    #       short
+    #       source
+    #       sourcetype
+    #       version
+    #       [notes]
+    #       extra
+    #               [filename]
+    #               [md5]
+    #               [mode]
+    #               [host]
+    #               [user]
+    #               [url]
+    #               [size]
+    #               [...]
+    # }
+
+    # create the t_line variable
+    %t_line = (
+               'desc'    => "Process: $label, PID: $pid, PPID: $ppid, Offset: '$offset'",
+               'short'   => "Process '$label' launched (PID $pid)",
+               'source'  => 'RAM',
+               'version' => 2,
+              );
+
+    # check and verify the source and use the appropriate text
+    $t_line{'sourcetype'} = 'Volatility PSSCAN2' if $self->{'psscan2'};
+    $t_line{'sourcetype'} = 'Volatility PSSCAN' unless $self->{'psscan2'};
+
+    # and add the time values
+    if (defined $btime) {
+
+        # we have two timestamps
+        $t_line{'time'}->{0} = {
+                                 'value'  => $atime,
+                                 'type'   => 'Time Created',
+                                 'legacy' => 12
+                               };
+
+        $t_line{'time'}->{1} = {
+                                 'value'  => $btime,
+                                 'type'   => 'Time Exited',
+                                 'legacy' => 3
+                               };
+    }
+    else {
+
+        # only one date
+        $t_line{'time'}->{0} = {
+                                 'value'  => $atime,
+                                 'type'   => 'Time Created',
+                                 'legacy' => 15
+                               };
+    }
+
     return \%t_line;
-  } 
-  elsif( $line =~ m/^$/ or $line =~ m/^\s+$/ ) 
-  {
-    return \%t_line;;
-  } 
-  elsif( $line =~ m/^----/ or $line =~ m/^PID\s+PPID/ ) 
-  {
-    return \%t_line;
-  }
-
-  # check which version we are dealing with
-  if( $self->{'psscan2'} )
-  {
-    # we have psscan2 output (verify line)
-    if ($line =~ m/^\s+(\d+)\s+(\d+)\s+(.*?)\s+0x([0-9a-f]+)\s+0x([0-9a-f]+)\s+(.*?)$/) {
-      $pid = $1;
-      $ppid = $2;
-      $offset = '0x'.$4;
-      $label = _trim($6);
-
-      # the date object is five words (each date), so we have either 5 or 10 dates
-      # One date object is (may be repeated twice or only one instance) [Day Month Day Hour:Minute:Second Year]
-      $d = $3;
-    }
-    else
-    {
-      return \%t_line;
-    }
-  }
-  else
-  {
-    # we have psscan output
-    if ($line =~ m/^\s+\d+\s+(\d+)\s+(\d+)\s+(.*?)\s+0x([0-9a-f]+)\s+0x([0-9a-f]+)\s+(.*?)$/) {
-      $pid = $1;
-      $ppid = $2;
-      $offset = '0x'.$4;
-      $label = _trim($6);
-
-      # the date object is five words (each date), so we have either 5 or 10 dates
-      # One date object is (may be repeated twice or only one instance) [Day Month Day Hour:Minute:Second Year]
-      $d = $3;
-    }
-    else
-    {
-      return \%t_line;
-    }
-  }
-
-  # and now to continue with the common processing
-  my $count = $d =~ s/((^|\s)\S)/$1/g;
-
-  # count is either 5 (one date - Time Created or two dates - Time Exited as well)
-  if( $count == 5 )
-  {
-    # now we have one date, just the Time Created
-    $atime = Log2t::Time::text2epoch( _trim( $d ), $self->{'tz'} );
-  }
-  elsif( $count == 10 )
-  {
-    # There are two dates, we also have the Time Exited value
-
-    # create a small array to store words
-    my @tmp = split( /\s/, _trim($d) );
-    
-    $atime = Log2t::Time::text2epoch( $tmp[0] . ' ' . $tmp[1] . ' ' . $tmp[2] . ' ' . $tmp[3] . ' ' . $tmp[4], $self->{'tz'} );
-    $btime = Log2t::Time::text2epoch( $tmp[5] . ' ' . $tmp[6] . ' ' . $tmp[7] . ' ' . $tmp[8] . ' ' . $tmp[9], $self->{'tz'} );
-  }
-  else
-  {
-    # try this
-    $atime = Log2t::Time::text2epoch( _trim( $d ), $self->{'tz'} );
-  }
-
-
-         # content of array t_line ([optional])
-         # %t_line {        #       time
-         #               index
-         #                       value
-         #                       type
-         #                       legacy
-         #       desc
-         #       short
-         #       source
-         #       sourcetype
-         #       version
-         #       [notes]
-         #       extra
-         #               [filename]
-         #               [md5]
-         #               [mode]
-         #               [host]
-         #               [user]
-         #               [url]
-         #               [size]
-         #               [...]
-         # }
-
-         # create the t_line variable
-         %t_line = (
-                 'desc' => "Process: $label, PID: $pid, PPID: $ppid, Offset: '$offset'",
-                 'short' => "Process '$label' launched (PID $pid)",
-                 'source' => 'RAM',
-                 'version' => 2,
-         );
-
-  
-  # check and verify the source and use the appropriate text
-  $t_line{'sourcetype'} = 'Volatility PSSCAN2' if $self->{'psscan2'};
-  $t_line{'sourcetype'} = 'Volatility PSSCAN' unless $self->{'psscan2'};
-
-  # and add the time values
-  if( defined $btime )
-  {
-    # we have two timestamps
-    $t_line{'time'}->{0} = { 
-      'value' => $atime,
-      'type' => 'Time Created',
-      'legacy' => 12
-    };
-
-    $t_line{'time'}->{1} = { 
-      'value' => $btime,
-      'type' => 'Time Exited',
-      'legacy' => 3
-    };
-  }
-  else
-  {
-    # only one date
-    $t_line{'time'}->{0} = { 
-      'value' => $atime,
-      'type' => 'Time Created',
-      'legacy' => 15
-    };
-  }
- 
-  return \%t_line;
 }
 
 #       get_help
 #
-# A simple subroutine that returns a string containing the help 
+# A simple subroutine that returns a string containing the help
 # message for this particular format file.
 #
 # @return A string containing a help file for this format file
-sub get_help()
-{
-  return "----------------------------------------------------
+sub get_help() {
+    return "----------------------------------------------------
   VOLATILITY OUTPUT FILES PARSER
 ----------------------------------------------------
 Read some output of volatility memory framework.\n
@@ -326,76 +317,73 @@ The format file accepts the following options
 # This is needed since there is no need to parse the file if this file/dir is not the file
 # that this input module is designed to parse
 #
-# It is also important to validate the file since the scanner function will try to 
+# It is also important to validate the file since the scanner function will try to
 # parse every file it finds, and uses this verify function to determine whether or not
-# a particular file/dir/artifact is supported or not. It is therefore very important to 
+# a particular file/dir/artifact is supported or not. It is therefore very important to
 # implement this function and make it verify the file structure without false positives and
 # without taking too long time
 #
-# @return A reference to a hash that contains an integer indicating whether or not the 
-#  file/dir/artifact is supporter by this input module as well as a reason why 
-#  it failed (if it failed) 
-sub verify
-{
-  my $self = shift;
+# @return A reference to a hash that contains an integer indicating whether or not the
+#  file/dir/artifact is supporter by this input module as well as a reason why
+#  it failed (if it failed)
+sub verify {
+    my $self = shift;
 
-  # define an array to keep
-  my %return;
-  my $vline;
+    # define an array to keep
+    my %return;
+    my $vline;
 
-  # default values
-  $return{'success'} = 0;
-  $return{'msg'} = 'success';
-
-  # depending on which type you are examining, directory or a file
-        return \%return unless -f ${$self->{'name'}};
-
-        # start by setting the endian correctly
-        Log2t::BinRead::set_endian( LITTLE_E );
-
-  my $ofs = 0;
-
-  # open the file (at least try to open it)
-  eval
-  {
-    # read a line from the file as it were a binary file
-    # it does not matter if the file is ASCII based or binary, 
-    # lines are read as they were a binary one, since trying to load up large
-    # binary documents using <FILE> can cause log2timeline/timescanner to 
-    # halt for a long while before dying (memory exhaustion)
-    $vline = Log2t::BinRead::read_ascii_until( $self->{'file'}, \$ofs, "\n", 100 );
-    
-    ## TODO eventually, if input concerns multiple file, could place some
-    ## structure check here with a global var %struct
-
-    # added by Kristinn add a check
-    # the default MSG
-    $return{'msg'} = 'Not the correct magic value';
-
-    if( $vline =~ m/^No.\s+PID\s+PPID\s+Time created/ )
-    {
-      # we have a PSSCAN output
-      $return{'success'} = 1;
-      $self->{'psscan2'} = 0;
-    }
-    elsif( $vline =~ m/^PID\s+PPID\s+Time created/ )
-    {
-      # we have a PSSCAN2 output
-      $return{'success'} = 1;
-      $self->{'psscan2'} = 1;
-    }
-  };
-  if ( $@ )
-  {
+    # default values
     $return{'success'} = 0;
-    $return{'msg'} = "Unable to open file";
-  }
+    $return{'msg'}     = 'success';
 
-  return \%return;
+    # depending on which type you are examining, directory or a file
+    return \%return unless -f ${ $self->{'name'} };
+
+    # start by setting the endian correctly
+    Log2t::BinRead::set_endian(LITTLE_E);
+
+    my $ofs = 0;
+
+    # open the file (at least try to open it)
+    eval {
+
+        # read a line from the file as it were a binary file
+        # it does not matter if the file is ASCII based or binary,
+        # lines are read as they were a binary one, since trying to load up large
+        # binary documents using <FILE> can cause log2timeline/timescanner to
+        # halt for a long while before dying (memory exhaustion)
+        $vline = Log2t::BinRead::read_ascii_until($self->{'file'}, \$ofs, "\n", 100);
+
+        ## TODO eventually, if input concerns multiple file, could place some
+        ## structure check here with a global var %struct
+
+        # added by Kristinn add a check
+        # the default MSG
+        $return{'msg'} = 'Not the correct magic value';
+
+        if ($vline =~ m/^No.\s+PID\s+PPID\s+Time created/) {
+
+            # we have a PSSCAN output
+            $return{'success'} = 1;
+            $self->{'psscan2'} = 0;
+        }
+        elsif ($vline =~ m/^PID\s+PPID\s+Time created/) {
+
+            # we have a PSSCAN2 output
+            $return{'success'} = 1;
+            $self->{'psscan2'} = 1;
+        }
+    };
+    if ($@) {
+        $return{'success'} = 0;
+        $return{'msg'}     = "Unable to open file";
+    }
+
+    return \%return;
 }
 
 1;
-
 
 __END__
 

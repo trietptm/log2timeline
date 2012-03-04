@@ -1,13 +1,13 @@
 #################################################################################################
-#    MSSQL_ERRLOG  
+#    MSSQL_ERRLOG
 #################################################################################################
 # This script parses the MS SQL ERRLOG files
 #
 # This script is a part of the log2timeline framework for timeline creation and analysis.
-# This script implements an input module, or a parser capable of parsing a single log file (or 
+# This script implements an input module, or a parser capable of parsing a single log file (or
 # directory) and creating a hash that is returned to the main script.  That hash is then used
 # to create a body file (to create a timeline) or a timeline (directly).
-# 
+#
 # Author: Kristinn Gudjonsson
 # Version : 0.2
 # Date : 30/04/11
@@ -31,95 +31,96 @@
 package Log2t::input::mssql_errlog;
 
 use strict;
-use Log2t::base::input; # the SUPER class or parent
+use Log2t::base::input;    # the SUPER class or parent
 use Log2t::Common ':binary';
-use Log2t::Time;  # to manipulate time
+use Log2t::Time;           # to manipulate time
+
 #use Log2t::Win;  # Windows specific information
 #use Log2t::Numbers;  # to manipulate numbers
-use Log2t::BinRead;  # methods to read binary files (it is preferable to always load this library)
-#use Log2t::Network;  # information about network traffic 
+use Log2t::BinRead;    # methods to read binary files (it is preferable to always load this library)
+
+#use Log2t::Network;  # information about network traffic
 use DateTime;
 
 # define the VERSION variable
 use vars qw($VERSION @ISA);
 
 # inherit the base input module, or the super class.
-@ISA = ( "Log2t::base::input" );
+@ISA = ("Log2t::base::input");
 
 # indicate the version number of this input module
 $VERSION = '0.2';
 
 #       get_description
-# A simple subroutine that returns a string containing a description of 
+# A simple subroutine that returns a string containing a description of
 # the funcionality of the format file. This string is used when a list of
 # all available format files is printed out
 #
 # @return A string containing a description of the format file's functionality
-sub get_description()
-{
-  return "Parse the content of an ERRORLOG file produced by MS SQL server"; 
+sub get_description() {
+    return "Parse the content of an ERRORLOG file produced by MS SQL server";
 }
 
 #       init
 #
 # The purpose of this subfunction is to prepare the log file or artifact for parsing
-# Usually this involves just opening the file (if plain text) or otherwise building a 
+# Usually this involves just opening the file (if plain text) or otherwise building a
 # structure that can be used by other functions
 #
 # This function also accepts parameters for processing (for changing some settings in
 # the input module)
 #
-# @params A path to the artifact/log file/directory to prepare 
+# @params A path to the artifact/log file/directory to prepare
 # @params The rest of the ARGV array containing parameters to be passed to the input module
-# @return An integer is returned to indicate whether the file preparation was 
+# @return An integer is returned to indicate whether the file preparation was
 #       successful or not.
-sub init
-{
-  # read the paramaters passed to the script
-  my $self = shift;
+sub init {
 
-  # default values
-  # variable to store the line we are reading
-  my $vline;
+    # read the paramaters passed to the script
+    my $self = shift;
 
-  # initialize the old_date and other variables
-  $self->{'old_date'} = undef;
-  $self->{'line_loaded'} = 0;
-  $self->{'ofs'} = 0;
+    # default values
+    # variable to store the line we are reading
+    my $vline;
 
-  # read the next line in the log file (and until we hit an empty line)
-  $vline = Log2t::BinRead::read_unicode_until( $self->{'file'}, \$self->{'ofs'}, "\n", 400 );
+    # initialize the old_date and other variables
+    $self->{'old_date'}    = undef;
+    $self->{'line_loaded'} = 0;
+    $self->{'ofs'}         = 0;
 
-  $vline =~ s/\n//g;
-  $vline =~ s/\r//g;
-    
-  # go through the lines until we hit an empty line, and stop there
-  while ( $vline ne "" )
-  {
-    $self->{'server'}->{'extra'} .= $vline . ' ';
-      
-    print STDERR "[PREPARE MSSQL] Pre-reading line ($vline)\n" if $self->{'debug'};
+    # read the next line in the log file (and until we hit an empty line)
+    $vline = Log2t::BinRead::read_unicode_until($self->{'file'}, \$self->{'ofs'}, "\n", 400);
 
-    # read another line from the log file  
-    $vline = Log2t::BinRead::read_unicode_until( $self->{'file'}, \$self->{'ofs'}, "\n", 400 );
     $vline =~ s/\n//g;
     $vline =~ s/\r//g;
-  }
 
-  print STDERR "[PREPARE MSSQL] Extra information about server: " . $self->{'server'}->{'extra'} . "\n" if $self->{'debug'};
+    # go through the lines until we hit an empty line, and stop there
+    while ($vline ne "") {
+        $self->{'server'}->{'extra'} .= $vline . ' ';
 
-  return 1;
+        print STDERR "[PREPARE MSSQL] Pre-reading line ($vline)\n" if $self->{'debug'};
+
+        # read another line from the log file
+        $vline = Log2t::BinRead::read_unicode_until($self->{'file'}, \$self->{'ofs'}, "\n", 400);
+        $vline =~ s/\n//g;
+        $vline =~ s/\r//g;
+    }
+
+    print STDERR "[PREPARE MSSQL] Extra information about server: "
+      . $self->{'server'}->{'extra'} . "\n"
+      if $self->{'debug'};
+
+    return 1;
 }
 
 #       get_version
 # A simple subroutine that returns the version number of the format file
-# There shouldn't be any need to change this routine, it serves its purpose 
+# There shouldn't be any need to change this routine, it serves its purpose
 # just the way it is defined right now.
 #
 # @return A version number
-sub get_version()
-{
-        return $VERSION;
+sub get_version() {
+    return $VERSION;
 }
 
 #       get_time
@@ -128,168 +129,171 @@ sub get_version()
 # load_line that loads a line of the log file into a global variable and then
 # parses that line to produce the hash t_line, which is read and sent to the
 # output modules by the main script to produce a timeline or a bodyfile
-# 
+#
 # @return Returns a reference to a hash containing the needed values to print a body file
-sub get_time
-{
-  my $self = shift;
-  # timestamp object
-  my %t_line;
-  my $text = '';
-  my $title = '';
-  my $date = undef;
-  my $d = undef;
-  my $s;
-  my $info;
-  my $line;
+sub get_time {
+    my $self = shift;
 
-        # check if there is a line already loaded up and ready to be parsed
-        if( $self->{'line_loaded'} )
-        {
-                $self->{'line_loaded'} = 0;
-    $line = $self->{'line_content'};
-    $self->{'line_content'} = undef;
-        }
-  else
-  {
-    # read the line until we hit the end
-    return undef unless $line = Log2t::BinRead::read_unicode_until( $self->{'file'}, \$self->{'ofs'}, "\n", 400 );
-  }
-  
-  # an example line  
-  # 2010-12-16 13:32:03.76 Server      SQL Server is starting at normal priority base (=7). This is an informational message only. No user action is required.
+    # timestamp object
+    my %t_line;
+    my $text  = '';
+    my $title = '';
+    my $date  = undef;
+    my $d     = undef;
+    my $s;
+    my $info;
+    my $line;
 
-  # we might have several lines containing the same timestamps, so let's parse them all
+    # check if there is a line already loaded up and ready to be parsed
+    if ($self->{'line_loaded'}) {
+        $self->{'line_loaded'}  = 0;
+        $line                   = $self->{'line_content'};
+        $self->{'line_content'} = undef;
+    }
+    else {
 
-  # parse the line, get the timestamps, etc. (start with the first line that got passed on to this function
+        # read the line until we hit the end
+        return undef
+          unless $line =
+              Log2t::BinRead::read_unicode_until($self->{'file'}, \$self->{'ofs'}, "\n", 400);
+    }
+
+# an example line
+# 2010-12-16 13:32:03.76 Server      SQL Server is starting at normal priority base (=7). This is an informational message only. No user action is required.
+
+    # we might have several lines containing the same timestamps, so let's parse them all
+
+# parse the line, get the timestamps, etc. (start with the first line that got passed on to this function
 #  if( $line =~ m/^(\d{4})-(\d{1,2})-(\d{1,2}) (\d{1,2}):(\d{1,2}):(\d{1,2})\.\d{1-4}\s([a-zA-Z0-9\-_]+)\s+(\.+)$/ )
-  if( $line =~ m/^(\d{4})-(\d{1,2})-(\d{1,2}) (\d{1,2}):(\d{1,2}):(\d{1,2}).\d{1,6}\s(\w+)\s+(.+)$/ )
-  {
-    # get the date
-    $d = new DateTime( 
-      'year' => $1,
-      'month' => $2,
-      'day' => $3,
-      'hour' => $4,
-      'minute' => $5,
-      'second' => $6,
-      'time_zone' => $self->{'tz'}
-    );
-
-    # set the old date to the current one
-    $self->{'old_date'} = "$1-$2-$3 $4:$5:$6";
-    $date = $d->epoch;
-
-    $s = $7;
-    $info = $8;
-    $title = "($7) $8";
-
-    print STDERR "[PARSE MSSQL] Date ($date) - $title\n" if $self->{'debug'};
-  }
-  else
-  {
-    print STDERR "[MSSQL] Line did not pass requirements ($line)\n" if $self->{'debug'};
-    return \%t_line;
-  }
-
-  my $same = 1;
-  while( $same )
-  {
-    # now go through the rest of the lines (read in a new one)
-    $line = Log2t::BinRead::read_unicode_until( $self->{'file'}, \$self->{'ofs'}, "\n", 400 );
-  
-    # check if we have reached the end of the file
-    $same = 0 unless defined $line;
-    next unless $same;
-
-    print STDERR "[PARSE MSSQL] Reading and comparing ($line)\n" if $self->{'debug'};
-    #if( $line =~ m/^(\d{4})-(\d{1,2})-(\d{1,2}) (\d{1,2}):(\d{1,2}):(\d{1,2})\.\d{1-4}\s([a-zA-Z0-9\-_]+)\s+(\.+)$/ )
-    if( $line =~ m/^(\d{4})-(\d{1,2})-(\d{1,2}) (\d{1,2}):(\d{1,2}):(\d{1,2}).\d{1,6}\s(\w+)\s+(.+)$/ )
+    if ($line =~
+        m/^(\d{4})-(\d{1,2})-(\d{1,2}) (\d{1,2}):(\d{1,2}):(\d{1,2}).\d{1,6}\s(\w+)\s+(.+)$/)
     {
-      # check if date is the same as the old one, and if so then read more lines
-      if( $self->{'old_date'} eq "$1-$2-$3 $4:$5:$6" )
-      {
-        # the date is the same, so we have a new line to process
-        # add to the information
-        $info .= $8;
 
-        if( $s !~ m/$7/ )
+        # get the date
+        $d = new DateTime(
+                          'year'      => $1,
+                          'month'     => $2,
+                          'day'       => $3,
+                          'hour'      => $4,
+                          'minute'    => $5,
+                          'second'    => $6,
+                          'time_zone' => $self->{'tz'}
+                         );
+
+        # set the old date to the current one
+        $self->{'old_date'} = "$1-$2-$3 $4:$5:$6";
+        $date = $d->epoch;
+
+        $s     = $7;
+        $info  = $8;
+        $title = "($7) $8";
+
+        print STDERR "[PARSE MSSQL] Date ($date) - $title\n" if $self->{'debug'};
+    }
+    else {
+        print STDERR "[MSSQL] Line did not pass requirements ($line)\n" if $self->{'debug'};
+        return \%t_line;
+    }
+
+    my $same = 1;
+    while ($same) {
+
+        # now go through the rest of the lines (read in a new one)
+        $line = Log2t::BinRead::read_unicode_until($self->{'file'}, \$self->{'ofs'}, "\n", 400);
+
+        # check if we have reached the end of the file
+        $same = 0 unless defined $line;
+        next unless $same;
+
+        print STDERR "[PARSE MSSQL] Reading and comparing ($line)\n" if $self->{'debug'};
+
+#if( $line =~ m/^(\d{4})-(\d{1,2})-(\d{1,2}) (\d{1,2}):(\d{1,2}):(\d{1,2})\.\d{1-4}\s([a-zA-Z0-9\-_]+)\s+(\.+)$/ )
+        if ($line =~
+            m/^(\d{4})-(\d{1,2})-(\d{1,2}) (\d{1,2}):(\d{1,2}):(\d{1,2}).\d{1,6}\s(\w+)\s+(.+)$/)
         {
-          $s .= ' (' . $7 . ')';
+
+            # check if date is the same as the old one, and if so then read more lines
+            if ($self->{'old_date'} eq "$1-$2-$3 $4:$5:$6") {
+
+                # the date is the same, so we have a new line to process
+                # add to the information
+                $info .= $8;
+
+                if ($s !~ m/$7/) {
+                    $s .= ' (' . $7 . ')';
+                }
+
+            }
+            else {
+
+                # we have a new date, that we are going to process during our next run
+                $same                   = 0;
+                $self->{'line_loaded'}  = 1;
+                $self->{'line_content'} = $line;
+            }
+        }
+        else {
+            print STDERR "[MSSQL] Additional line did not pass requirements ($line)\n"
+              if $self->{'debug'};
+            $same = 0;
         }
 
-      }
-      else
-      {
-        # we have a new date, that we are going to process during our next run
-        $same = 0;
-        $self->{'line_loaded'} = 1;
-        $self->{'line_content'} = $line;
-      }
     }
-    else
-    {
-      print STDERR "[MSSQL] Additional line did not pass requirements ($line)\n" if $self->{'debug'};
-      $same = 0;
-    }
-    
-  }
 
-  # check if we have a valid date
-  return \%t_line unless defined $date;
+    # check if we have a valid date
+    return \%t_line unless defined $date;
 
-  $text = 'Database: ' . $s . ' Information: ' . $info;
+    $text = 'Database: ' . $s . ' Information: ' . $info;
 
-  $text =~ s/\n//g;
-  $text =~ s/\r//g;
-  $text =~ s/\s+/ /g;
-  
-        # content of array t_line ([optional])
-        # %t_line {        #       time
-        #               index
-        #                       value
-        #                       type
-        #                       legacy
-        #       desc
-        #       short
-        #       source
-        #       sourcetype
-        #       version
-        #       [notes]
-        #       extra
-        #               [filename]
-        #               [md5]
-        #               [mode]
-        #               [host]
-        #               [user]
-        #               [url]
-        #               [size]
-        #               [...]
-        # }
+    $text =~ s/\n//g;
+    $text =~ s/\r//g;
+    $text =~ s/\s+/ /g;
 
-        # create the t_line variable
-        %t_line = (
-                'time' => { 0 => { 'value' => $date, 'type' => 'Entry written', 'legacy' => 15 } },
-                'desc' => $text,
-                'short' => $title,
-                'source' => 'LOG',
-                'sourcetype' => 'MSSQL ErrorLog',
-                'version' => 2,
-                'extra' => { 'database' => $s  }
-        );
+    # content of array t_line ([optional])
+    # %t_line {        #       time
+    #               index
+    #                       value
+    #                       type
+    #                       legacy
+    #       desc
+    #       short
+    #       source
+    #       sourcetype
+    #       version
+    #       [notes]
+    #       extra
+    #               [filename]
+    #               [md5]
+    #               [mode]
+    #               [host]
+    #               [user]
+    #               [url]
+    #               [size]
+    #               [...]
+    # }
 
-  return \%t_line;
+    # create the t_line variable
+    %t_line = (
+        'time'   => { 0 => { 'value' => $date, 'type' => 'Entry written', 'legacy' => 15 } },
+        'desc'   => $text,
+        'short'  => $title,
+        'source' => 'LOG',
+        'sourcetype' => 'MSSQL ErrorLog',
+        'version'    => 2,
+        'extra'      => { 'database' => $s }
+              );
+
+    return \%t_line;
 }
 
 #       get_help
 #
-# A simple subroutine that returns a string containing the help 
+# A simple subroutine that returns a string containing the help
 # message for this particular format file.
 #
 # @return A string containing a help file for this format file
-sub get_help()
-{
-  return "This module parses the MS-SQL errorlog, not much more to say really\n" . '
+sub get_help() {
+    return "This module parses the MS-SQL errorlog, not much more to say really\n" . '
 sql server "reportserverservice" log files
 path= c:\Program Files\Microsoft SQL Server\MSRS10.MSSQLSERVER\Reporting Services\LogFiles
 
@@ -306,75 +310,70 @@ path= c:\Program Files\Microsoft SQL Server\MSSQL10.MSSQLSERVER\MSSQL\Log
 # This is needed since there is no need to parse the file if this file/dir is not the file
 # that this input module is designed to parse
 #
-# It is also important to validate the file since the scanner function will try to 
+# It is also important to validate the file since the scanner function will try to
 # parse every file it finds, and uses this verify function to determine whether or not
-# a particular file/dir/artifact is supported or not. It is therefore very important to 
+# a particular file/dir/artifact is supported or not. It is therefore very important to
 # implement this function and make it verify the file structure without false positives and
 # without taking too long time
 #
-# @return A reference to a hash that contains an integer indicating whether or not the 
-#  file/dir/artifact is supporter by this input module as well as a reason why 
-#  it failed (if it failed) 
-sub verify
-{
-  my $self = shift;
-  my $temp;
+# @return A reference to a hash that contains an integer indicating whether or not the
+#  file/dir/artifact is supporter by this input module as well as a reason why
+#  it failed (if it failed)
+sub verify {
+    my $self = shift;
+    my $temp;
 
-  # define an array to keep
-  my %return;
-  my $vline;
-  my @words;
+    # define an array to keep
+    my %return;
+    my $vline;
+    my @words;
 
-  # default values
-  $return{'success'} = 0;
-  $return{'msg'} = 'success';
-  $self->{ofs} = 0;  # return the offset to zero (initialize)
+    # default values
+    $return{'success'} = 0;
+    $return{'msg'}     = 'success';
+    $self->{ofs}       = 0;           # return the offset to zero (initialize)
 
-        return \%return unless -f ${$self->{'name'}};
+    return \%return unless -f ${ $self->{'name'} };
 
-        # start by setting the endian correctly
-        Log2t::BinRead::set_endian( BIG_E );
+    # start by setting the endian correctly
+    Log2t::BinRead::set_endian(BIG_E);
 
-  # read the first two bytes
-  $vline = Log2t::BinRead::read_16( $self->{'file'}, \$self->{'ofs'} );
+    # read the first two bytes
+    $vline = Log2t::BinRead::read_16($self->{'file'}, \$self->{'ofs'});
 
-  # check for magic value: 0x fffe
-  if( $vline eq 0xfffe )
-  {
-    printf STDERR "[MAGIC] 0x%x\n", $vline if $self->{'debug'};
-    $vline = Log2t::BinRead::read_unicode_until( $self->{'file'}, \$self->{'ofs'}, "\n", 400 );
+    # check for magic value: 0x fffe
+    if ($vline eq 0xfffe) {
+        printf STDERR "[MAGIC] 0x%x\n", $vline if $self->{'debug'};
+        $vline = Log2t::BinRead::read_unicode_until($self->{'file'}, \$self->{'ofs'}, "\n", 400);
 
-    printf STDERR "[FIRST LINE] %s\n", $vline if $self->{'debug'};
+        printf STDERR "[FIRST LINE] %s\n", $vline if $self->{'debug'};
 
-    # check the first line, it should correspond to:
-    # 2010-12-16 13:32:03.29 Server      Microsoft SQL Server 2008 (SP1) - 10.0.2531.0 (X64) 
-    # YYYY-MM-DD HH:MM:SS.MS Server       MSSQL SERVER VERSION
+        # check the first line, it should correspond to:
+        # 2010-12-16 13:32:03.29 Server      Microsoft SQL Server 2008 (SP1) - 10.0.2531.0 (X64)
+        # YYYY-MM-DD HH:MM:SS.MS Server       MSSQL SERVER VERSION
 
-    if( $vline =~ m/^\d{4}-\d{1,2}-\d{1,2}\s.+SQL.+/ )
-    {
-      $return{'success'} = 1;
-      $return{'msg'} = 'Correct format';
+        if ($vline =~ m/^\d{4}-\d{1,2}-\d{1,2}\s.+SQL.+/) {
+            $return{'success'} = 1;
+            $return{'msg'}     = 'Correct format';
 
-      # now we need to build the server information variable
-      if( $vline =~ m/(\d{4}-\d{1,2}-\d{1,2} \d{1,2}:\d{1,2}:\d{1,2})\.\d{1,4}\sServer\s+(\w+)$/ )
-      {
-        $self->{'server'}->{'log_date'} = $1;
-        $self->{'server'}->{'info'} = $2;
-      }
+            # now we need to build the server information variable
+            if ($vline =~
+                m/(\d{4}-\d{1,2}-\d{1,2} \d{1,2}:\d{1,2}:\d{1,2})\.\d{1,4}\sServer\s+(\w+)$/)
+            {
+                $self->{'server'}->{'log_date'} = $1;
+                $self->{'server'}->{'info'}     = $2;
+            }
+        }
+        else {
+            $return{'success'} = 0;
+            $return{'msg'}     = 'First line not correctly formed [' . $vline . ']';
+        }
     }
-    else
-    {
-      $return{'success'} = 0;
-      $return{'msg'} = 'First line not correctly formed [' . $vline . ']';
-    }
-  }
-  
-  return \%return;
+
+    return \%return;
 }
 
-
 1;
-
 
 __END__
 

@@ -1,14 +1,14 @@
 #################################################################################################
-#		OUTPUT	
+#		OUTPUT
 #################################################################################################
 # this package provides an output module for the tool log2timeline.
 # The package takes as an input a hash that contains all the needed information to print or output
 # the timeline that has been produced by a format file
-# 
+#
 # Author: Kristinn Gudjonsson
 # Version : 0.7
 # Date : 13/04/11
-# 
+#
 # Copyright 2009-2011 Kristinn Gudjonsson (kristinn ( a t ) log2timeline (d o t) net)
 #
 #  This file is part of log2timeline.
@@ -29,87 +29,80 @@
 package Log2t::output::csv;
 
 use strict;
-use Getopt::Long;       # read parameters
-use Log2t::Time;	# for time stuff
+use Getopt::Long;    # read parameters
+use Log2t::Time;     # for time stuff
 
 my $version = "0.7";
 
-my $first_line;	# defines if we have printed a line or not
+my $first_line;      # defines if we have printed a line or not
 
 #       get_version
 # A simple subroutine that returns the version number of the format file
 #
 # @return A version number
-sub get_version()
-{
-	return $version;
+sub get_version() {
+    return $version;
 }
 
 #       new
-# A simple constructor of the output module. Takes care of parsing 
+# A simple constructor of the output module. Takes care of parsing
 # parameters sent to the output module
-sub new($)
-{
-        my $class = shift;
+sub new($) {
+    my $class = shift;
 
-        # bless the class ;)
-        my $self = bless{}, $class;
+    # bless the class ;)
+    my $self = bless {}, $class;
 
-        return $self;
+    return $self;
 }
 
-
 #       get_description
-# A simple subroutine that returns a string containing a description of 
+# A simple subroutine that returns a string containing a description of
 # the funcionality of the format file. This string is used when a list of
 # all available format files is printed out
 #
 # @return A string containing a description of the format file's functionality
-sub get_description()
-{
-	return "Output timeline using CSV (Comma Separated Value) file"; 
+sub get_description() {
+    return "Output timeline using CSV (Comma Separated Value) file";
 }
 
-sub print_header()
-{
-	# since we really do not know how to construct the header, we need to wait
-	$first_line = 1;
-	return 1;
+sub print_header() {
+
+    # since we really do not know how to construct the header, we need to wait
+    $first_line = 1;
+    return 1;
 }
 
-sub get_footer()
-{
-	return 0;	# no footer
+sub get_footer() {
+    return 0;    # no footer
 }
 
-sub print_footer()
-{
-	return 1;
+sub print_footer() {
+    return 1;
 }
 
-#      	print_line 
+#      	print_line
 # A subroutine that reads a line from the access file and returns it to the
 # main script
-# @return A string containing one line of the log file (or a -1 if we've reached 
+# @return A string containing one line of the log file (or a -1 if we've reached
 #       the end of the log file)
-sub print_line()
-{
-        my $self = shift;
-        my $t_line= shift;	# the timestamp object
-	my $text;
-	my $temp;
-	my $mactime;
+sub print_line() {
+    my $self   = shift;
+    my $t_line = shift;    # the timestamp object
+    my $text;
+    my $temp;
+    my $mactime;
 
-	# check if this is the first line
-	if( $first_line )
-	{
-		# start by printing out name of dates
-		$text .= 'date,time,timezone,MACB,';
+    # check if this is the first line
+    if ($first_line) {
 
-        # content of the timestamp object t_line 
-        # optional fields are marked with [] 
-        # 
-        # %t_line {        
+        # start by printing out name of dates
+        $text .= 'date,time,timezone,MACB,';
+
+        # content of the timestamp object t_line
+        # optional fields are marked with []
+        #
+        # %t_line {
         #       time
         #               index
         #                       value
@@ -132,157 +125,171 @@ sub print_line()
         #               [...]
         # }
 
-		if( scalar( %{$t_line} ) )
-		{
+        if (scalar(%{$t_line})) {
 
-			$text .= 'source,sourcetype,type,user,host,short,desc,version,filename,inode,notes,format,extra';
+            $text .=
+              'source,sourcetype,type,user,host,short,desc,version,filename,inode,notes,format,extra';
 
-			::print_line( $text ."\n");
-		}
+            ::print_line($text . "\n");
+        }
 
-		# first line is finished
-		$first_line = 0;
-		$text = '';
-	}
+        # first line is finished
+        $first_line = 0;
+        $text       = '';
+    }
 
-	# go through the line and print it out
-        if( scalar( %{$t_line} ) )
-	{
-		# remove any instances of ::comma:: from the line
-		$t_line->{'desc'} =~ s/::comma::/-/g;
-		$t_line->{'title'} =~ s/::comma::/-/g;
+    # go through the line and print it out
+    if (scalar(%{$t_line})) {
 
-		# remove any instances of tab
-		$t_line->{'desc'} =~ s/\t/ /g;
-		$t_line->{'title'} =~ s/\t/ /g;
-		
-		#printf STDERR "[PRINT] M %d A %d C %d B %d\n",$mtime,$atime,$ctime,$btime;
-                # go through each defined timestamp
-                foreach( keys %{$t_line->{'time'}} )
-                {
-			# don't want to print emtpy timestamps
-			next if $t_line->{'time'}->{$_}->{'value'} le 0;
+        # remove any instances of ::comma:: from the line
+        $t_line->{'desc'}  =~ s/::comma::/-/g;
+        $t_line->{'title'} =~ s/::comma::/-/g;
 
-                	$mactime =  $t_line->{'time'}->{$_}->{'legacy'} & 0b0001 ? 'M' : '.';
-                	$mactime .= $t_line->{'time'}->{$_}->{'legacy'} & 0b0010 ? 'A' : '.';
-                	$mactime .= $t_line->{'time'}->{$_}->{'legacy'} & 0b0100 ? 'C' : '.';
-                	$mactime .= $t_line->{'time'}->{$_}->{'legacy'} & 0b1000 ? 'B' : '.';
+        # remove any instances of tab
+        $t_line->{'desc'}  =~ s/\t/ /g;
+        $t_line->{'title'} =~ s/\t/ /g;
 
-                	my ($a,$b) = Log2t::Time::epoch2text( $t_line->{'time'}->{$_}->{'value'}, 3, $self->{'otz'} );
-                	$text .= $a . '::comma::' . $b . '::comma::' . $self->{'short_otz'}  . '::comma::' . $mactime . '::comma::';
-			$text .=  $t_line->{'source'} . '::comma::' . $t_line->{'sourcetype'} . '::comma::' . $t_line->{'time'}->{$_}->{'type'} . '::comma::';
+        #printf STDERR "[PRINT] M %d A %d C %d B %d\n",$mtime,$atime,$ctime,$btime;
+        # go through each defined timestamp
+        foreach (keys %{ $t_line->{'time'} }) {
 
-			# now to take the values from 'extra'
-			if( $t_line->{'extra'}->{'user'} eq '' or $t_line->{'extra'}->{'user'} eq 'unknown' )
-			{
-				$text .= '-::comma::';
-			}
-			else
-			{
-				$text .= $t_line->{'extra'}->{'user'} . '::comma::';
-			}
+            # don't want to print emtpy timestamps
+            next if $t_line->{'time'}->{$_}->{'value'} le 0;
 
-			if( $t_line->{'extra'}->{'host'} eq '' or $t_line->{'extra'}->{'host'} eq 'unknown' )
-			{
-				$text .= '-::comma::';
-			}
-			else
-			{
-				$text .= $t_line->{'extra'}->{'host'} . '::comma::';
-			}
+            $mactime = $t_line->{'time'}->{$_}->{'legacy'} & 0b0001 ? 'M' : '.';
+            $mactime .= $t_line->{'time'}->{$_}->{'legacy'} & 0b0010 ? 'A' : '.';
+            $mactime .= $t_line->{'time'}->{$_}->{'legacy'} & 0b0100 ? 'C' : '.';
+            $mactime .= $t_line->{'time'}->{$_}->{'legacy'} & 0b1000 ? 'B' : '.';
 
-			$text .= $t_line->{'short'} . '::comma::' . $t_line->{'desc'} . '::comma::' . $t_line->{'version'} . '::comma::';
+            my ($a, $b) =
+              Log2t::Time::epoch2text($t_line->{'time'}->{$_}->{'value'}, 3, $self->{'otz'});
+            $text .=
+                $a
+              . '::comma::'
+              . $b
+              . '::comma::'
+              . $self->{'short_otz'}
+              . '::comma::'
+              . $mactime
+              . '::comma::';
+            $text .=
+                $t_line->{'source'}
+              . '::comma::'
+              . $t_line->{'sourcetype'}
+              . '::comma::'
+              . $t_line->{'time'}->{$_}->{'type'}
+              . '::comma::';
 
-			# and for the filename
-			$t_line->{'extra'}->{'filename'} =~ s/::comma::/-/g;
-	                $text .= $t_line->{'extra'}->{'path'} if defined $t_line->{'extra'}->{'path'};
+            # now to take the values from 'extra'
+            if ($t_line->{'extra'}->{'user'} eq '' or $t_line->{'extra'}->{'user'} eq 'unknown') {
+                $text .= '-::comma::';
+            }
+            else {
+                $text .= $t_line->{'extra'}->{'user'} . '::comma::';
+            }
 
-                	# check if we have the original directory definition
-                	if( defined $t_line->{'extra'}->{'parse_dir'} )
-                	{
-                	        # we need to remove the "path" from the file before proceeding
-	
-	                        # get the file name
-	                        my $fname = $t_line->{'extra'}->{'filename'};
-	                        Log2t::Common::replace_char( \$fname, 0 );
-	                        my $orig = $t_line->{'extra'}->{'parse_dir'};
-	                        Log2t::Common::replace_char( \$orig, 0 );
-	
-	                        # remove the directory from the path
-	                        $fname =~ s/^$orig//;
-	
-	                        Log2t::Common::replace_char( \$fname, 1 );
-	
-	                        $text .= $fname . '::comma::';
-	                }
-	                else
-	                {
-	                        # we don't have to worry about filename stuff
-	                        $text .= $t_line->{'extra'}->{'filename'} . '::comma::';
-        	        }
+            if ($t_line->{'extra'}->{'host'} eq '' or $t_line->{'extra'}->{'host'} eq 'unknown') {
+                $text .= '-::comma::';
+            }
+            else {
+                $text .= $t_line->{'extra'}->{'host'} . '::comma::';
+            }
 
-			$text .= $t_line->{'extra'}->{'inode'} . '::comma::';
+            $text .=
+                $t_line->{'short'}
+              . '::comma::'
+              . $t_line->{'desc'}
+              . '::comma::'
+              . $t_line->{'version'}
+              . '::comma::';
 
-			$temp = undef;
+            # and for the filename
+            $t_line->{'extra'}->{'filename'} =~ s/::comma::/-/g;
+            $text .= $t_line->{'extra'}->{'path'} if defined $t_line->{'extra'}->{'path'};
 
-			# check the notes field
-			$t_line->{'notes'} =~ s/::comma::/-/g if defined $t_line->{'notes'};
-			$temp = $t_line->{'notes'} . ' ' if defined $t_line->{'notes'};
+            # check if we have the original directory definition
+            if (defined $t_line->{'extra'}->{'parse_dir'}) {
 
-			# and the URL field
-			$temp .= 'URL: ' . $t_line->{'extra'}->{'url'} if defined $t_line->{'extra'}->{'url'};
-			
-			$text .= $temp . '::comma::' if defined $temp;
-			$text .= '-::comma::' unless defined $temp;
+                # we need to remove the "path" from the file before proceeding
 
+                # get the file name
+                my $fname = $t_line->{'extra'}->{'filename'};
+                Log2t::Common::replace_char(\$fname, 0);
+                my $orig = $t_line->{'extra'}->{'parse_dir'};
+                Log2t::Common::replace_char(\$orig, 0);
 
-			$text .= $t_line->{'extra'}->{'format'} . '::comma::';
+                # remove the directory from the path
+                $fname =~ s/^$orig//;
 
+                Log2t::Common::replace_char(\$fname, 1);
 
-			$temp = undef;	# reset the temp variable
-			# and now to go through the rest of the extra field
-			foreach( keys %{$t_line->{'extra'}} )
-			{
-				next if $_ eq 'user';
-				next if $_ eq 'host';
-				next if $_ eq 'path';
-				next if $_ eq 'inode';
-				next if $_ eq 'url';
-				next if $_ eq 'parse_dir';
-				next if $_ eq 'format';
-				next if $_ eq 'filename';
+                $text .= $fname . '::comma::';
+            }
+            else {
 
-				$temp .= $_ . ': ' . $t_line->{'extra'}->{$_} . ' ';
-			}
+                # we don't have to worry about filename stuff
+                $text .= $t_line->{'extra'}->{'filename'} . '::comma::';
+            }
 
-			# now we've gone through the extra field, let's include it
-			$temp =~ s/,/-/g;
-			$text .= $temp if defined $temp and $temp ne '';
-			$text .= '-' unless defined $temp;
+            $text .= $t_line->{'extra'}->{'inode'} . '::comma::';
 
-			$text =~ s/,$//;
+            $temp = undef;
 
-			#print STDERR "[PRINTING] ", substr( $t_line->{'name'}, 20, 10 ), "...\n";
+            # check the notes field
+            $t_line->{'notes'} =~ s/::comma::/-/g if defined $t_line->{'notes'};
+            $temp = $t_line->{'notes'} . ' ' if defined $t_line->{'notes'};
 
-			# now to substitute any instances of , and ::comma::
-			$text =~ s/,/-/g;
-			$text =~ s/::comma::/,/g;
+            # and the URL field
+            $temp .= 'URL: ' . $t_line->{'extra'}->{'url'} if defined $t_line->{'extra'}->{'url'};
 
-			::print_line( $text  . "\n");
-			$text = '';
-		}
-	}
+            $text .= $temp . '::comma::' if defined $temp;
+            $text .= '-::comma::' unless defined $temp;
 
-	return 1;
+            $text .= $t_line->{'extra'}->{'format'} . '::comma::';
+
+            $temp = undef;    # reset the temp variable
+                              # and now to go through the rest of the extra field
+            foreach (keys %{ $t_line->{'extra'} }) {
+                next if $_ eq 'user';
+                next if $_ eq 'host';
+                next if $_ eq 'path';
+                next if $_ eq 'inode';
+                next if $_ eq 'url';
+                next if $_ eq 'parse_dir';
+                next if $_ eq 'format';
+                next if $_ eq 'filename';
+
+                $temp .= $_ . ': ' . $t_line->{'extra'}->{$_} . ' ';
+            }
+
+            # now we've gone through the extra field, let's include it
+            $temp =~ s/,/-/g;
+            $text .= $temp if defined $temp and $temp ne '';
+            $text .= '-' unless defined $temp;
+
+            $text =~ s/,$//;
+
+            #print STDERR "[PRINTING] ", substr( $t_line->{'name'}, 20, 10 ), "...\n";
+
+            # now to substitute any instances of , and ::comma::
+            $text =~ s/,/-/g;
+            $text =~ s/::comma::/,/g;
+
+            ::print_line($text . "\n");
+            $text = '';
+        }
+    }
+
+    return 1;
 }
 
 #       get_help
-# A simple subroutine that returns a string containing the help 
+# A simple subroutine that returns a string containing the help
 # message for this particular format file.
 # @return A string containing a help file for this format file
-sub get_help()
-{
-	return "This output module takes the line and prints out all the fields in a comma separated value file (CSV)
+sub get_help() {
+    return
+      "This output module takes the line and prints out all the fields in a comma separated value file (CSV)
 that can be imported into programs like Excel for analysis";
 
 }

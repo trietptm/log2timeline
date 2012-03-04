@@ -1,8 +1,8 @@
 #################################################################################################
-#		CFTL	
+#		CFTL
 #################################################################################################
 # this package provides an output module for the tool log2timeline.
-# The package takes as an input a reference to a hash that contains all the needed information to 
+# The package takes as an input a reference to a hash that contains all the needed information to
 # print or output the timeline that has been produced by a format file
 #
 # The output of this format file is an XML document that can be used by the timeline visual tool
@@ -10,11 +10,11 @@
 #
 # More information about the CFTL can be read in the following paper:
 # http://www.dfrws.org/2009/proceedings/p78-olsson.pdf
-# 
+#
 # Author: Kristinn Gudjonsson
 # Version : 0.7
 # Date : 13/04/11
-# 
+#
 # Copyright 2009-2011 Kristinn Gudjonsson (kristinn ( a t ) log2timeline (d o t) net)
 #
 #  This file is part of log2timeline.
@@ -36,8 +36,8 @@ package Log2t::output::cftl;
 
 use strict;
 use HTML::Scrubber;
-use Getopt::Long;       # read parameters
-use Log2t::Time;	# for time manipulation
+use Getopt::Long;    # read parameters
+use Log2t::Time;     # for time manipulation
 
 my $version = '0.7';
 
@@ -49,132 +49,148 @@ my $index;
 # A simple subroutine that returns the version number of the format file
 #
 # @return A version number
-sub get_version()
-{
-	return $version;
+sub get_version() {
+    return $version;
 }
 
 #       new
-# A simple constructor of the output module. Takes care of parsing 
+# A simple constructor of the output module. Takes care of parsing
 # parameters sent to the output module
-sub new($)
-{
-        my $class = shift;
+sub new($) {
+    my $class = shift;
 
-        # bless the class ;)
-        my $self = bless{}, $class;
+    # bless the class ;)
+    my $self = bless {}, $class;
 
-        return $self;
+    return $self;
 }
 
-
 #       get_description
-# A simple subroutine that returns a string containing a description of 
+# A simple subroutine that returns a string containing a description of
 # the funcionality of the format file. This string is used when a list of
 # all available format files is printed out
 #
 # @return A string containing a description of the format file's functionality
-sub get_description()
-{
-	return "Output timeline in a XML format that can be read by CFTL"; 
+sub get_description() {
+    return "Output timeline in a XML format that can be read by CFTL";
 }
 
-sub print_header()
-{
-	::print_line ("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n\r<!DOCTYPE EvidenceCollection SYSTEM \"CyberForensicsTimeLab.dtd\">\n\r<!--\n\rCreated by log2timeline for CyberForensics TimeLab.\n\rCopyright(C) 2009 Kristinn Gudjonsson (log2timeline)\n\rCopyright(C) 2008 Jens Olsson (CFTL)\n\r-->\n\r<EvidenceCollection>\n\r");
-	# initialize the index variable
-	$index = 0;
+sub print_header() {
+    ::print_line(
+        "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n\r<!DOCTYPE EvidenceCollection SYSTEM \"CyberForensicsTimeLab.dtd\">\n\r<!--\n\rCreated by log2timeline for CyberForensics TimeLab.\n\rCopyright(C) 2009 Kristinn Gudjonsson (log2timeline)\n\rCopyright(C) 2008 Jens Olsson (CFTL)\n\r-->\n\r<EvidenceCollection>\n\r"
+    );
 
-	return 1;
+    # initialize the index variable
+    $index = 0;
+
+    return 1;
 }
 
-sub print_footer()
-{
-	::print_line( "</EvidenceCollection>\n\r" );
+sub print_footer() {
+    ::print_line("</EvidenceCollection>\n\r");
 
-	return 1;
+    return 1;
 }
 
-sub get_footer()
-{
-	return "</EvidenceCollection>\n\r";
+sub get_footer() {
+    return "</EvidenceCollection>\n\r";
 }
 
-#      	print_line 
+#      	print_line
 # A subroutine that reads a line from the access file and returns it to the
 # main script
-# @return A string containing one line of the log file (or a -1 if we've reached 
+# @return A string containing one line of the log file (or a -1 if we've reached
 #       the end of the log file)
-sub print_line()
-{
-        my $self = shift;
-        my $t_line= shift;	# the timestamp object
-	my $text;
-	my $title;
-	my $time_text;
-	
-        # content of the timestamp object t_line 
-        # optional fields are marked with [] 
-        # 
-        # %t_line {        
-        #       time
-        #               index
-        #                       value
-        #                       type
-        #                       legacy
-        #       desc
-        #       short
-        #       source
-        #       sourcetype
-        #       version
-        #       [notes]
-        #       extra
-        #               [filename]
-        #               [md5]
-        #               [mode]
-        #               [host]
-        #               [user]
-        #               [url]
-        #               [size]
-        #               [...]
-        # }
-        if( scalar( %{$t_line} ) )
-	{
-                # go through each defined timestamp
-                foreach( keys %{$t_line->{'time'}} )
-                {
-			$time_text .= '<Timestamp type="' . $t_line->{'time'}->{$_}->{'type'} . '" value="' . Log2t::Time::epoch2cftl( $t_line->{'time'}->{$_}->{'value'}, $self->{'tz'} ) . '" origin="' . $t_line->{'sourcetype'} . '" />' . "\n\r\t";
-		}
+sub print_line() {
+    my $self   = shift;
+    my $t_line = shift;    # the timestamp object
+    my $text;
+    my $title;
+    my $time_text;
 
-		# construct the title part
-		$text = 'User: ' . $t_line->{'extra'}->{'user'} . ' ' unless $t_line->{'extra'}->{'user'} eq 'unknown';
-		$text .= '(' . $t_line->{'extra'}->{'host'} . ') ' unless $t_line->{'extra'}->{'host'} eq 'unknown';
-		$text .= $t_line->{'desc'};
-		$text .= ' (file: ' . $t_line->{'extra'}->{'path'} . $self->{'name'} . ')';
+    # content of the timestamp object t_line
+    # optional fields are marked with []
+    #
+    # %t_line {
+    #       time
+    #               index
+    #                       value
+    #                       type
+    #                       legacy
+    #       desc
+    #       short
+    #       source
+    #       sourcetype
+    #       version
+    #       [notes]
+    #       extra
+    #               [filename]
+    #               [md5]
+    #               [mode]
+    #               [host]
+    #               [user]
+    #               [url]
+    #               [size]
+    #               [...]
+    # }
+    if (scalar(%{$t_line})) {
 
-		# fix the title
-		$title = $html->scrub( $text );
-        	$title =~ s/\"/\&quot;/g;
-        	$title =~ s/\'/\&apos;/g;
-        	$title =~ s/\&/\&amp;/g;
-        	$title =~ s/</\&lt;/g;
-        	$title =~ s/>/\&gt;/g;
+        # go through each defined timestamp
+        foreach (keys %{ $t_line->{'time'} }) {
+            $time_text .=
+                '<Timestamp type="'
+              . $t_line->{'time'}->{$_}->{'type'}
+              . '" value="'
+              . Log2t::Time::epoch2cftl($t_line->{'time'}->{$_}->{'value'}, $self->{'tz'})
+              . '" origin="'
+              . $t_line->{'sourcetype'} . '" />'
+              . "\n\r\t";
+        }
 
-		
-		# one time
-		::print_line(  "\n\r" . '<Evidence' . "\n\r\t" . 'title="' . $title . '"' . "\n\r\t" . 'type="' . $t_line->{sourcetype} . '"' . "\n\r\t" . 'id="' . $index++ . '" parent="">' . "\n\r\t" . '<Chunk from="0" to="0"/>' . "\n\r\t" . $time_text . "<Data />\n\r</Evidence>\n\r" );
-	}
+        # construct the title part
+        $text = 'User: ' . $t_line->{'extra'}->{'user'} . ' '
+          unless $t_line->{'extra'}->{'user'} eq 'unknown';
+        $text .= '(' . $t_line->{'extra'}->{'host'} . ') '
+          unless $t_line->{'extra'}->{'host'} eq 'unknown';
+        $text .= $t_line->{'desc'};
+        $text .= ' (file: ' . $t_line->{'extra'}->{'path'} . $self->{'name'} . ')';
 
-	return 1;
+        # fix the title
+        $title = $html->scrub($text);
+        $title =~ s/\"/\&quot;/g;
+        $title =~ s/\'/\&apos;/g;
+        $title =~ s/\&/\&amp;/g;
+        $title =~ s/</\&lt;/g;
+        $title =~ s/>/\&gt;/g;
+
+        # one time
+        ::print_line(  "\n\r"
+                     . '<Evidence'
+                     . "\n\r\t"
+                     . 'title="'
+                     . $title . '"'
+                     . "\n\r\t"
+                     . 'type="'
+                     . $t_line->{sourcetype} . '"'
+                     . "\n\r\t" . 'id="'
+                     . $index++
+                     . '" parent="">'
+                     . "\n\r\t"
+                     . '<Chunk from="0" to="0"/>'
+                     . "\n\r\t"
+                     . $time_text
+                     . "<Data />\n\r</Evidence>\n\r");
+    }
+
+    return 1;
 }
 
 #       get_help
-# A simple subroutine that returns a string containing the help 
+# A simple subroutine that returns a string containing the help
 # message for this particular format file.
 # @return A string containing a help file for this format file
-sub get_help()
-{
-	return "This output plugin creates a XML document that can be read by the 
+sub get_help() {
+    return "This output plugin creates a XML document that can be read by the 
 timeline visualization tool CFTL (CyberForensics TimeLab) 
 
 This is only the XML document, to visually examine the timeline, one needs to have

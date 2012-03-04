@@ -2,7 +2,7 @@
 #    OPERA
 #################################################################################################
 # This script is a part of the log2timeline framework for timeline creation and analysis.
-# This script implements an input module, or a parser capable of parsing a single log file (or 
+# This script implements an input module, or a parser capable of parsing a single log file (or
 # directory) and creating a hash that is returned to the main script.  That hash is then used
 # to create a body file (to create a timeline) or a timeline (directly).
 #
@@ -19,7 +19,7 @@
 # The Global history file contains the global browsing history (everything except the
 # directly typed in URL's) while the direct history contains a XML document describing
 # all the directly typed in URL's.
-# 
+#
 # Author: Kristinn Gudjonsson
 # Version : 0.3
 # Date : 03/05/11
@@ -44,12 +44,14 @@
 package Log2t::input::opera;
 
 use strict;
-use Log2t::base::input; # the SUPER class or parent
+use Log2t::base::input;    # the SUPER class or parent
 use Log2t::Common ':binary';
-use Log2t::Time;  # to manipulate time
+use Log2t::Time;           # to manipulate time
+
 #use Log2t::Numbers;  # to manipulate numbers
-use Log2t::BinRead;  # methods to read binary files
-#use Log2t::Network;  # information about network traffic 
+use Log2t::BinRead;        # methods to read binary files
+
+#use Log2t::Network;  # information about network traffic
 use XML::LibXML;
 use XML::LibXML::Common;
 use Encode;
@@ -57,119 +59,116 @@ use Encode;
 use vars qw($VERSION @ISA);
 
 # inherit the base input module, or the super class.
-@ISA = ( "Log2t::base::input" );
+@ISA = ("Log2t::base::input");
 
 # define a constant to declare which type of document we are examinig (direct vs. global)
 use constant {
-  GLOBAL_HISTORY => 12,
-  DIRECT_HISTORY => 21
-};
+               GLOBAL_HISTORY => 12,
+               DIRECT_HISTORY => 21
+             };
 
 # indicate the version number of this input module
 $VERSION = '0.2';
-
 
 #       get_version
 # A simple subroutine that returns the version number of the format file
 #
 # @return A version number
-sub get_version()
-{
-  return $VERSION;
+sub get_version() {
+    return $VERSION;
 }
 
 #       get_description
-# A simple subroutine that returns a string containing a description of 
+# A simple subroutine that returns a string containing a description of
 # the funcionality of the format file. This string is used when a list of
 # all available format files is printed out
 #
 # @return A string containing a description of the format file's functionality
-sub get_description()
-{
-  return "Parse the content of an Opera's global history file"; 
+sub get_description() {
+    return "Parse the content of an Opera's global history file";
 }
 
 #       prepare_file
 #
 # The purpose of this subfunction is to prepare the log file or artifact for parsing
-# Usually this involves just opening the file (if plain text) or otherwise building a 
+# Usually this involves just opening the file (if plain text) or otherwise building a
 # structure that can be used by other functions
 #
 # This function also accepts parameters for processing (for changing some settings in
 # the input module)
 #
-# @params A path to the artifact/log file/directory to prepare 
+# @params A path to the artifact/log file/directory to prepare
 # @params The rest of the ARGV array containing parameters to be passed to the input module
-# @return An integer is returned to indicate whether the file preparation was 
+# @return An integer is returned to indicate whether the file preparation was
 #       successful or not.
-sub init
-{
-  # read the paramaters passed to the script
-  my $self = shift;
-  my $temp;
-  my $path;
+sub init {
 
-  # XML elements
-  my ($propertylist,$property);
-  my (@properties,@relationships);
+    # read the paramaters passed to the script
+    my $self = shift;
+    my $temp;
+    my $path;
 
-        # check if we need to "guess" the username of the user
-        if( $self->{'username'} eq 'unknown' )
-        {
-                # check the current working directory and try to guess the username
-    $self->{'username'} = Log2t::Common::get_username_from_path(${$self->{'name'}});
+    # XML elements
+    my ($propertylist, $property);
+    my (@properties,   @relationships);
+
+    # check if we need to "guess" the username of the user
+    if ($self->{'username'} eq 'unknown') {
+
+        # check the current working directory and try to guess the username
+        $self->{'username'} = Log2t::Common::get_username_from_path(${ $self->{'name'} });
+    }
+
+    # check the type, we might have to read the file
+    if ($self->{'type'} eq DIRECT_HISTORY) {
+
+        # initialize the index variable
+        $self->{'index'} = 0;
+
+        # we have a XML file, let's read it
+        $self->{'xml_object'} = XML::LibXML->new();
+
+        # read inn all the XML
+        $self->{'direct_history'} = $self->{'xml_object'}->parse_fh($self->{'file'});
+
+        # get the encoding of the document
+        $self->{'encoding'} = $self->{'direct_history'}->encoding();
+
+        # get all the Relationship nodes
+        $propertylist = $self->{'direct_history'}->getDocumentElement();
+        @properties   = $propertylist->childNodes;
+
+        # examine each record
+        foreach $property (@properties) {
+
+            # for each record, let's examine the values
+            if ($property->nodeType == ELEMENT_NODE) {
+
+                # let's get all the attributes
+                @relationships = $property->attributes();
+
+                # go through each attribute
+                foreach (@relationships) {
+                    $temp = $_->toString;
+                    ($a, $b) = split(/=/, $temp);
+
+                    $a =~ s/\s+//g;
+                    $b =~ s/\s+//g;
+
+                    $self->{'records'}->{ $self->{'index'} }->{$a} = $b;
+                }
+
+                # increment the index variable
+                $self->{'index'}++;
+
+            }
         }
+    }
 
-  # check the type, we might have to read the file
-  if( $self->{'type'} eq DIRECT_HISTORY )
-  {
-    # initialize the index variable
+    # initialize the index variable again (for loading)
     $self->{'index'} = 0;
 
-    # we have a XML file, let's read it
-          $self->{'xml_object'} = XML::LibXML->new();
-        
-    # read inn all the XML
-          $self->{'direct_history'} = $self->{'xml_object'}->parse_fh( $self->{'file'} );
-
-          # get the encoding of the document
-          $self->{'encoding'} = $self->{'direct_history'}->encoding();
-
-          # get all the Relationship nodes
-          $propertylist = $self->{'direct_history'}->getDocumentElement();
-          @properties = $propertylist->childNodes;
-
-          # examine each record
-          foreach $property (@properties)
-          {
-      # for each record, let's examine the values 
-                  if( $property->nodeType==ELEMENT_NODE )
-                  {
-        # let's get all the attributes
-                          @relationships = $property->attributes();
-
-        # go through each attribute
-                          foreach ( @relationships )
-                          {
-          $temp = $_->toString;
-          ($a,$b) = split( /=/, $temp );
-
-          $a =~ s/\s+//g;
-          $b =~ s/\s+//g;
-
-          $self->{'records'}->{$self->{'index'}}->{$a} = $b;
-        }
-        # increment the index variable
-        $self->{'index'}++;
-  
-      }
-    }
-  }
-
-  # initialize the index variable again (for loading)
-  $self->{'index'} = 0;
-
-  return 1;
+    return 1;
 }
 
 #       get_time
@@ -178,121 +177,127 @@ sub init
 # load_line that loads a line of the log file into a global variable and then
 # parses that line to produce the hash t_line, which is read and sent to the
 # output modules by the main script to produce a timeline or a bodyfile
-# 
+#
 # @return Returns a reference to a hash containing the needed values to print a body file
-sub get_time
-{
-  my $self = shift;
-  # the timestamp object
-  my %t_line;
-  my ($url,$title,$date,$nr);
-  my $text = '';
-  my $fh = $self->{'file'};
+sub get_time {
+    my $self = shift;
 
-  # check the type of history file we are dealing with
-  if( $self->{'type'} eq GLOBAL_HISTORY )
-  {
-    # get the filehandle and read the next line
-    my $line = <$fh> or return undef; 
+    # the timestamp object
+    my %t_line;
+    my ($url, $title, $date, $nr);
+    my $text = '';
+    my $fh   = $self->{'file'};
 
-    # Title
-    $title = $line;
-    $url = <$fh>;
-    $date = <$fh>;
-    $nr = <$fh>;
+    # check the type of history file we are dealing with
+    if ($self->{'type'} eq GLOBAL_HISTORY) {
 
-    # remove end line characters
-    $date =~ s/\n//g;
-    $date =~ s/\r//g;
-    $url =~ s/\n//g;
-    $url =~ s/\r//g;
-    $title =~ s/\n//g;
-    $title =~ s/\r//g;
-    $nr =~ s/\n//g;
-    $nr =~ s/\r//g;
-  
-    $text = 'URL visited ' . $url . ' (' . $title . ') [' . $nr . ']';
-  }
-  else
-  {
-    return undef unless $self->{'index'} < keys %{$self->{'records'}};
+        # get the filehandle and read the next line
+        my $line = <$fh> or return undef;
 
-    # we are dealing with a DIRECT history file
-    # we know the current index into the HASH
-    $url = $self->{'records'}->{$self->{'index'}}->{'content'};
-    $url =~ s/^"//;
-    $url =~ s/"$//;
-  
-    $text = 'typed the URL ' . $url . ' directly into the browser (type ' . $self->{'records'}->{$self->{'index'}}->{'type'} . ')'; 
+        # Title
+        $title = $line;
+        $url   = <$fh>;
+        $date  = <$fh>;
+        $nr    = <$fh>;
 
-    $nr = $self->{'records'}->{$self->{'index'}}->{'last_typed'};
-    $nr =~ s/"//g;
+        # remove end line characters
+        $date  =~ s/\n//g;
+        $date  =~ s/\r//g;
+        $url   =~ s/\n//g;
+        $url   =~ s/\r//g;
+        $title =~ s/\n//g;
+        $title =~ s/\r//g;
+        $nr    =~ s/\n//g;
+        $nr    =~ s/\r//g;
 
-    $date = Log2t::Time::iso2epoch( $nr, ,$self->{'tz'} ); 
+        $text = 'URL visited ' . $url . ' (' . $title . ') [' . $nr . ']';
+    }
+    else {
+        return undef unless $self->{'index'} < keys %{ $self->{'records'} };
 
-    # increment the index variable for one (if DIRECT HISTORY)
-    $self->{'index'}++;
-  }
-  
-  # create the t_line variable
-        # content of array t_line ([optional])
-        # %t_line {        #       time
-        #               index
-        #                       value
-        #                       type
-        #                       legacy
-        #       desc
-        #       short
-        #       source
-        #       sourcetype
-        #       version
-        #       [notes]
-        #       extra
-        #               [filename]
-        #               [md5]
-        #               [mode]
-        #               [host]
-        #               [user]
-        #               [url]
-        #               [size]
-        #               [...]
-        # }
+        # we are dealing with a DIRECT history file
+        # we know the current index into the HASH
+        $url = $self->{'records'}->{ $self->{'index'} }->{'content'};
+        $url =~ s/^"//;
+        $url =~ s/"$//;
 
-        # create the t_line variable
-        %t_line = (
-                'time' => { 0 => { 'value' => $date, 'type' => 'URL visited', 'legacy' => 15 } },
-                'desc' => $text,
-                'short' => $url,
-                'source' => 'WEBHIST',
-                'sourcetype' => 'Opera',
-                'version' => 2,
-                'extra' => { 'user' => $self->{'username'}, }
-        );
+        $text =
+            'typed the URL ' 
+          . $url
+          . ' directly into the browser (type '
+          . $self->{'records'}->{ $self->{'index'} }->{'type'} . ')';
 
-        # check the existence of a default browser for this particular user
-        if( defined $self->{'defbrowser'}->{lc($self->{'username'})} )
-        {   
-                $t_line{'notes'} = $self->{'defbrowser'}->{$self->{'username'}} =~ m/opera/i ? 'Default browser for user' : 'Not the default browser (' . $self->{'defbrowser'}->{$self->{'username'}} . ')';
-        }   
-        elsif ( $self->{'defbrowser'}->{'os'} ne '' )
-        {   
-                # check the default one (the OS)
-                $t_line{'notes'} = $self->{'defbrowser'}->{'os'} =~ m/opera/ ? 'Default browser for system' : 'Not the default system browser (' . $self->{'defbrowser'}->{'os'} . ')';
-        } 
+        $nr = $self->{'records'}->{ $self->{'index'} }->{'last_typed'};
+        $nr =~ s/"//g;
 
+        $date = Log2t::Time::iso2epoch($nr,, $self->{'tz'});
 
-  return \%t_line;
+        # increment the index variable for one (if DIRECT HISTORY)
+        $self->{'index'}++;
+    }
+
+    # create the t_line variable
+    # content of array t_line ([optional])
+    # %t_line {        #       time
+    #               index
+    #                       value
+    #                       type
+    #                       legacy
+    #       desc
+    #       short
+    #       source
+    #       sourcetype
+    #       version
+    #       [notes]
+    #       extra
+    #               [filename]
+    #               [md5]
+    #               [mode]
+    #               [host]
+    #               [user]
+    #               [url]
+    #               [size]
+    #               [...]
+    # }
+
+    # create the t_line variable
+    %t_line = (
+        'time'       => { 0 => { 'value' => $date, 'type' => 'URL visited', 'legacy' => 15 } },
+        'desc'       => $text,
+        'short'      => $url,
+        'source'     => 'WEBHIST',
+        'sourcetype' => 'Opera',
+        'version'    => 2,
+        'extra' => { 'user' => $self->{'username'}, }
+              );
+
+    # check the existence of a default browser for this particular user
+    if (defined $self->{'defbrowser'}->{ lc($self->{'username'}) }) {
+        $t_line{'notes'} =
+          $self->{'defbrowser'}->{ $self->{'username'} } =~ m/opera/i
+          ? 'Default browser for user'
+          : 'Not the default browser (' . $self->{'defbrowser'}->{ $self->{'username'} } . ')';
+    }
+    elsif ($self->{'defbrowser'}->{'os'} ne '') {
+
+        # check the default one (the OS)
+        $t_line{'notes'} =
+          $self->{'defbrowser'}->{'os'} =~ m/opera/
+          ? 'Default browser for system'
+          : 'Not the default system browser (' . $self->{'defbrowser'}->{'os'} . ')';
+    }
+
+    return \%t_line;
 }
 
 #       get_help
 #
-# A simple subroutine that returns a string containing the help 
+# A simple subroutine that returns a string containing the help
 # message for this particular format file.
 #
 # @return A string containing a help file for this format file
-sub get_help()
-{
-  return "This is a simple input module that takes as an input
+sub get_help() {
+    return "This is a simple input module that takes as an input
 the Opera Global History file and prints out the associated browser
 history, as it is stored inside the file. \n";
 
@@ -306,125 +311,118 @@ history, as it is stored inside the file. \n";
 # This is needed since there is no need to parse the file if this file/dir is not the file
 # that this input module is designed to parse
 #
-# It is also important to validate the file since the scanner function will try to 
+# It is also important to validate the file since the scanner function will try to
 # parse every file it finds, and uses this verify function to determine whether or not
-# a particular file/dir/artifact is supported or not. It is therefore very important to 
+# a particular file/dir/artifact is supported or not. It is therefore very important to
 # implement this function and make it verify the file structure without false positives and
 # without taking too long time
 #
-# @return A reference to a hash that contains an integer indicating whether or not the 
-#  file/dir/artifact is supporter by this input module as well as a reason why 
-#  it failed (if it failed) 
-sub verify
-{
-  my $self = shift;
+# @return A reference to a hash that contains an integer indicating whether or not the
+#  file/dir/artifact is supporter by this input module as well as a reason why
+#  it failed (if it failed)
+sub verify {
+    my $self = shift;
 
-  # define an array to keep
-  my %return;
-  my $line;
-  my $l2;
-  my $time;
+    # define an array to keep
+    my %return;
+    my $line;
+    my $l2;
+    my $time;
 
-  # default values
-  $return{'success'} = 0;
-  $return{'msg'} = 'success';
-
-        return \%return unless -f ${$self->{'name'}};
-
-        # start by setting the endian correctly
-        Log2t::BinRead::set_endian( LITTLE_E );
-
-  my $ofs = 0;
-
-  # open the file (at least try to open it)
-  eval
-  {
-    #unless( $self->{'quick'} )
-    #{
-    #  # this is a bit tough one to properly parse, since the first line is a URL or a web site's title
-    #  # but let's try
-    #  seek($self->{'name'},0,0);
-    #  read($self->{'name'},$line,1);
-    #  if( $line !~ m/[\w<]/ )
-    #  {
-    #    return \%return; 
-    #  }
-    #}
-
-    # opera consists of four lines
-    #   Title
-    #  URL
-    #   Epoch time
-    #  Number
-    $line = Log2t::BinRead::read_ascii_until( $self->{'file'}, \$ofs, "\n", 100 );
-  };
-  if ( $@ )
-  {
+    # default values
     $return{'success'} = 0;
-    $return{'msg'} = "Unable to open file";
-  }
+    $return{'msg'}     = 'success';
 
-  # read the URL
-  $l2 = Log2t::BinRead::read_ascii_until( $self->{'file'}, \$ofs, "\n", 200 );
+    return \%return unless -f ${ $self->{'name'} };
 
-  # confirm we have a URL (possibly the global history file)
-  if( $l2 =~ m/http?:\/\/.+/ )
-  {
-    # we have a URL
-    # check the next line
-    $l2 = Log2t::BinRead::read_ascii_until( $self->{'file'}, \$ofs, "\n", 200 ); # <FILE>;
-    $l2 =~ s/\n//g;
-    $l2 =~ s/\r//g;
-    
-    # this should be an epoch time format
-    $time = int( $l2 );
-    if( $l2 ne $time )
-    {
-      $return{'success'} = 0;
-      $return{'msg'} = 'Not a Opera file (time not in epoch)';
+    # start by setting the endian correctly
+    Log2t::BinRead::set_endian(LITTLE_E);
+
+    my $ofs = 0;
+
+    # open the file (at least try to open it)
+    eval {
+
+ #unless( $self->{'quick'} )
+ #{
+ #  # this is a bit tough one to properly parse, since the first line is a URL or a web site's title
+ #  # but let's try
+ #  seek($self->{'name'},0,0);
+ #  read($self->{'name'},$line,1);
+ #  if( $line !~ m/[\w<]/ )
+ #  {
+ #    return \%return;
+ #  }
+ #}
+
+        # opera consists of four lines
+        #   Title
+        #  URL
+        #   Epoch time
+        #  Number
+        $line = Log2t::BinRead::read_ascii_until($self->{'file'}, \$ofs, "\n", 100);
+    };
+    if ($@) {
+        $return{'success'} = 0;
+        $return{'msg'}     = "Unable to open file";
     }
-    else
-    {  
-      # check for the time variable
-      if ( $time > 0 && $time < ( time() + 5184000 ) )
-      {
-        $return{'success'} = 1;
 
-        # we have a global history file, let's mark the type
-        $self->{'type'} = GLOBAL_HISTORY;
-      }
+    # read the URL
+    $l2 = Log2t::BinRead::read_ascii_until($self->{'file'}, \$ofs, "\n", 200);
+
+    # confirm we have a URL (possibly the global history file)
+    if ($l2 =~ m/http?:\/\/.+/) {
+
+        # we have a URL
+        # check the next line
+        $l2 = Log2t::BinRead::read_ascii_until($self->{'file'}, \$ofs, "\n", 200);    # <FILE>;
+        $l2 =~ s/\n//g;
+        $l2 =~ s/\r//g;
+
+        # this should be an epoch time format
+        $time = int($l2);
+        if ($l2 ne $time) {
+            $return{'success'} = 0;
+            $return{'msg'}     = 'Not a Opera file (time not in epoch)';
+        }
+        else {
+
+            # check for the time variable
+            if ($time > 0 && $time < (time() + 5184000)) {
+                $return{'success'} = 1;
+
+                # we have a global history file, let's mark the type
+                $self->{'type'} = GLOBAL_HISTORY;
+            }
+        }
+
     }
-    
-    
-  }
-  elsif( $line =~ m/xml version="1.0" encoding/ )
-  {
-    # we have a possible direct history file
+    elsif ($line =~ m/xml version="1.0" encoding/) {
 
-    $l2 =~ s/\n//g;
-    $l2 =~ s/\r//g;
+        # we have a possible direct history file
 
-    # check if we have the correct tag to show that this is truly a direct history file
-    if( $l2 =~ m/\<typed_history\>/ )
-    {
-      # we have a typed history file, let's move on
-      $return{'success'} = 1;
+        $l2 =~ s/\n//g;
+        $l2 =~ s/\r//g;
 
-      # indicate the type of file we have
-      $self->{'type'} = DIRECT_HISTORY;
+        # check if we have the correct tag to show that this is truly a direct history file
+        if ($l2 =~ m/\<typed_history\>/) {
+
+            # we have a typed history file, let's move on
+            $return{'success'} = 1;
+
+            # indicate the type of file we have
+            $self->{'type'} = DIRECT_HISTORY;
+        }
     }
-  }
-  else
-  {
-    $return{'success'} = 0;
-    $return{'msg'} = 'Not a History file';
-  }
-    
-  return \%return;
+    else {
+        $return{'success'} = 0;
+        $return{'msg'}     = 'Not a History file';
+    }
+
+    return \%return;
 }
 
 1;
-
 
 __END__
 

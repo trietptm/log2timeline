@@ -2,12 +2,12 @@
 #    FTK_DIRLISTING
 #################################################################################################
 # This script is a part of the log2timeline framework for timeline creation and analysis.
-# This script implements an input module, or a parser capable of parsing a single log file (or 
+# This script implements an input module, or a parser capable of parsing a single log file (or
 # directory) and creating a hash that is returned to the main script.  That hash is then used
 # to create a body file (to create a timeline) or a timeline (directly).
-# 
+#
 # update: http://bugs.log2timeline.net/show_bug.cgi?id=6
-# 
+#
 # Author: Kristinn Gudjonsson
 # Version : 0.3
 # Date : 20/08/11
@@ -33,61 +33,59 @@
 package Log2t::input::ftk_dirlisting;
 
 use strict;
-use Log2t::base::input; # the SUPER class or parent
+use Log2t::base::input;    # the SUPER class or parent
 use Log2t::Common ':binary';
-use Log2t::Time;  # to manipulate time
+use Log2t::Time;           # to manipulate time
+
 #use Log2t::Win;  # Windows specific information
 #use Log2t::Numbers;  # to manipulate numbers
-use Log2t::BinRead;  # methods to read binary files (it is preferable to always load this library)
-#use Log2t::Network;  # information about network traffic 
+use Log2t::BinRead;    # methods to read binary files (it is preferable to always load this library)
+
+#use Log2t::Network;  # information about network traffic
 
 # define the VERSION variable
 use vars qw($VERSION @ISA);
 
 # inherit the base input module, or the super class.
-@ISA = ( "Log2t::base::input" );
+@ISA = ("Log2t::base::input");
 
 # indicate the version number of this input module
 $VERSION = '0.3';
 
 #       get_description
-# A simple subroutine that returns a string containing a description of 
+# A simple subroutine that returns a string containing a description of
 # the funcionality of the format file. This string is used when a list of
 # all available format files is printed out
 #
 # @return A string containing a description of the format file's functionality
-sub get_description()
-{
-  return "Parse the content of a CSV file that is exported from FTK Imager (dirlisting)"; 
+sub get_description() {
+    return "Parse the content of a CSV file that is exported from FTK Imager (dirlisting)";
 }
 
 #       get_version
 # A simple subroutine that returns the version number of the format file
-# There shouldn't be any need to change this routine, it serves its purpose 
+# There shouldn't be any need to change this routine, it serves its purpose
 # just the way it is defined right now.
 #
 # @return A version number
-sub get_version()
-{
-        return $VERSION;
+sub get_version() {
+    return $VERSION;
 }
 
-
 #  init
-# the routine that initializes the parsing 
-sub init
-{
-  my $self = shift;
+# the routine that initializes the parsing
+sub init {
+    my $self = shift;
 
-        # get the filehandle and read the next line
-        my $fh = $self->{'file'};
+    # get the filehandle and read the next line
+    my $fh = $self->{'file'};
 
-        # the first line is this:
-  #  Filename  Full Path  Size  Created  Modified  Accessed  Is Deleted
-        # so we want to read that one before continuing on processing each line
-        my $line = <$fh> or return undef;
+    # the first line is this:
+    #  Filename  Full Path  Size  Created  Modified  Accessed  Is Deleted
+    # so we want to read that one before continuing on processing each line
+    my $line = <$fh> or return undef;
 
-  return 1;
+    return 1;
 }
 
 #       get_time
@@ -96,100 +94,102 @@ sub init
 # load_line that loads a line of the log file into a global variable and then
 # parses that line to produce the hash t_line, which is read and sent to the
 # output modules by the main script to produce a timeline or a bodyfile
-# 
+#
 # @return Returns a reference to a hash containing the needed values to print a body file
-sub get_time
-{
-  my $self = shift;
-  # the timestamp object
-  my %t_line;
-  my %info;
-  my $text;
+sub get_time {
+    my $self = shift;
 
-  # so we've got the line with the following format (tab to separate fields)
-  #  Filename  Full Path  Size  Created  Modified  Accessed  Is Deleted
+    # the timestamp object
+    my %t_line;
+    my %info;
+    my $text;
 
-  # get the filehandle and read the next line
-        my $fh = $self->{'file'};
-        my $line = <$fh> or return undef;
+    # so we've got the line with the following format (tab to separate fields)
+    #  Filename  Full Path  Size  Created  Modified  Accessed  Is Deleted
 
-  if( $line =~ m/([^\t]+)\t([^\t]+)\t([^\t]+)\t([^\t]+)\t([^\t]+)\t([^\t]+)\t([^\t]+)$/ )
-  {
-    %info = (
-      'name' => $1,
-      'path' => $2,
-      'size' => $3,
-      'cre' => Log2t::Time::ftk2date(\$4),
-      'mod' => Log2t::Time::ftk2date(\$5),
-      'acc' => Log2t::Time::ftk2date(\$6),
-      'del' => $7  
-    );
-    print STDERR "[FTK] DATE ($4 - " . $info{'cre'} . ") ($5 - " . $info{'mod'} . ") ($6 - " . $info{'acc'} . ")\n" if $self->{'debug'};
-      
-  }
-  else
-  {
-    print STDERR "[FTK] Line does not match criteria given to it\n";
+    # get the filehandle and read the next line
+    my $fh = $self->{'file'};
+    my $line = <$fh> or return undef;
+
+    if ($line =~ m/([^\t]+)\t([^\t]+)\t([^\t]+)\t([^\t]+)\t([^\t]+)\t([^\t]+)\t([^\t]+)$/) {
+        %info = (
+                 'name' => $1,
+                 'path' => $2,
+                 'size' => $3,
+                 'cre'  => Log2t::Time::ftk2date(\$4),
+                 'mod'  => Log2t::Time::ftk2date(\$5),
+                 'acc'  => Log2t::Time::ftk2date(\$6),
+                 'del'  => $7
+                );
+        print STDERR "[FTK] DATE ($4 - "
+          . $info{'cre'}
+          . ") ($5 - "
+          . $info{'mod'}
+          . ") ($6 - "
+          . $info{'acc'} . ")\n"
+          if $self->{'debug'};
+
+    }
+    else {
+        print STDERR "[FTK] Line does not match criteria given to it\n";
+        return \%t_line;
+    }
+
+    $text = $info{'path'};
+    $text .= ' (file deleted)' if $info{'del'} =~ m/yes/i;
+
+    # content of the timestamp object t_line
+    # optional fields are marked with []
+    #
+    # %t_line {
+    #       time
+    #               index
+    #                       value
+    #                       type
+    #                       legacy
+    #       desc
+    #       short
+    #       source
+    #       sourcetype
+    #       version
+    #       [notes]
+    #       extra
+    #               [filename]
+    #               [md5]
+    #               [mode]
+    #               [host]
+    #               [user]
+    #               [url]
+    #               [size]
+    #               [...]
+    # }
+
+    # create the t_line variable
+    %t_line = (
+               'time' => {
+                           0 => { 'value' => $info{'acc'}, 'type' => 'Accessed', 'legacy' => 2 },
+                           1 => { 'value' => $info{'mod'}, 'type' => 'Modified', 'legacy' => 1 },
+                           2 => { 'value' => $info{'cre'}, 'type' => 'Created',  'legacy' => 12 }
+                         },
+               'desc'       => $text,
+               'short'      => $text,
+               'source'     => 'FILE',
+               'sourcetype' => 'FTK Imager FolderPath',
+               'version'    => 2,
+               'extra'      => { 'size' => $info{'size'} }
+              );
+
     return \%t_line;
-  }
-
-  $text = $info{'path'};
-  $text .= ' (file deleted)' if $info{'del'} =~ m/yes/i;
-
-
-  # content of the timestamp object t_line 
-  # optional fields are marked with [] 
-  # 
-        # %t_line {        
-  #       time
-        #               index
-        #                       value
-        #                       type
-        #                       legacy
-        #       desc
-        #       short
-        #       source
-        #       sourcetype
-        #       version
-        #       [notes]
-        #       extra
-        #               [filename]
-        #               [md5]
-        #               [mode]
-        #               [host]
-        #               [user]
-        #               [url]
-        #               [size]
-        #               [...]
-        # }
-
-  # create the t_line variable
-  %t_line = (
-    'time' => { 
-      0 => { 'value' => $info{'acc'}, 'type' => 'Accessed', 'legacy' => 2 },
-      1 => { 'value' => $info{'mod'}, 'type' => 'Modified', 'legacy' => 1 },
-      2 => { 'value' => $info{'cre'}, 'type' => 'Created', 'legacy' => 12 } 
-    },
-    'desc' => $text,
-    'short' => $text,
-    'source' => 'FILE',
-    'sourcetype' => 'FTK Imager FolderPath',
-    'version' => 2,
-    'extra' => { 'size' => $info{'size'}  }
-  );
-
-  return \%t_line;
 }
 
 #       get_help
 #
-# A simple subroutine that returns a string containing the help 
+# A simple subroutine that returns a string containing the help
 # message for this particular format file.
 #
 # @return A string containing a help file for this format file
-sub get_help()
-{
-  return "This input module pares the CSV file that is exported from FTK Imager when 
+sub get_help() {
+    return "This input module pares the CSV file that is exported from FTK Imager when 
 exporting directory listing
 ";
 }
@@ -202,80 +202,75 @@ exporting directory listing
 # This is needed since there is no need to parse the file if this file/dir is not the file
 # that this input module is designed to parse
 #
-# It is also important to validate the file since the scanner function will try to 
+# It is also important to validate the file since the scanner function will try to
 # parse every file it finds, and uses this verify function to determine whether or not
-# a particular file/dir/artifact is supported or not. It is therefore very important to 
+# a particular file/dir/artifact is supported or not. It is therefore very important to
 # implement this function and make it verify the file structure without false positives and
 # without taking too long time
 #
-# @return A reference to a hash that contains an integer indicating whether or not the 
-#  file/dir/artifact is supporter by this input module as well as a reason why 
-#  it failed (if it failed) 
-sub verify
-{
-  my $self = shift;
+# @return A reference to a hash that contains an integer indicating whether or not the
+#  file/dir/artifact is supporter by this input module as well as a reason why
+#  it failed (if it failed)
+sub verify {
+    my $self = shift;
 
+    # define an array to keep
+    my %return;
+    my $vline;
 
-  # define an array to keep
-  my %return;
-  my $vline;
-
-  # default values
-  $return{'success'} = 0;
-  $return{'msg'} = 'success';
-
-  # depending on which type you are examining, directory or a file
-        return \%return unless -f ${$self->{'name'}};
-
-        # start by setting the endian correctly
-        Log2t::BinRead::set_endian( LITTLE_E );
-
-  my $ofs = 0;
-
-  # try to parse the file
-  eval 
-  {  
-    unless( $self->{'quick'} )
-    {
-      # here we need to do a quick test, such as to test the first
-      # letter of the file to see if it matches what we expect
-      # this is done to speed up the verification process, so this
-      # is a preliminery test done before the more detailed one is performed
-      $vline = Log2t::BinRead::read_16($self->{'file'},\$ofs);
-
-      $return{'msg'} = "Wrong MAGIC value (not 0xfffe) [" . sprintf "0x%x", $vline . "]\n";
-      return \%return unless $vline == 0xfeff;
-    }
-    else
-    {
-      $ofs+=2;
-    }
-  
-    # read a line from the file as it were a binary file
-    # it does not matter if the file is ASCII based or binary, 
-    # lines are read as they were a binary one, since trying to load up large
-    # binary documents using <FILE> can cause log2timeline/timescanner to 
-    # halt for a long while before dying (memory exhaustion)
-
-    #  Filename  Full Path  Size  Created  Modified  Accessed  Is Deleted
-
-    $return{'msg'} = 'Incorrect file structure' . "\n";
-
-    $vline = Log2t::BinRead::read_unicode_until( $self->{'file'}, \$ofs,"\n", 400 );
-
-    $return{'success'} = 1 if $vline =~ m/^Filename\tFull Path/ ;
-  };
-  if ( $@ )
-  {
+    # default values
     $return{'success'} = 0;
-    $return{'msg'} = "An error occured during the validation process (error $@)";
-  }
+    $return{'msg'}     = 'success';
 
-  return \%return;
+    # depending on which type you are examining, directory or a file
+    return \%return unless -f ${ $self->{'name'} };
+
+    # start by setting the endian correctly
+    Log2t::BinRead::set_endian(LITTLE_E);
+
+    my $ofs = 0;
+
+    # try to parse the file
+    eval {
+        unless ($self->{'quick'})
+        {
+
+            # here we need to do a quick test, such as to test the first
+            # letter of the file to see if it matches what we expect
+            # this is done to speed up the verification process, so this
+            # is a preliminery test done before the more detailed one is performed
+            $vline = Log2t::BinRead::read_16($self->{'file'}, \$ofs);
+
+            $return{'msg'} = "Wrong MAGIC value (not 0xfffe) [" . sprintf "0x%x", $vline . "]\n";
+            return \%return unless $vline == 0xfeff;
+        }
+        else {
+            $ofs += 2;
+        }
+
+        # read a line from the file as it were a binary file
+        # it does not matter if the file is ASCII based or binary,
+        # lines are read as they were a binary one, since trying to load up large
+        # binary documents using <FILE> can cause log2timeline/timescanner to
+        # halt for a long while before dying (memory exhaustion)
+
+        #  Filename  Full Path  Size  Created  Modified  Accessed  Is Deleted
+
+        $return{'msg'} = 'Incorrect file structure' . "\n";
+
+        $vline = Log2t::BinRead::read_unicode_until($self->{'file'}, \$ofs, "\n", 400);
+
+        $return{'success'} = 1 if $vline =~ m/^Filename\tFull Path/;
+    };
+    if ($@) {
+        $return{'success'} = 0;
+        $return{'msg'}     = "An error occured during the validation process (error $@)";
+    }
+
+    return \%return;
 }
 
 1;
-
 
 __END__
 

@@ -2,12 +2,12 @@
 #		SIMILE
 #################################################################################################
 # this package provides an output module for the tool log2timeline.
-# The package takes as an input a reference to a hash that contains all the needed information to 
+# The package takes as an input a reference to a hash that contains all the needed information to
 # print or output the timeline that has been produced by a format file
 #
 # The output of this format file is an XML document that can be used by the timeline visual tool
 # SIMILE (http://www.simile-widgets.org/timeline/)
-# 
+#
 # Author: Kristinn Gudjonsson
 # Version : 0.5
 # Date : 13/04/11
@@ -33,19 +33,19 @@ package Log2t::output::simile;
 
 use strict;
 use HTML::Scrubber;
-use Getopt::Long;       # read parameters
+use Getopt::Long;    # read parameters
 
-use Log2t::Time;	# for time manipulation
+use Log2t::Time;     # for time manipulation
 
 my $version = "0.5";
 
 my %colors = (
-	1 => 'black', 	# M
-	2 => 'green',	# A
-	3 => 'red',	# C
-	8 => 'blue',	# B
-	15 => 'yellow'	# MACB
-	# otherwise orange
+    1  => 'black',    # M
+    2  => 'green',    # A
+    3  => 'red',      # C
+    8  => 'blue',     # B
+    15 => 'yellow'    # MACB
+                      # otherwise orange
 );
 
 # to sanitize or scrub HTML elements of the entries
@@ -55,45 +55,39 @@ my $html = HTML::Scrubber->new();
 # A simple subroutine that returns the version number of the format file
 #
 # @return A version number
-sub get_version()
-{
-	return $version;
+sub get_version() {
+    return $version;
 }
 
 #       new
-# A simple constructor of the output module. Takes care of parsing 
+# A simple constructor of the output module. Takes care of parsing
 # parameters sent to the output module
-sub new($)
-{
-        my $class = shift;
+sub new($) {
+    my $class = shift;
 
-        # bless the class ;)
-        my $self = bless{}, $class;
+    # bless the class ;)
+    my $self = bless {}, $class;
 
-	$self->{'json'} = 0;
+    $self->{'json'} = 0;
 
-        return $self;
+    return $self;
 }
 
-
 #       get_description
-# A simple subroutine that returns a string containing a description of 
+# A simple subroutine that returns a string containing a description of
 # the funcionality of the format file. This string is used when a list of
 # all available format files is printed out
 #
 # @return A string containing a description of the format file's functionality
-sub get_description()
-{
-	return "Output timeline in a XML format that can be read by a SIMILE widget"; 
+sub get_description() {
+    return "Output timeline in a XML format that can be read by a SIMILE widget";
 }
 
-sub print_header()
-{
-	my $self = shift;
+sub print_header() {
+    my $self = shift;
 
-	if( $self->{'json'} )
-	{
-		::print_line ("
+    if ($self->{'json'}) {
+        ::print_line("
 {
 	'dateTimeFormat': 'iso8601',
 	'wikiURL': \"http://simile.mit.edu/shelf/\",
@@ -101,11 +95,11 @@ sub print_header()
 
 'events' : [
 		");
-	}
-	else
-	{
-		# XML
-	        ::print_line ('
+    }
+    else {
+
+        # XML
+        ::print_line('
 <data
         wiki-url="http://simile.mit.edu/shelf/"
         wikiSection="Timeline produced from log2timeline"
@@ -115,152 +109,162 @@ sub print_header()
         -->
 
 		');
-	}
+    }
 
-	return 1;
+    return 1;
 }
 
-sub get_footer()
-{
-	my $self = shift;
+sub get_footer() {
+    my $self = shift;
 
-	if( $self->{'json'} )
-	{
-		return '
+    if ($self->{'json'}) {
+        return '
 ]
 }
 ';
-	}
-	else
-	{
-	        return '</data>';
-	}
+    }
+    else {
+        return '</data>';
+    }
 }
 
-sub print_footer()
-{
-	my $self = shift;
+sub print_footer() {
+    my $self = shift;
 
-	if( $self->{'json'} )
-	{
-		::print_line( '
+    if ($self->{'json'}) {
+        ::print_line('
 ]
 }
-' );
-	}
-	else
-	{
-	        ::print_line( "\n</data>" );
-	}
+');
+    }
+    else {
+        ::print_line("\n</data>");
+    }
 
-	return 1;
+    return 1;
 }
 
-#      	print_line 
+#      	print_line
 # A subroutine that reads a line from the access file and returns it to the
 # main script
-# @return A string containing one line of the log file (or a -1 if we've reached 
+# @return A string containing one line of the log file (or a -1 if we've reached
 #       the end of the log file)
-sub print_line()
-{
-        # content of the timestamp object t_line 
-        # optional fields are marked with [] 
-        # 
-        # %t_line {        
-        #       time
-        #               index
-        #                       value
-        #                       type
-        #                       legacy
-        #       desc
-        #       short
-        #       source
-        #       sourcetype
-        #       version
-        #       [notes]
-        #       extra
-        #               [filename]
-        #               [md5]
-        #               [mode]
-        #               [host]
-        #               [user]
-        #               [url]
-        #               [size]
-        #               [...]
-        # }
+sub print_line() {
 
-        my $self = shift;
-        my $t_line= shift;
-	my $text;
-	my $color;
-	my $date;
-	my $extra;
+    # content of the timestamp object t_line
+    # optional fields are marked with []
+    #
+    # %t_line {
+    #       time
+    #               index
+    #                       value
+    #                       type
+    #                       legacy
+    #       desc
+    #       short
+    #       source
+    #       sourcetype
+    #       version
+    #       [notes]
+    #       extra
+    #               [filename]
+    #               [md5]
+    #               [mode]
+    #               [host]
+    #               [user]
+    #               [url]
+    #               [size]
+    #               [...]
+    # }
 
-        if( scalar( %{$t_line} ) )
-	{
-                # go through each defined timestamp
-                foreach( keys %{$t_line->{'time'}} )
-                {
-			next unless $t_line->{'time'}->{$_}->{'value'} > 0;
+    my $self   = shift;
+    my $t_line = shift;
+    my $text;
+    my $color;
+    my $date;
+    my $extra;
 
-			my $title = $t_line->{short};
-			$title =~ s/\&/\&amp;/g;
-			$title = $html->scrub($title);
-			$title =~ s/\"//g;
+    if (scalar(%{$t_line})) {
 
-			$extra = "\n'link': '" . $t_line->{'extra'}->{'url'} . "'," if defined $t_line->{'extra'}->{'url'} and $t_line->{'extra'}->{'url'} ne '';
+        # go through each defined timestamp
+        foreach (keys %{ $t_line->{'time'} }) {
+            next unless $t_line->{'time'}->{$_}->{'value'} > 0;
 
-			$text .= 'User: ' . $t_line->{'extra'}->{'user'} . ' ' unless $t_line->{'extra'}->{'user'} eq '' or $t_line->{'extra'}->{'user'} eq 'unknown';
-			$text .= $t_line->{desc};
-			$text =~ s/\&/\&amp;/g;
-			$text = $html->scrub($text);
-			$text =~ s/\'//g;
-			$text =~ s/\"//g;
+            my $title = $t_line->{short};
+            $title =~ s/\&/\&amp;/g;
+            $title = $html->scrub($title);
+            $title =~ s/\"//g;
 
-			# get the date in text format
-			$date = Log2t::Time::epoch2iso( $t_line->{'time'}->{$_}->{'value'}, $self->{'tz'} ) if $self->{'json'};
-			$date = Log2t::Time::epoch2text( $t_line->{'time'}->{$_}->{'value'}, 1, $self->{'tz'} ) unless $self->{'json'};
-			$date =~ s/\(//;
-			$date =~ s/\)//;
+            $extra = "\n'link': '" . $t_line->{'extra'}->{'url'} . "',"
+              if defined $t_line->{'extra'}->{'url'} and $t_line->{'extra'}->{'url'} ne '';
 
-			# get the color
-			$color = $colors{$t_line->{'time'}->{$_}->{'legacy'}} if defined $colors{$t_line->{'time'}->{$_}->{'legacy'}};
-			$color = 'orange' unless defined $colors{$t_line->{'time'}->{$_}->{'legacy'}};
-			
-			# print the line
-			::print_line( "
+            $text .= 'User: ' . $t_line->{'extra'}->{'user'} . ' '
+              unless $t_line->{'extra'}->{'user'} eq ''
+                  or $t_line->{'extra'}->{'user'} eq 'unknown';
+            $text .= $t_line->{desc};
+            $text =~ s/\&/\&amp;/g;
+            $text = $html->scrub($text);
+            $text =~ s/\'//g;
+            $text =~ s/\"//g;
+
+            # get the date in text format
+            $date = Log2t::Time::epoch2iso($t_line->{'time'}->{$_}->{'value'}, $self->{'tz'})
+              if $self->{'json'};
+            $date = Log2t::Time::epoch2text($t_line->{'time'}->{$_}->{'value'}, 1, $self->{'tz'})
+              unless $self->{'json'};
+            $date =~ s/\(//;
+            $date =~ s/\)//;
+
+            # get the color
+            $color = $colors{ $t_line->{'time'}->{$_}->{'legacy'} }
+              if defined $colors{ $t_line->{'time'}->{$_}->{'legacy'} };
+            $color = 'orange' unless defined $colors{ $t_line->{'time'}->{$_}->{'legacy'} };
+
+            # print the line
+            ::print_line("
 	{ 'start': '" . $date . "',
 	'isDuration': false,
-	'textColor': '"  . $color . "',
+	'textColor': '" . $color . "',
 	'caption': '" . $t_line->{'sourcetype'} . "',
 	'title': '" . $title . "', $extra
-	'description': '[" . $t_line->{'source'} . '] (' . $t_line->{'time'}->{$_}->{'type'} . ') ' . $text . '(file: ' . $t_line->{'extra'}->{'path'} . $self->{'name'} . ")'
+	'description': '["
+                  . $t_line->{'source'} . '] ('
+                  . $t_line->{'time'}->{$_}->{'type'} . ') '
+                  . $text
+                  . '(file: '
+                  . $t_line->{'extra'}->{'path'}
+                  . $self->{'name'} . ")'
 	},
 			") if $self->{'json'};
 
-			::print_line( '
+            ::print_line('
         <event start="' . $date . '"
                 durationEvent="false"
                 title="' . $title . '"
                 >
-        [' . $t_line->{'source'} . '] (' . $t_line->{'time'}->{$_}->{'type'} . ') ' . $text . ' (file: ' . $t_line->{'extra'}->{'path'} . $self->{'name'} . ')
+        ['
+                  . $t_line->{'source'} . '] ('
+                  . $t_line->{'time'}->{$_}->{'type'} . ') '
+                  . $text
+                  . ' (file: '
+                  . $t_line->{'extra'}->{'path'}
+                  . $self->{'name'} . ')
         </event>
 			') unless $self->{'json'};
-			
-		}
-		
-	}
 
-	return 1;
+        }
+
+    }
+
+    return 1;
 }
 
 #       get_help
-# A simple subroutine that returns a string containing the help 
+# A simple subroutine that returns a string containing the help
 # message for this particular format file.
 # @return A string containing a help file for this format file
-sub get_help()
-{
-	return "This output plugin creates a XML document that can be read by the 
+sub get_help() {
+    return "This output plugin creates a XML document that can be read by the 
 timeline visualization widget SIMILE (http://www.simile-widgets.org/timeline/).
 
 The module accepts the parameter 

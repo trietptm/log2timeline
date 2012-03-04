@@ -31,30 +31,27 @@ use vars qw($VERSION);
 
 $VERSION = "0.1";
 
+sub join_numbers($$) {
+    my $lo = shift;
+    my $hi = shift;
+    my $number;
 
-sub join_numbers($$)
-{
-        my $lo = shift;
-        my $hi = shift;
-        my $number;
+    if ($hi eq 0) {
+        $number = $lo;
+    }
+    else {
 
-        if( $hi eq 0 )
-        {
-                $number = $lo;
-        }
-        else
-        {
-                # need to join numbers
-                $number = int( $lo + $hi * 65536 );
-        }
+        # need to join numbers
+        $number = int($lo + $hi * 65536);
+    }
 
-        return $number;
+    return $number;
 }
 
 # a small routine to round up an integer (to fix the dates)
 sub roundup($) {
     my $n = shift;
-    return(($n == int($n)) ? $n : int($n + 1))
+    return (($n == int($n)) ? $n : int($n + 1));
 }
 
 1;

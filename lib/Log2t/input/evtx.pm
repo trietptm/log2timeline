@@ -2,18 +2,18 @@
 #    EVTX
 #################################################################################################
 # This script is a part of the log2timeline framework for timeline creation and analysis.
-# This script implements an input module, or a parser capable of parsing a single log file (or 
+# This script implements an input module, or a parser capable of parsing a single log file (or
 # directory) and creating a hash that is returned to the main script.  That hash is then used
 # to create a body file (to create a timeline) or a timeline (directly).
-# 
-# This input module implements a parser for Event Log files in Windows Vista,Win7,+ in 
+#
+# This input module implements a parser for Event Log files in Windows Vista,Win7,+ in
 # the windows EVTX format.
 #
 # The input module uses the Parse::Evtx libraries developed by Andreas Schuster, libraries
-# that are included with the framwework with permission from Andreas.  
-# 
+# that are included with the framwework with permission from Andreas.
+#
 # The input modules uses part of the code evtxdump.pl written by Andreas Schuster.
-# 
+#
 # Author: Kristinn Gudjonsson
 # Version : 0.5
 # Date : 25/04/11
@@ -41,12 +41,14 @@ package Log2t::input::evtx;
 use strict;
 
 # add the Log2t libraries
-use Log2t::base::input; # the SUPER class or parent
+use Log2t::base::input;    # the SUPER class or parent
 use Log2t::Common ':binary';
-use Log2t::Time;  # to manipulate time
+use Log2t::Time;           # to manipulate time
+
 #use Log2t::Numbers;  # to manipulate numbers
-use Log2t::BinRead;  # methods to read binary files
-#use Log2t::Network;  # information about network traffic 
+use Log2t::BinRead;        # methods to read binary files
+
+#use Log2t::Network;  # information about network traffic
 
 # for reading and parsing the XML schema
 use XML::LibXML;
@@ -60,97 +62,92 @@ use Parse::Evtx::Chunk;
 use vars qw($VERSION @ISA);
 
 # inherit the base input module, or the super class.
-@ISA = ( "Log2t::base::input" );
+@ISA = ("Log2t::base::input");
 
 # indicate the version number of this input module
 $VERSION = '0.5';
 
 #       get_description
-# A simple subroutine that returns a string containing a description of 
+# A simple subroutine that returns a string containing a description of
 # the funcionality of the format file. This string is used when a list of
 # all available format files is printed out
 #
 # @return A string containing a description of the format file's functionality
-sub get_description()
-{
-  return "Parse the content of a Windows Event Log File (EVTX)"; 
+sub get_description() {
+    return "Parse the content of a Windows Event Log File (EVTX)";
 }
 
 #       init
 #
 # The purpose of this subfunction is to prepare the log file or artifact for parsing
-# Usually this involves just opening the file (if plain text) or otherwise building a 
+# Usually this involves just opening the file (if plain text) or otherwise building a
 # structure that can be used by other functions
 #
 # This function also accepts parameters for processing (for changing some settings in
 # the input module)
 #
-sub init
-{
-  # read the paramaters passed to the script
-  my $self = shift;
+sub init {
 
-  # the default value of loaded is 0 (not loaded the first event)
-  $self->{'loaded'} = 0;
-  $self->{'bad_event_counter'} = 0;
+    # read the paramaters passed to the script
+    my $self = shift;
 
-  # code taken from evtxdump.pl from Andreas Schuster
-  #$self->{'fh'} = IO::File->new($self->{'name'}, "r");
+    # the default value of loaded is 0 (not loaded the first event)
+    $self->{'loaded'}            = 0;
+    $self->{'bad_event_counter'} = 0;
 
-  print STDERR "[EVTX] Preparing to parse the EVTX file\n" if $self->{'debug'};
-  $self->{'evtx'} = Parse::Evtx->new('FH' => $self->{'file'});
+    # code taken from evtxdump.pl from Andreas Schuster
+    #$self->{'fh'} = IO::File->new($self->{'name'}, "r");
 
-  if (!defined $self->{'evtx'} ) 
-  {
+    print STDERR "[EVTX] Preparing to parse the EVTX file\n" if $self->{'debug'};
+    $self->{'evtx'} = Parse::Evtx->new('FH' => $self->{'file'});
+
+    if (!defined $self->{'evtx'}) {
+
         # if it's not a complete file, is it a chunk then?
-        $self->{'evtx'} = Parse::Evtx::Chunk->new('FH' => $self->{'file'} );
-  };
+        $self->{'evtx'} = Parse::Evtx::Chunk->new('FH' => $self->{'file'});
+    }
 
+    # create the ACL list
+    $self->{'acl_list'} = {
+                            '%%1537' => 'DELETE',
+                            '%%1538' => 'READ_CONTROL',
+                            '%%1539' => 'WRITE_DAC',
+                            '%%1541' => 'SYNCHRONIZE',
+                            '%%1542' => 'ACCESS_SYS_SEC',
+                            '%%4416' => 'ReadData (or ListDirectory)',
+                            '%%4417' => 'WriteData (or AddFile)',
+                            '%%4418' => 'AppendData',
+                            '%%4419' => 'ReadEA',
+                            '%%4420' => 'WriteEA',
+                            '%%4421' => 'Execute/Traverse',
+                            '%%4423' => 'ReadAttributes',
+                            '%%4424' => 'WriteAttributes',
+                            '%%4432' => 'Query key value',
+                            '%%4432' => 'Set Key Value',
+                            '%%4434' => 'Create Sub Key',
+                            '%%4435' => 'Enumerate sub-keys',
+                            '%%4436' => 'Notify about changes to keys',
+                            '%%4437' => 'Create Link',
+                            '%%6931' => 'Print',
+                            '%%1553' => 'Unknown specific access (bit 1)',
+                          };
 
-  # create the ACL list
-  $self->{'acl_list'} = {
-    '%%1537'  => 'DELETE',
-    '%%1538'  => 'READ_CONTROL',
-    '%%1539'  => 'WRITE_DAC',
-    '%%1541'  => 'SYNCHRONIZE',
-    '%%1542'  => 'ACCESS_SYS_SEC',
-    '%%4416'  => 'ReadData (or ListDirectory)',
-    '%%4417'  => 'WriteData (or AddFile)',
-    '%%4418'  => 'AppendData',
-    '%%4419'  => 'ReadEA',
-    '%%4420'  => 'WriteEA',
-    '%%4421'  => 'Execute/Traverse',
-    '%%4423'  => 'ReadAttributes',
-    '%%4424'  => 'WriteAttributes',
-    '%%4432'  => 'Query key value',
-    '%%4432'  => 'Set Key Value',
-    '%%4434'  => 'Create Sub Key',
-    '%%4435'  => 'Enumerate sub-keys',
-    '%%4436'  => 'Notify about changes to keys',
-    '%%4437'  => 'Create Link',
-    '%%6931'  => 'Print',
-    '%%1553'  => 'Unknown specific access (bit 1)',
-  };
+    print STDERR "[EVTX] Preparation completed\n" if $self->{'debug'};
 
-  print STDERR "[EVTX] Preparation completed\n" if $self->{'debug'};
+    return 1 if defined $self->{'evtx'};
 
-  return 1 if defined $self->{'evtx'};
-
-  return 0;
+    return 0;
 }
 
 #       get_version
 # A simple subroutine that returns the version number of the format file
-# There shouldn't be any need to change this routine, it serves its purpose 
+# There shouldn't be any need to change this routine, it serves its purpose
 # just the way it is defined right now.
 #
 # @return A version number
-sub get_version()
-{
-        return $VERSION;
+sub get_version() {
+    return $VERSION;
 }
-
-
 
 #       get_time
 #
@@ -158,364 +155,365 @@ sub get_version()
 # load_line that loads a line of the log file into a global variable and then
 # parses that line to produce the hash t_line, which is read and sent to the
 # output modules by the main script to produce a timeline or a bodyfile
-# 
+#
 # @return Returns a reference to a hash containing the needed values to print a body file
-sub get_time
-{
-  my $self = shift;
+sub get_time {
+    my $self = shift;
 
-  my %t_line;   # the timestamp object
-        my $text;
-  my ($xml,$xml_parsed);
-  my ($prop, @prop_array );
-  my ($system,$eventdata);
-  my (@system_child, @eventdata_child);
-  my (%sys,%data);
-  my (@attrs);
-  my $temp;
-  my %data_info = undef;  # login information (in case we have those)
-  my $event;
+    my %t_line;    # the timestamp object
+    my $text;
+    my ($xml,          $xml_parsed);
+    my ($prop,         @prop_array);
+    my ($system,       $eventdata);
+    my (@system_child, @eventdata_child);
+    my (%sys,          %data);
+    my (@attrs);
+    my $temp;
+    my %data_info = undef;    # login information (in case we have those)
+    my $event;
 
-  # code partially borrowed from dumpevtx.pl by Andreas Schuster
+    # code partially borrowed from dumpevtx.pl by Andreas Schuster
 
-  # check if we are about to load up the first event of the file
-  if ( $self->{'loaded'} == 0 )
-  {
-    # try to load first event
-    eval
-    {
-      print STDERR "[EVTX] Fetching the first event\n" if $self->{'debug'};
-      $event = $self->{'evtx'}->get_first_event();
-    };
-    if( $@ )
-    {  
-      # an empty evtx file
-      return 0;
+    # check if we are about to load up the first event of the file
+    if ($self->{'loaded'} == 0) {
+
+        # try to load first event
+        eval {
+            print STDERR "[EVTX] Fetching the first event\n" if $self->{'debug'};
+            $event = $self->{'evtx'}->get_first_event();
+        };
+        if ($@) {
+
+            # an empty evtx file
+            return 0;
+        }
+
+        $self->{'loaded'} += 1;
+        return \%t_line;
+    }
+    else {
+
+        # otherwise we are loading up subsequent events
+        eval { $event = $self->{'evtx'}->get_next_event(); };
+        if ($@) {
+
+            # some error occured, unable to further process the file
+            # until a better approached has been developed, we will
+            # try to parse the next event, while incrementing a bad
+            # counter, and if we reach our limits, we will gracually
+            # exit
+            print STDERR "[EVTX] Error occured while parsing file: \n$@\n";
+            $self->{'bad_event_counter'}++;
+
+            $self->{'bad_event_counter'} == 50 ? return 0 : return \%t_line;
+        }
     }
 
-    $self->{'loaded'} += 1;
-    return \%t_line;
-  }
-  else
-  {
-    # otherwise we are loading up subsequent events
-    eval {
-      $event = $self->{'evtx'}->get_next_event();
-    };
-    if( $@ )
-    {
-      # some error occured, unable to further process the file
-      # until a better approached has been developed, we will
-      # try to parse the next event, while incrementing a bad
-      # counter, and if we reach our limits, we will gracually
-      # exit
-      print STDERR "[EVTX] Error occured while parsing file: \n$@\n";
-      $self->{'bad_event_counter'}++;
+    # check for the last record
+    return undef unless defined $event;
 
-      $self->{'bad_event_counter'} == 50 ? return 0 : return \%t_line;
+    # get the XML
+    $xml = XML::LibXML->new();
+
+    print STDERR "[EVTX] Fetching the XML structure\n" if $self->{'debug'};
+
+    eval { $temp = $event->get_xml(); };
+    if ($@) {
+
+        # we had an error, unable to get the event in question
+        return \%t_line;
     }
-  }    
 
-  # check for the last record
-  return undef unless defined $event;
+    # fix the XML structure (remove "banned" symbols)
+    #$temp =~ s/\&/::amb::/g;
+    #$temp =~ tr/[]()!/ /;
 
-  # get the XML
-  $xml = XML::LibXML->new();
+    $xml_parsed = $xml->parse_string($temp);
 
-  print STDERR "[EVTX] Fetching the XML structure\n" if $self->{'debug'};
+    # now we need to parse the XML structure
+    $prop       = $xml_parsed->getDocumentElement();
+    @prop_array = $prop->childNodes;
 
-  eval
-  {
-    $temp = $event->get_xml();
-  };
-  if( $@ )
-  {
-    # we had an error, unable to get the event in question
-    return \%t_line;
-  }
+    # go through each of the child nodes
+    foreach (@prop_array) {
+        if ($_->nodeType == ELEMENT_NODE) {
+            if (lc($_->nodeName) eq 'system') {
+                $system = $_;
+            }
+            else {
 
-  # fix the XML structure (remove "banned" symbols)
-  #$temp =~ s/\&/::amb::/g;
-  #$temp =~ tr/[]()!/ /;
+                # process it further
+                #print STDERR "[EVTX] Node (", $_->nodeName, ")\n";
 
-  $xml_parsed = $xml->parse_string( $temp );
+                # get the child nodes of the tag
+                @eventdata_child = $_->childNodes;
+                foreach my $node (@eventdata_child) {
 
-  # now we need to parse the XML structure 
-  $prop = $xml_parsed->getDocumentElement();
-  @prop_array = $prop->childNodes;
+                    # initialize the temp variable
+                    $temp = '';
 
-  # go through each of the child nodes
-  foreach( @prop_array )
-  {
-    if( $_->nodeType == ELEMENT_NODE )
-    {
-      if( lc($_->nodeName) eq 'system' )
-      {
-        $system = $_;
-      }
-      else
-      {
-        # process it further
-        #print STDERR "[EVTX] Node (", $_->nodeName, ")\n";
+                    if ($node->nodeType == ELEMENT_NODE) {
 
-        # get the child nodes of the tag
-        @eventdata_child = $_->childNodes;
-        foreach my $node( @eventdata_child )
-        {
-          # initialize the temp variable
-          $temp = '';
+                        # initialize the temp variable
+                        #$temp = '';
+                        #print STDERR "\tName: ", $node->nodeName, "\n";
 
-          if( $node->nodeType == ELEMENT_NODE )
-          {
-            # initialize the temp variable
-            #$temp = '';
-            #print STDERR "\tName: ", $node->nodeName, "\n";
-  
-            # we will go through each of the supplied value
-            # check if the node has attributes
-            if( $node->hasAttributes() )
-            {
-              @attrs = $node->attributes();
-              foreach my $attr (@attrs)
-              {
-                #print STDERR "\t\tAttr: (nodename) [", $attr->nodeName, "] => (value) [", $attr->value, "] (text) [", $attr->textContent, "] (nodeText) [", $node->textContent, "] \n";
-                eval
-                {
-                  if( $attr->textContent eq 'AccessList' )
-                  {
-                    # need to process the ACL
-                    my $acl = $node->textContent;
-                    $acl =~ s/\r//g;
-                    $acl =~ s/\n/-/g;
-                    $acl =~ s/\t//g;
-                    $acl =~ s/\s//g;
-                    my @acls = split( /-/, $acl );
+                        # we will go through each of the supplied value
+                        # check if the node has attributes
+                        if ($node->hasAttributes()) {
+                            @attrs = $node->attributes();
+                            foreach my $attr (@attrs) {
 
-                    $temp .= $attr->textContent . ': {';
-                    $data_info{$attr->value} .= 'AccessList: {';
+#print STDERR "\t\tAttr: (nodename) [", $attr->nodeName, "] => (value) [", $attr->value, "] (text) [", $attr->textContent, "] (nodeText) [", $node->textContent, "] \n";
+                                eval {
+                                    if ($attr->textContent eq 'AccessList')
+                                    {
 
-                    foreach( @acls )
-                    {
-                      $data_info{$attr->value} .= defined $self->{'acl_list'}->{$_} ? $self->{'acl_list'}->{$_} : $_;
-                      $temp .= defined $self->{'acl_list'}->{$_} ? $self->{'acl_list'}->{$_} : $_;
+                                        # need to process the ACL
+                                        my $acl = $node->textContent;
+                                        $acl =~ s/\r//g;
+                                        $acl =~ s/\n/-/g;
+                                        $acl =~ s/\t//g;
+                                        $acl =~ s/\s//g;
+                                        my @acls = split(/-/, $acl);
 
-                      $temp .= ' - ';
-                      $data_info{$attr->value} .= ' - ';
+                                        $temp .= $attr->textContent . ': {';
+                                        $data_info{ $attr->value } .= 'AccessList: {';
+
+                                        foreach (@acls) {
+                                            $data_info{ $attr->value } .=
+                                              defined $self->{'acl_list'}->{$_}
+                                              ? $self->{'acl_list'}->{$_}
+                                              : $_;
+                                            $temp .=
+                                              defined $self->{'acl_list'}->{$_}
+                                              ? $self->{'acl_list'}->{$_}
+                                              : $_;
+
+                                            $temp .= ' - ';
+                                            $data_info{ $attr->value } .= ' - ';
+                                        }
+
+                                        $temp =~ s/- $//;
+                                        $temp .= '} ';
+                                    }
+                                    elsif ($attr->textContent eq 'AccessReason') {
+
+                                        # setup:
+                                        #  ACL:ID - ACL:ID D(....)
+                                        # need to process the ACL
+                                        my $acl = $node->textContent;
+                                        $acl =~ s/\r//g;
+                                        $acl =~ s/\n/-/g;
+                                        $acl =~ s/\t//g;
+                                        $acl =~ s/\s//g;
+                                        my @acls = split(/-/, $acl);
+
+                                        $temp .= $attr->textContent . ': {';
+                                        $data_info{ $attr->value } .= 'AccessReason: {';
+
+                                        foreach (@acls) {
+                                            my ($a,  $b)  = split(/:/, $_);
+                                            my ($bb, $dd) = split(/D/, $b);
+
+                                            #print STDERR "R: A $a B $b BB $bb DD $dd\n";
+
+                                            $data_info{ $attr->value } .=
+                                              defined $self->{'acl_list'}->{$a}
+                                              ? $self->{'acl_list'}->{$a}
+                                              . ': Granted by '
+                                              . $self->{'acl_list'}->{$bb} . ' D'
+                                              . $dd
+                                              : $a . ':' . $bb . ' D' . $dd;
+                                            $temp .=
+                                              defined $self->{'acl_list'}->{$a}
+                                              ? $self->{'acl_list'}->{$a}
+                                              . ': Granted by '
+                                              . $self->{'acl_list'}->{$bb} . ' D'
+                                              . $dd
+                                              : $a . ':' . $bb . ' D' . $dd;
+
+                                            $temp .= ' - ';
+                                            $data_info{ $attr->value } .= ' - ';
+                                        }
+
+                                        $temp =~ s/- $//;
+                                        $temp .= '} ';
+                                    }
+                                    else {
+                                        $data_info{ $attr->value } = $attr->textContent;
+                                        $temp .= $attr->value . ' = ' . $node->textContent . '- ';
+                                    }
+                                };
+                                if ($@) {
+                                    $data_info{ $attr->value } = 'unable to retrieve text content';
+                                    $temp .= $attr->value . ' = ' . $node->textContent . '- ';
+                                }
+
+                            }
+
+                            # remove the last '- ' from the temp variable
+                            $temp =~ s/- $/ /;
+                        }
+
+#print STDERR "[EVTX] Now assigning ", $_->nodeName, "/", $node->nodeName, " to ", $node->textContent, " - ", $temp, "\n";
+# set the data variable
+                        $data{ $_->nodeName . '/' . $node->nodeName } .=
+                          $temp eq '' ? $node->textContent : $temp;
+                        $data{ $_->nodeName . '/' . $node->nodeName } =~ s/\n//g;
+                        $data{ $_->nodeName . '/' . $node->nodeName } =~ s/\r//g;
                     }
-                  
-                    $temp =~ s/- $//;
-                    $temp .= '} ';
-                  }
-                  elsif( $attr->textContent eq 'AccessReason' )
-                  {
-                    # setup: 
-                    #  ACL:ID - ACL:ID D(....)
-                    # need to process the ACL
-                    my $acl = $node->textContent;
-                    $acl =~ s/\r//g;
-                    $acl =~ s/\n/-/g;
-                    $acl =~ s/\t//g;
-                    $acl =~ s/\s//g;
-                    my @acls = split( /-/, $acl );
-
-                    $temp .= $attr->textContent . ': {';
-                    $data_info{$attr->value} .= 'AccessReason: {';
-
-                    foreach( @acls )
-                    {
-                      my ($a,$b) = split(/:/, $_);
-                      my ($bb,$dd) = split( /D/, $b );
-                      #print STDERR "R: A $a B $b BB $bb DD $dd\n";
-
-
-                      $data_info{$attr->value} .= defined $self->{'acl_list'}->{$a} ? $self->{'acl_list'}->{$a} . ': Granted by ' . $self->{'acl_list'}->{$bb} . ' D' . $dd: $a . ':'  . $bb . ' D' . $dd;
-                      $temp .= defined $self->{'acl_list'}->{$a} ? $self->{'acl_list'}->{$a} . ': Granted by ' . $self->{'acl_list'}->{$bb} . ' D' . $dd: $a . ':'  . $bb . ' D' . $dd;
-
-                      $temp .= ' - ';
-                      $data_info{$attr->value} .= ' - ';
-                    }
-                  
-                    $temp =~ s/- $//;
-                    $temp .= '} ';
-                  }
-                  else
-                  {
-                    $data_info{$attr->value} = $attr->textContent;
-                    $temp .= $attr->value . ' = ' . $node->textContent .  '- ';
-                  }
-                };
-                if( $@ )
-                {
-                  $data_info{$attr->value} = 'unable to retrieve text content';
-                  $temp .= $attr->value . ' = ' . $node->textContent .  '- ';
                 }
 
-              }
-
-              # remove the last '- ' from the temp variable
-              $temp =~ s/- $/ /;
             }
-          
-            #print STDERR "[EVTX] Now assigning ", $_->nodeName, "/", $node->nodeName, " to ", $node->textContent, " - ", $temp, "\n";
-            # set the data variable
-            $data{$_->nodeName . '/' . $node->nodeName } .= $temp eq ''? $node->textContent :  $temp;
-            $data{$_->nodeName . '/' . $node->nodeName } =~ s/\n//g;
-            $data{$_->nodeName . '/' . $node->nodeName } =~ s/\r//g;
-          }
+
+        }
+    }
+
+    # get the two values of interest
+    #$system = $prop_array[1];  # contains information about the event, such as date
+    #$eventdata = $prop_array[3];  # the actual information contained in the event
+
+    # get the child nodes of the <System> tag
+    @system_child = $system->childNodes;
+    foreach (@system_child) {
+
+        # print out all nodes
+        #print STDERR "[EVTX] -> Reading node (sys): ", $_->nodeName, "\n";
+
+        if ($_->nodeName eq 'Provider') {
+            @attrs = $_->attributes();
+            foreach my $attr (@attrs) {
+
+                #print STDERR "\tProvider: ", $attr->nodeName, "\n";
+
+                if ($attr->nodeName eq 'EventSourceName') {
+                    $sys{'source'} = $attr->value;
+                }
+                elsif ($attr->nodeName eq 'Name') {
+                    $sys{'source'} = $attr->value;
+                }
+            }
+        }
+        elsif ($_->nodeName eq 'TimeCreated') {
+
+            # extract the timestamp (ISO format)
+            @attrs = $_->attributes();
+
+            foreach my $attr (@attrs) {
+                if ($attr->nodeName eq 'SystemTime') {
+                    $sys{'date'} = $attr->value;
+                }
+            }
+        }
+        elsif ($_->nodeName eq 'EventID') {
+            $sys{'eventid'} = $_->textContent;
+        }
+        elsif ($_->nodeName eq 'Channel') {
+            $sys{'channel'} = $_->textContent;
+        }
+        elsif ($_->nodeName eq 'Computer') {
+            $sys{'computer'} = $_->textContent;
         }
 
-      }
-  
-    }
-  }
-  # get the two values of interest
-  #$system = $prop_array[1];  # contains information about the event, such as date
-  #$eventdata = $prop_array[3];  # the actual information contained in the event
-
-  # get the child nodes of the <System> tag
-  @system_child = $system->childNodes;
-  foreach( @system_child )
-  {
-    # print out all nodes
-    #print STDERR "[EVTX] -> Reading node (sys): ", $_->nodeName, "\n";
-
-    if( $_->nodeName eq 'Provider' )
-    {
-      @attrs = $_->attributes();
-      foreach my $attr (@attrs)
-      {
-        #print STDERR "\tProvider: ", $attr->nodeName, "\n";
-
-        if( $attr->nodeName eq 'EventSourceName' )
-        {
-          $sys{'source'} = $attr->value;
-        }
-        elsif( $attr->nodeName eq 'Name' )
-        {
-          $sys{'source'} = $attr->value;
-        }
-      }
-    }
-    elsif( $_->nodeName eq 'TimeCreated' )
-    {
-      # extract the timestamp (ISO format)
-      @attrs = $_->attributes();
-
-      foreach my $attr (@attrs)
-      {
-        if( $attr->nodeName eq 'SystemTime' )
-        {
-          $sys{'date'} = $attr->value; 
-        }
-      }
-    }
-    elsif( $_->nodeName eq 'EventID' )
-    {
-      $sys{'eventid'} = $_->textContent;
-    }
-    elsif( $_->nodeName eq 'Channel' )
-    {
-      $sys{'channel'} = $_->textContent;
-    }
-    elsif( $_->nodeName eq 'Computer' )
-    {
-      $sys{'computer'} = $_->textContent;
     }
 
-  }
+    # get the child nodes of the <EventData> tag
+    #@eventdata_child = $eventdata->childNodes;
+    #foreach( @eventdata_child )
+    #{
+    #  if( $_->nodeType == ELEMENT_NODE )
+    #  {
+    #    # initialize the temp variable
+    #    $temp = '';
+    #    print STDERR "[EVTX] (data) ", $_->nodeName,  "\n";
+    #
+    #    # we will go through each of the supplied value
+    #    # check if the node has attributes
+    #    if( $_->hasAttributes() )
+    #    {
+    #      @attrs = $_->attributes();
+    #      foreach my $attr (@attrs)
+    #      {
+    #        print STDERR "\tattrib: ", $attr->nodeName, " => ", $attr->value, "\n";
+    #        $temp .= $attr->nodeName . ' = ' . $attr->value . ', ';
+    #      }
+    #    }
+    #
+    #    # set the data variable
+    #    $data{$_->nodeName} = $text eq ''? $_->textContent : $_->textContent . '(' . $temp . ')';
+    #    $data{$_->nodeName} =~ s/\n//g;
+    #    $data{$_->nodeName} =~ s/\r//g;
+    #  }
+    #}
 
-  # get the child nodes of the <EventData> tag
-  #@eventdata_child = $eventdata->childNodes;
-  #foreach( @eventdata_child )
-  #{
-  #  if( $_->nodeType == ELEMENT_NODE )
-  #  {
-  #    # initialize the temp variable
-  #    $temp = '';
-  #    print STDERR "[EVTX] (data) ", $_->nodeName,  "\n";
-  #
-  #    # we will go through each of the supplied value
-  #    # check if the node has attributes
-  #    if( $_->hasAttributes() )
-  #    {
-  #      @attrs = $_->attributes();
-  #      foreach my $attr (@attrs)
-  #      {
-  #        print STDERR "\tattrib: ", $attr->nodeName, " => ", $attr->value, "\n";
-  #        $temp .= $attr->nodeName . ' = ' . $attr->value . ', ';
-  #      }
-  #    }
-  #
-  #    # set the data variable
-  #    $data{$_->nodeName} = $text eq ''? $_->textContent : $_->textContent . '(' . $temp . ')';
-  #    $data{$_->nodeName} =~ s/\n//g;
-  #    $data{$_->nodeName} =~ s/\r//g;
-  #  }
-  #}
+    # fix the hostname variable
+    $self->{'hostname'} = defined $sys{'computer'} ? $sys{'computer'} : $self->{'hostname'};
 
+    # construct the text
+    $text .= $sys{'channel'} . '/' . $sys{'source'} . ' ID [' . $sys{'eventid'} . '] :';
 
-  # fix the hostname variable
-  $self->{'hostname'} = defined $sys{'computer'} ? $sys{'computer'} : $self->{'hostname'};
+    $text .= 'Logon Type: ' . $sys{'logontype'} if defined $sys{'logontype'};
 
-  # construct the text
-  $text .= $sys{'channel'} . '/' . $sys{'source'} . ' ID [' . $sys{'eventid'} . '] :';
+    foreach (keys %data) {
+        $text .= $data{"$_"} eq '' ? $_ . ' -> empty - ' : $_ . ' -> ' . $data{"$_"} . '- ';
+    }
+    chomp($text);
+    $text =~ s/- $//;
 
-  $text .= 'Logon Type: ' . $sys{'logontype'} if defined $sys{'logontype'};
+    # content of array t_line ([optional])
+    # %t_line {        #       time
+    #               index
+    #                       value
+    #                       type
+    #                       legacy
+    #       desc
+    #       short
+    #       source
+    #       sourcetype
+    #       version
+    #       [notes]
+    #       extra
+    #               [filename]
+    #               [md5]
+    #               [mode]
+    #               [host]
+    #               [user]
+    #               [url]
+    #               [size]
+    #               [...]
+    # }
 
-  foreach ( keys %data )
-  {
-    $text .= $data{"$_"} eq '' ? $_ . ' -> empty - ' : $_ . ' -> ' . $data{"$_"} . '- ';
-  }
-  chomp($text);
-  $text =~ s/- $//;
+    # create the t_line variable
+    %t_line = (
+        'time' => { 0 => { 'value' => $sys{'date'}, 'type' => 'Event Logged', 'legacy' => 15 } },
+        'desc' => $text,
+        'short'  => 'Event ID ' . $sys{'channel'} . '/' . $sys{'source'} . ':' . $sys{'eventid'},
+        'source' => 'EVTX',
+        'sourcetype' => $sys{'channel'},
+        'version'    => 2,
+        'notes' =>
+          'Description of EventIDs can be found here: http://support.microsoft.com/default.aspx?scid=kb;EN-US;947226',
+        'extra' => {
+                     'host' => $self->{'hostname'},
+                     'url'  => 'http://eventid.net/display.asp?eventid='
+                       . $sys{'eventid'}
+                       . '&source='
+                       . $sys{'source'},
+                   }
+              );
 
-        # content of array t_line ([optional])
-        # %t_line {        #       time
-        #               index
-        #                       value
-        #                       type
-        #                       legacy
-        #       desc
-        #       short
-        #       source
-        #       sourcetype
-        #       version
-        #       [notes]
-        #       extra
-        #               [filename]
-        #               [md5]
-        #               [mode]
-        #               [host]
-        #               [user]
-        #               [url]
-        #               [size]
-        #               [...]
-        # }
-
-        # create the t_line variable
-        %t_line = (
-                'time' => { 0 => { 'value' => $sys{'date'}, 'type' => 'Event Logged', 'legacy' => 15 } },
-                'desc' => $text,
-                'short' => 'Event ID ' . $sys{'channel'} . '/' . $sys{'source'} . ':' . $sys{'eventid'},
-                'source' => 'EVTX',
-                'sourcetype' => $sys{'channel'},
-                'version' => 2,
-    'notes' => 'Description of EventIDs can be found here: http://support.microsoft.com/default.aspx?scid=kb;EN-US;947226',
-                'extra' => { 'host' => $self->{'hostname'}, 'url' => 'http://eventid.net/display.asp?eventid=' . $sys{'eventid'} . '&source=' . $sys{'source'}, }
-        );
-
-  return \%t_line;
+    return \%t_line;
 }
 
 #       get_help
 #
-# A simple subroutine that returns a string containing the help 
+# A simple subroutine that returns a string containing the help
 # message for this particular format file.
 #
 # @return A string containing a help file for this format file
-sub get_help()
-{
-  return "This input module parses the content of a Windows Event Log
+sub get_help() {
+    return "This input module parses the content of a Windows Event Log
 as it is stored in Windows Vista/Win 7/2008 and later versions, that is the 
 EVTX binary XML document.
 
@@ -533,64 +531,60 @@ to accomodate this input module.\n";
 # This is needed since there is no need to parse the file if this file/dir is not the file
 # that this input module is designed to parse
 #
-# It is also important to validate the file since the scanner function will try to 
+# It is also important to validate the file since the scanner function will try to
 # parse every file it finds, and uses this verify function to determine whether or not
-# a particular file/dir/artifact is supported or not. It is therefore very important to 
+# a particular file/dir/artifact is supported or not. It is therefore very important to
 # implement this function and make it verify the file structure without false positives and
 # without taking too long time
 #
-# @return A reference to a hash that contains an integer indicating whether or not the 
-#  file/dir/artifact is supporter by this input module as well as a reason why 
-#  it failed (if it failed) 
-sub verify
-{
-  my $self = shift;
+# @return A reference to a hash that contains an integer indicating whether or not the
+#  file/dir/artifact is supporter by this input module as well as a reason why
+#  it failed (if it failed)
+sub verify {
+    my $self = shift;
 
-  # define an array to keep
-  my %return;
-  my $line;
-  my @words;
-  my $ofs = 0;
+    # define an array to keep
+    my %return;
+    my $line;
+    my @words;
+    my $ofs = 0;
 
-  # default values
-  $return{'success'} = 0;
-  $return{'msg'} = 'success';
-
-        return \%return unless -f ${$self->{'name'}};
-
-        # start by setting the endian correctly
-        Log2t::BinRead::set_endian( LITTLE_E );
-
-  # we need to check the following magic value
-  # 456c 6646 696c 65
-
-  #unless( $self->{'quick'} )
-  #{
-  #  # start by reading only a single value
-  #  seek($self->{'file'},0,0);
-  #  read($self->{'file'},$line,1);
-  #
-  #  return \%return unless $line eq 'E';
-  #}
-
-  $line = Log2t::BinRead::read_ascii( $self->{'file'}, \$ofs, 7 );
-  
-  # 456c 6646 696c 65 = ElfFile
-  if ( $line eq 'ElfFile' )
-  {
-    $return{'success'} = 1;
-  }
-  else
-  {
+    # default values
     $return{'success'} = 0;
-    $return{'msg'} = 'File not of the correct format (wrong magic)' . "\n";
-  }
+    $return{'msg'}     = 'success';
 
-  return \%return;
+    return \%return unless -f ${ $self->{'name'} };
+
+    # start by setting the endian correctly
+    Log2t::BinRead::set_endian(LITTLE_E);
+
+    # we need to check the following magic value
+    # 456c 6646 696c 65
+
+    #unless( $self->{'quick'} )
+    #{
+    #  # start by reading only a single value
+    #  seek($self->{'file'},0,0);
+    #  read($self->{'file'},$line,1);
+    #
+    #  return \%return unless $line eq 'E';
+    #}
+
+    $line = Log2t::BinRead::read_ascii($self->{'file'}, \$ofs, 7);
+
+    # 456c 6646 696c 65 = ElfFile
+    if ($line eq 'ElfFile') {
+        $return{'success'} = 1;
+    }
+    else {
+        $return{'success'} = 0;
+        $return{'msg'}     = 'File not of the correct format (wrong magic)' . "\n";
+    }
+
+    return \%return;
 }
 
 1;
-
 
 __END__
 

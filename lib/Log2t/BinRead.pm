@@ -28,7 +28,6 @@
 # Few lines of code have been borrowed from a CPAN module called Parse::Flash::Cookie
 #  Copyright 2007 Andreas Faafeng, all rights reserved.
 
-
 package Log2t::BinRead;
 
 use Encode;
@@ -45,19 +44,17 @@ use constant POSITIVE_INFINITY => "\x7F\xF0\x00\x00\x00\x00\x00\x00";
 use constant NEGATIVE_INFINITY => "\xFF\xF0\x00\x00\x00\x00\x00\x00";
 use constant NOT_A_NUMBER      => "\x7F\xF8\x00\x00\x00\x00\x00\x00";
 
-
 # temporary data, storing read data
 my $temp;
 my $endian = LITTLE_E;
 
 # a small subroutine that sets the endian of the reader
-sub set_endian($)
-{
-	my $end = shift;
-	$endian = LITTLE_E if $end eq LITTLE_E;
-	$endian = BIG_E if $end eq BIG_E;
+sub set_endian($) {
+    my $end = shift;
+    $endian = LITTLE_E if $end eq LITTLE_E;
+    $endian = BIG_E    if $end eq BIG_E;
 
-	return 1;
+    return 1;
 }
 
 #       read_ascii
@@ -67,32 +64,30 @@ sub set_endian($)
 #
 # Example usage in script:
 # $string = Log2t::BinRead::read_ascii(\*FH, \$ofs, 4 );
-# 
+#
 # @params       FH	a file handle as a reference to a typeglob (\*FH)
-# @params       ofs	A reference to the offset variable 
+# @params       ofs	A reference to the offset variable
 # @params       for_length      An integer indicating the number of bytes to read
 # @return       A concentrated string that contains x bytes (for_length many bytes)
-sub read_ascii($$$)
-{
-	my $fh = shift;
-	my $ofs = shift;
-        my $for_length = shift;
+sub read_ascii($$$) {
+    my $fh         = shift;
+    my $ofs        = shift;
+    my $for_length = shift;
 
-        my @l;
+    my @l;
 
-        for( my $i=0 ; $i < $for_length; $i++ )
-        {
-                seek($fh,$$ofs,0);
-                read($fh,$temp,1) or return 0;
+    for (my $i = 0; $i < $for_length; $i++) {
+        seek($fh, $$ofs, 0);
+        read($fh, $temp, 1) or return 0;
 
-                $$ofs++;
-		next if $temp eq "\0";
-                push( @l, $temp );
-        }
+        $$ofs++;
+        next if $temp eq "\0";
+        push(@l, $temp);
+    }
 
-	return 0 if $#l eq -1;
+    return 0 if $#l eq -1;
 
-        return join('',@l );
+    return join('', @l);
 }
 
 #       read_raw_until
@@ -100,67 +95,64 @@ sub read_ascii($$$)
 #
 # Example usage in script:
 # $string = Log2t::BinRead::read_raw_until(\*FH, \$ofs, \@byte_sequence );
-# 
+#
 # @params       FH	a file handle as a reference to a typeglob (\*FH)
-# @params       ofs	A reference to the offset variable 
+# @params       ofs	A reference to the offset variable
 # @params       max	An integer, indicating the length to read
 # @params       cp   	A reference to an array that contains the bytes that mark the end
 # @return       A concentrated string that contains x bytes (for_length many bytes)
-sub read_raw_until($$$$)
-{
-	my $fh = shift;
-	my $ofs = shift;
-	my $max = shift;
-	my $cp = shift;
+sub read_raw_until($$$$) {
+    my $fh  = shift;
+    my $ofs = shift;
+    my $max = shift;
+    my $cp  = shift;
 
-	my $tag = 1;
-	my $index = 0;
+    my $tag   = 1;
+    my $index = 0;
 
-	my $line;
-	my @line_a;
+    my $line;
+    my @line_a;
 
-	while( $tag )
-	{
-		seek($fh,$$ofs,0);
-		read($fh,$temp,1) or return 0;
-		$temp = unpack( "c", $temp );
-		$$ofs++;
+    while ($tag) {
+        seek($fh, $$ofs, 0);
+        read($fh, $temp, 1) or return 0;
+        $temp = unpack("c", $temp);
+        $$ofs++;
 
-		#printf STDERR "%s (0x%x) ",$temp,$temp;
+        #printf STDERR "%s (0x%x) ",$temp,$temp;
 
-		if( $temp == ${$cp}[$index] )
-		{
-			# check if we have reached the end
-			if( $#{$cp} eq $index )
-			{
-				# reached the end
-				$tag = 0;
-			}
-			else
-			{
-				# increase the index
-				$index++;
-			}
-		}
-		else
-		{
-			$index = 0;
-		}
+        if ($temp == ${$cp}[$index]) {
 
-		$tag = 0 unless $$ofs < $max;
+            # check if we have reached the end
+            if ($#{$cp} eq $index) {
 
-		next unless $tag;
-		push( @line_a, $temp );
-	}
+                # reached the end
+                $tag = 0;
+            }
+            else {
 
-	print STDERR "\n";
+                # increase the index
+                $index++;
+            }
+        }
+        else {
+            $index = 0;
+        }
 
-	# we have a new line, let's print it out
-	$line = join('',@line_a);
-	$line =~ s/\0//g;
-	$line =~ s/[[:cntrl:]]//g;
-	
-	return $line;			
+        $tag = 0 unless $$ofs < $max;
+
+        next unless $tag;
+        push(@line_a, $temp);
+    }
+
+    print STDERR "\n";
+
+    # we have a new line, let's print it out
+    $line = join('', @line_a);
+    $line =~ s/\0//g;
+    $line =~ s/[[:cntrl:]]//g;
+
+    return $line;
 }
 
 #       read_ascii_end
@@ -170,45 +162,42 @@ sub read_raw_until($$$$)
 #
 # Example usage in script:
 # $string = Log2t::BinRead::read_ascii_end(\*FH, \$ofs, 50 );
-# 
+#
 # @params       FH	a file handle as a reference to a typeglob (\*FH)
-# @params       ofs	A reference to the offset variable 
-# @params       max     An integer indicating the max length of a string 
+# @params       ofs	A reference to the offset variable
+# @params       max     An integer indicating the max length of a string
 # @return       A concentrated string that contains x bytes (for_length many bytes)
-sub read_ascii_end($$$)
-{
-	my $fh = shift;
-	my $ofs = shift;
-	my $max = shift;
+sub read_ascii_end($$$) {
+    my $fh  = shift;
+    my $ofs = shift;
+    my $max = shift;
 
-	my $i = 0;
-	my $tag = 1;
+    my $i   = 0;
+    my $tag = 1;
 
-	my $line;
-	my @line_a;
+    my $line;
+    my @line_a;
 
-	while( $tag )
-	{
-		seek($fh,$$ofs,0);
-		read($fh,$temp,1) or return 0;
-		$$ofs++;
+    while ($tag) {
+        seek($fh, $$ofs, 0);
+        read($fh, $temp, 1) or return 0;
+        $$ofs++;
 
-		$tag = 0 if $temp eq "\0";
-		$tag = 0 if  $i == $max; 
+        $tag = 0 if $temp eq "\0";
+        $tag = 0 if $i == $max;
 
-		$i++;
-		next unless $tag;
-		push( @line_a, $temp );
-	}
+        $i++;
+        next unless $tag;
+        push(@line_a, $temp);
+    }
 
-	# we have a new line, let's print it out
-	$line = join('',@line_a);
-	$line =~ s/\0//g;
-	$line =~ s/[[::cntrl::]]//g;
-	
-	return $line;			
+    # we have a new line, let's print it out
+    $line = join('', @line_a);
+    $line =~ s/\0//g;
+    $line =~ s/[[::cntrl::]]//g;
+
+    return $line;
 }
-
 
 #       read_ascii_until
 #
@@ -217,58 +206,52 @@ sub read_ascii_end($$$)
 #
 # Example usage in script:
 # $string = Log2t::BinRead::read_ascii_until(\*FH, \$ofs, $marker, \$max );
-# 
+#
 # @params       FH	a file handle as a reference to a typeglob (\*FH)
-# @params       ofs	A reference to the offset variable 
+# @params       ofs	A reference to the offset variable
 # @params       marker	A string referring to the ASCII symbol we are searching for
 #			or a reference to an array with multiple markers
-# @params       max     An integer indicating the max length of a string 
+# @params       max     An integer indicating the max length of a string
 # @return       A concentrated string that contains x bytes (for_length many bytes)
-sub read_ascii_until($$$$)
-{
-	my $fh = shift;
-	my $ofs = shift;
-	my $marker = shift;
-	my $max = shift;
+sub read_ascii_until($$$$) {
+    my $fh     = shift;
+    my $ofs    = shift;
+    my $marker = shift;
+    my $max    = shift;
 
-	my $i = 0;
-	my $tag = 1;
+    my $i   = 0;
+    my $tag = 1;
 
-	my $line;
-	my @line_a;
+    my $line;
+    my @line_a;
 
-	while( $tag )
-	{
-		seek($fh,$$ofs,0);
-		read($fh,$temp,1) or return 0;
-		$$ofs++;
+    while ($tag) {
+        seek($fh, $$ofs, 0);
+        read($fh, $temp, 1) or return 0;
+        $$ofs++;
 
-		$tag = 0 if $temp eq "\0";
-		if( ref( $marker ) eq 'ARRAY' )
-		{
-			foreach( @{$marker} )
-			{
-				$tag = 0 if $temp eq $_;
-			}
-		}
-		else
-		{
-			$tag = 0 if $temp eq $marker;
-		}
-		$tag = 0 if  $i == $max; 
+        $tag = 0 if $temp eq "\0";
+        if (ref($marker) eq 'ARRAY') {
+            foreach (@{$marker}) {
+                $tag = 0 if $temp eq $_;
+            }
+        }
+        else {
+            $tag = 0 if $temp eq $marker;
+        }
+        $tag = 0 if $i == $max;
 
-		$i++;
-		next unless $tag;
-		push( @line_a, $temp );
-	}
+        $i++;
+        next unless $tag;
+        push(@line_a, $temp);
+    }
 
-	
-	# we have a new line, let's print it out
-	$line = join('',@line_a);
-	$line =~ s/\0//g;
-	$line =~ s/[[::cntrl::]]//g;
-	
-	return $line;			
+    # we have a new line, let's print it out
+    $line = join('', @line_a);
+    $line =~ s/\0//g;
+    $line =~ s/[[::cntrl::]]//g;
+
+    return $line;
 }
 
 #       read_ascii_magic
@@ -278,129 +261,124 @@ sub read_ascii_until($$$$)
 #
 # Example usage in script:
 # $string = Log2t::BinRead::read_ascii_until(\*FH, \$ofs, \$max, \$marker );
-# 
+#
 # @params       FH	a file handle as a reference to a typeglob (\*FH)
-# @params       ofs	A reference to the offset variable 
-# @params       max     An integer indicating the max length of a string 
+# @params       ofs	A reference to the offset variable
+# @params       max     An integer indicating the max length of a string
 # @params       marker	A string referring to the magic value we are searching for
 #			or a reference to an array with multiple markers
 # @return       A concentrated string that contains x bytes (for_length many bytes)
 #
-sub read_ascii_magic($$$$)
-{
-	my $fh = shift;
-	my $ofs = shift;
-	my $max = shift;
-	my $marker = shift;	# either a reference to an array or a single string
+sub read_ascii_magic($$$$) {
+    my $fh     = shift;
+    my $ofs    = shift;
+    my $max    = shift;
+    my $marker = shift;    # either a reference to an array or a single string
 
-	my $i = 0;
-	my $tag = 1;
+    my $i   = 0;
+    my $tag = 1;
 
-	my $line;
-	my $length;
-	my $tl;
+    my $line;
+    my $length;
+    my $tl;
 
-	while( $tag )
-	{
-		# start to check if we have an array or a single value
-		if( ref( $marker ) eq 'ARRAY' )
-		{
-			# go through each marker
-			foreach( @{$marker} )
-			{
-				# get the length of the magic value to search for
-				$length = length( $_ );
-	
-				# read the string to match
-				$tl = '';
-				for( my $j = 0; $j < $length; $j++ )
-				{
-					seek( $fh, $$ofs+$j, 0 );
-					read( $fh, $temp, 1 ) or return 0;
-	
-					$tl .= $temp;
-				}
-				
-				# compare the string
-				$tag = 0 if $tl eq $_;
-			}
-		}
-		else
-		{
-			$length = length( $marker );
+    while ($tag) {
 
-			$tl = '';
-			for( my $j = 0; $j < $length; $j++ )
-			{
-				# read the string to match
-				seek( $fh, $$ofs+$j, 0 );
-				read( $fh, $temp, 1 ) or return 0;
+        # start to check if we have an array or a single value
+        if (ref($marker) eq 'ARRAY') {
 
-				$tl .= $temp;
-			}
+            # go through each marker
+            foreach (@{$marker}) {
 
-			# compare the string
-			$tag = 0 if $tl eq $marker;
-		}
-	
-		# check if we've reached the end, or the magic value has come up
-		next unless $tag;
+                # get the length of the magic value to search for
+                $length = length($_);
 
-		# no we are about to read a single character (no magic value yet)
-		seek($fh,$$ofs,0);
-		read($fh,$temp,1) or return 0;
-		$$ofs++;
-	
-		# check if we have reached the end of string			
-		$tag = 0 if $temp eq "\0";
-		$tag = 0 if  $i == $max; 
-		$i++;
+                # read the string to match
+                $tl = '';
+                for (my $j = 0; $j < $length; $j++) {
+                    seek($fh, $$ofs + $j, 0);
+                    read($fh, $temp, 1) or return 0;
 
-		# add to the line
-		$line .= $temp;
-	}
+                    $tl .= $temp;
+                }
 
-	# we have a new line, let's print it out
-	$line =~ s/\0//g;
-	$line =~ s/[[::cntrl::]]//g;
-	
-	return $line;			
+                # compare the string
+                $tag = 0 if $tl eq $_;
+            }
+        }
+        else {
+            $length = length($marker);
+
+            $tl = '';
+            for (my $j = 0; $j < $length; $j++) {
+
+                # read the string to match
+                seek($fh, $$ofs + $j, 0);
+                read($fh, $temp, 1) or return 0;
+
+                $tl .= $temp;
+            }
+
+            # compare the string
+            $tag = 0 if $tl eq $marker;
+        }
+
+        # check if we've reached the end, or the magic value has come up
+        next unless $tag;
+
+        # no we are about to read a single character (no magic value yet)
+        seek($fh, $$ofs, 0);
+        read($fh, $temp, 1) or return 0;
+        $$ofs++;
+
+        # check if we have reached the end of string
+        $tag = 0 if $temp eq "\0";
+        $tag = 0 if $i == $max;
+        $i++;
+
+        # add to the line
+        $line .= $temp;
+    }
+
+    # we have a new line, let's print it out
+    $line =~ s/\0//g;
+    $line =~ s/[[::cntrl::]]//g;
+
+    return $line;
 }
 
 #       read_unicode
 #
-# A function to read an Unicode string until we have reached the "for_length" character 
+# A function to read an Unicode string until we have reached the "for_length" character
 #
 # Example usage in script:
 # $string = Log2t::BinRead::read_unicode(\*FH, \$ofs, 10 );
-# 
+#
 # @params       FH	a file handle as a reference to a typeglob (\*FH)
-# @params       ofs	A reference to the offset variable 
-# @params       for_length	An integer indicating the amount of characters to read (Unicode) 
-# @return       A concentrated string that contains $for_length Unicode encoded characters 
-sub read_unicode($$$)
-{
-	my $fh = shift;
-	my $ofs = shift;
-        my $for_length = shift;
+# @params       ofs	A reference to the offset variable
+# @params       for_length	An integer indicating the amount of characters to read (Unicode)
+# @return       A concentrated string that contains $for_length Unicode encoded characters
+sub read_unicode($$$) {
+    my $fh         = shift;
+    my $ofs        = shift;
+    my $for_length = shift;
 
-	my $line;
+    my $line;
 
-	# read the file, line by line
-	for( my $i; $i < $for_length; $i++ )
-	{
-	        seek($fh,$$ofs,0);
-	        read($fh,$temp,2) or return 0;
-		$$ofs+=2;
+    # read the file, line by line
+    for (my $i; $i < $for_length; $i++) {
+        seek($fh, $$ofs, 0);
+        read($fh, $temp, 2) or return 0;
+        $$ofs += 2;
 
-		$line .= encode('utf-8',$temp);
-	}
+        $line .= encode('utf-8', $temp);
+    }
 
-	# we have a new line, let's print it out
-	$line =~ s/\00//g;
-	$line =~ s/[[::cntrl::]]//g;
-	
-	return $line;			
+    # we have a new line, let's print it out
+    $line =~ s/\00//g;
+    $line =~ s/[[::cntrl::]]//g;
+
+    return $line;
 }
 
 #       read_unicode_until
@@ -410,66 +388,63 @@ sub read_unicode($$$)
 #
 # Example usage in script:
 # $string = Log2t::BinRead::read_unicode_end(\*FH, \$ofs, 50 );
-# 
+#
 # @params       FH	a file handle as a reference to a typeglob (\*FH)
-# @params       ofs	A reference to the offset variable 
+# @params       ofs	A reference to the offset variable
 # @params       max     An integer indicating the maximum characters in string (max * 2 = bytes)
 # @return       A concentrated string that contains an Unicode string until a 0x00 is found (or max characters)
-sub read_unicode_until($$$$)
-{
-	my $fh = shift;
-	my $ofs = shift;
-	my $marker = shift;
-	my $max = shift;
+sub read_unicode_until($$$$) {
+    my $fh     = shift;
+    my $ofs    = shift;
+    my $marker = shift;
+    my $max    = shift;
 
-	my $tag = 1;
-	my $i = 0;
-	my $char;
-	my $line;
+    my $tag = 1;
+    my $i   = 0;
+    my $char;
+    my $line;
 
-	# read the file, line by line
-	while( $tag )
-	{
-	        seek($fh,$$ofs,0);
-	        read($fh,$temp,2) or return 0;
-		$$ofs+=2;
+    # read the file, line by line
+    while ($tag) {
+        seek($fh, $$ofs, 0);
+        read($fh, $temp, 2) or return 0;
+        $$ofs += 2;
 
-		$char = unpack( "v", $temp );
-	
-	        # check if we have reached the end of the file
-		$tag = 0 if $char eq 0x00;
+        $char = unpack("v", $temp);
 
-                if( ref( $marker ) eq 'ARRAY' )
-                {
-                        foreach( @{$marker} )
-                        {
-                                $tag = 0 if $char == ord(  $_  );
-                        }
-                }
-                else
-                {
-			#printf STDERR "[MARKER] marker 0x%x and variable 0x%x (char 0x%x - %s)\n", $marker, $temp, $char, $char;
-			#print STDERR "[2nd] Marker " . ord( $marker ) . " and compare to " . $char . " \n";
-			$tag = 0 if $char == ord( $marker );
-                }
+        # check if we have reached the end of the file
+        $tag = 0 if $char eq 0x00;
 
-		# check if we have reached our max value
-		$tag = 0 if $i == $max;
+        if (ref($marker) eq 'ARRAY') {
+            foreach (@{$marker}) {
+                $tag = 0 if $char == ord($_);
+            }
+        }
+        else {
 
-		$i++;
-		next unless $tag;
+#printf STDERR "[MARKER] marker 0x%x and variable 0x%x (char 0x%x - %s)\n", $marker, $temp, $char, $char;
+#print STDERR "[2nd] Marker " . ord( $marker ) . " and compare to " . $char . " \n";
+            $tag = 0 if $char == ord($marker);
+        }
 
-		$line .= encode('utf-8',$temp);
-	}
+        # check if we have reached our max value
+        $tag = 0 if $i == $max;
 
-	# we have a new line, let's print it out
-	$line =~ s/\00//g;
-	$line =~ s/\n//g;
-	$line =~ s/\r//g;
-	$line =~ s/[[::cntrl::]]//g;
-	
-	return $line;			
+        $i++;
+        next unless $tag;
+
+        $line .= encode('utf-8', $temp);
+    }
+
+    # we have a new line, let's print it out
+    $line =~ s/\00//g;
+    $line =~ s/\n//g;
+    $line =~ s/\r//g;
+    $line =~ s/[[::cntrl::]]//g;
+
+    return $line;
 }
+
 #       read_unicode_end
 #
 # A function to read an ascii string until we reach the end of string
@@ -477,48 +452,46 @@ sub read_unicode_until($$$$)
 #
 # Example usage in script:
 # $string = Log2t::BinRead::read_unicode_end(\*FH, \$ofs, 50 );
-# 
+#
 # @params       FH	a file handle as a reference to a typeglob (\*FH)
-# @params       ofs	A reference to the offset variable 
+# @params       ofs	A reference to the offset variable
 # @params       max     An integer indicating the maximum characters in string (max * 2 = bytes)
 # @return       A concentrated string that contains an Unicode string until a 0x00 is found (or max characters)
-sub read_unicode_end($$$)
-{
-	my $fh = shift;
-	my $ofs = shift;
-	my $max = shift;
+sub read_unicode_end($$$) {
+    my $fh  = shift;
+    my $ofs = shift;
+    my $max = shift;
 
-	my $tag = 1;
-	my $i = 0;
-	my $char;
-	my $line;
+    my $tag = 1;
+    my $i   = 0;
+    my $char;
+    my $line;
 
-	# read the file, line by line
-	while( $tag )
-	{
-	        seek($fh,$$ofs,0);
-	        read($fh,$temp,2) or return 0;
-		$$ofs+=2;
+    # read the file, line by line
+    while ($tag) {
+        seek($fh, $$ofs, 0);
+        read($fh, $temp, 2) or return 0;
+        $$ofs += 2;
 
-		$char = unpack( "v", $temp );
-	
-	        # check if we have reached the end of the file
-		$tag = 0 if $char eq 0x00;
+        $char = unpack("v", $temp);
 
-		# check if we have reached our max value
-		$tag = 0 if $i == $max;
+        # check if we have reached the end of the file
+        $tag = 0 if $char eq 0x00;
 
-		$i++;
-		next unless $tag;
+        # check if we have reached our max value
+        $tag = 0 if $i == $max;
 
-		$line .= encode('utf-8',$temp);
-	}
+        $i++;
+        next unless $tag;
 
-	# we have a new line, let's print it out
-	$line =~ s/\00//g;
-	$line =~ s/[[::cntrl::]]//g;
-	
-	return $line;			
+        $line .= encode('utf-8', $temp);
+    }
+
+    # we have a new line, let's print it out
+    $line =~ s/\00//g;
+    $line =~ s/[[::cntrl::]]//g;
+
+    return $line;
 }
 
 #       read16
@@ -526,44 +499,38 @@ sub read_unicode_end($$$)
 # A small function to read two bytes or 16 bits from the file and return it
 #
 # @params       FH	a file handle as a reference to a typeglob (\*FH)
-# @params       ofs	A reference to the offset variable 
+# @params       ofs	A reference to the offset variable
 # @return two bytes of data
-sub read_16($$)
-{
-	my $fh = shift;
-	my $ofs = shift;
+sub read_16($$) {
+    my $fh  = shift;
+    my $ofs = shift;
 
-        seek($fh,$$ofs,0);
-        read($fh,$temp,2) or return 0;
-        $$ofs+=2;
+    seek($fh, $$ofs, 0);
+    read($fh, $temp, 2) or return 0;
+    $$ofs += 2;
 
-	if( $endian eq LITTLE_E )
-	{
-        	return unpack("v", $temp );
-	}
-	else
-	{
-        	return unpack("n", $temp );
-	}
+    if ($endian eq LITTLE_E) {
+        return unpack("v", $temp);
+    }
+    else {
+        return unpack("n", $temp);
+    }
 }
 
-sub read_short($$)
-{
-	my $fh = shift;
-	my $ofs = shift;
+sub read_short($$) {
+    my $fh  = shift;
+    my $ofs = shift;
 
-        seek($fh,$$ofs,0);
-        read($fh,$temp,2) or return 0;
-        $$ofs+=2;
+    seek($fh, $$ofs, 0);
+    read($fh, $temp, 2) or return 0;
+    $$ofs += 2;
 
-	if( $endian eq LITTLE_E )
-	{
-        	return unpack("S", $temp );
-	}
-	else
-	{
-        	return unpack("s", $temp );
-	}
+    if ($endian eq LITTLE_E) {
+        return unpack("S", $temp);
+    }
+    else {
+        return unpack("s", $temp);
+    }
 }
 
 #       read_double
@@ -574,36 +541,32 @@ sub read_short($$)
 # http://en.wikipedia.org/wiki/Double_precision
 #
 # @params       FH	a file handle as a reference to a typeglob (\*FH)
-# @params       ofs	A reference to the offset variable 
+# @params       ofs	A reference to the offset variable
 # @return four bytes of data
-sub read_double($$)
-{
-	my $fh = shift;
-	my $ofs = shift;
+sub read_double($$) {
+    my $fh  = shift;
+    my $ofs = shift;
 
-	seek($fh,$$ofs,0);
-	read($fh,$temp,8);
-	$$ofs+=8;
+    seek($fh, $$ofs, 0);
+    read($fh, $temp, 8);
+    $$ofs += 8;
 
-	# the following lines came from the CPAN module Parse::Flash::Cookie
-	# Copyright 2007 Andreas Faafeng, all rights reserved.
-	#
-        # Check special numbers - do not rely on OS/compiler to tell the
-        # truth.  
-        if ($temp eq POSITIVE_INFINITY) 
-	{
-                return q{inf};
-        } 
-	elsif ($temp eq NEGATIVE_INFINITY) 
-	{
-                return q{-inf};
-        } 
-	elsif ($temp eq NOT_A_NUMBER) 
-	{
-                return q{nan};
-        }
-	
-	$endian eq LITTLE_E ? return unpack 'd*', $temp : return unpack 'd*', reverse $temp;
+    # the following lines came from the CPAN module Parse::Flash::Cookie
+    # Copyright 2007 Andreas Faafeng, all rights reserved.
+    #
+    # Check special numbers - do not rely on OS/compiler to tell the
+    # truth.
+    if ($temp eq POSITIVE_INFINITY) {
+        return q{inf};
+    }
+    elsif ($temp eq NEGATIVE_INFINITY) {
+        return q{-inf};
+    }
+    elsif ($temp eq NOT_A_NUMBER) {
+        return q{nan};
+    }
+
+    $endian eq LITTLE_E ? return unpack 'd*', $temp : return unpack 'd*', reverse $temp;
 }
 
 #       read32
@@ -611,86 +574,77 @@ sub read_double($$)
 # A small function to read four bytes or 32 bits from the file and return it
 #
 # @params       FH	a file handle as a reference to a typeglob (\*FH)
-# @params       ofs	A reference to the offset variable 
+# @params       ofs	A reference to the offset variable
 # @return four bytes of data
-sub read_32($$)
-{
-	my $fh = shift;
-	my $ofs = shift;
+sub read_32($$) {
+    my $fh  = shift;
+    my $ofs = shift;
 
-        seek($fh,$$ofs,0);
-        read($fh,$temp,4) or return 0;
-        $$ofs += 4;
+    seek($fh, $$ofs, 0);
+    read($fh, $temp, 4) or return 0;
+    $$ofs += 4;
 
-	if( $endian eq LITTLE_E )
-	{
-        	return unpack("V", $temp );
-	}
-	else
-	{
-        	return unpack("N", $temp );
-	}
+    if ($endian eq LITTLE_E) {
+        return unpack("V", $temp);
+    }
+    else {
+        return unpack("N", $temp);
+    }
 }
-sub read_long($$)
-{
-	my $fh = shift;
-	my $ofs = shift;
 
-        seek($fh,$$ofs,0);
-        read($fh,$temp,4) or return 0;
-        $$ofs += 4;
+sub read_long($$) {
+    my $fh  = shift;
+    my $ofs = shift;
 
-	if( $endian eq LITTLE_E )
-	{
-        	return unpack("L", $temp );
-	}
-	else
-	{
-        	return unpack("L", $temp );
-	}
+    seek($fh, $$ofs, 0);
+    read($fh, $temp, 4) or return 0;
+    $$ofs += 4;
+
+    if ($endian eq LITTLE_E) {
+        return unpack("L", $temp);
+    }
+    else {
+        return unpack("L", $temp);
+    }
 }
 
 #       read_8
 #
 # A small function to read one byte or eight bits from the file and return it
 # @return one byte of data
-sub read_8($$)
-{
-	my $fh = shift;
-	my $ofs = shift;
+sub read_8($$) {
+    my $fh  = shift;
+    my $ofs = shift;
 
-        seek($fh,$$ofs,0);
-        read($fh,$temp,1) or return 0;
-        $$ofs++;
+    seek($fh, $$ofs, 0);
+    read($fh, $temp, 1) or return 0;
+    $$ofs++;
 
-        #return $temp; 
-        return unpack( "c", $temp ); 
+    #return $temp;
+    return unpack("c", $temp);
 }
 
 # 	read_4
-sub read_4($$$)
-{
-	my $fh = shift;
-	my $ofs = shift;
-	my $loc = shift;
-	my $var;
+sub read_4($$$) {
+    my $fh  = shift;
+    my $ofs = shift;
+    my $loc = shift;
+    my $var;
 
-	seek($fh,$$ofs,0);
-	read($fh,$temp,1) or return 0;
-	$$ofs++;
+    seek($fh, $$ofs, 0);
+    read($fh, $temp, 1) or return 0;
+    $$ofs++;
 
-	# now check if we are to read the upper or lower part
-	$var = unpack("c", $temp );
+    # now check if we are to read the upper or lower part
+    $var = unpack("c", $temp);
 
-	if( $loc eq 0 )
-	{
-		return $var & 0x0f;
-	}
-	else
-	{
-		return ($var & 0xf0) >> 4;
-	}	
-	
+    if ($loc eq 0) {
+        return $var & 0x0f;
+    }
+    else {
+        return ($var & 0xf0) >> 4;
+    }
+
 }
 1;
 

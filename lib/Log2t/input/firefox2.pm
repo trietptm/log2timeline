@@ -3,7 +3,7 @@
 #################################################################################################
 # This script is a part of the log2timeline framework for timeline creation and analysis.
 # This script implements an input module, or a parser capable of parsing a history file for the
-# Firefox 2 and older browsers.  
+# Firefox 2 and older browsers.
 #
 # Firefox 2 (and older) used the Mork file format to store the browser history file.
 # To get further information about the Mork structure, please refer to this link:#
@@ -11,7 +11,7 @@
 #
 # And for a brief discussion about the history.dat file that stores the actual history
 #   http://kb.mozillazine.org/History.dat
-# 
+#
 # Author: Kristinn Gudjonsson
 # Version : 0.3
 # Date : 27/04/11
@@ -35,13 +35,15 @@
 package Log2t::input::firefox2;
 
 use strict;
-use Log2t::base::input; # the SUPER class or parent
+use Log2t::base::input;    # the SUPER class or parent
 use Log2t::Common ':binary';
+
 #use Log2t::Time;  # to manipulate time
 #use Log2t::Win;  # Windows specific information
 #use Log2t::Numbers;  # to manipulate numbers
-use Log2t::BinRead;  # methods to read binary files (it is preferable to always load this library)
-#use Log2t::Network;  # information about network traffic 
+use Log2t::BinRead;    # methods to read binary files (it is preferable to always load this library)
+
+#use Log2t::Network;  # information about network traffic
 use Encode;
 use File::Mork;
 
@@ -49,97 +51,94 @@ use File::Mork;
 use vars qw($VERSION @ISA);
 
 # inherit the base input module, or the super class.
-@ISA = ( "Log2t::base::input" );
+@ISA = ("Log2t::base::input");
 
 # indicate the version number of this input module
 $VERSION = '0.3';
 
 # other global variables that are needed for this input module
-my @keys;  # an array that stores the keys, or the keys to the stored records
+my @keys;    # an array that stores the keys, or the keys to the stored records
 
 # the default constructor
-sub new()
-{
-        my $class = shift;
+sub new() {
+    my $class = shift;
 
-        # bless the class ;)
-        my $self = $class->SUPER::new();
+    # bless the class ;)
+    my $self = $class->SUPER::new();
 
-        # indicate that we are dealing with a binary file (only one entry returned)
-        $self->{'file_access'} = 1;     # do we need to parse the actual file or is it enough to get a file handle
+    # indicate that we are dealing with a binary file (only one entry returned)
+    $self->{'file_access'} =
+      1;     # do we need to parse the actual file or is it enough to get a file handle
 
-  bless($self,$class);
+    bless($self, $class);
 
-        return $self;
+    return $self;
 }
 
 #       get_description
-# A simple subroutine that returns a string containing a description of 
+# A simple subroutine that returns a string containing a description of
 # the funcionality of the format file. This string is used when a list of
 # all available format files is printed out
 #
 # @return A string containing a description of the format file's functionality
-sub get_description()
-{
-  return "Parse the content of a Firefox 2 browser history"; 
+sub get_description() {
+    return "Parse the content of a Firefox 2 browser history";
 }
 
 #       init
 #
-# Usually this involves just opening the file (if plain text) or otherwise building a 
+# Usually this involves just opening the file (if plain text) or otherwise building a
 # structure that can be used by other functions
 #
 # This function also accepts parameters for processing (for changing some settings in
 # the input module)
 #
-# @params A path to the artifact/log file/directory to prepare 
+# @params A path to the artifact/log file/directory to prepare
 # @params The rest of the ARGV array containing parameters to be passed to the input module
-# @return An integer is returned to indicate whether the file preparation was 
+# @return An integer is returned to indicate whether the file preparation was
 #       successful or not.
-sub init
-{
-  my $self = shift;
+sub init {
+    my $self = shift;
 
-  # open the file (or return 0 if unable)
-  # a variable to store a "mork" object, or a reference to the parsed information
-  $self->{'mork'} = File::Mork->new(${$self->{'name'}}, verbose => $self->{'debug'}); 
+    # open the file (or return 0 if unable)
+    # a variable to store a "mork" object, or a reference to the parsed information
+    $self->{'mork'} = File::Mork->new(${ $self->{'name'} }, verbose => $self->{'debug'});
 
-  unless( $self->{'mork'} )
-  {
-    print STDERR "Error while parsing (" . ${$self->{'name'}} . "): " . $File::Mork::ERRO . "\n";
-    return 0;
-  }
+    unless ($self->{'mork'}) {
+        print STDERR "Error while parsing ("
+          . ${ $self->{'name'} } . "): "
+          . $File::Mork::ERRO . "\n";
+        return 0;
+    }
 
-  # try to guess the username
-  $self->{'username'} = Log2t::Common::get_username_from_path(${$self->{'name'}});
+    # try to guess the username
+    $self->{'username'} = Log2t::Common::get_username_from_path(${ $self->{'name'} });
 
-  # an index to the current record we are examining
-  # reset the index
-  $self->{'index'} = 0;
+    # an index to the current record we are examining
+    # reset the index
+    $self->{'index'} = 0;
 
-  # and get the count, that is total number of events
-  @keys = $self->{'mork'}->entries;
-  # a variable that stores the total amount of records stored in the file
-  $self->{'count'} = $#keys + 1;
+    # and get the count, that is total number of events
+    @keys = $self->{'mork'}->entries;
 
-  # check debug
-  print STDERR "[FIREFOX2] Number of entries: " . $self->{'count'} . "\n" if $self->{'debug'};
+    # a variable that stores the total amount of records stored in the file
+    $self->{'count'} = $#keys + 1;
 
-  return 1;
+    # check debug
+    print STDERR "[FIREFOX2] Number of entries: " . $self->{'count'} . "\n" if $self->{'debug'};
+
+    return 1;
 }
 
 #       get_version
 # A simple subroutine that returns the version number of the format file
-# There shouldn't be any need to change this routine, it serves its purpose 
+# There shouldn't be any need to change this routine, it serves its purpose
 # just the way it is defined right now.
 #
 # @return A version number
-sub get_version()
-{
-        return $VERSION;
+sub get_version() {
+    return $VERSION;
 }
-
-
 
 #       get_time
 #
@@ -147,114 +146,118 @@ sub get_version()
 # load_line that loads a line of the log file into a global variable and then
 # parses that line to produce the hash t_line, which is read and sent to the
 # output modules by the main script to produce a timeline or a bodyfile
-# 
+#
 # @return Returns a reference to a hash containing the needed values to print a body file
-sub get_time
-{
-  my $self = shift;
-  my %t_line;  # the timestamp object
-  my $text;
-  my $title;
+sub get_time {
+    my $self = shift;
+    my %t_line;    # the timestamp object
+    my $text;
+    my $title;
 
-  # check if we have reached the end
-  return undef unless $self->{'index'} < $self->{'count'};
+    # check if we have reached the end
+    return undef unless $self->{'index'} < $self->{'count'};
 
-  printf STDERR "[FIREFOX2] Parsing record: %d out of %d\n",$self->{'index'}+1,$self->{'count'} if $self->{'debug'};
+    printf STDERR "[FIREFOX2] Parsing record: %d out of %d\n", $self->{'index'} + 1,
+      $self->{'count'}
+      if $self->{'debug'};
 
-  # substitute multiple spaces with one for splitting the string into variables
-  my $entry = $keys[$self->{'index'}-1];
-  # update the index
-  $self->{'index'}++;
+    # substitute multiple spaces with one for splitting the string into variables
+    my $entry = $keys[ $self->{'index'} - 1 ];
 
-  $text .= 'Visited ' unless ( defined $entry->Typed ) and ( $entry->Typed eq 1 );
-  $text .= 'Typed the URL ' if ( defined $entry->Typed ) and ( $entry->Typed eq 1 );
-  $text .= $entry->URL . ' (' . $entry->Hostname . ')';
-  $text .= ' total visits ' . $entry->VisitCount if defined $entry->VisitCount;
-  $text .= ' referred from: ' . $entry->Referrer if defined $entry->Referrer;
-  $text .= ' [URL hidden from user]' if ( defined $entry->Hidden ) and ( $entry->Hidden eq 1 );
-  $title = ' [URL hidden from user]' if ( defined $entry->Hidden ) and ( $entry->Hidden eq 1 );
+    # update the index
+    $self->{'index'}++;
 
-  $text .= ' Title: (' . $entry->Name . ')' if defined $entry->Name;
+    $text .= 'Visited ' unless (defined $entry->Typed) and ($entry->Typed eq 1);
+    $text .= 'Typed the URL ' if (defined $entry->Typed) and ($entry->Typed eq 1);
+    $text .= $entry->URL . ' (' . $entry->Hostname . ')';
+    $text .= ' total visits ' . $entry->VisitCount if defined $entry->VisitCount;
+    $text .= ' referred from: ' . $entry->Referrer if defined $entry->Referrer;
+    $text .= ' [URL hidden from user]' if (defined $entry->Hidden) and ($entry->Hidden eq 1);
+    $title = ' [URL hidden from user]' if (defined $entry->Hidden) and ($entry->Hidden eq 1);
 
-        # content of the timestamp object t_line 
-        # optional fields are marked with [] 
-        # 
-        # %t_line {        
-        #       time
-        #               index
-        #                       value
-        #                       type
-        #                       legacy
-        #       desc
-        #       short
-        #       source
-        #       sourcetype
-        #       version
-        #       [notes]
-        #       extra
-        #               [filename]
-        #               [md5]
-        #               [mode]
-        #               [host]
-        #               [user]
-        #               [url]
-        #               [size]
-        #               [...]
-        # }
+    $text .= ' Title: (' . $entry->Name . ')' if defined $entry->Name;
 
-        # create the t_line variable
-        %t_line = (
-                'desc' => $text,
-                'short' => $entry->URL .  $title,
-                'source' => 'WEBHIST',
-                'sourcetype' => 'Firefox 2',
-                'version' => 2,
-                'extra' => { 'user' => $self->{'username'}, }
-        );
+    # content of the timestamp object t_line
+    # optional fields are marked with []
+    #
+    # %t_line {
+    #       time
+    #               index
+    #                       value
+    #                       type
+    #                       legacy
+    #       desc
+    #       short
+    #       source
+    #       sourcetype
+    #       version
+    #       [notes]
+    #       extra
+    #               [filename]
+    #               [md5]
+    #               [mode]
+    #               [host]
+    #               [user]
+    #               [url]
+    #               [size]
+    #               [...]
+    # }
 
-        # check the existence of a default browser for this particular user
-        if( defined $self->{'defbrowser'}->{lc($self->{'username'})} )
-        {   
-                $t_line{'notes'} = $self->{'defbrowser'}->{$self->{'username'}} =~ m/firefox/i ? 'Default browser for user' : 'Not the default browser (' . $self->{'defbrowser'}->{$self->{'username'}} . ')';
-        }   
-        elsif ( $self->{'defbrowser'}->{'os'} ne '' )
-        {   
-                # check the default one (the OS)
-                $t_line{'notes'} = $self->{'defbrowser'}->{'os'} =~ m/firefox/ ? 'Default browser for system' : 'Not the default system browser (' . $self->{'defbrowser'}->{'os'} . ')';
-        } 
+    # create the t_line variable
+    %t_line = (
+               'desc'       => $text,
+               'short'      => $entry->URL . $title,
+               'source'     => 'WEBHIST',
+               'sourcetype' => 'Firefox 2',
+               'version'    => 2,
+               'extra'      => { 'user' => $self->{'username'}, }
+              );
 
+    # check the existence of a default browser for this particular user
+    if (defined $self->{'defbrowser'}->{ lc($self->{'username'}) }) {
+        $t_line{'notes'} =
+          $self->{'defbrowser'}->{ $self->{'username'} } =~ m/firefox/i
+          ? 'Default browser for user'
+          : 'Not the default browser (' . $self->{'defbrowser'}->{ $self->{'username'} } . ')';
+    }
+    elsif ($self->{'defbrowser'}->{'os'} ne '') {
 
-  # and assign the time variable
-  if( $entry->LastVisitDate == $entry->FirstVisitDate )
-  {
-    # the same, only one timestamp
-    $t_line{'time'} = {
-      0 => { 'value' => $entry->LastVisitDate, 'type' => 'Only Visit', 'legacy' => 15 },
-    };
-  }
-  else
-  {
-    # different timestamps
-    $t_line{'time'} = {
-      0 => { 'value' => $entry->LastVisitDate, 'type' => 'Last Visit', 'legacy' => 7 },
-      1 => { 'value' => $entry->FirstVisitDate, 'type' => 'First Visit', 'legacy' => 8 },
-    };
-  }
+        # check the default one (the OS)
+        $t_line{'notes'} =
+          $self->{'defbrowser'}->{'os'} =~ m/firefox/
+          ? 'Default browser for system'
+          : 'Not the default system browser (' . $self->{'defbrowser'}->{'os'} . ')';
+    }
 
-  return \%t_line;
+    # and assign the time variable
+    if ($entry->LastVisitDate == $entry->FirstVisitDate) {
+
+        # the same, only one timestamp
+        $t_line{'time'} =
+          { 0 => { 'value' => $entry->LastVisitDate, 'type' => 'Only Visit', 'legacy' => 15 }, };
+    }
+    else {
+
+        # different timestamps
+        $t_line{'time'} = {
+                 0 => { 'value' => $entry->LastVisitDate,  'type' => 'Last Visit',  'legacy' => 7 },
+                 1 => { 'value' => $entry->FirstVisitDate, 'type' => 'First Visit', 'legacy' => 8 },
+                          };
+    }
+
+    return \%t_line;
 }
 
 #       get_help
 #
-# A simple subroutine that returns a string containing the help 
+# A simple subroutine that returns a string containing the help
 # message for this particular format file.
 #
 # @return A string containing a help file for this format file
-sub get_help()
-{
-  return "This is an input module that parses the contents of the history.dat file, 
+sub get_help() {
+    return "This is an input module that parses the contents of the history.dat file, 
 that contains the browser history from a Firefox 2 or older browsers, that are using the 
-Mork file format to store the browser history."; 
+Mork file format to store the browser history.";
 
 }
 
@@ -266,68 +269,62 @@ Mork file format to store the browser history.";
 # This is needed since there is no need to parse the file if this file/dir is not the file
 # that this input module is designed to parse
 #
-# It is also important to validate the file since the scanner function will try to 
+# It is also important to validate the file since the scanner function will try to
 # parse every file it finds, and uses this verify function to determine whether or not
-# a particular file/dir/artifact is supported or not. It is therefore very important to 
+# a particular file/dir/artifact is supported or not. It is therefore very important to
 # implement this function and make it verify the file structure without false positives and
 # without taking too long time
 #
-# @return A reference to a hash that contains an integer indicating whether or not the 
-#  file/dir/artifact is supporter by this input module as well as a reason why 
-#  it failed (if it failed) 
-sub verify
-{
-  my $self = shift;
+# @return A reference to a hash that contains an integer indicating whether or not the
+#  file/dir/artifact is supporter by this input module as well as a reason why
+#  it failed (if it failed)
+sub verify {
+    my $self = shift;
 
-  # define an array to keep
-  my %return;
-  my $vline;
+    # define an array to keep
+    my %return;
+    my $vline;
 
-  # default values
-  $return{'success'} = 0;
-  $return{'msg'} = 'success';
-
-  # depending on which type you are examining, directory or a file
-        return \%return unless -f ${$self->{'name'}};
-
-
-        # start by setting the endian correctly
-        Log2t::BinRead::set_endian( LITTLE_E );
-
-  my $ofs = 0;
-
-  # open the file (at least try to open it)
-  eval
-  {
-    # read a line from the file as it were a binary file
-    # it does not matter if the file is ASCII based or binary, 
-    # lines are read as they were a binary one, since trying to load up large
-    # binary documents using <FILE> can cause log2timeline/timescanner to 
-    # halt for a long while before dying (memory exhaustion)
-    $vline = Log2t::BinRead::read_ascii_until( $self->{'file'}, \$ofs, "\n", 50 );
-  };
-  if ( $@ )
-  {
+    # default values
     $return{'success'} = 0;
-    $return{'msg'} = "Unable to open file";
-  }
+    $return{'msg'}     = 'success';
 
-  # check if this is a mork file
-  if( $vline =~ m/mdb:mork:z/ )
-  {
-    $return{'success'} = 1;
-  }
-  else
-  {
-    $return{'success'} = 0;
-    $return{'msg'} = 'Wrong magic value';
-  }
+    # depending on which type you are examining, directory or a file
+    return \%return unless -f ${ $self->{'name'} };
 
-  return \%return;
+    # start by setting the endian correctly
+    Log2t::BinRead::set_endian(LITTLE_E);
+
+    my $ofs = 0;
+
+    # open the file (at least try to open it)
+    eval {
+
+        # read a line from the file as it were a binary file
+        # it does not matter if the file is ASCII based or binary,
+        # lines are read as they were a binary one, since trying to load up large
+        # binary documents using <FILE> can cause log2timeline/timescanner to
+        # halt for a long while before dying (memory exhaustion)
+        $vline = Log2t::BinRead::read_ascii_until($self->{'file'}, \$ofs, "\n", 50);
+    };
+    if ($@) {
+        $return{'success'} = 0;
+        $return{'msg'}     = "Unable to open file";
+    }
+
+    # check if this is a mork file
+    if ($vline =~ m/mdb:mork:z/) {
+        $return{'success'} = 1;
+    }
+    else {
+        $return{'success'} = 0;
+        $return{'msg'}     = 'Wrong magic value';
+    }
+
+    return \%return;
 }
 
 1;
-
 
 __END__
 

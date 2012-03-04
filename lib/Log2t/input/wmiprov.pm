@@ -1,11 +1,11 @@
 #################################################################################################
-#    wmiprov  
+#    wmiprov
 #################################################################################################
 # This script is a part of the log2timeline framework for timeline creation and analysis.
-# This script implements an input module, or a parser capable of parsing a single log file (or 
+# This script implements an input module, or a parser capable of parsing a single log file (or
 # directory) and creating a hash that is returned to the main script.  That hash is then used
 # to create a body file (to create a timeline) or a timeline (directly).
-# 
+#
 # Author: Kristinn Gudjonsson
 # Version : 0.2
 # Date : 18/02/11
@@ -29,45 +29,43 @@
 package Log2t::input::wmiprov;
 
 use strict;
-use Log2t::base::input; # the SUPER class or parent
+use Log2t::base::input;    # the SUPER class or parent
 use Log2t::Common ':binary';
-use Log2t::Time;  # to manipulate time
+use Log2t::Time;           # to manipulate time
+
 #use Log2t::Win;  # Windows specific information
 #use Log2t::Numbers;  # to manipulate numbers
-use Log2t::BinRead;  # methods to read binary files (it is preferable to always load this library)
-#use Log2t::Network;  # information about network traffic 
+use Log2t::BinRead;    # methods to read binary files (it is preferable to always load this library)
+
+#use Log2t::Network;  # information about network traffic
 
 # define the VERSION variable
 use vars qw($VERSION @ISA);
 
 # inherit the base input module, or the super class.
-@ISA = ( "Log2t::base::input" );
+@ISA = ("Log2t::base::input");
 
 # indicate the version number of this input module
 $VERSION = '0.2';
 
 #       get_version
 # A simple subroutine that returns the version number of the format file
-# There shouldn't be any need to change this routine, it serves its purpose 
+# There shouldn't be any need to change this routine, it serves its purpose
 # just the way it is defined right now.
 #
 # @return A version number
-sub get_version()
-{
-        return $VERSION;
+sub get_version() {
+    return $VERSION;
 }
 
-
-
 #       get_description
-# A simple subroutine that returns a string containing a description of 
+# A simple subroutine that returns a string containing a description of
 # the funcionality of the format file. This string is used when a list of
 # all available format files is printed out
 #
 # @return A string containing a description of the format file's functionality
-sub get_description()
-{
-  return "Parse the content of the wmiprov log file"; 
+sub get_description() {
+    return "Parse the content of the wmiprov log file";
 }
 
 #       get_time
@@ -76,92 +74,92 @@ sub get_description()
 # load_line that loads a line of the log file into a global variable and then
 # parses that line to produce the hash t_line, which is read and sent to the
 # output modules by the main script to produce a timeline or a bodyfile
-# 
+#
 # @return Returns a reference to a hash containing the needed values to print a body file
-sub get_time
-{
-  my $self = shift;
+sub get_time {
+    my $self = shift;
 
-  # the timestamp object
-  my %t_line;
-  my $date;
-  my $msg;
+    # the timestamp object
+    my %t_line;
+    my $date;
+    my $msg;
 
-        # get the filehandle and read the next line
-        my $fh = $self->{'file'};
-        my $line = <$fh> or return undef;
+    # get the filehandle and read the next line
+    my $fh = $self->{'file'};
+    my $line = <$fh> or return undef;
 
-  # remove new line chars
-  $line =~ s/\n//g;
-  $line =~ s/\r//g;
+    # remove new line chars
+    $line =~ s/\n//g;
+    $line =~ s/\r//g;
 
-  # check the line
-  if( $line =~ m/^\(([\w :]+)\.\d+\) : (.+)/ )
-  #if( $line =~ m/^\((\s+)\.\d+\) : \((\w+)\)/ )
-  {
-    print STDERR "[WMIPROV] Date ($1) and message ($2)\n" if $self->{'debug'};
-    # now to transform the textual representation of the date into a more proper form
-    $date = Log2t::Time::text2epoch( $1, $self->{'tz'} );
-    $msg = $2;    
-  }
-  else
-  {
-    print STDERR "[WMIPROV] Line [$line] does not match the correct structure\n" if $self->{'debug'};
+    # check the line
+    if ($line =~ m/^\(([\w :]+)\.\d+\) : (.+)/)
+
+      #if( $line =~ m/^\((\s+)\.\d+\) : \((\w+)\)/ )
+    {
+        print STDERR "[WMIPROV] Date ($1) and message ($2)\n" if $self->{'debug'};
+
+        # now to transform the textual representation of the date into a more proper form
+        $date = Log2t::Time::text2epoch($1, $self->{'tz'});
+        $msg = $2;
+    }
+    else {
+        print STDERR "[WMIPROV] Line [$line] does not match the correct structure\n"
+          if $self->{'debug'};
+        return \%t_line;
+    }
+
+    # dont want the line to contain only * (asterisk)
+    return \%t_line if $msg =~ m/^\*+$/;
+
+    # content of the timestamp object t_line
+    # optional fields are marked with []
+    #
+    # %t_line {
+    #       time
+    #               index
+    #                       value
+    #                       type
+    #                       legacy
+    #       desc
+    #       short
+    #       source
+    #       sourcetype
+    #       version
+    #       [notes]
+    #       extra
+    #               [filename]
+    #               [md5]
+    #               [mode]
+    #               [host]
+    #               [user]
+    #               [url]
+    #               [size]
+    #               [...]
+    # }
+
+    # create the t_line variable
+    %t_line = (
+        'time' => { 0 => { 'value' => $date, 'type' => 'Time Written', 'legacy' => 15 } },
+        'desc'       => 'Entry in log file: ' . $msg,
+        'short'      => $msg,
+        'source'     => 'LOG',
+        'sourcetype' => 'WMIprov Log file',
+        'version'    => 2,
+        'extra' => { 'url' => 'http://msdn.microsoft.com/en-us/library/aa827354%28VS.85%29.aspx' }
+              );
+
     return \%t_line;
-  }
-
-  # dont want the line to contain only * (asterisk)
-  return \%t_line if $msg =~ m/^\*+$/;
-
-  # content of the timestamp object t_line 
-  # optional fields are marked with [] 
-  # 
-        # %t_line {        
-  #       time
-        #               index
-        #                       value
-        #                       type
-        #                       legacy
-        #       desc
-        #       short
-        #       source
-        #       sourcetype
-        #       version
-        #       [notes]
-        #       extra
-        #               [filename]
-        #               [md5]
-        #               [mode]
-        #               [host]
-        #               [user]
-        #               [url]
-        #               [size]
-        #               [...]
-        # }
-
-  # create the t_line variable
-  %t_line = (
-    'time' => { 0 => { 'value' => $date, 'type' => 'Time Written', 'legacy' => 15 } },
-    'desc' => 'Entry in log file: ' . $msg,
-    'short' => $msg,
-    'source' => 'LOG',
-    'sourcetype' => 'WMIprov Log file',
-    'version' => 2,
-    'extra' => { 'url' => 'http://msdn.microsoft.com/en-us/library/aa827354%28VS.85%29.aspx' }
-  );
-
-  return \%t_line;
 }
 
 #       get_help
 #
-# A simple subroutine that returns a string containing the help 
+# A simple subroutine that returns a string containing the help
 # message for this particular format file.
 #
 # @return A string containing a help file for this format file
-sub get_help()
-{
-  return "This module parses the WMIprov file in Windows\n";
+sub get_help() {
+    return "This module parses the WMIprov file in Windows\n";
 
 }
 
@@ -173,70 +171,65 @@ sub get_help()
 # This is needed since there is no need to parse the file if this file/dir is not the file
 # that this input module is designed to parse
 #
-# It is also important to validate the file since the scanner function will try to 
+# It is also important to validate the file since the scanner function will try to
 # parse every file it finds, and uses this verify function to determine whether or not
-# a particular file/dir/artifact is supported or not. It is therefore very important to 
+# a particular file/dir/artifact is supported or not. It is therefore very important to
 # implement this function and make it verify the file structure without false positives and
 # without taking too long time
 #
-# @return A reference to a hash that contains an integer indicating whether or not the 
-#  file/dir/artifact is supporter by this input module as well as a reason why 
-#  it failed (if it failed) 
-sub verify
-{
-  my $self = shift;
+# @return A reference to a hash that contains an integer indicating whether or not the
+#  file/dir/artifact is supporter by this input module as well as a reason why
+#  it failed (if it failed)
+sub verify {
+    my $self = shift;
 
-  # define an array to keep
-  my %return;
-  my $vline;
+    # define an array to keep
+    my %return;
+    my $vline;
 
-  # default values
-  $return{'success'} = 0;
-  $return{'msg'} = 'Wrong File Name';
-
-  # depending on which type you are examining, directory or a file
-  return \%return unless -f ${$self->{'name'}};
-
-        # start by setting the endian correctly
-        Log2t::BinRead::set_endian( LITTLE_E );
-
-  my $ofs = 0;
-
-  # check the name of the file (first thing)
-  return \%return unless ${$self->{'name'}} =~ m/wmiprov\.log/i;
-
-  # open the file (at least try to open it)
-  eval
-  {
-    # read a line from the file as it were a binary file
-    # it does not matter if the file is ASCII based or binary, 
-    # lines are read as they were a binary one, since trying to load up large
-    # binary documents using <FILE> can cause log2timeline/timescanner to 
-    # halt for a long while before dying (memory exhaustion)
-    $vline = Log2t::BinRead::read_ascii_until( $self->{'file'}, \$ofs, "\n", 100 );
-  };
-  if ( $@ )
-  {
+    # default values
     $return{'success'} = 0;
-    $return{'msg'} = "Unable to open file";
-  }
+    $return{'msg'}     = 'Wrong File Name';
 
-  # check the line
-  if( $vline =~ m/^\(.+\) : .+/ )
-  {
-    $return{'success'} = 1;
-  }
-  else
-  {
-    $return{'success'} = 0;
-    $return{'msg'} = 'wrong content in file';
-  }
+    # depending on which type you are examining, directory or a file
+    return \%return unless -f ${ $self->{'name'} };
 
-  return \%return;
+    # start by setting the endian correctly
+    Log2t::BinRead::set_endian(LITTLE_E);
+
+    my $ofs = 0;
+
+    # check the name of the file (first thing)
+    return \%return unless ${ $self->{'name'} } =~ m/wmiprov\.log/i;
+
+    # open the file (at least try to open it)
+    eval {
+
+        # read a line from the file as it were a binary file
+        # it does not matter if the file is ASCII based or binary,
+        # lines are read as they were a binary one, since trying to load up large
+        # binary documents using <FILE> can cause log2timeline/timescanner to
+        # halt for a long while before dying (memory exhaustion)
+        $vline = Log2t::BinRead::read_ascii_until($self->{'file'}, \$ofs, "\n", 100);
+    };
+    if ($@) {
+        $return{'success'} = 0;
+        $return{'msg'}     = "Unable to open file";
+    }
+
+    # check the line
+    if ($vline =~ m/^\(.+\) : .+/) {
+        $return{'success'} = 1;
+    }
+    else {
+        $return{'success'} = 0;
+        $return{'msg'}     = 'wrong content in file';
+    }
+
+    return \%return;
 }
 
 1;
-
 
 __END__
 

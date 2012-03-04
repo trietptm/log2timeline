@@ -3,17 +3,17 @@
 #################################################################################################
 # This script is a part of the log2timeline framework for timeline creation and analysis.
 # This script implements an input module, or a parser capable of parsing the setupapi.log file
-# found in Windows XP (among others).  According to information from Microsoft the purpose of the 
+# found in Windows XP (among others).  According to information from Microsoft the purpose of the
 # file is to:
 #
-#   This plain-text file maintains the information that SetupAPI records about device 
-#  installation, service-pack installation, and hotfix installation. Specifically, 
-#  the file maintains a record of device and driver changes, as well as major system 
+#   This plain-text file maintains the information that SetupAPI records about device
+#  installation, service-pack installation, and hotfix installation. Specifically,
+#  the file maintains a record of device and driver changes, as well as major system
 #  changes, beginning from the most recent Windows installation.
 #
 # For further reading of the setupapi log file format:
 #  http://www.microsoft.com/whdc/driver/install/setupapilog.mspx
-# 
+#
 # Author: Kristinn Gudjonsson
 # Version : 0.5
 # Date : 30/03/11
@@ -37,16 +37,17 @@
 package Log2t::input::setupapi;
 
 use strict;
-use Log2t::base::input; # the SUPER class or parent
+use Log2t::base::input;    # the SUPER class or parent
+
 #use Log2t::Time;  # to manipulate time
 #use Log2t::Numbers;  # to manipulate numbers
-use Log2t::BinRead;  # methods to read binary files
+use Log2t::BinRead;        # methods to read binary files
 use Log2t::Common ':binary';
-use DateTime;    # for date manipulatio
+use DateTime;              # for date manipulatio
 use vars qw($VERSION @ISA);
 
 # inherit the base input module, or the super class.
-@ISA = ( "Log2t::base::input" );
+@ISA = ("Log2t::base::input");
 
 # version number
 $VERSION = '0.6';
@@ -54,94 +55,88 @@ $VERSION = '0.6';
 my %structure;
 my $line_loaded;
 
-my %msg_codes;  # list of message codes
+my %msg_codes;             # list of message codes
 
 #       get_description
-# A simple subroutine that returns a string containing a description of 
+# A simple subroutine that returns a string containing a description of
 # the funcionality of the format file. This string is used when a list of
 # all available format files is printed out
 #
 # @return A string containing a description of the format file's functionality
-sub get_description()
-{
-  return "Parse the content of the SetupAPI log file in Windows XP"; 
+sub get_description() {
+    return "Parse the content of the SetupAPI log file in Windows XP";
 }
 
 #       get_version
 # A simple subroutine that returns the version number of the format file
-# There shouldn't be any need to change this routine, it serves its purpose 
+# There shouldn't be any need to change this routine, it serves its purpose
 # just the way it is defined right now.
 #
 # @return A version number
-sub get_version()
-{
-        return $VERSION;
+sub get_version() {
+    return $VERSION;
 }
 
+sub init() {
+    my $self = shift;
 
+    # initialize the first line variable
+    $self->{'first_line'} = 1;
 
-sub init()
-{
-  my $self = shift;
+    # prepare the message codes
+    %msg_codes = (
+        11  => 'Installation in progress',
+        18  => 'Reported compatible identifiers from device parent bus',
+        19  => 'Reported hardware ID(s) from device parent bus',
+        22  => 'Compatible INF file found',
+        23  => 'Install section',                                        # watch the rank "Rank: NR"
+        24  => 'Copy in progress',
+        121 => 'Device successfully setup',
+        124 => 'Copy-only installation',
+        140 => 'GUID of device-setup class',
+        141 => 'Class install completed (no errors)',
+        142 => 'Class install failed (error)',
+        166 => 'Processing a DIF_SELECTBESTCOMPATDRV request',
+        167 => 'SPFILENOTIFY_NEEDMEDIA: SYS file found in Windows driver cabinet',
+        168 => 'SPFILENOTIFY_NEEDMEDIA callback not called',
+        198 => 'Driver install entered (through services.exe)',
 
-  # initialize the first line variable
-  $self->{'first_line'} = 1;
+# more on the -199 code. there are three possible scenarios
+# setup -newsetup => GUI mode during setup phase of Windows, newdev.dll => client side setup, 3rd is application driven install
+# then a UpdateDriverForPlugAndPlayDevices function called - the only indication is that the name of the executable is called
+        199 => 'Driver install entered',
+        290 => 'Processing section',
+        336 => 'File copied',
+        340 => 'File extracted',
+        406 => 'Obtaining rollback information'
 
-  # prepare the message codes
-  %msg_codes = (
-    11  => 'Installation in progress',
-    18  => 'Reported compatible identifiers from device parent bus',
-    19  => 'Reported hardware ID(s) from device parent bus',
-    22  => 'Compatible INF file found',
-    23  => 'Install section',  # watch the rank "Rank: NR"
-    24  => 'Copy in progress',
-    121  => 'Device successfully setup',
-    124  => 'Copy-only installation',
-    140  => 'GUID of device-setup class',
-    141  => 'Class install completed (no errors)',
-    142  => 'Class install failed (error)',
-    166  => 'Processing a DIF_SELECTBESTCOMPATDRV request',
-    167  => 'SPFILENOTIFY_NEEDMEDIA: SYS file found in Windows driver cabinet',
-    168  => 'SPFILENOTIFY_NEEDMEDIA callback not called',
-    198  => 'Driver install entered (through services.exe)',
-    # more on the -199 code. there are three possible scenarios
-    # setup -newsetup => GUI mode during setup phase of Windows, newdev.dll => client side setup, 3rd is application driven install 
-    # then a UpdateDriverForPlugAndPlayDevices function called - the only indication is that the name of the executable is called
-    199  => 'Driver install entered',  
-    290  => 'Processing section',
-    336  => 'File copied',
-    340  => 'File extracted',
-    406  => 'Obtaining rollback information'
-    
-  );
+                 );
 
-  return 1;
+    return 1;
 }
 
-# 
-sub _read_header($)
-{
-  my $fh = shift;
-  my $line = <$fh> or return undef;  
+#
+sub _read_header($) {
+    my $fh = shift;
+    my $line = <$fh> or return undef;
 
-  # fill the structure
-  $structure{'magic'} = $line;
-  
-  #print STDERR "[HEADER] The magic, $line\n";
-  
-  # read the next six lines which are part of the header
-  for( my $i=0; $i < 6; $i++ )
-  {
-    $_ = <$fh> or return undef;
+    # fill the structure
+    $structure{'magic'} = $line;
 
-    # split the line
-    /(.+)\s\=\s(.+)/;
-    $structure{$1} = $2;
+    #print STDERR "[HEADER] The magic, $line\n";
 
-    #print STDERR "\t[$_]\n";
-  }
+    # read the next six lines which are part of the header
+    for (my $i = 0; $i < 6; $i++) {
+        $_ = <$fh> or return undef;
 
-  return 1;
+        # split the line
+        /(.+)\s\=\s(.+)/;
+        $structure{$1} = $2;
+
+        #print STDERR "\t[$_]\n";
+    }
+
+    return 1;
 }
 
 #       parse_line
@@ -150,172 +145,168 @@ sub _read_header($)
 # load_line that loads a line of the log file into a global variable and then
 # parses that line to produce the hash t_line, which is read and sent to the
 # output modules by the main script to produce a timeline or a bodyfile
-# 
+#
 # @return Returns a reference to a hash containing the needed values to print a body file
-sub get_time()
-{
-  my $self = shift;
-  my $fh = $self->{'file'};
-  
-  #print STDERR "CALLING get_time\n";
-  
-  # check if we are parsing the first lines
-  if( $self->{'first_line'} )
-  {  
-    #print STDERR "READING THE HEADER\n";
-    $self->{'first_line'} = 0;
-    print STDERR "[ERROR WHILE PARSING HEADER]\n" unless _read_header($self->{'file'});
-  }
+sub get_time() {
+    my $self = shift;
+    my $fh   = $self->{'file'};
 
-  # timestamp object
-  my %t_line;
-  my $date;
-  my ($pid_part,$msg_desc,$pid,$instance);
-  my $text;
-  my %temp;
-  my $title;
-  my $line;
+    #print STDERR "CALLING get_time\n";
 
-  # check if a line has already been loaded by parse_line function
-  if( $line_loaded )
-  {
-    $line_loaded = 0;
-    $line = $self->{'line_loaded'};
-  }
-  else  
-  {
-    # line hasn't been loaded yet, so let's read in a new line
-    $line = <$fh> or return undef;
+    # check if we are parsing the first lines
+    if ($self->{'first_line'}) {
 
-    # check if we have a section marker or a message
-    # possibilites are that the line starts with:
-    #  [ - new section
-    #  @ - detailed message (used in more verbose settings) followed by a data
-    #  # - a message (followed by a message code)
-    if( $line !~ m/^\[\d{4}\/\d{2}\// )
-    {
-      #print STDERR "<LINE> $line\n";
-      #print STDERR "[LINE NOT CORRECT] Not the correct structure, let's call myself again\n";
-      return get_time();
+        #print STDERR "READING THE HEADER\n";
+        $self->{'first_line'} = 0;
+        print STDERR "[ERROR WHILE PARSING HEADER]\n" unless _read_header($self->{'file'});
     }
 
-  }
+    # timestamp object
+    my %t_line;
+    my $date;
+    my ($pid_part, $msg_desc, $pid, $instance);
+    my $text;
+    my %temp;
+    my $title;
+    my $line;
 
-  $msg_desc = '';
-
-  # now the line variable contains the date, transform it into a usable date
-  if( $line =~ /\[(\d{4})\/(\d{2})\/(\d{2}) (\d{2}):(\d{2}):(\d{2}) (.+)\]/ )
-  {
-    $date = DateTime->new(
-                  year => $1,
-                  month => $2,
-                  day => $3,
-                  hour => $4,
-                  minute => $5,
-                  second => $6,
-      time_zone => $self->{'tz'}
-          );
-    #print STDERR "[SETUPAPI] YEAR $1 MONTH $2 DAY $3 HOUR $4 MINUTE $5 SECOND $6 TIME ZONE $timezone\n";
-    #print STDERR "\tOriginal: $line\n";
-
-    ($pid_part,$msg_desc) = split( /\s/, $7);
-    ($pid,$instance) = split( /\./, $pid_part );
-  }
-  else
-  {
-    #print STDERR "Wrongly formed section marker\n";
-    return undef;
-  }
-
-  # now we need to decipher the msg_type_id
-
-  # now we need to read the following lines for more information
-  $text = '';
-
-  $text .= $msg_desc if $msg_desc ne '';
-  $title .= $msg_desc if $msg_desc ne '';
-
-  # and to add more context we need to read ahead (read all messages)
-  $_ = <$fh> or return undef;
-  while( /^#/ )
-  {
-    # msg format
-    #  message_type_ID message_text
-    # or
-    #  timestamp message_type_ID message_text 
-    /^#(.)(\d{3})(.+)/;
-    if( $1 eq '-' )
-    {
-      # context
-      $text .= 'Context: ';
-      $text .= $msg_codes{ int($2) } || '(code ' . $2 . ')';
-
-      $title .= 'Contextual information. ';
-
-      # check for 199
+    # check if a line has already been loaded by parse_line function
+    if ($line_loaded) {
+        $line_loaded = 0;
+        $line        = $self->{'line_loaded'};
     }
-    elsif( $1 eq 'E' )
-    {
-      # error
-      $text .= 'Error: ' . $msg_codes{ int($2) } || '(code ' . $2 . ')';
-      $title .= ' Error msg ' . $2 . '. ';
-    }  
-    elsif( $1 eq 'W' )
-    {
-      # warning
-      $text .= 'Warning: ' . $msg_codes{ int($2) } || '(code ' . $2 . ')';
-      $title .= ' Warning msg ' . $2 . '. ';
-    }
-    elsif( $1 eq 'I' )
-    {
-      # information
-      $text .= 'Information: ' . $msg_codes{ int($2) } || '(code ' . $2 . ')';
-      $title .= ' Information msg ' . $2 . '. ';
-    }
-    elsif( $1 eq 'V' )
-    {
-      $text .= 'Verbose: ' . $msg_codes{ int($2) } || '(code ' . $2 .')';
-      $title .= ' Verbose msg ' . $2 . '. ';
-    }
-    elsif( $1 eq 'T' )
-    {
-      # timing
-      $text .= 'Timing: ' . $msg_codes{ int($2) } || '(code ' . $2 . ')';
-      $title .= ' Timing msg ' . $2 . '. ';
-    }
-    else
-    {
-      # unknown
-      $text .= 'unknown [' . $1 . ']: ' . $msg_codes{ int($2) } || '(code ' . $2 . ')';
-      $title .= ' unknown msg ' . $2 . '.';
+    else {
+
+        # line hasn't been loaded yet, so let's read in a new line
+        $line = <$fh> or return undef;
+
+        # check if we have a section marker or a message
+        # possibilites are that the line starts with:
+        #  [ - new section
+        #  @ - detailed message (used in more verbose settings) followed by a data
+        #  # - a message (followed by a message code)
+        if ($line !~ m/^\[\d{4}\/\d{2}\//) {
+
+            #print STDERR "<LINE> $line\n";
+            #print STDERR "[LINE NOT CORRECT] Not the correct structure, let's call myself again\n";
+            return get_time();
+        }
+
     }
 
-    if( $3 =~ m/.+install.+"(.+)".+/i )
-    {
-      $text .= " [$1]";
-    }
-      
-    $text .= '. ';
+    $msg_desc = '';
 
-    # processing key words
-    #  device
-    #  driver
-    #  date
-    #  c:\windows
-    #  ID(s)
-  
+    # now the line variable contains the date, transform it into a usable date
+    if ($line =~ /\[(\d{4})\/(\d{2})\/(\d{2}) (\d{2}):(\d{2}):(\d{2}) (.+)\]/) {
+        $date = DateTime->new(
+                              year      => $1,
+                              month     => $2,
+                              day       => $3,
+                              hour      => $4,
+                              minute    => $5,
+                              second    => $6,
+                              time_zone => $self->{'tz'}
+                             );
+
+#print STDERR "[SETUPAPI] YEAR $1 MONTH $2 DAY $3 HOUR $4 MINUTE $5 SECOND $6 TIME ZONE $timezone\n";
+#print STDERR "\tOriginal: $line\n";
+
+        ($pid_part, $msg_desc) = split(/\s/, $7);
+        ($pid,      $instance) = split(/\./, $pid_part);
+    }
+    else {
+
+        #print STDERR "Wrongly formed section marker\n";
+        return undef;
+    }
+
+    # now we need to decipher the msg_type_id
+
+    # now we need to read the following lines for more information
+    $text = '';
+
+    $text  .= $msg_desc if $msg_desc ne '';
+    $title .= $msg_desc if $msg_desc ne '';
+
+    # and to add more context we need to read ahead (read all messages)
+    $_ = <$fh> or return undef;
+    while (/^#/) {
+
+        # msg format
+        #  message_type_ID message_text
+        # or
+        #  timestamp message_type_ID message_text
+        /^#(.)(\d{3})(.+)/;
+        if ($1 eq '-') {
+
+            # context
+            $text .= 'Context: ';
+            $text .= $msg_codes{ int($2) } || '(code ' . $2 . ')';
+
+            $title .= 'Contextual information. ';
+
+            # check for 199
+        }
+        elsif ($1 eq 'E') {
+
+            # error
+            $text .= 'Error: ' . $msg_codes{ int($2) } || '(code ' . $2 . ')';
+            $title .= ' Error msg ' . $2 . '. ';
+        }
+        elsif ($1 eq 'W') {
+
+            # warning
+            $text .= 'Warning: ' . $msg_codes{ int($2) } || '(code ' . $2 . ')';
+            $title .= ' Warning msg ' . $2 . '. ';
+        }
+        elsif ($1 eq 'I') {
+
+            # information
+            $text .= 'Information: ' . $msg_codes{ int($2) } || '(code ' . $2 . ')';
+            $title .= ' Information msg ' . $2 . '. ';
+        }
+        elsif ($1 eq 'V') {
+            $text .= 'Verbose: ' . $msg_codes{ int($2) } || '(code ' . $2 . ')';
+            $title .= ' Verbose msg ' . $2 . '. ';
+        }
+        elsif ($1 eq 'T') {
+
+            # timing
+            $text .= 'Timing: ' . $msg_codes{ int($2) } || '(code ' . $2 . ')';
+            $title .= ' Timing msg ' . $2 . '. ';
+        }
+        else {
+
+            # unknown
+            $text .= 'unknown [' . $1 . ']: ' . $msg_codes{ int($2) } || '(code ' . $2 . ')';
+            $title .= ' unknown msg ' . $2 . '.';
+        }
+
+        if ($3 =~ m/.+install.+"(.+)".+/i) {
+            $text .= " [$1]";
+        }
+
+        $text .= '. ';
+
+        # processing key words
+        #  device
+        #  driver
+        #  date
+        #  c:\windows
+        #  ID(s)
+
 #    if( ($line =~ m/device/i ) && ( $line !~ m/device install function/i ) && ( $line !~ m/device install of/i ))
 #    {
 #      if( $line =~ m/#.+Found.+Device: "(.+)"; Driver: "(.+)"; Provider: "(.+)"; Mfg: "(.+)"; Section name: "(.+)".+/ )
 #      {
-#        # now we need to print 
+#        # now we need to print
 #        $text .= 'Device ' . $1 . ' using driver ' . $2 . ' from provider ' . $3 . '. Mfg: ' . $4 . ' and section name ' . $5;
 #      }
 #
 #      if( $line =~ m/Effective driver date: (\d{2}\/\d{2}\/\d{4})/ )
 #      {
 #        $text .= ' Driver date: ' . $1;
-#      } 
+#      }
 #      if( $line =~ m/.+Class GUID of device remains: \{(.+)\}/ )
 #      {
 #        $text .= ' GUID: ' . $1;
@@ -329,92 +320,90 @@ sub get_time()
 #
 #
 #    }
-    
-#    if( $line =~ m/Executing "(.+)" with command line:(.+)$/ )
-#    {
-#      $text .= 'Cmd executed ' . $1 . ' cmd options: ' . $2;
-#    }
-#
-#    if( $line =~ m/Obtaining rollback information for device "(.+)"/ )
-#    {
-#      $text .= ' rollback for device: ' . $1;
-#    }
-#  
-#    if( $line =~ m/Command line processed: (.+)$/ )
-#    {
-#      $text .= ' Cmd processed: ' . $1;
-#    }
-#
-#    if( $line =~ m/Selected driver installs from section \[(.+)\] in "(.+)"/ )
-#    {
-#      $text .= 'Driver install, section: ' . $1 . ' loc: ' . $2 ;
-#    }
-#
 
-    # load new line
-    $_ = <$fh> ;#or return undef;
-  }
+        #    if( $line =~ m/Executing "(.+)" with command line:(.+)$/ )
+        #    {
+        #      $text .= 'Cmd executed ' . $1 . ' cmd options: ' . $2;
+        #    }
+        #
+        #    if( $line =~ m/Obtaining rollback information for device "(.+)"/ )
+        #    {
+        #      $text .= ' rollback for device: ' . $1;
+        #    }
+        #
+        #    if( $line =~ m/Command line processed: (.+)$/ )
+        #    {
+        #      $text .= ' Cmd processed: ' . $1;
+        #    }
+        #
+        #    if( $line =~ m/Selected driver installs from section \[(.+)\] in "(.+)"/ )
+        #    {
+        #      $text .= 'Driver install, section: ' . $1 . ' loc: ' . $2 ;
+        #    }
+        #
 
-  # check if we have reached the next time settings
-  if( /^\[/ )
-  {
-    $line_loaded = 1 if( /^\[/ );
-    $self->{'line_loaded'} = $_;
-  }
+        # load new line
+        $_ = <$fh>;    #or return undef;
+    }
 
-  $text =~ s/\n//g;
-  $text =~ s/\r//g;
-  $text =~ s/[[:cntrl:]]//g;
+    # check if we have reached the next time settings
+    if (/^\[/) {
+        $line_loaded = 1 if (/^\[/);
+        $self->{'line_loaded'} = $_;
+    }
 
-  #print STDERR "\t$text\nDATE: [" . Log2t::Time::epoch2text( $date->epoch ) . "]\n<" . $date->epoch . ">\n\n";
-  
-        # content of array t_line ([optional])
-        # %t_line {        #       time
-        #               index
-        #                       value
-        #                       type
-        #                       legacy
-        #       desc
-        #       short
-        #       source
-        #       sourcetype
-        #       version
-        #       [notes]
-        #       extra
-        #               [filename]
-        #               [md5]
-        #               [mode]
-        #               [host]
-        #               [user]
-        #               [url]
-        #               [size]
-        #               [...]
-        # }
-  $text = $self->{'detailed_time'} ? $text : $title;
+    $text =~ s/\n//g;
+    $text =~ s/\r//g;
+    $text =~ s/[[:cntrl:]]//g;
 
-        # create the t_line variable
-        %t_line = (
-                'time' => { 0 => { 'value' => $date->epoch, 'type' => 'Entry written', 'legacy' => 15 } },
-                'desc' => $text,
-                'short' => $title,
-                'source' => 'LOG',
-                'sourcetype' => 'SetupAPI Log',
-                'version' => 2,
-                'extra' => {  }
-        );
+#print STDERR "\t$text\nDATE: [" . Log2t::Time::epoch2text( $date->epoch ) . "]\n<" . $date->epoch . ">\n\n";
 
-  return \%t_line;
+    # content of array t_line ([optional])
+    # %t_line {        #       time
+    #               index
+    #                       value
+    #                       type
+    #                       legacy
+    #       desc
+    #       short
+    #       source
+    #       sourcetype
+    #       version
+    #       [notes]
+    #       extra
+    #               [filename]
+    #               [md5]
+    #               [mode]
+    #               [host]
+    #               [user]
+    #               [url]
+    #               [size]
+    #               [...]
+    # }
+    $text = $self->{'detailed_time'} ? $text : $title;
+
+    # create the t_line variable
+    %t_line = (
+        'time' => { 0 => { 'value' => $date->epoch, 'type' => 'Entry written', 'legacy' => 15 } },
+        'desc' => $text,
+        'short'      => $title,
+        'source'     => 'LOG',
+        'sourcetype' => 'SetupAPI Log',
+        'version'    => 2,
+        'extra'      => {}
+              );
+
+    return \%t_line;
 }
 
 #       get_help
 #
-# A simple subroutine that returns a string containing the help 
+# A simple subroutine that returns a string containing the help
 # message for this particular format file.
 #
 # @return A string containing a help file for this format file
-sub get_help()
-{
-  return "This input module implements a parser for the Windows SetupAPI log file";
+sub get_help() {
+    return "This input module implements a parser for the Windows SetupAPI log file";
 
 }
 
@@ -426,80 +415,76 @@ sub get_help()
 # This is needed since there is no need to parse the file if this file/dir is not the file
 # that this input module is designed to parse
 #
-# It is also important to validate the file since the scanner function will try to 
+# It is also important to validate the file since the scanner function will try to
 # parse every file it finds, and uses this verify function to determine whether or not
-# a particular file/dir/artifact is supported or not. It is therefore very important to 
+# a particular file/dir/artifact is supported or not. It is therefore very important to
 # implement this function and make it verify the file structure without false positives and
 # without taking too long time
 #
-# @return A reference to a hash that contains an integer indicating whether or not the 
-#  file/dir/artifact is supporter by this input module as well as a reason why 
-#  it failed (if it failed) 
-sub verify($$)
-{
-  # define an array to keep
-  my %return;
-  my $line;
+# @return A reference to a hash that contains an integer indicating whether or not the
+#  file/dir/artifact is supporter by this input module as well as a reason why
+#  it failed (if it failed)
+sub verify($$) {
 
-  my $self = shift;
+    # define an array to keep
+    my %return;
+    my $line;
 
-  # default values
-  $return{'success'} = 0;
-  $return{'msg'} = 'not really a file';
+    my $self = shift;
 
-  # if it isn't a file, then we do not bother reading further
-  return \%return unless -f ${$self->{'name'}};
-
-        # start by setting the endian correctly
-        Log2t::BinRead::set_endian( LITTLE_E );
-  my $ofs = 0;
-
-  # open the file (at least try to open it)
-  eval
-  {
-    #unless( $detail )
-    #{
-    #  # a SetupAPI log file starts with [
-    #  seek(FILE,0,0);
-    #  read(FILE,$line,1);
-    #  $return{'msg'} = 'Wrong magic value';
-    #
-    #  close(FILE) unless $line eq '[';
-    #  return \%return unless $line eq '[';
-    #}
-
-    # read a line
-    $line = Log2t::BinRead::read_ascii_until( $self->{'file'}, \$ofs, "\n", 40 ); 
-    # remove control characters from it
-    $line =~ s/[[:cntrl:]]//g;
-
-    #print STDERR "[DEBUG] Verify line is ($line)\n" if $self->{'debug'};
-  };
-  if ( $@ )
-  {
+    # default values
     $return{'success'} = 0;
-    $return{'msg'} = "Unable to open file";
+    $return{'msg'}     = 'not really a file';
 
+    # if it isn't a file, then we do not bother reading further
+    return \%return unless -f ${ $self->{'name'} };
+
+    # start by setting the endian correctly
+    Log2t::BinRead::set_endian(LITTLE_E);
+    my $ofs = 0;
+
+    # open the file (at least try to open it)
+    eval {
+
+        #unless( $detail )
+        #{
+        #  # a SetupAPI log file starts with [
+        #  seek(FILE,0,0);
+        #  read(FILE,$line,1);
+        #  $return{'msg'} = 'Wrong magic value';
+        #
+        #  close(FILE) unless $line eq '[';
+        #  return \%return unless $line eq '[';
+        #}
+
+        # read a line
+        $line = Log2t::BinRead::read_ascii_until($self->{'file'}, \$ofs, "\n", 40);
+
+        # remove control characters from it
+        $line =~ s/[[:cntrl:]]//g;
+
+        #print STDERR "[DEBUG] Verify line is ($line)\n" if $self->{'debug'};
+    };
+    if ($@) {
+        $return{'success'} = 0;
+        $return{'msg'}     = "Unable to open file";
+
+        return \%return;
+    }
+
+    # verify that we are dealing with a setupAPI log file
+    if ($line eq '[SetupAPI Log]') {
+        $return{'success'} = 1;
+    }
+    else {
+        $return{'success'} = 0;
+        $return{'msg'}     = 'Wrong magic value: [' . $line . ']';
+    }
 
     return \%return;
-  }
-
-  # verify that we are dealing with a setupAPI log file
-  if( $line eq '[SetupAPI Log]' )
-  {
-    $return{'success'} = 1;
-  }
-  else
-  {
-    $return{'success'} = 0;
-    $return{'msg'} = 'Wrong magic value: [' . $line . ']';
-  } 
-
-  return \%return;
 }
 
 1;
-
 
 __END__
 

@@ -2,15 +2,15 @@
 #    MCAFEE
 #################################################################################################
 # This script is a part of the log2timeline framework for timeline creation and analysis.
-# This script implements an input module, or a parser capable of parsing a single log file (or 
+# This script implements an input module, or a parser capable of parsing a single log file (or
 # directory) and creating a hash that is returned to the main script.  That hash is then used
 # to create a body file (to create a timeline) or a timeline (directly).
-# 
+#
 # Author: Kristinn Gudjonsson
 # Version : 0.3
 # Date : 03/05/11
 #
-# Updated 07/26/11 by anonymous donator 
+# Updated 07/26/11 by anonymous donator
 # Added:
 #  Newline check to verify function. Added code is marked with BEGIN UPDATE and END UPDATE
 #
@@ -34,13 +34,15 @@
 package Log2t::input::mcafee;
 
 use strict;
-use Log2t::base::input; # the SUPER class or parent
+use Log2t::base::input;    # the SUPER class or parent
 use Log2t::Common ':binary';
-use Log2t::Time;  # to manipulate time
+use Log2t::Time;           # to manipulate time
+
 #use Log2t::Win;  # Windows specific information
 #use Log2t::Numbers;  # to manipulate numbers
-use Log2t::BinRead;  # methods to read binary files (it is preferable to always load this library)
-#use Log2t::Network;  # information about network traffic 
+use Log2t::BinRead;    # methods to read binary files (it is preferable to always load this library)
+
+#use Log2t::Network;  # information about network traffic
 
 # define the VERSION variable
 use vars qw($VERSION @ISA);
@@ -51,27 +53,27 @@ use constant NEWLINELIMIT => 20;
 #####END UPDATE#####
 
 # inherit the base input module, or the super class.
-@ISA = ( "Log2t::base::input" );
+@ISA = ("Log2t::base::input");
 
 # indicate the version number of this input module
 $VERSION = '0.3';
 
-# ------------------------------------------------------------------------------------------------ 
+# ------------------------------------------------------------------------------------------------
 #       AccessProtectionLog (one line per event)
-# ------------------------------------------------------------------------------------------------ 
+# ------------------------------------------------------------------------------------------------
 # DATE (day/month/year)   TIME   WHAT   USER   WHERE  PROGRAM  DESCRIPTION  ACTION
-# 
-# each line is a new event 
+#
+# each line is a new event
 # starts with a magic value
 # type 1
 #
-# ------------------------------------------------------------------------------------------------ 
+# ------------------------------------------------------------------------------------------------
 #         OnDemandScanLog
-# ------------------------------------------------------------------------------------------------ 
+# ------------------------------------------------------------------------------------------------
 # (not with the magic value) possible multiple lines each event, same timestamp on each entry
 # The multiple lines use the following ACTION field:
 #  Engine version
-#  Scan Summary 
+#  Scan Summary
 #
 # Some lines are empty
 #
@@ -79,85 +81,83 @@ $VERSION = '0.3';
 # Date (day/month/year)  TIME  ACTION  USER  FILE  WHAT
 #
 #
-# ------------------------------------------------------------------------------------------------ 
+# ------------------------------------------------------------------------------------------------
 #         OnAccessScanLog
-# ------------------------------------------------------------------------------------------------ 
+# ------------------------------------------------------------------------------------------------
 # Date (day/month/year)   TIME  TEXT  USER  FILE  FILE
 #
-# some lines are empty 
+# some lines are empty
 # starts with a magic value
 # multiple lines per event (same date and timestamp for all the entries)
 #
 
 # the constructor...
-sub new()
-{
-        my $class = shift;
+sub new() {
+    my $class = shift;
 
-        # bless the class ;)
-        my $self = $class->SUPER::new();
+    # bless the class ;)
+    my $self = $class->SUPER::new();
 
-  # the available log types
-  $self->{'types'} = {
-    1 => 'AccessProtectionLog',
-    2 => 'OnAccessScanLog',
-    3 => 'OnDemandScanLog'
-  };
+    # the available log types
+    $self->{'types'} = {
+                         1 => 'AccessProtectionLog',
+                         2 => 'OnAccessScanLog',
+                         3 => 'OnDemandScanLog'
+                       };
 
-        bless($self,$class);
+    bless($self, $class);
 
-        return $self;
+    return $self;
 }
-
-
 
 #       get_version
 # A simple subroutine that returns the version number of the format file
 #
 # @return A version number
-sub get_version()
-{
-  return $VERSION;
+sub get_version() {
+    return $VERSION;
 }
 
 #       get_description
-# A simple subroutine that returns a string containing a description of 
+# A simple subroutine that returns a string containing a description of
 # the funcionality of the format file. This string is used when a list of
 # all available format files is printed out
 #
 # @return A string containing a description of the format file's functionality
-sub get_description()
-{
-  return "Parse the content of log files from McAfee AV engine"; 
+sub get_description() {
+    return "Parse the content of log files from McAfee AV engine";
 }
 
 #       init
 #
 # The purpose of this subfunction is to prepare the log file or artifact for parsing
-# Usually this involves just opening the file (if plain text) or otherwise building a 
+# Usually this involves just opening the file (if plain text) or otherwise building a
 # structure that can be used by other functions
 #
 # This function also accepts parameters for processing (for changing some settings in
 # the input module)
 #
-# @params A path to the artifact/log file/directory to prepare 
+# @params A path to the artifact/log file/directory to prepare
 # @params The rest of the ARGV array containing parameters to be passed to the input module
-# @return An integer is returned to indicate whether the file preparation was 
+# @return An integer is returned to indicate whether the file preparation was
 #       successful or not.
-sub init
-{
-  # read the paramaters passed to the script
-  my $self = shift;
+sub init {
 
-  # initialize variables
-  $self->{'old_date'} = undef;
-  $self->{'line_loaded'} = 0;
-  $self->{'eof'} = 0;
-  $self->{'first_line'} = 1;
+    # read the paramaters passed to the script
+    my $self = shift;
 
-  print STDERR "[McAfee] Type " . $self->{'type'} . ": " . $self->{'types'}->{$self->{'type'}} . "\n" if $self->{'debug'};
+    # initialize variables
+    $self->{'old_date'}    = undef;
+    $self->{'line_loaded'} = 0;
+    $self->{'eof'}         = 0;
+    $self->{'first_line'}  = 1;
 
-  return 1;
+    print STDERR "[McAfee] Type "
+      . $self->{'type'} . ": "
+      . $self->{'types'}->{ $self->{'type'} } . "\n"
+      if $self->{'debug'};
+
+    return 1;
 }
 
 #       get_time
@@ -166,358 +166,392 @@ sub init
 # load_line that loads a line of the log file into a global variable and then
 # parses that line to produce the hash t_line, which is read and sent to the
 # output modules by the main script to produce a timeline or a bodyfile
-# 
+#
 # @return Returns a reference to a hash containing the needed values to print a body file
-sub get_time
-{
-  my $self = shift;
-  # timestamp object
-  my %t_line;
-  my @fields;
-  my $text;
-  my $title;
-  my $date = undef;
-  my %d;  # the current date
-  my $line;
-  my $fh = $self->{'file'};
+sub get_time {
+    my $self = shift;
 
-  # check if there is a line already loaded up and ready to be parsed
-  if( $self->{'line_loaded'} )
-  {
-    return undef if $self->{'eof'};
+    # timestamp object
+    my %t_line;
+    my @fields;
+    my $text;
+    my $title;
+    my $date = undef;
+    my %d;    # the current date
+    my $line;
+    my $fh = $self->{'file'};
 
-    $self->{'line_loaded'} = 0;
-    $line = $self->{'line'};
-  }
+    # check if there is a line already loaded up and ready to be parsed
+    if ($self->{'line_loaded'}) {
+        return undef if $self->{'eof'};
 
-  # check if we have a magic in the beginning of the file, let's skip it
-  if( ( $self->{'type'} == 1 or $self->{'type'} == 2 ) && ( $self->{'first_line'} ) )
-  {
-    # check for magic value and the first line
-    my $ofs = 3;
-    $line = Log2t::BinRead::read_ascii_until( $self->{'file'}, \$ofs, "\n", 400 );
-    $self->{'first_line'} = 0;
-  }
-  else
-  {
-    # get the filehandle and read the next line
-    $line = <$fh> or return undef; 
-  }
-
-  @fields = split( /\t/, $line );
-
-  $self->_populate_date(\%d,\@fields);
-
-  # parse the date
-  $date = Log2t::Time::hash_to_date( \%d, $self->{'tz'} ) if( defined $d{'month'} and defined $d{'time'} );
-
-  print STDERR "[MCAFEE] Parsing line with date $date\n" if $self->{'debug'};
-
-  # check if we have a valid date
-  return \%t_line unless defined $date;
-
-  $text ='';
-  # first we check if the date/time has been mixed
-  if( $d{'m'} eq 0 && $d{'t'} eq 1 )
-  {
-    # set the title (short text)
-    $title = 'Line from ' . $self->{'types'}->{$self->{'type'}};
-
-    # check the type
-    if( $self->{'type'} == 1 )
-    {
-      # we have AccessProtectionLog
-      # each line here is a new event
-# ------------------------------------------------------------------------------------------------ 
-#       AccessProtectionLog (one line per event)   => 1
-# ------------------------------------------------------------------------------------------------ 
-#  (8 fields)
-# DATE (day/month/year)   TIME   WHAT   USER   WHERE  FILE  DESCRIPTION  ACTION
-#  (6 fields)
-# DATE  TIME  WHAT  PROGRAM    DESCRIPTION  IP:PORT
-# 
-# each line is a new event 
-# starts with a magic value
-# Fields are either 5 or 7 (meaning 6 or 8)
-#
-      $text .= 'AccessProtection: ';
-
-      if( $#fields eq 5 )
-      {
-        my( $ip, $port ) = split( /:/, $fields[5] );
-        $text .= 'IP: ' . $ip . ' port ' . $port . ' - ' . $fields[2] . ' by ' . $fields[3] . ' [' . $fields[4] . ']';
-      }
-      elsif( $#fields eq 7 )
-      {
-        $text .= $fields[2] . ' action taken ' . $fields[7] . ' file:' . $fields[5] . ' [' . $fields[4] . '] - ' . $fields[5];
-        $self->{'username'} = $fields[3];
-      }
-      
+        $self->{'line_loaded'} = 0;
+        $line = $self->{'line'};
     }
-    elsif( $self->{'type'} == 2 )
-    {
-      print STDERR "[MCAFEE] Now we have an OnAcessScanLog file\n" if $self->{'debug'};
-# ------------------------------------------------------------------------------------------------ 
-#         OnAccessScanLog        => 2
-# ------------------------------------------------------------------------------------------------ 
-# some lines are empty 
-# starts with a magic value
-# multiple lines per event (same date and timestamp for all the entries)
-# Fields are in the range from 1-10,12,15
-# Values of five and seven are the majority of the file
-#
-#  (5 fields) - GROUP EVENT
-# DATE  TIME  NOTHING  VARIABLE  VALUE
-#
-#  (3 fields)
-# DATE  TIME  WHAT
-# IF WHAT EQ Statistics: THEN WE HAVE A GROUP EVENT FOLLOWED BY 4 FIELDS
-#  (4 fields) followed by Statistics: 3 fields
-# DATE  TIME  VARIABLE  VALUE
-#
-#   (7 fields) - MIGHT SUPERSEED THE 3 FIELDS CONTAINING INFORMATION ABOUT EVENT (GROUP EVENT)
-# DATE  TIME  ACTION  USER  FILE1  FILE2  VIRUS NAME
-# or
-# FILE1 DATE  TIME  VIRUSNAME  VARIABLE  FILE2  VALUE
-#
-#  TREAT THIS IS AS A SEPARATE EVENT (7 fields separate)
-#
-#  (9 fields) - treated as separate event
-# DATEDATE  NOTHING  TIME  TIME  ACTION  VARIABLE  NOTHING  VALUE  NOTHING
-# 
-#   (6 and 8 fields)
-# VALUE DIFFERS, CHECK EACH FIELD, IF THERE IS BOTH A DATE AND A TIME THEN GO AHEAD, ELSE SKIP
-#
-# Value of 1 (zero) and 2, can be skipped
-      # check the number of fields
-      $text .= 'OnAccessScan: ';
 
-      if( $#fields eq 6 )
-      {
-        print STDERR "[MCAFEE] We have a six field line\n" if $self->{'debug'};
-        # separate event
-        $text .= $fields[6] eq '' ? ' action: ' . $fields[2] . ' - file ' . $fields[4] . ' - ' . $fields[5] : ' action: ' . $fields[2] . ' - Virus: ' . $fields[6]. ' - file ' . $fields[4] . ' - ' . $fields[5];
+    # check if we have a magic in the beginning of the file, let's skip it
+    if (($self->{'type'} == 1 or $self->{'type'} == 2) && ($self->{'first_line'})) {
 
-        $self->{'username'} = $fields[3];
-      }
-      else
-      {
-        # here we could have a group event
-        $self->{'old_date'} = $date;
-  
-        my $temp;
-        # go through each line until we hit a new event
-        while( $self->{'old_date'} eq $date )
-        {
-          # parse the line
-          $temp = shift( @fields );
-          $temp = shift( @fields );
-          $text .= join( ' ', @fields );
-            
-          print STDERR "[MCAFEE] Loading a new line\n" if $self->{'debug'};
-
-          # load a new line and process it (we may have reached the end of file)
-          $line = <$fh> or $self->{'eof'} = 1;
-          $date = undef if $self->{'eof'};
-          next if $self->{'eof'};
-
-          # split the fields and populate the date
-          @fields = split(/\t/,$line);
-          $self->_populate_date(\%d,\@fields);
-          $date = Log2t::Time::hash_to_date( \%d, $self->{'tz'} ) if( defined $d{'month'} and defined $d{'time'} );
-
-          print STDERR "[McAfee] New date: $date while the old one is " . $self->{'old_date'} . "\n" if $self->{'debug'};
-        }
-        # now we have a new line to parse
-        $self->{'line_loaded'} = 1;
-        $self->{'line'} = $line;
-        $date = $self->{'old_date'};
-      }
+        # check for magic value and the first line
+        my $ofs = 3;
+        $line = Log2t::BinRead::read_ascii_until($self->{'file'}, \$ofs, "\n", 400);
+        $self->{'first_line'} = 0;
     }
-    elsif( $self->{'type'} == 3 )
-    {
-      # OnDemandScanLog
-# ------------------------------------------------------------------------------------------------ 
-#         OnDemandScanLog        => 3
-# ------------------------------------------------------------------------------------------------ 
-# (not with the magic value) possible multiple lines each event, same timestamp on each entry
-# The multiple lines use the following ACTION field:
-#  Engine version
-#  Scan Summary 
-#
-# Some lines are empty
-# No magic value
-# Number of fields: 0, 3, 5 and 6
-#
-# Events:
-#   (3 fields) - GROUP EVENT 
-# DATE  TIME  INFORMATION
-# INFORMATION FIELD IS A "VARIABLE = VALUE"
-#
-#  (5 fields) 
-# DATE  TIME  ACTION  USER  INFORMATION
-#  GROUP EVENT IF ACTION = "Scan Summary"
-#  OTHER POSSIBILITIES INCLUDE: "Scan Started"
-#
-#  (6 fields)
-# Date (day/month/year)  TIME  ACTION  USER  FILE  WHAT
-#
-      # check for an empty line
-      return \%t_line if( $#fields eq 0 or $#fields eq 1 );
+    else {
 
-      if( $#fields eq 5 )
-      {
-        # single event
-        $text .= ' action: ' . $fields[2] . ' - ' . $fields[5] . ' file: ' . $fields[4];
-        $self->{'username'} = $fields[3];
-      }
-      elsif( $#fields eq 2 )
-      {
-        $self->{'old_date'} = $date;
+        # get the filehandle and read the next line
+        $line = <$fh> or return undef;
+    }
 
-                                my $temp;
-                                # go through each line until we hit a new event
-                                while( $self->{'old_date'} eq $date )
-                                {
-                                        # parse the line
-                                        $temp = shift( @fields );
-                                        $temp = shift( @fields );
-          $text .= $fields[2] . ' - '; 
+    @fields = split(/\t/, $line);
 
-                                        print STDERR "[MCAFEE] Loading a new line\n" if $self->{'debug'};
+    $self->_populate_date(\%d, \@fields);
 
-                                        # load a new line and process it (we may have reached the end of file)
-                                        $line = <$fh> or $self->{'eof'} = 1;
-                                        $date = undef if $self->{'eof'};
-                                        next if $self->{'eof'};
+    # parse the date
+    $date = Log2t::Time::hash_to_date(\%d, $self->{'tz'})
+      if (defined $d{'month'} and defined $d{'time'});
 
-                                        # split the fields and populate the date
-                                        @fields = split(/\t/,$line);
-                                        $self->_populate_date(\%d,\@fields);
-                                        $date = Log2t::Time::hash_to_date( \%d, $self->{'tz'} ) if( defined $d{'month'} and defined $d{'time'} );
+    print STDERR "[MCAFEE] Parsing line with date $date\n" if $self->{'debug'};
 
-                                        print STDERR "[McAfee] New date: $date while the old one is " . $self->{'old_date'} . "\n" if $self->{'debug'};
-                                }
-                                # now we have a new line to parse
-                                $self->{'line_loaded'} = 1;
-        $self->{'line'} = $line;
-                                $date = $self->{'old_date'};
-      }
-      else
-      {
-        # we need to examine the line a bit better, to check for a single or group event
-        if( $fields[2] =~ m/Scan Summary/ )
-        {
-          # load the next line there (don't need the title)
-          $line = <$fh>;
-          $text .= ' Scan Summary: ';
-                                    my $temp;
-          $self->{'old_date'} = $date;
+    # check if we have a valid date
+    return \%t_line unless defined $date;
 
-                                    # go through each line until we hit a new event
-                                    while( $self->{'old_date'} eq $date )
-                                    {
-                                          # parse the line
-            $temp = $fields[4];
-            $temp =~ s/\s+/ /g;
-        
-            $text .= $temp . ' - ';
-  
-                                          print STDERR "[MCAFEE] Loading a new line\n" if $self->{'debug'};
-  
-                                          # load a new line and process it (we may have reached the end of file)
-                                          $line = <$fh> or $self->{'eof'} = 1;
-                                          $date = undef if $self->{'eof'};
-                                          next if $self->{'eof'};
-  
-                                          # split the fields and populate the date
-                                          @fields = split(/\t/,$line);
-                                          $self->_populate_date(\%d,\@fields);
-                                          $date = Log2t::Time::hash_to_date( \%d,$self->{'tz'} ) if( defined $d{'month'} and defined $d{'time'} );
-  
-                                          print STDERR "[McAfee] New date: $date while the old one is " . $self->{'old_date'} . "\n" if $self->{'debug'};
-                                  }
-                                  # now we have a new line to parse
-                                  $self->{'line_loaded'} = 1;
-          $self->{'line'} = $line;
-                                  $date = $self->{'old_date'};
+    $text = '';
+
+    # first we check if the date/time has been mixed
+    if ($d{'m'} eq 0 && $d{'t'} eq 1) {
+
+        # set the title (short text)
+        $title = 'Line from ' . $self->{'types'}->{ $self->{'type'} };
+
+        # check the type
+        if ($self->{'type'} == 1) {
+
+  # we have AccessProtectionLog
+  # each line here is a new event
+  # ------------------------------------------------------------------------------------------------
+  #       AccessProtectionLog (one line per event)   => 1
+  # ------------------------------------------------------------------------------------------------
+  #  (8 fields)
+  # DATE (day/month/year)   TIME   WHAT   USER   WHERE  FILE  DESCRIPTION  ACTION
+  #  (6 fields)
+  # DATE  TIME  WHAT  PROGRAM    DESCRIPTION  IP:PORT
+  #
+  # each line is a new event
+  # starts with a magic value
+  # Fields are either 5 or 7 (meaning 6 or 8)
+  #
+            $text .= 'AccessProtection: ';
+
+            if ($#fields eq 5) {
+                my ($ip, $port) = split(/:/, $fields[5]);
+                $text .=
+                    'IP: ' 
+                  . $ip 
+                  . ' port ' 
+                  . $port . ' - '
+                  . $fields[2] . ' by '
+                  . $fields[3] . ' ['
+                  . $fields[4] . ']';
+            }
+            elsif ($#fields eq 7) {
+                $text .=
+                    $fields[2]
+                  . ' action taken '
+                  . $fields[7]
+                  . ' file:'
+                  . $fields[5] . ' ['
+                  . $fields[4] . '] - '
+                  . $fields[5];
+                $self->{'username'} = $fields[3];
+            }
 
         }
-        else
-        {
-          # single event
-          $text .= ' action: ' . $fields[2] . ' -' . $fields[4];
-          $self->{'username'} = $fields[3];
+        elsif ($self->{'type'} == 2) {
+            print STDERR "[MCAFEE] Now we have an OnAcessScanLog file\n" if $self->{'debug'};
+
+  # ------------------------------------------------------------------------------------------------
+  #         OnAccessScanLog        => 2
+  # ------------------------------------------------------------------------------------------------
+  # some lines are empty
+  # starts with a magic value
+  # multiple lines per event (same date and timestamp for all the entries)
+  # Fields are in the range from 1-10,12,15
+  # Values of five and seven are the majority of the file
+  #
+  #  (5 fields) - GROUP EVENT
+  # DATE  TIME  NOTHING  VARIABLE  VALUE
+  #
+  #  (3 fields)
+  # DATE  TIME  WHAT
+  # IF WHAT EQ Statistics: THEN WE HAVE A GROUP EVENT FOLLOWED BY 4 FIELDS
+  #  (4 fields) followed by Statistics: 3 fields
+  # DATE  TIME  VARIABLE  VALUE
+  #
+  #   (7 fields) - MIGHT SUPERSEED THE 3 FIELDS CONTAINING INFORMATION ABOUT EVENT (GROUP EVENT)
+  # DATE  TIME  ACTION  USER  FILE1  FILE2  VIRUS NAME
+  # or
+  # FILE1 DATE  TIME  VIRUSNAME  VARIABLE  FILE2  VALUE
+  #
+  #  TREAT THIS IS AS A SEPARATE EVENT (7 fields separate)
+  #
+  #  (9 fields) - treated as separate event
+  # DATEDATE  NOTHING  TIME  TIME  ACTION  VARIABLE  NOTHING  VALUE  NOTHING
+  #
+  #   (6 and 8 fields)
+  # VALUE DIFFERS, CHECK EACH FIELD, IF THERE IS BOTH A DATE AND A TIME THEN GO AHEAD, ELSE SKIP
+  #
+  # Value of 1 (zero) and 2, can be skipped
+  # check the number of fields
+            $text .= 'OnAccessScan: ';
+
+            if ($#fields eq 6) {
+                print STDERR "[MCAFEE] We have a six field line\n" if $self->{'debug'};
+
+                # separate event
+                $text .=
+                  $fields[6] eq ''
+                  ? ' action: ' . $fields[2] . ' - file ' . $fields[4] . ' - ' . $fields[5]
+                  : ' action: '
+                  . $fields[2]
+                  . ' - Virus: '
+                  . $fields[6]
+                  . ' - file '
+                  . $fields[4] . ' - '
+                  . $fields[5];
+
+                $self->{'username'} = $fields[3];
+            }
+            else {
+
+                # here we could have a group event
+                $self->{'old_date'} = $date;
+
+                my $temp;
+
+                # go through each line until we hit a new event
+                while ($self->{'old_date'} eq $date) {
+
+                    # parse the line
+                    $temp = shift(@fields);
+                    $temp = shift(@fields);
+                    $text .= join(' ', @fields);
+
+                    print STDERR "[MCAFEE] Loading a new line\n" if $self->{'debug'};
+
+                    # load a new line and process it (we may have reached the end of file)
+                    $line = <$fh> or $self->{'eof'} = 1;
+                    $date = undef if $self->{'eof'};
+                    next if $self->{'eof'};
+
+                    # split the fields and populate the date
+                    @fields = split(/\t/, $line);
+                    $self->_populate_date(\%d, \@fields);
+                    $date = Log2t::Time::hash_to_date(\%d, $self->{'tz'})
+                      if (defined $d{'month'} and defined $d{'time'});
+
+                    print STDERR "[McAfee] New date: $date while the old one is "
+                      . $self->{'old_date'} . "\n"
+                      if $self->{'debug'};
+                }
+
+                # now we have a new line to parse
+                $self->{'line_loaded'} = 1;
+                $self->{'line'}        = $line;
+                $date                  = $self->{'old_date'};
+            }
         }
-      }
-      
+        elsif ($self->{'type'} == 3) {
+
+  # OnDemandScanLog
+  # ------------------------------------------------------------------------------------------------
+  #         OnDemandScanLog        => 3
+  # ------------------------------------------------------------------------------------------------
+  # (not with the magic value) possible multiple lines each event, same timestamp on each entry
+  # The multiple lines use the following ACTION field:
+  #  Engine version
+  #  Scan Summary
+  #
+  # Some lines are empty
+  # No magic value
+  # Number of fields: 0, 3, 5 and 6
+  #
+  # Events:
+  #   (3 fields) - GROUP EVENT
+  # DATE  TIME  INFORMATION
+  # INFORMATION FIELD IS A "VARIABLE = VALUE"
+  #
+  #  (5 fields)
+  # DATE  TIME  ACTION  USER  INFORMATION
+  #  GROUP EVENT IF ACTION = "Scan Summary"
+  #  OTHER POSSIBILITIES INCLUDE: "Scan Started"
+  #
+  #  (6 fields)
+  # Date (day/month/year)  TIME  ACTION  USER  FILE  WHAT
+  #
+  # check for an empty line
+            return \%t_line if ($#fields eq 0 or $#fields eq 1);
+
+            if ($#fields eq 5) {
+
+                # single event
+                $text .= ' action: ' . $fields[2] . ' - ' . $fields[5] . ' file: ' . $fields[4];
+                $self->{'username'} = $fields[3];
+            }
+            elsif ($#fields eq 2) {
+                $self->{'old_date'} = $date;
+
+                my $temp;
+
+                # go through each line until we hit a new event
+                while ($self->{'old_date'} eq $date) {
+
+                    # parse the line
+                    $temp = shift(@fields);
+                    $temp = shift(@fields);
+                    $text .= $fields[2] . ' - ';
+
+                    print STDERR "[MCAFEE] Loading a new line\n" if $self->{'debug'};
+
+                    # load a new line and process it (we may have reached the end of file)
+                    $line = <$fh> or $self->{'eof'} = 1;
+                    $date = undef if $self->{'eof'};
+                    next if $self->{'eof'};
+
+                    # split the fields and populate the date
+                    @fields = split(/\t/, $line);
+                    $self->_populate_date(\%d, \@fields);
+                    $date = Log2t::Time::hash_to_date(\%d, $self->{'tz'})
+                      if (defined $d{'month'} and defined $d{'time'});
+
+                    print STDERR "[McAfee] New date: $date while the old one is "
+                      . $self->{'old_date'} . "\n"
+                      if $self->{'debug'};
+                }
+
+                # now we have a new line to parse
+                $self->{'line_loaded'} = 1;
+                $self->{'line'}        = $line;
+                $date                  = $self->{'old_date'};
+            }
+            else {
+
+                # we need to examine the line a bit better, to check for a single or group event
+                if ($fields[2] =~ m/Scan Summary/) {
+
+                    # load the next line there (don't need the title)
+                    $line = <$fh>;
+                    $text .= ' Scan Summary: ';
+                    my $temp;
+                    $self->{'old_date'} = $date;
+
+                    # go through each line until we hit a new event
+                    while ($self->{'old_date'} eq $date) {
+
+                        # parse the line
+                        $temp = $fields[4];
+                        $temp =~ s/\s+/ /g;
+
+                        $text .= $temp . ' - ';
+
+                        print STDERR "[MCAFEE] Loading a new line\n" if $self->{'debug'};
+
+                        # load a new line and process it (we may have reached the end of file)
+                        $line = <$fh> or $self->{'eof'} = 1;
+                        $date = undef if $self->{'eof'};
+                        next if $self->{'eof'};
+
+                        # split the fields and populate the date
+                        @fields = split(/\t/, $line);
+                        $self->_populate_date(\%d, \@fields);
+                        $date = Log2t::Time::hash_to_date(\%d, $self->{'tz'})
+                          if (defined $d{'month'} and defined $d{'time'});
+
+                        print STDERR "[McAfee] New date: $date while the old one is "
+                          . $self->{'old_date'} . "\n"
+                          if $self->{'debug'};
+                    }
+
+                    # now we have a new line to parse
+                    $self->{'line_loaded'} = 1;
+                    $self->{'line'}        = $line;
+                    $date                  = $self->{'old_date'};
+
+                }
+                else {
+
+                    # single event
+                    $text .= ' action: ' . $fields[2] . ' -' . $fields[4];
+                    $self->{'username'} = $fields[3];
+                }
+            }
+
+        }
+        else {
+            $text  = '';
+            $title = '';
+        }
     }
-    else
-    {
-      $text = '';
-      $title = '';
+    else {
+
+  # we have a line with a valid time and date, but not in the correct position, so we will improvise
+        $text .= $self->{'types'}->{ $self->{'type'} } . ' - ' . $line;
+        $text =~ s/\t/-/g;
+
+        $title = 'Line from ' . $self->{'types'}->{ $self->{'type'} };
     }
-  }
-  else
-  {
-    # we have a line with a valid time and date, but not in the correct position, so we will improvise
-    $text .= $self->{'types'}->{$self->{'type'}} . ' - ' . $line;
-    $text =~ s/\t/-/g;
 
-    $title = 'Line from ' . $self->{'types'}->{$self->{'type'}};
-  }
+    # fix potential new line characters in text
+    $text =~ s/\n//g;
+    $text =~ s/\r//g;
+    $text =~ s/\s+/ /g;
 
-  # fix potential new line characters in text
-  $text =~ s/\n//g;
-  $text =~ s/\r//g;
-  $text =~ s/\s+/ /g;
-  
-        # content of array t_line ([optional])
-        # %t_line {        #       time
-        #               index
-        #                       value
-        #                       type
-        #                       legacy
-        #       desc
-        #       short
-        #       source
-        #       sourcetype
-        #       version
-        #       [notes]
-        #       extra
-        #               [filename]
-        #               [md5]
-        #               [mode]
-        #               [host]
-        #               [user]
-        #               [url]
-        #               [size]
-        #               [...]
-        # }
+    # content of array t_line ([optional])
+    # %t_line {        #       time
+    #               index
+    #                       value
+    #                       type
+    #                       legacy
+    #       desc
+    #       short
+    #       source
+    #       sourcetype
+    #       version
+    #       [notes]
+    #       extra
+    #               [filename]
+    #               [md5]
+    #               [mode]
+    #               [host]
+    #               [user]
+    #               [url]
+    #               [size]
+    #               [...]
+    # }
 
-        # create the t_line variable
-        %t_line = (
-                'time' => { 0 => { 'value' => $date, 'type' => 'Entry written', 'legacy' => 15 } },
-                'desc' => $text,
-                'short' => $title,
-                'source' => 'AV',
-                'sourcetype' => 'McAfee AV Log',
-                'version' => 2,
-                'extra' => { 'user' => $self->{'username'},  }
-        );
+    # create the t_line variable
+    %t_line = (
+        'time'   => { 0 => { 'value' => $date, 'type' => 'Entry written', 'legacy' => 15 } },
+        'desc'   => $text,
+        'short'  => $title,
+        'source' => 'AV',
+        'sourcetype' => 'McAfee AV Log',
+        'version'    => 2,
+        'extra'      => { 'user' => $self->{'username'}, }
+              );
 
-  return \%t_line;
+    return \%t_line;
 }
 
 #       get_help
 #
-# A simple subroutine that returns a string containing the help 
+# A simple subroutine that returns a string containing the help
 # message for this particular format file.
 #
 # @return A string containing a help file for this format file
-sub get_help()
-{
-  return "This is a plugin of unknown origin.  It parses a log file and contains no requirements or 
+sub get_help() {
+    return
+      "This is a plugin of unknown origin.  It parses a log file and contains no requirements or 
 any other relevant options or possibilites, use with care...";
 
 }
@@ -530,330 +564,310 @@ any other relevant options or possibilites, use with care...";
 # This is needed since there is no need to parse the file if this file/dir is not the file
 # that this input module is designed to parse
 #
-# It is also important to validate the file since the scanner function will try to 
+# It is also important to validate the file since the scanner function will try to
 # parse every file it finds, and uses this verify function to determine whether or not
-# a particular file/dir/artifact is supported or not. It is therefore very important to 
+# a particular file/dir/artifact is supported or not. It is therefore very important to
 # implement this function and make it verify the file structure without false positives and
 # without taking too long time
 #
-# @return A reference to a hash that contains an integer indicating whether or not the 
-#  file/dir/artifact is supporter by this input module as well as a reason why 
-#  it failed (if it failed) 
-sub verify
-{
-  my $self = shift;
-  my $ofs;
-  my $temp;
+# @return A reference to a hash that contains an integer indicating whether or not the
+#  file/dir/artifact is supporter by this input module as well as a reason why
+#  it failed (if it failed)
+sub verify {
+    my $self = shift;
+    my $ofs;
+    my $temp;
 
-  # define an array to keep
-  my %return;
-  my $vline;
-  my @words;
+    # define an array to keep
+    my %return;
+    my $vline;
+    my @words;
 
-  # default values
-  $return{'success'} = 0;
-  $return{'msg'} = 'success';
-  $ofs = 0;
-
-        return \%return unless -f ${$self->{'name'}};
-
-        # start by setting the endian correctly
-        Log2t::BinRead::set_endian( BIG_E );
-
-  # open the file (at least try to open it)
-  eval
-  {
-    # read the first two bytes
-    $vline = Log2t::BinRead::read_16( $self->{'file'}, \$ofs );
-
-  };
-  if ( $@ )
-  {
+    # default values
     $return{'success'} = 0;
-    $return{'msg'} = "Unable to read from file ($@)";
-  }
+    $return{'msg'}     = 'success';
+    $ofs               = 0;
 
-# ------------------------------------------------------------------------------------------------ 
-#       AccessProtectionLog (one line per event)   => 1
-# ------------------------------------------------------------------------------------------------ 
-#  (8 fields)
-# DATE (day/month/year)   TIME   WHAT   USER   WHERE  FILE  DESCRIPTION  ACTION
-#  (6 fields)
-# DATE  TIME  WHAT  PROGRAM    DESCRIPTION  IP:PORT
-# 
-# each line is a new event 
-# starts with a magic value
-# Fields are either 5 or 7 (meaning 6 or 8)
-#
-# ------------------------------------------------------------------------------------------------ 
-#         OnDemandScanLog        => 3
-# ------------------------------------------------------------------------------------------------ 
-# (not with the magic value) possible multiple lines each event, same timestamp on each entry
-# The multiple lines use the following ACTION field:
-#  Engine version
-#  Scan Summary 
-#
-# Some lines are empty
-# No magic value
-# Number of fields: 0, 3, 5 and 6
-#
-# Events:
-#   (3 fields) - GROUP EVENT 
-# DATE  TIME  INFORMATION
-# INFORMATION FIELD IS A "VARIABLE = VALUE"
-#
-#  (5 fields) 
-# DATE  TIME  ACTION  USER  INFORMATION
-#  GROUP EVENT IF ACTION = "Scan Summary"
-#  OTHER POSSIBILITIES INCLUDE: "Scan Started"
-#
-#  (6 fields)
-# Date (day/month/year)  TIME  ACTION  USER  FILE  WHAT
-#
-#
-# ------------------------------------------------------------------------------------------------ 
-#         OnAccessScanLog        => 2
-# ------------------------------------------------------------------------------------------------ 
-# some lines are empty 
-# starts with a magic value
-# multiple lines per event (same date and timestamp for all the entries)
-# Fields are in the range from 1-10,12,15
-# Values of five and seven are the majority of the file
-#
-#  (5 fields) - GROUP EVENT
-# DATE  TIME  NOTHING  VARIABLE  VALUE
-#
-#  (3 fields)
-# DATE  TIME  WHAT
-# IF WHAT EQ Statistics: THEN WE HAVE A GROUP EVENT FOLLOWED BY 4 FIELDS
-#  (4 fields) followed by Statistics: 3 fields
-# DATE  TIME  VARIABLE  VALUE
-#
-#   (7 fields) - MIGHT SUPERSEED THE 3 FIELDS CONTAINING INFORMATION ABOUT EVENT (GROUP EVENT)
-# DATE  TIME  ACTION  USER  FILE1  FILE2  VIRUS NAME
-# or
-# FILE1 DATE  TIME  VIRUSNAME  VARIABLE  FILE2  VALUE
-#
-#  TREAT THIS IS AS A SEPARATE EVENT (7 fields separate)
-#
-#  (9 fields) - treated as separate event
-# DATEDATE  NOTHING  TIME  TIME  ACTION  VARIABLE  NOTHING  VALUE  NOTHING
-# 
-#   (6 and 8 fields)
-# VALUE DIFFERS, CHECK EACH FIELD, IF THERE IS BOTH A DATE AND A TIME THEN GO AHEAD, ELSE SKIP
-#
-# Value of 1 (zero) and 2, can be skipped
+    return \%return unless -f ${ $self->{'name'} };
 
+    # start by setting the endian correctly
+    Log2t::BinRead::set_endian(BIG_E);
 
-  # check for magic value: 0x ef bb bf
-  if( $vline eq 0xefbb )
-  {
-    $ofs--;
-    $vline = Log2t::BinRead::read_16( $self->{'file'}, \$ofs );
-    
-    if( $vline eq 0xbbbf )
-    {
-      #####BEGIN UPDATE#####
-      
-      # correct magic value, read another byte to do some further checks
-      $vline = Log2t::BinRead::read_8( $self->{'file'}, \$ofs );
-      
-      # figure out if we just read a new line
-      my  $newlinecount = 0;
-      while( ($vline eq 0x0a || $vline eq 0x0d) && $newlinecount < NEWLINELIMIT)
-      {
-        $newlinecount++;
-        # keep reading until there are no more new lines or there is nothing left to read
-        $vline = Log2t::BinRead::read_8( $self->{'file'}, \$ofs );
-        #print "vline = $vline\n";
-      }
-      
-      # the correct starting location is one less than the current file offset
-      $ofs--;
-    
-      #####END UPDATE#####
-    
-      # correct magic value, let's continue and read a line to find out if this truly is a McAfee log file and which type it is
-      $vline = Log2t::BinRead::read_ascii_until( $self->{'file'}, \$ofs, "\n", 400 );
-      
-      # split the sentence into fields
-      @words = split( /\t/, $vline );
-      
-      # check the date field (Paul Bobby, paul.bobby at lmco dot com added the d{1,2} for the month value)
-      if( $words[0] =~ m/\d{1,2}\/\d{1,2}\/\d{4}/ )
-      {
-        # verify the second field
-        if( $words[1] =~ m/\d{1,2}:\d{2}:\d{2}/ )
-        {
-          # both the date and time stamp are OK, let's detect types shall we...
-          $return{'success'} = 1;
+    # open the file (at least try to open it)
+    eval {
 
-          if( $#words eq 5 or $#words eq 7 )
-          {
-            # possible AccessProtectionLog
-            # DATE (day/month/year)   TIME   WHAT   USER   WHERE  FILE  DESCRIPTION  ACTION
-            # DATE  TIME  WHAT  PROGRAM    DESCRIPTION  IP:PORT
-            # verify the IP:PORT if eq 5 and USER if eq 7
-            $self->{'type'} = 1;
-            if( $#words eq 5 && $words[5] =~ m/\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}:\d+/ )
-            {
-              $self->{'type'} = 1;
-              $return{'success'} = 1;
-            }
-            elsif( $#words eq 7 && $words[3] =~ m/.+\\.+/ )
-            {
-              $self->{'type'} = 1;
-              $return{'success'} = 1;
-            }
-            else
-            {
-              $return{'success'} = 0;
-              $return{'msg'} = 'Not the correct format, incorrect fields';
-            }
-          }
-          elsif( $#words ge 2 and $#words le 8 )
-          {
-            # OnAccessScanLog
-            $self->{'type'} = 2;
+        # read the first two bytes
+        $vline = Log2t::BinRead::read_16($self->{'file'}, \$ofs);
 
-            # check the line
-            if( $vline =~ m/Engine|AntiVirus|Statistics|McAfee/ )
-            {
-              $return{'success'} = 1;
-            }
-            else
-            {
-              $return{'success'} = 0;
-              $return{'msg'} = 'Not the correct format of an OnAccessScanLog';
-            }
-          }
-          else
-          {
-            $return{'success'} = 0;
-            $return{'msg'} = 'Wrong number of fields (' . $#words . ')';
-          }
-        }
-        else
-        {
-          $return{'success'} = 0;
-          $return{'msg'} = 'The time field is not correctly formed';
-        }
-      }
-      else
-      {
-        $return{'msg'} = 'The date field is not correctly formed (' . $words[0] .')';
+    };
+    if ($@) {
         $return{'success'} = 0;
-      }
-    }
-    else
-    {
-      $return{'success'} = 0;
-      $return{'msg'} = sprintf 'Wrong magic value (0x%x)', $vline;
-    }
-  }
-  else
-  {
-    # check the third type (OnDemandScanLog)
-
-    unless( $self->{'quick'} )
-    {
-      # it should start with a date (so we have a number)
-      seek($self->{'file'},0,0);
-      read($self->{'file'},$ofs,1);
-      $return{'msg'} = 'Wrong magic value';
-
-      if( $ofs !~ m/[0-9]/ )
-      {
-        return \%return;
-      }
+        $return{'msg'}     = "Unable to read from file ($@)";
     }
 
-    $ofs = 0;
-    $vline = Log2t::BinRead::read_ascii_until( $self->{'file'}, \$ofs, "\n", 400 );
+  # ------------------------------------------------------------------------------------------------
+  #       AccessProtectionLog (one line per event)   => 1
+  # ------------------------------------------------------------------------------------------------
+  #  (8 fields)
+  # DATE (day/month/year)   TIME   WHAT   USER   WHERE  FILE  DESCRIPTION  ACTION
+  #  (6 fields)
+  # DATE  TIME  WHAT  PROGRAM    DESCRIPTION  IP:PORT
+  #
+  # each line is a new event
+  # starts with a magic value
+  # Fields are either 5 or 7 (meaning 6 or 8)
+  #
+  # ------------------------------------------------------------------------------------------------
+  #         OnDemandScanLog        => 3
+  # ------------------------------------------------------------------------------------------------
+  # (not with the magic value) possible multiple lines each event, same timestamp on each entry
+  # The multiple lines use the following ACTION field:
+  #  Engine version
+  #  Scan Summary
+  #
+  # Some lines are empty
+  # No magic value
+  # Number of fields: 0, 3, 5 and 6
+  #
+  # Events:
+  #   (3 fields) - GROUP EVENT
+  # DATE  TIME  INFORMATION
+  # INFORMATION FIELD IS A "VARIABLE = VALUE"
+  #
+  #  (5 fields)
+  # DATE  TIME  ACTION  USER  INFORMATION
+  #  GROUP EVENT IF ACTION = "Scan Summary"
+  #  OTHER POSSIBILITIES INCLUDE: "Scan Started"
+  #
+  #  (6 fields)
+  # Date (day/month/year)  TIME  ACTION  USER  FILE  WHAT
+  #
+  #
+  # ------------------------------------------------------------------------------------------------
+  #         OnAccessScanLog        => 2
+  # ------------------------------------------------------------------------------------------------
+  # some lines are empty
+  # starts with a magic value
+  # multiple lines per event (same date and timestamp for all the entries)
+  # Fields are in the range from 1-10,12,15
+  # Values of five and seven are the majority of the file
+  #
+  #  (5 fields) - GROUP EVENT
+  # DATE  TIME  NOTHING  VARIABLE  VALUE
+  #
+  #  (3 fields)
+  # DATE  TIME  WHAT
+  # IF WHAT EQ Statistics: THEN WE HAVE A GROUP EVENT FOLLOWED BY 4 FIELDS
+  #  (4 fields) followed by Statistics: 3 fields
+  # DATE  TIME  VARIABLE  VALUE
+  #
+  #   (7 fields) - MIGHT SUPERSEED THE 3 FIELDS CONTAINING INFORMATION ABOUT EVENT (GROUP EVENT)
+  # DATE  TIME  ACTION  USER  FILE1  FILE2  VIRUS NAME
+  # or
+  # FILE1 DATE  TIME  VIRUSNAME  VARIABLE  FILE2  VALUE
+  #
+  #  TREAT THIS IS AS A SEPARATE EVENT (7 fields separate)
+  #
+  #  (9 fields) - treated as separate event
+  # DATEDATE  NOTHING  TIME  TIME  ACTION  VARIABLE  NOTHING  VALUE  NOTHING
+  #
+  #   (6 and 8 fields)
+  # VALUE DIFFERS, CHECK EACH FIELD, IF THERE IS BOTH A DATE AND A TIME THEN GO AHEAD, ELSE SKIP
+  #
+  # Value of 1 (zero) and 2, can be skipped
 
-    # split the sentence into fields
-    @words = split( /\t/, $vline );
+    # check for magic value: 0x ef bb bf
+    if ($vline eq 0xefbb) {
+        $ofs--;
+        $vline = Log2t::BinRead::read_16($self->{'file'}, \$ofs);
 
-    # check the number of fields
-    if( $#words ge 2 )
-    {
-      # check the date field
-      if( $words[0] =~ m/\d{1,2}\/\d{2}\/\d{4}/ )
-      {
-        # verify the second field
-        if( $words[1] =~ m/\d{1,2}:\d{1,2}:\d{2}/ )
-        {
-          $self->{'type'} = 3;
-          # check the line
-          if( $vline =~ m/Engine|AntiVirus|Statistics|McAfee/ )
-          {
-            $return{'success'} = 1;
-          }
-          else
-          {
+        if ($vline eq 0xbbbf) {
+            #####BEGIN UPDATE#####
+
+            # correct magic value, read another byte to do some further checks
+            $vline = Log2t::BinRead::read_8($self->{'file'}, \$ofs);
+
+            # figure out if we just read a new line
+            my $newlinecount = 0;
+            while (($vline eq 0x0a || $vline eq 0x0d) && $newlinecount < NEWLINELIMIT) {
+                $newlinecount++;
+
+                # keep reading until there are no more new lines or there is nothing left to read
+                $vline = Log2t::BinRead::read_8($self->{'file'}, \$ofs);
+
+                #print "vline = $vline\n";
+            }
+
+            # the correct starting location is one less than the current file offset
+            $ofs--;
+
+            #####END UPDATE#####
+
+# correct magic value, let's continue and read a line to find out if this truly is a McAfee log file and which type it is
+            $vline = Log2t::BinRead::read_ascii_until($self->{'file'}, \$ofs, "\n", 400);
+
+            # split the sentence into fields
+            @words = split(/\t/, $vline);
+
+# check the date field (Paul Bobby, paul.bobby at lmco dot com added the d{1,2} for the month value)
+            if ($words[0] =~ m/\d{1,2}\/\d{1,2}\/\d{4}/) {
+
+                # verify the second field
+                if ($words[1] =~ m/\d{1,2}:\d{2}:\d{2}/) {
+
+                    # both the date and time stamp are OK, let's detect types shall we...
+                    $return{'success'} = 1;
+
+                    if ($#words eq 5 or $#words eq 7) {
+
+                     # possible AccessProtectionLog
+                     # DATE (day/month/year)   TIME   WHAT   USER   WHERE  FILE  DESCRIPTION  ACTION
+                     # DATE  TIME  WHAT  PROGRAM    DESCRIPTION  IP:PORT
+                     # verify the IP:PORT if eq 5 and USER if eq 7
+                        $self->{'type'} = 1;
+                        if ($#words eq 5 && $words[5] =~ m/\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}:\d+/)
+                        {
+                            $self->{'type'} = 1;
+                            $return{'success'} = 1;
+                        }
+                        elsif ($#words eq 7 && $words[3] =~ m/.+\\.+/) {
+                            $self->{'type'} = 1;
+                            $return{'success'} = 1;
+                        }
+                        else {
+                            $return{'success'} = 0;
+                            $return{'msg'}     = 'Not the correct format, incorrect fields';
+                        }
+                    }
+                    elsif ($#words ge 2 and $#words le 8) {
+
+                        # OnAccessScanLog
+                        $self->{'type'} = 2;
+
+                        # check the line
+                        if ($vline =~ m/Engine|AntiVirus|Statistics|McAfee/) {
+                            $return{'success'} = 1;
+                        }
+                        else {
+                            $return{'success'} = 0;
+                            $return{'msg'}     = 'Not the correct format of an OnAccessScanLog';
+                        }
+                    }
+                    else {
+                        $return{'success'} = 0;
+                        $return{'msg'}     = 'Wrong number of fields (' . $#words . ')';
+                    }
+                }
+                else {
+                    $return{'success'} = 0;
+                    $return{'msg'}     = 'The time field is not correctly formed';
+                }
+            }
+            else {
+                $return{'msg'}     = 'The date field is not correctly formed (' . $words[0] . ')';
+                $return{'success'} = 0;
+            }
+        }
+        else {
             $return{'success'} = 0;
-            $return{'msg'} = 'Not the correct format of an OnDemandScanLog';
-          }
+            $return{'msg'} = sprintf 'Wrong magic value (0x%x)', $vline;
         }
-        else
-        {
-          $return{'success'} = 0;
-          $return{'msg'} = 'The time field is not correctly formed';
+    }
+    else {
+
+        # check the third type (OnDemandScanLog)
+
+        unless ($self->{'quick'}) {
+
+            # it should start with a date (so we have a number)
+            seek($self->{'file'}, 0, 0);
+            read($self->{'file'}, $ofs, 1);
+            $return{'msg'} = 'Wrong magic value';
+
+            if ($ofs !~ m/[0-9]/) {
+                return \%return;
+            }
         }
-      }
-      else
-      {
-        $return{'msg'} = 'The date field is not correctly formed';
-        $return{'success'} = 0;
-      }
+
+        $ofs = 0;
+        $vline = Log2t::BinRead::read_ascii_until($self->{'file'}, \$ofs, "\n", 400);
+
+        # split the sentence into fields
+        @words = split(/\t/, $vline);
+
+        # check the number of fields
+        if ($#words ge 2) {
+
+            # check the date field
+            if ($words[0] =~ m/\d{1,2}\/\d{2}\/\d{4}/) {
+
+                # verify the second field
+                if ($words[1] =~ m/\d{1,2}:\d{1,2}:\d{2}/) {
+                    $self->{'type'} = 3;
+
+                    # check the line
+                    if ($vline =~ m/Engine|AntiVirus|Statistics|McAfee/) {
+                        $return{'success'} = 1;
+                    }
+                    else {
+                        $return{'success'} = 0;
+                        $return{'msg'}     = 'Not the correct format of an OnDemandScanLog';
+                    }
+                }
+                else {
+                    $return{'success'} = 0;
+                    $return{'msg'}     = 'The time field is not correctly formed';
+                }
+            }
+            else {
+                $return{'msg'}     = 'The date field is not correctly formed';
+                $return{'success'} = 0;
+            }
+        }
+        else {
+            $return{'success'} = 0;
+            $return{'msg'}     = 'Wrong magic value or not the correct format';
+        }
     }
-    else
-    {
-      $return{'success'} = 0;
-      $return{'msg'} = 'Wrong magic value or not the correct format';
-    }
-  }
-  
-  return \%return;
+
+    return \%return;
 }
-
 
 # the populate_date is a small function to get the date from a log file
-sub _populate_date( $$ )
-{
-  my $self = shift;
-  my $ref = shift;
-  my $ar = shift;
-  
-  my $i = 0;
+sub _populate_date( $$ ) {
+    my $self = shift;
+    my $ref  = shift;
+    my $ar   = shift;
 
-  # find the date fields
-  foreach( @{$ar} )
-  {
-    $_ =~ s/\n//g;
-    $_ =~ s/\r//g;
+    my $i = 0;
 
-    next if $_ eq '';
+    # find the date fields
+    foreach (@{$ar}) {
+        $_ =~ s/\n//g;
+        $_ =~ s/\r//g;
 
-    print STDERR "[MCAFEE] Populating the date object, or testing date <$_>\n" if $self->{'debug'};
-    if( /\d{1,2}\/\d{1,2}\/\d{4}/ )
-    {
-      # then we have a month
-      $ref->{'month'} = $_;
-      $ref->{'m'} = $i;
+        next if $_ eq '';
+
+        print STDERR "[MCAFEE] Populating the date object, or testing date <$_>\n"
+          if $self->{'debug'};
+        if (/\d{1,2}\/\d{1,2}\/\d{4}/) {
+
+            # then we have a month
+            $ref->{'month'} = $_;
+            $ref->{'m'}     = $i;
+        }
+        elsif (/\d{1,2}:\d{1,2}:\d{1,2}/) {
+
+            # we have a timestamp
+            $ref->{'time'} = $_;
+            $ref->{'t'}    = $i;
+        }
+
+        # increment counter
+        $i++;
     }
-    elsif( /\d{1,2}:\d{1,2}:\d{1,2}/ )
-    {
-      # we have a timestamp
-      $ref->{'time'} = $_;
-      $ref->{'t'} = $i;
-    }
-    # increment counter
-    $i++;
-  }
 }
 1;
-
 
 __END__
 
