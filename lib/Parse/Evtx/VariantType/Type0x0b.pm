@@ -10,7 +10,7 @@ sub parse_self {
 	assert($self->{'Length'} >= 4);
 	my ($data) = unpack("f", 
 		$self->{'Chunk'}->get_data($self->{'Start'}, 4));
-	$self->{'String'} = sprintf("%f", $data);
+	$self->{'String'} = sprintf("%e", $data);
 	$self->{'Length'} = 4;
 };
 

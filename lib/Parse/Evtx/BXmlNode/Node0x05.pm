@@ -5,6 +5,7 @@ use base qw( Parse::Evtx::BXmlNode );
 require Parse::Evtx::VariantType;
 use Carp::Assert;
 
+
 sub get_xml {
 	my $self = shift;	
 	my %args = (
@@ -22,20 +23,26 @@ sub get_xml {
 	return $xml;
 }
 
+
 sub parse_self {
 	my $self = shift;
 	
 	assert($self->{'Length'} >= 2, "packet too short") if DEBUG;
 	my $data = $self->{'Chunk'}->get_data($self->{'Start'}, 2);
 	my ($opcode, $Type) = unpack("CC", $data);
+	my $Flags = $opcode >> 4;
+	assert(($Flags & 0x0b) == 0, "unexpected flag") if DEBUG;
+	# Flag 0x40 was observed in a record that contained a split string 
+	# (string, entity ref, string)
 	$opcode = $opcode & 0x0f;	
 	assert($opcode == 0x05, "bad opcode, expected 5, got $opcode") if DEBUG;
 	
 	$self->{'TagLength'} = 2;
 	$self->{'DataLength'} = $self->{'Length'} - 2;
 	$self->{'Type'} = $Type;
-	$self->{'TagState'} = $self->{'Chunk'}->get_tag_state();
+	$self->{'TagState'} = $self->{'Chunk'}->get_tag_state();	
 }
+
 
 sub parse_down {
 	my $self = shift;
@@ -55,7 +62,7 @@ sub parse_down {
 
 	$self->{'DataLength'} = $Pointer->get_length();
 	$self->{'Pointer'} = $Pointer;
-	$self->{'Length'} = $self->{'TagLength'} + $self->{'DataLength'};
+	$self->{'Length'} = $self->{'TagLength'} + $self->{'DataLength'};	
 }
 
 1;

@@ -1218,15 +1218,9 @@ sub _parse_dir($) {
         print STDERR "[LOG2T] Now inspecting file: [$_]\n" if $self->{'debug'};
         $done = 0;
 
-        # start a high resolution timer
-        #$start = [ Time::HiRes::gettimeofday( ) ];
-
         # start by checking all format files and see if we can parse file
         $self->{'file'} = $f;
         $self->_parse_file;
-
-        # print the time
-        #print STDERR $end, "\t", $_, "\n"; #, "|",$end, "\n";
 
         # now we need to check if this is a file or a folder
         $self->_parse_dir if -d $f;
@@ -1238,10 +1232,39 @@ sub _parse_dir($) {
 
 I<A private method (not part of the public API).>
 
-KOMINN HINGAD!!
+This sub routine reads the class variable 'file' that contains the path
+name to a file that needs to be parsed. It accepts only a single string to
+either a file or a directory.
+
+It will then test to see if this is a file, and then open it or a directory
+and then open that.
+
+Then the routine will go over each input module that has been loaded up in the tool
+and attempt to parse the file/directory using that module. It will provide the input
+module with the necessary information it needs, such as:
+
+B<fh>: A filehandle to the file that needs to be parsed.
+
+B<name>: Name of the file (the full path).
+
+It will then attempt to verify the module can parse the file, and if it successfully
+validates it will check to see if the module returns a single timestamp object or a
+one object per line read (variable 'multi-line').
+
+The routine will then either collect that single container and go over each entry therein
+or call the get_time until all timestamp objects have been collected.
+
+For each output object gathered the tool will check if it should return the raw object
+(as defined in the 'raw' class variable) or process the output with an output module.
+
+When the routine has completed parsing the file it will close it.
+
+=head3 Returns:
+
+=head4 An integer, 0 if an error occured or 1 if the operation was successful.
 
 =cut
-sub _parse_file() {
+sub _parse_file($) {
     my $self = shift;
     my $t_line;    # the timestamp object
     my $done = 0;  # indicates that we've already parsed the file in question
@@ -1332,15 +1355,11 @@ sub _parse_file() {
                         # process the timestamps (or jump to the next timestamp)
                         next unless $self->_process_timestamp($t_line);
 
-                        #print STDERR "Timestamp processed\n" if $self->{'debug'};
-
                         if ($self->{'raw'}) {
-
                             # no further processing  let the MAIN function handle it
                             ::process_output($t_line);
                         }
                         else {
-
                             # check if we need to print or return the timestamp object
                             if (!$self->{'out'}->print_line($t_line)) {
                                 print STDERR "Error printing line ($t_line->{name})\n";
@@ -1368,7 +1387,6 @@ $@\n";
 
                 # go through each of the timestamp objects
                 foreach (keys %{$t_line}) {
-
                     # process the timestamp, if unable, then move on to the next one
                     next unless $self->_process_timestamp($t_line->{$_});
 
@@ -1424,8 +1442,10 @@ $@\n";
 
 I<A private method (not part of the public API).>
 
+A 
+
 =cut
-sub _process_timestamp() {
+sub _process_timestamp($$) {
     my $self   = shift;
     my $t_line = shift;
 

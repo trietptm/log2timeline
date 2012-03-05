@@ -16,15 +16,14 @@ sub parse_self {
 	
 	assert($self->{'Length'} >= 10, "packet too short") if DEBUG;
 	my $data = $self->{'Chunk'}->get_data($self->{'Start'}, 8);
-	my ($backlink, 
-		$hash, 
-		$Length) = unpack("LSS", $data);
+	my ($Next, $Hash, $Length) = unpack("LSS", $data);
 	$self->{'TagLength'} = 8;
 	$self->{'DataLength'} = ($Length+1) * 2;	# this could be dangerous!
 	$self->{'String'} = decode(
 		"UCS2-LE", 
 		$self->{'Chunk'}->get_data($self->{'Start'}+8, $Length*2)
 	);
+	$self->{'Next'} = $Next;
 	$self->{'Length'} = $self->{'TagLength'} + $self->{'DataLength'};	
 }
 

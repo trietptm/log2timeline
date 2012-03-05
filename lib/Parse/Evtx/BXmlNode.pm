@@ -1,23 +1,30 @@
 package Parse::Evtx::BXmlNode;
 
 require Parse::Evtx::BXmlNode::NameString;
-require Parse::Evtx::BXmlNode::Node0x00;
-require Parse::Evtx::BXmlNode::Node0x01;
-require Parse::Evtx::BXmlNode::Node0x02;
-require Parse::Evtx::BXmlNode::Node0x03;
-require Parse::Evtx::BXmlNode::Node0x04;
-require Parse::Evtx::BXmlNode::Node0x05;
-require Parse::Evtx::BXmlNode::Node0x06;
-require Parse::Evtx::BXmlNode::Node0x0c;
-require Parse::Evtx::BXmlNode::Node0x0d;
-require Parse::Evtx::BXmlNode::Node0x0e;
-require Parse::Evtx::BXmlNode::Node0x0f;
+require Parse::Evtx::BXmlNode::Node0x00;	# End of stream
+require Parse::Evtx::BXmlNode::Node0x01;	# Open start element tag
+require Parse::Evtx::BXmlNode::Node0x02;	# Close start element tag
+require Parse::Evtx::BXmlNode::Node0x03;	# Close empty element tag
+require Parse::Evtx::BXmlNode::Node0x04;	# End element tag
+require Parse::Evtx::BXmlNode::Node0x05;	# Value
+require Parse::Evtx::BXmlNode::Node0x06;	# Attribute
+require Parse::Evtx::BXmlNode::Node0x07;	# CDATA
+							 # Node0x08 
+require Parse::Evtx::BXmlNode::Node0x09;	# Entity reference
+require Parse::Evtx::BXmlNode::Node0x0a;	# PItarget
+require Parse::Evtx::BXmlNode::Node0x0b;	# PIdata 
+require Parse::Evtx::BXmlNode::Node0x0c;	# Template instance
+require Parse::Evtx::BXmlNode::Node0x0d;	# Normal substitution
+require Parse::Evtx::BXmlNode::Node0x0e;	# Conditional substitution
+require Parse::Evtx::BXmlNode::Node0x0f;	# Stream opening sequence
 require Parse::Evtx::BXmlNode::Root;
 require Parse::Evtx::BXmlNode::SubstArray;
 require Parse::Evtx::BXmlNode::Template;
 
 use Carp;
 use Carp::Assert;
+
+use version; our $VERSION = qv('1.1.1');
 
 
 sub new {
@@ -41,8 +48,30 @@ sub new {
 	$self->{'DataLength'} = 0;
 	$self->{'Children'} = [];			# list of child objects	
 	$self->{'EndOfStream'} = 0;			# subtree reached End-of-Stream
+	
+	# register as an object
+	$self->{'Chunk'}->push_object($self);
 
 	return $self;
+}
+
+
+sub release {
+	my $self = shift;
+	
+	undef $self->{'Chunk'};
+	undef $self->{'Parent'};
+	undef $self->{'Start'};
+	undef $self->{'Length'};
+	undef $self->{'TagLength'};
+	undef $self->{'DataLength'};
+	my $child;
+	foreach $child (@{$self->{'Children'}}) {
+		$child->release();
+		undef $child;
+	}
+	undef $self->{'Children'};
+	undef $self->{'EndOfStream'};
 }
 
 
@@ -103,6 +132,34 @@ sub new_subnode {
 			'Start' => $Start,
 			'Length' => $Length,
 		);	
+	} elsif ($opcode == 0x07) {
+		$child = Parse::Evtx::BXmlNode::Node0x07->new(
+			'Chunk' => $self->{'Chunk'},
+			'Parent' => $self,
+			'Start' => $Start,
+			'Length' => $Length,
+		);	
+	} elsif ($opcode == 0x09) {
+		$child = Parse::Evtx::BXmlNode::Node0x09->new(
+			'Chunk' => $self->{'Chunk'},
+			'Parent' => $self,
+			'Start' => $Start,
+			'Length' => $Length,
+		);	
+	} elsif ($opcode == 0x0a) {
+		$child = Parse::Evtx::BXmlNode::Node0x0a->new(
+			'Chunk' => $self->{'Chunk'},
+			'Parent' => $self,
+			'Start' => $Start,
+			'Length' => $Length,
+		);		
+	} elsif ($opcode == 0x0b) {
+		$child = Parse::Evtx::BXmlNode::Node0x0b->new(
+			'Chunk' => $self->{'Chunk'},
+			'Parent' => $self,
+			'Start' => $Start,
+			'Length' => $Length,
+		);		
 	} elsif ($opcode == 0x0c) {
 		$child = Parse::Evtx::BXmlNode::Node0x0c->new(
 			'Chunk' => $self->{'Chunk'},
@@ -133,8 +190,13 @@ sub new_subnode {
 		); 
 	} else {
 		# die on unknown opcode
-		$self->{'Chunk'}->get_hexdump($Start, 16);
-		confess("new_subnode: unknown opcode.");
+		print "\nPlease submit the following information\n";
+		print "to bugs-evtxparser\@forensikblog.de\n";
+		print "Earlier data:\n";
+		print $self->{'Chunk'}->get_hexdump($Start-64, 64);
+		print "\nCurrent data:\n";
+		print $self->{'Chunk'}->get_hexdump($Start, $Length);
+		confess("new_subnode: unknown opcode $opcode.");
 	};
 	return $child;
 }
@@ -179,6 +241,17 @@ sub get_end_of_stream {
 }
 
 
+sub get_hexdump {
+	my $self = shift;
+	my %args = (@_);
+	
+	assert(defined $self->{'Chunk'}, "Chunk undefined") if DEBUG;
+	assert(defined $self->{'Start'}, "Start undefied") if DEBUG;
+	assert(defined $self->{'Length'}, "Length undefined") if DEBUG;
+	$self->{'Chunk'}->get_hexdump($self->{'Start'}, $self->{'Length'});
+}
+
+
 sub get_length {
 	my $self = shift;
 	
@@ -188,6 +261,7 @@ sub get_length {
 
 sub get_xml {
 	my $self = shift;
+	my %args = (@_);
 	
 	my $result = '';
 	my $child;
@@ -201,6 +275,7 @@ sub get_xml {
 
 sub get_substitute {
 	my $self = shift;
+	my %args = (@_);
 	
 	my $root = $self->{'Chunk'}->get_root();
 	assert(defined($root), 

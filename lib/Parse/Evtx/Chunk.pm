@@ -6,12 +6,13 @@ package Parse::Evtx::Chunk;
 
 use Parse::Evtx::Const 1.0.4 qw(:checks);
 use Parse::Evtx::Event;
+use Parse::Evtx::BXmlNode::Template;
 use Digest::CRC qw(crc32);
 use Math::BigInt;
 use Fcntl qw(:seek);
 use Carp::Assert;
 
-use version; our $VERSION = qv('1.0.5');
+use version; our $VERSION = qv('1.1.1');
 
 
 sub new {
@@ -54,6 +55,46 @@ sub new {
 	return $self;	
 }
 
+
+sub release {
+	my $self = shift;
+	
+	undef $self->{'Crc32Data'};
+	undef $self->{'Crc32Header'};
+	undef $self->{'Event'};
+	undef $self->{'Length'};
+	undef $self->{'NumFirst'};
+	undef $self->{'NumLast'};
+	undef $self->{'NumFirstFile'};
+	undef $self->{'NumLastFile'};
+	undef $self->{'OfsNextRec'};
+	undef $self->{'Start'};
+	undef $self->{'TagState'};
+	
+	foreach $object (@{$self->{'OBJECTSTACK'}}) {
+		$object->release();
+		undef $object;
+	}
+
+	undef $self->{'DATA'};	
+	undef $self->{'DEFERED_OUTPUT'};
+	undef $self->{'ELEMENTSTACK'};
+	undef $self->{'FH'};
+	undef $self->{'OBJECTSTACK'};
+	undef $self->{'ROOTSTACK'};
+	undef $self->{'STRINGS'};
+	undef $self->{'TEMPLATES'};
+}
+
+
+sub push_object {
+	my $self = shift;
+	my $object = shift;
+	
+	push @{$self->{'OBJECTSTACK'}}, $object;	
+}
+
+
 sub check {
 	my $self = shift;
 	
@@ -87,6 +128,7 @@ sub get_data {
 	return substr($self->{'DATA'}, $start, $length);
 }
 
+
 sub get_hexdump {
 	my $self = shift;
 	my $start = shift;
@@ -98,12 +140,14 @@ sub get_hexdump {
 	return Hexify($self->{'DATA'}, {start => $start, length => $length});
 }
 
+
 sub push_element {
 	my $self = shift;
 	my $element = shift;
 	
 	push @{$self->{'ELEMENTSTACK'}}, $element;
 }
+
 
 sub get_depth {
 	my $self = shift;
@@ -118,11 +162,13 @@ sub get_element {
 	return @{$self->{'ELEMENTSTACK'}}[get_depth()];
 }
 
+
 sub pop_element {
 	my $self = shift;
 	
 	return pop @{$self->{'ELEMENTSTACK'}};
 }
+
 
 sub push_root {
 	my $self = shift;
@@ -131,11 +177,13 @@ sub push_root {
 	unshift @{$self->{'ROOTSTACK'}}, $root;
 }
 
+
 sub pop_root {
 	my $self = shift;
 	
 	shift @{$self->{'ROOTSTACK'}};
 }
+
 
 sub get_root {
 	my $self = shift;
@@ -143,17 +191,20 @@ sub get_root {
 	return  @{$self->{'ROOTSTACK'}}[0];
 }
 
+
 sub get_start {
 	my $self = shift;
 	
 	return $self->{'Start'};
 }
 
+
 sub get_length {
 	my $self = shift;
 	
 	return $self->{'Length'};
 }
+
 
 sub get_defered_output {
 	my $self = shift;
@@ -164,6 +215,7 @@ sub get_defered_output {
 	return $xml;	
 }
 
+
 sub set_defered_output {
 	my $self = shift;
 	
@@ -173,12 +225,14 @@ sub set_defered_output {
 	$self->{'DEFERED_OUTPUT'} .= $xml;
 }
 
+
 sub get_string {
 	my $self = shift;
 	my $address = shift;
 	
 	return $self->{'STRINGS'}{$address};
 }
+
 
 sub set_string {
 	my $self = shift;
@@ -194,11 +248,13 @@ sub set_string {
 	$self->{'STRINGS'}{$address} = $string;
 }
 
+
 sub get_tag_state {
 	my $self = shift;
 	
 	return $self->{'TagState'};
 }
+
 
 sub set_tag_state {
 	my $self = shift;
@@ -206,12 +262,85 @@ sub set_tag_state {
 	$self->{'TagState'} = shift;
 }
 
+
+sub collect_templates {
+	my $self = shift;
+	
+	# find and load all NameStrings
+	my $BUCKETS = 64;
+	my $data = $self->get_data(0x80, 4*$BUCKETS);
+	my @bucket = unpack("L*", $data);
+	my ($i, $next, $result);
+	for ($i=0; $i<$BUCKETS; $i++) {
+		$next = $bucket[$i];
+		while($next > 0) {
+			my $length = $self->{'OfsNextRec'} - $next;
+			my $name = Parse::Evtx::BXmlNode::NameString->new(
+				'Chunk' => $self,
+				'Parent' => $self,
+				'Start' => $next,
+				'Length' => $length,
+			);
+			assert(defined $name, "unable to create NameString at offset $next") if DEBUG;
+			$name->parse_self();
+			$name->parse_down();
+			$self->set_string($next, $name);
+			$self->push_object($name);
+			$next = $name->{'Next'};
+		}
+	}
+	
+	# find and load all templates
+	$BUCKETS = 32;
+	$data = $self->get_data(0x180, 4*$BUCKETS);
+	@bucket = unpack("L*", $data);
+	for ($i=0; $i<$BUCKETS; $i++) {
+		$next = $bucket[$i];
+		while ($next > 0) {
+			# sanity check
+			my ($opcode, $unknown1, $TemplateId, $Pointer) = 
+				unpack("CCLL", $self->get_data($next-10, 10)); 
+			if (($opcode != 0x0c) or ($Pointer != $next)) {
+				# printf "WARNING! opcode=0x%x (expected 0xc), expected pointer 0x%x, got 0x%x\n", $opcode, $next, $Pointer;
+				$next = 0;
+				next;
+			}
+			
+			# create template object
+			my $length = $self->{'OfsNextRec'} - $next;
+			my $template = Parse::Evtx::BXmlNode::Template->new(
+				'Chunk' => $self,
+				'Parent' => $self,
+				'Start' => $next,
+				'Length' => $length,
+			);
+			assert(defined $template, "unable to create template at offset $next") if DEBUG;
+			$template->parse_self();
+			$template->parse_down();
+			$self->set_template($next, $template);
+			$self->push_object($template);
+			$next = $template->{'Next'};				
+		}
+	}	
+}
+
+
 sub get_template {
 	my $self = shift;
 	my $address = shift;
 	
 	return $self->{'TEMPLATES'}{$address};
 }
+
+
+sub get_templates {
+	my $self = shift;
+	
+	# return sorted list of template base addresses
+	return sort { $a<=>$b } keys %{$self->{'TEMPLATES'}};
+}
+
+
 
 sub set_template {
 	my $self = shift;
@@ -227,6 +356,7 @@ sub set_template {
 	$self->{'TEMPLATES'}{$address} = $template;
 }
 
+
 sub get_first_event {
 	my $self = shift;
 	
@@ -235,8 +365,10 @@ sub get_first_event {
 	   'Start' => 0x200,
 	);
 	$self->{'Event'} = $event;
+	$self->push_object($event);
 	return $event;
 }
+
 
 sub get_next_event {
 	my $self = shift;
@@ -254,8 +386,10 @@ sub get_next_event {
 	   'Start' => $start,
 	);
 	$self->{'Event'} = $event;
+	$self->push_object($event);
 	return $event;
 }
+
 
 1;
 
@@ -382,6 +516,7 @@ evtxdump.pl, evtxtemplates.pl, Parse::Evtx, Parse::Evtx::Event
 =item v1.0.1 (2009-12-21) Bugfixes, improved parsing of header.
 =item v1.0.3 (2010-02-11) Implemented CRC32 check of chunk header.
 =item v1.0.4 (2010-03-24) Added CRC32 check of event data.
+=item v1.1.1 (2011-11-17) Fixed memory leaks.
 
 =back
 

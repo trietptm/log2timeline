@@ -21,6 +21,9 @@ sub parse_self {
 	my $data = $self->{'Chunk'}->get_data($self->{'Start'}, 10);
 	my ($opcode, $unknown1, $TemplateId, $Pointer) = 
 		unpack("CCLL", $data); 
+	my $Flags = $opcode >> 4;
+	assert($Flags == 0, "unexpected flag") if DEBUG;
+	$opcode = $opcode & 0x0f;
 	assert($opcode == 0x0c, "bad opcode, expected 0x0c, got $opcode") if DEBUG;
 	assert($unknown1 == 1, "unknown1 expected 1, got $unknown1") if DEBUG;	
 	$self->{'TagLength'} = 10;
@@ -62,5 +65,14 @@ sub parse_down {
 	}
 	$self->{'Length'} = $self->{'TagLength'} + $self->{'DataLength'};
 }
+
+
+sub release {
+	my $self = shift;
+	
+	undef $self->{'Pointer'};
+	$self->SUPER::release();
+}
+
 
 1;

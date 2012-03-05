@@ -5,14 +5,14 @@ package Parse::Evtx;
 # http://computer.forensikblog.de/en/2007/07/evtx_file_header.html
 
 use Parse::Evtx::Const 1.0.4 qw(:checks);
-use Parse::Evtx::Chunk;
-use Parse::Evtx::BXmlNode;
-use Digest::CRC;
+use Parse::Evtx::Chunk 1.1.1;
+use Parse::Evtx::BXmlNode 1.1.1;
+use Digest::CRC qw(crc32);
 use Math::BigInt;
 use Fcntl qw( :seek );
 use Carp::Assert;
 
-use version; our $VERSION = qv('1.0.5');
+use version; our $VERSION = qv('1.1.1');
 
 #perl2exe_include "Math/BigInt.pm";
 #perl2exe_include "Math/BigInt/Calc.pm";
@@ -36,6 +36,11 @@ sub new {
     return undef if (substr($self->{'DATA'}, 0, 8) ne "ElfFile\000");
 	
 	# parse header fields
+
+	my ($NumOldestChunkLow, $NumOldestChunkHigh) = 
+		unpack("LL", substr($self->{'DATA'}, 0x08, 8));
+	$self->{'OldestChunk'} = 
+		Math::BigInt->new($NumOldestChunkHigh)->blsft(32)->bxor($NumOldestChunkLow);
 	
 	my ($NumCurrentChunkLow, $NumCurrentChunkHigh) = 
 		unpack("LL", substr($self->{'DATA'}, 0x10, 8));
@@ -121,7 +126,6 @@ sub get_next_chunk {
 		'FH' => $self->{'FH'}, 
 		'Start' => $newstart,
     );
-	$self->{'Chunk'} = $chunk;
 	return $chunk;
 }
 
@@ -146,8 +150,12 @@ sub get_next_event {
 	my $event = $self->{'Chunk'}->get_next_event();
 	
 	if (!defined($event)) {
-		# chunk reached its end, create next one
-		$self->{'Chunk'} = $self->get_next_chunk();
+		# chunk reached its end, get next one
+		my $nextchunk = $self->get_next_chunk();
+		# destroy objects ...
+		$self->{'Chunk'}->release();
+		# activate next chunk
+		$self->{'Chunk'} = $nextchunk;
 		return undef unless (defined $self->{'Chunk'});
 		$event = $self->{'Chunk'}->get_first_event();
 	}
@@ -276,7 +284,7 @@ part of this package:
 
 =item Data::Hexify 
 
-=item Digest::Crc32
+=item Digest::CRC
 
 =item Math::BigInt
 
@@ -294,6 +302,10 @@ evtxdump.pl, evtxtemplates.pl, L<Parse::Evtx::Chunk>, L<Parse::Evtx::Event>
 =item v1.0.1 (2009-12-21) Bugfixes, improved parsing of header.
 =item v1.0.3 (2010-02-11) implemented CRC32 check.
 =item v1.0.4 (2010-03-23) updated CRC32 header check.
+=item v1.0.5 (2010-04-27) improved CRC32 checks.
+=item v1.0.6 (2010-05-13) fixed error in CRC32 checks.
+=item v1.0.8 (2011-05-25) parse OldestChunk in header.
+=item v1.1.1 (2011-11-17) fixed memory leak.
 
 =back
 

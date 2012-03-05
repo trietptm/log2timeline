@@ -4,12 +4,15 @@ package Parse::Evtx::Event;
 # about its format please consult my blog post at:
 # http://computer.forensikblog.de/en/2007/07/evtx_event_record.html
 
-use Parse::Evtx::BXmlNode;
+use Parse::Evtx::BXmlNode 1.1.1;
 use Parse::Evtx::BXmlNode::Root;
 use Math::BigInt;
+use DateTime;
 use Carp::Assert;
 
-use version; our $VERSION = qv('1.0.0');
+#perl2exe_include "DateTime/Locale/en.pm"
+
+use version; our $VERSION = qv('1.1.1');
 
 
 sub new {
@@ -32,11 +35,19 @@ sub new {
 	my ($Length1, 
 		$RecNumLow, $RecNumHigh, 
 		$TimeCreatedLow, $TimeCreatedHigh) = 
-		unpack('LLLLL', $chunk->get_data($start+4, 16));
+		unpack('LLLLL', $chunk->get_data($start+4, 20));
 		
 	$self->{'RecordId'} = 
 		Math::BigInt->new($RecNumHigh)->blsft(32)->bxor($RecNumLow);
 		
+	my $filetime = Math::BigInt->new($TimeCreatedHigh)->blsft(32)->bxor($TimeCreatedLow);
+	$filetime /= 1000;
+	$filetime -= 116444736000000;
+	my $seconds = $filetime / 10000;
+	my $fraction = $filetime - $seconds*10000;
+	my $datetime = DateTime->from_epoch(epoch => $seconds->numify(), time_zone => 'UTC');
+	$self->{'TimeCreated'} = sprintf("%s.%sZ", $datetime, $fraction->numify());
+			
 	my $Length2 = unpack("L", $chunk->get_data($self->{'Start'}+$Length1-4, 4));
 
 	# Mismatching Length fields indicate an incomplete record.
@@ -58,6 +69,18 @@ sub new {
 	$Root->parse_down();
 	
 	return $self;
+}
+
+
+sub release {
+	my $self = shift;
+	
+	undef $self->{'Chunk'};
+	undef $self->{'Length'};
+	undef $self->{'RecordId'};
+	undef $self->{'Root'};
+	undef $self->{'Start'};
+	undef $self->{'TimeCreated'};
 }
 
 
@@ -86,6 +109,13 @@ sub get_root_obj {
 	my $self = shift;
 	
 	return $self->{'Root'};
+}
+
+
+sub get_time_created {
+	my $self = shift;
+	
+	return $self->{'TimeCreated'};
 }
 
 

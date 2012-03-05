@@ -22,11 +22,10 @@ sub parse_self {
 	}
 	
 	my $i;
-	my $string = '';
 	my $elements = $self->{'Length'} / 4;
 	my @data;
 	for ($i=0; $i<$elements; $i++ ) {
-		$data[$i] = sprintf("[%d] 0x%s",
+		$data[$i] = sprintf("[%u] 0x%s",
 		 	$i,
 			scalar reverse unpack("h*", substr($data, $i*4, 4))
 		);

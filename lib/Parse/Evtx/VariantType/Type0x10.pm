@@ -25,4 +25,14 @@ sub parse_self {
 	$self->{'String'} = $int64->numify();
 };
 
+
+sub release {
+	my $self = shift;
+	
+	undef $self->{'String'};
+	$self->SUPER::release();
+}
+
+
+
 1;

@@ -20,15 +20,8 @@ sub parse_self {
 	for ($i=0; $i<=5; $i++) {
 		$GUID[$i] =~ tr/a-f/A-F/;
 	}
-
-	$self->{'String'} = sprintf(
-		"{%8s-%4s-%4s-%4s-%12s}",
-		reverse($GUID[0]),
-		reverse($GUID[1]),
-		reverse($GUID[2]),
-		$GUID[3],
-		$GUID[4]
-	);
+	
+	$self->{'String'} = sprintf("{%8s-%4s-%4s-%4s-%12s}", @GUID);
 	$self->{'Length'} = 16;
 }
 

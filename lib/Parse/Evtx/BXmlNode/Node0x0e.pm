@@ -21,7 +21,7 @@ sub get_xml {
 			0
 		);
 	} else {
-		$subst = sprintf("#%d (type %d, optional)#",
+		$subst = sprintf("#%d (type 0x%02x, optional)#",
 			$self->{'Index'},
 			$self->{'Type'}
 		);

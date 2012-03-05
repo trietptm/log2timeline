@@ -1,8 +1,10 @@
-# array of HexInt64
-package Parse::Evtx::VariantType::Type0x95;
+# array of FILETIME
+package Parse::Evtx::VariantType::Type0x91;
 use base qw( Parse::Evtx::VariantType );
 
 use Carp::Assert;
+use Math::BigInt;
+use DateTime;
 
 sub parse_self {
 	my $self = shift;
@@ -25,12 +27,30 @@ sub parse_self {
 	my $elements = $self->{'Length'} / 8;
 	my @data;
 	for ($i=0; $i<$elements; $i++ ) {
-		$data[$i] = sprintf("[%u] 0x%s",
+		my ($low, $high) = unpack("LL", substr($data, $i*8, 8));
+
+		my $filetime = Math::BigInt->new($high)->blsft(32)->bxor($low);
+		$filetime /= 1000;
+		$filetime -= 116444736000000;
+		my $seconds = $filetime / 10000;
+		my $fraction = $filetime - $seconds*10000;
+		my $datetime = DateTime->from_epoch(epoch => $seconds->numify(), time_zone => 'UTC');
+		
+		$data[$i] = sprintf("[%u] %s.%sZ",
 		 	$i,
-			scalar reverse unpack("h*", substr($data, $i*8, 8))
+			$datetime, $fraction->numify()
 		);
 	}	
 	$self->{'String'} = join("\n", @data);
 }
+
+
+sub release {
+	my $self = shift;
+	
+	undef $self->{'String'};
+	$self->SUPER::release();
+}
+
 
 1;

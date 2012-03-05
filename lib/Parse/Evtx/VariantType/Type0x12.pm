@@ -16,8 +16,7 @@ use base qw( Parse::Evtx::VariantType );
 # } SYSTEMTIME, *PSYSTEMTIME;
 
 use Carp::Assert;
-#use DateTime;	# removed by Kristinn
-use Log2t::Time;	# added by Kristinn
+#use DateTime;
  
 sub parse_self {
 	my $self = shift;
@@ -25,8 +24,8 @@ sub parse_self {
  	assert($self->{'Length'} >= 16, "packet too small") if DEBUG;
 	my $data = $self->{'Chunk'}->get_data($self->{'Start'}, 16);
 	my ($year, $month, $dow, $day, $h, $m, $s, $ms) = unpack("s8", $data);
-	$self->{'String'} = Log2t::Time::iso2epoch( sprintf("%04d-%02d-%02dT%02d:%02d:%02d.%04dZ",
-		$year, $month, $day, $h, $m, $s, $ms), 'UTC' );
+	$self->{'String'} = sprintf("%04d-%02d-%02dT%02d:%02d:%02d.%04dZ",
+		$year, $month, $day, $h, $m, $s, $ms);
 	$self->{'Length'} = 16;
 };
 	

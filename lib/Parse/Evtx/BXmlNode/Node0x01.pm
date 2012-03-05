@@ -30,6 +30,7 @@ sub parse_self {
 	my $data = $self->{'Chunk'}->get_data($self->{'Start'}, 11);
 	my ($opcode, $unknown1, $Length, $Pointer) = unpack("CSLL", $data);
 	my $Flags = $opcode >> 4;
+	assert (($Flags & 0xb) == 0, "unknown flag $Flag") if DEBUG;
 	$opcode = $opcode & 0x0f;
 	assert($opcode == 0x01, "bad opcode, expected 1, got $opcode") if DEBUG;
 	
@@ -78,6 +79,14 @@ sub parse_down {
 	
 	$self->{'DataLength'} = $self->{'Length'} - $self->{'TagLength'};
 	$self->SUPER::parse_down();
+}
+
+
+sub release {
+	my $self = shift;
+	
+	undef $self->{'Pointer'};
+	$self->SUPER::release();
 }
 
 sub set_element_type {

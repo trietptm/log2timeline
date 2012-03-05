@@ -29,4 +29,13 @@ sub parse_self {
 	$self->{'Pointer'} = $Root;
 };
 
+
+sub release {
+	my $self = shift;
+	
+	undef $self->{'Pointer'};
+	$self->SUPER::release();
+}
+
+
 1;

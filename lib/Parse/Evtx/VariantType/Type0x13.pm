@@ -30,6 +30,15 @@ sub parse_self {
 	
 	$self->{'String'} = $SID;
 	$self->{'Length'} = 8 + $Elements*4;
-};
+}
+
+
+sub release {
+	my $self = shift;
+	
+	undef $self->{'String'};
+	$self->SUPER::release();
+}
+
 
 1;

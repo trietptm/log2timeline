@@ -4,7 +4,7 @@ use base qw( Parse::Evtx::VariantType );
 
 use Carp::Assert;
 use Math::BigInt;
-#use DateTime;	 # removed by Kristinn
+#use DateTime;  # removed by Kristinn (log2timeline compatability)
 
 #perl2exe_include "DateTime/Locale/en.pm"
 
@@ -16,14 +16,22 @@ sub parse_self {
 	my ($low, $high) = unpack("LL", $data);
 
 	my $filetime = Math::BigInt->new($high)->blsft(32)->bxor($low);
-	$filetime /= 10000;
-	$filetime -= 11644473600000;
-	my $seconds = $filetime / 1000;
-	my $fraction = $filetime - $seconds*1000;
-        # modifications made by Kristinn
-	#my $datetime = DateTime->from_epoch( epoch => $seconds->numify(), time_zone => 'UTC');
+	$filetime /= 1000;
+	$filetime -= 116444736000000;
+	my $seconds = $filetime / 10000;
+	my $fraction = $filetime - $seconds*10000;
+	#my $datetime = DateTime->from_epoch(epoch => $seconds->numify(), time_zone => 'UTC');
 	#$self->{'String'} = sprintf("%s.%sZ", $datetime, $fraction->numify());
-        $self->{'String'} = $seconds->numify();
+  $self->{'String'} = $seconds->numify();
 };
+
+
+sub release {
+	my $self = shift;
+	
+	undef $self->{'String'};
+	$self->SUPER::release();
+}
+
 
 1;

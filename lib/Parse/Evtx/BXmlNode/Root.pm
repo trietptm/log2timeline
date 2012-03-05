@@ -1,22 +1,22 @@
 # root node
 package Parse::Evtx::BXmlNode::Root;
-use base qw( Parse::Evtx::BXmlNode )
-;
+use base qw( Parse::Evtx::BXmlNode );
 require Parse::Evtx::BXmlNode::SubstArray;
 use Carp::Assert;
+
 
 sub get_substitute {
 	my $self = shift;
 
 	$self->{'SubstArray'}->get_substitute(@_);
-};
+}
 
 
 sub get_array_obj {
 	my $self = shift;
 	
 	return $self->{'SubstArray'};
-};
+}
 
 
 sub get_xml {
@@ -28,8 +28,9 @@ sub get_xml {
 	# restore root context
 	my $root = $self->{'Chunk'}->pop_root();
 	assert($root == $self, "root is not self") if DEBUG;
+
 	return $xml;
-};
+}
 
 
 sub parse_self {
@@ -38,7 +39,8 @@ sub parse_self {
 	# the root node has no tag, so there's not much to be done here
 	$self->{'TagLength'} = 0; 
 	$self->{'DataLength'}  = $self->{'Length'};
-};
+}
+
 
 sub parse_down {
 	my $self = shift;
@@ -59,6 +61,16 @@ sub parse_down {
 	$array->parse_self();
 	$array->parse_down();
 	$self->{'SubstArray'} = $array;
-};
+}
+
+
+
+sub release {
+	my $self = shift;
+	
+	undef $self->{'SubstArray'};
+	$self->SUPER::release();
+}
+
 
 1;

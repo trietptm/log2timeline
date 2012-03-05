@@ -34,7 +34,7 @@ sub parse_self {
 	
 	my @strings = split(/\000/, $string);
 	my $i = 1;
-	$string = sprintf("[%d] %s", 0, $strings[0]);
+	$string = sprintf("[%u] %s", 0, $strings[0]);
 	while ($i <= $#strings) {
 		$string .= sprintf("\n[%d] %s", $i, $strings[$i]);
 		$i++;
