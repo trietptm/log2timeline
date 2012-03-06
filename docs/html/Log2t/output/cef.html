@@ -1,0 +1,77 @@
+<?xml version="1.0" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>cef - Output plugin for the Commen Event Format defined by ArcSight</title>
+<link rel="stylesheet" href="./docs/html/default.css" type="text/css" />
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rev="made" href="mailto:kiddi@dhcp-172-19-33-45.mtv.corp.google.com" />
+</head>
+
+<body>
+
+
+<!-- INDEX BEGIN -->
+<div name="index">
+<p><a name="__index__"></a></p>
+
+<ul>
+
+	<li><a href="#name">NAME</a></li>
+	<li><a href="#methods">METHODS</a></li>
+</ul>
+
+<hr name="index" />
+</div>
+<!-- INDEX END -->
+
+<p>
+</p>
+<hr />
+<h1><a name="name">NAME</a></h1>
+<p>cef - Output plugin for the Commen Event Format (CEF) defined by ArcSight</p>
+<p>
+</p>
+<hr />
+<h1><a name="methods">METHODS</a></h1>
+<dl>
+<dt><strong><a name="get_help" class="item"><code>get_help()</code></a></strong></dt>
+
+<dd>
+<p>Returns a string that contains a longer version of the description of the output module, as well as possibly providing some assistance in how the module should be used.</p>
+</dd>
+<dt><strong><a name="print_line" class="item">print_line( $class, \%t_line )</a></strong></dt>
+
+<dd>
+<p>Accepts as a parameter a reference to a hash that stores the timeline that is to be printed.  It then parses the reference and calls a method in the main script that takes care of printing a line in a particular output format</p>
+</dd>
+<dt><strong><a name="new" class="item"><code>new()</code></a></strong></dt>
+
+<dd>
+<p>A constructor that parses parameters passed to the output module, perhaps indicating a user name or additional information to include with the printed timeline</p>
+</dd>
+<dt><strong><a name="get_version" class="item"><code>get_version()</code></a></strong></dt>
+
+<dd>
+<p>Returns the version number of the plugin file</p>
+</dd>
+<dt><strong><a name="get_description" class="item"><code>get_description()</code></a></strong></dt>
+
+<dd>
+<p>Returns a string that contains a short description of the output module</p>
+</dd>
+<dt><strong><a name="print_header" class="item"><code>print_header()</code></a></strong></dt>
+
+<dd>
+<p>If applicaple this function calls a print function in the main script to add a header to the output file</p>
+</dd>
+<dt><strong><a name="print_footer" class="item"><code>print_footer()</code></a></strong></dt>
+
+<dd>
+<p>If applicaple this function calls a print function in the main script to add a footer to the output file</p>
+</dd>
+</dl>
+
+</body>
+
+</html>

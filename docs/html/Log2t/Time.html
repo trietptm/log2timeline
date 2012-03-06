@@ -1,0 +1,432 @@
+<?xml version="1.0" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Log2t::Time - A library that provides method to work with different timestamps.</title>
+<link rel="stylesheet" href="./docs/html/default.css" type="text/css" />
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rev="made" href="mailto:kiddi@dhcp-172-19-33-45.mtv.corp.google.com" />
+</head>
+
+<body>
+
+
+<!-- INDEX BEGIN -->
+<div name="index">
+<p><a name="__index__"></a></p>
+
+<ul>
+
+	<li><a href="#name">NAME</a></li>
+	<li><a href="#description">DESCRIPTION</a></li>
+	<li><a href="#methods">METHODS</a></li>
+	<ul>
+
+		<li><a href="#win2unix"><code>Win2Unix</code></a></li>
+		<ul>
+
+			<li><a href="#args_">Args:</a></li>
+			<ul>
+
+				<li><a href="#lo__an_integer__32_bits__representing_the_lower_32_bits_of_the_timestamp_">Lo: An integer (32 bits) representing the lower 32 bits of the timestamp.</a></li>
+				<li><a href="#hi__an_integer__32_bits__representing_the_higher_32_bits_of_the_timestamp_">Hi: An integer (32 bits) representing the higher 32 bits of the timestamp.</a></li>
+			</ul>
+
+			<li><a href="#returns_">Returns:</a></li>
+			<ul>
+
+				<li><a href="#an_integer_representing_the_number_of_seconds_since_epoch_time_">An integer representing the number of seconds since Epoch time.</a></li>
+			</ul>
+
+		</ul>
+
+		<li><a href="#getnanowinfiletime"><code>getNanoWinFileTime</code></a></li>
+		<ul>
+
+			<li><a href="#args_">Args:</a></li>
+			<ul>
+
+				<li><a href="#l__an_integer__32_bits__representing_the_lower_32_bits_of_the_timestamp_">l: An integer, 32 bits, representing the lower 32 bits of the timestamp.</a></li>
+				<li><a href="#h__an_integer__32_bits__representing_the_higher_32_bits_of_the_timestamp_">h: An integer, 32 bits, representing the higher 32 bits of the timestamp.</a></li>
+			</ul>
+
+			<li><a href="#returns_">Returns:</a></li>
+			<ul>
+
+				<li><a href="#an_integer_that_represents_the_nanoseconds_of_a_filetime_timestamp_">An integer that represents the nanoseconds of a FILETIME timestamp.</a></li>
+			</ul>
+
+		</ul>
+
+		<li><a href="#dos2unix"><code>Dos2Unix</code></a></li>
+		<ul>
+
+			<li><a href="#args_">Args:</a></li>
+			<ul>
+
+				<li><a href="#date__packed_16_bit__2_byte__value_that_represents_the_date_">date: Packed 16 bit (2 byte) value that represents the date.</a></li>
+				<li><a href="#time__packed_16_bit__2_byte__value_that_represents_the_time_of_day_">time: Packed 16 bit (2 byte) value that represents the time of day.</a></li>
+			</ul>
+
+		</ul>
+
+		<li><a href="#iso2epoch"><code>iso2epoch</code></a></li>
+		<ul>
+
+			<li><a href="#args_">Args:</a></li>
+			<ul>
+
+				<li><a href="#iso__a_string_containing_the_timestamp__in_iso_8601_notation_">iso: A string containing the timestamp, in ISO_8601 notation.</a></li>
+				<li><a href="#tz__the_timezone_of_the_file_">tz: The timezone of the file.</a></li>
+			</ul>
+
+			<li><a href="#returns_">Returns:</a></li>
+			<ul>
+
+				<li><a href="#an_integer_representing_the_number_of_seconds_since_epoch_">An integer representing the number of seconds since Epoch.</a></li>
+			</ul>
+
+		</ul>
+
+		<li><a href="#epoch2cftl"><code>epoch2cftl</code></a></li>
+		<ul>
+
+			<li><a href="#args_">Args:</a></li>
+			<ul>
+
+				<li><a href="#epoch__an_integer_in_the_epoch_format_">epoch: An integer in the epoch format.</a></li>
+				<li><a href="#tz__the_timezone_of_the_timestamp_">tz: The timezone of the timestamp.</a></li>
+			</ul>
+
+			<li><a href="#returns_">Returns:</a></li>
+			<ul>
+
+				<li><a href="#a_string_representing_the_timestamp_in_a_format_that_cftl_accepts_">A string representing the timestamp in a format that CFTL accepts.</a></li>
+			</ul>
+
+		</ul>
+
+		<li><a href="#epoch2text"><code>epoch2text</code></a></li>
+		<ul>
+
+			<li><a href="#args_">Args:</a></li>
+			<ul>
+
+				<li><a href="#epoch__an_integer_in_the_epoch_format">epoch: An integer in the Epoch format</a></li>
+				<li><a href="#use_local__an_integer_that_determines_the_format_of_the_output__values_can_be_found_above_in_the_description_">use_local: An integer that determines the format of the output, values can be found above in the description.</a></li>
+				<li><a href="#tz__the_timezone_of_the_timestamp_">tz: The timezone of the timestamp.</a></li>
+			</ul>
+
+			<li><a href="#returns_">Returns:</a></li>
+			<ul>
+
+				<li><a href="#a_string_representing_the_timestamp__depending_on_the_value_of_use_local_">A string representing the timestamp, depending on the value of use_local.</a></li>
+			</ul>
+
+		</ul>
+
+		<li><a href="#month2int"><code>month2int</code></a></li>
+		<ul>
+
+			<li><a href="#args_">Args:</a></li>
+			<ul>
+
+				<li><a href="#month__a_string__abbreviated_text_of_a_month__eg_jan__feb__mar______">Month: A string, abbreviated text of a month (eg Jan, Feb, Mar, ...)</a></li>
+			</ul>
+
+			<li><a href="#returns_">Returns:</a></li>
+			<ul>
+
+				<li><a href="#an_integer__from_1_12">An integer, from 1-12</a></li>
+			</ul>
+
+		</ul>
+
+		<li><a href="#exceldate2epoch"><code>exceldate2epoch</code></a></li>
+		<ul>
+
+			<li><a href="#args_">Args:</a></li>
+			<ul>
+
+				<li><a href="#d__a_string_that_represents_the_timestamp_in_the_excel_format_">d: A string that represents the timestamp in the Excel format.</a></li>
+				<li><a href="#tz__the_timezone_of_the_file_in_question_">tz: The timezone of the file in question.</a></li>
+			</ul>
+
+			<li><a href="#returns_">Returns:</a></li>
+			<ul>
+
+				<li><a href="#an_integer__representing_the_timestamp_in_epoch_format_">An integer, representing the timestamp in Epoch format.</a></li>
+			</ul>
+
+		</ul>
+
+		<li><a href="#is_leap_year"><code>is_leap_year</code></a></li>
+		<ul>
+
+			<li><a href="#args_">Args:</a></li>
+			<ul>
+
+				<li><a href="#year__a_four_digit_integer__year_">year: a four digit integer (year)</a></li>
+			</ul>
+
+			<li><a href="#returns_">Returns:</a></li>
+			<ul>
+
+				<li><a href="#1_if_this_is_a_leap_year__0_otherwise_">1 if this is a leap year, 0 otherwise.</a></li>
+			</ul>
+
+		</ul>
+
+	</ul>
+
+</ul>
+
+<hr name="index" />
+</div>
+<!-- INDEX END -->
+
+<p>
+</p>
+<hr />
+<h1><a name="name">NAME</a></h1>
+<p>Log2t::Time - A library that provides method to work with different timestamps.</p>
+<p>
+</p>
+<hr />
+<h1><a name="description">DESCRIPTION</a></h1>
+<p>This is a small library to assist with time manipulation. It contains multiple methods that
+can be used in log2timeline modules when dealing with converting timestamps that are stored in
+various formats into Epoch, and also to convert Epoch timestamps to textual representations.</p>
+<p>This library should always be used when converting timestamps either to or from an epoch value
+since the sub routines defined here can be used by all modules (code reuse, and if a quicker method
+is developed it will make maintenance considerably easier).</p>
+<p>All methods should be documented here in the code so that it will be easy for anyone to
+use them in the code.</p>
+<p>
+</p>
+<hr />
+<h1><a name="methods">METHODS</a></h1>
+<p>
+</p>
+<h2><a name="win2unix"><code>Win2Unix</code></a></h2>
+<p>A subroutine copied from ptfinder.pl developed by Andreas Schuster and
+Csaba Barta.  This sub routine converts windows filetime into a unix 
+format</p>
+<p>n.b FILETIME is represented in UTC</p>
+<p>Windows epoch is 1601-01-01 00:00:00, resolution 100ns</p>
+<p>UNIX epoch is 1970-01-01 00:00:00, resolution 1s</p>
+<p>Copyright (c) 2009 by Andreas Schuster and Csaba Barta.</p>
+<p>
+</p>
+<h3><a name="args_">Args:</a></h3>
+<p>
+</p>
+<h4><a name="lo__an_integer__32_bits__representing_the_lower_32_bits_of_the_timestamp_">Lo: An integer (32 bits) representing the lower 32 bits of the timestamp.</a></h4>
+<p>
+</p>
+<h4><a name="hi__an_integer__32_bits__representing_the_higher_32_bits_of_the_timestamp_">Hi: An integer (32 bits) representing the higher 32 bits of the timestamp.</a></h4>
+<p>
+</p>
+<h3><a name="returns_">Returns:</a></h3>
+<p>
+</p>
+<h4><a name="an_integer_representing_the_number_of_seconds_since_epoch_time_">An integer representing the number of seconds since Epoch time.</a></h4>
+<p>
+</p>
+<h2><a name="getnanowinfiletime"><code>getNanoWinFileTime</code></a></h2>
+<p>A small subroutine that returns the nanoseconds of a Windows FILETIME</p>
+<p>
+</p>
+<h3><a name="args_">Args:</a></h3>
+<p>
+</p>
+<h4><a name="l__an_integer__32_bits__representing_the_lower_32_bits_of_the_timestamp_">l: An integer, 32 bits, representing the lower 32 bits of the timestamp.</a></h4>
+<p>
+</p>
+<h4><a name="h__an_integer__32_bits__representing_the_higher_32_bits_of_the_timestamp_">h: An integer, 32 bits, representing the higher 32 bits of the timestamp.</a></h4>
+<p>
+</p>
+<h3><a name="returns_">Returns:</a></h3>
+<p>
+</p>
+<h4><a name="an_integer_that_represents_the_nanoseconds_of_a_filetime_timestamp_">An integer that represents the nanoseconds of a FILETIME timestamp.</a></h4>
+<p>
+</p>
+<h2><a name="dos2unix"><code>Dos2Unix</code></a></h2>
+<p>Taken from the dos2unixtime function from the tsk3/fs/fatfs_meta.c file from The Sleuthkit.
+The logic and code taken there, and adapted to be a Perl code (the other is a C code)</p>
+<p>** Brian Carrier [carrier &lt;at&gt; sleuthkit [dot] org]</p>
+<p>** Copyright (c) 2006-2008 Brian Carrier, Basis Technology.  All Rights reserved</p>
+<p>** Copyright (c) 2003-2005 Brian Carrier.  All rights reserved</p>
+<p>**</p>
+<p>** TASK</p>
+<p>** Copyright (c) 2002 Brian Carrier, @stake Inc.  All rights reserved</p>
+<p>**</p>
+<p>**</p>
+<p>** This software is distributed under the Common Public License 1.0</p>
+<p>**</p>
+<p>** Unicode added with support from I.D.E.A.L. Technology Corp (Aug '05)</p>
+<p>Convert DOS DATE and TIME format to Unix Epoch.</p>
+<p>DOS DATE is a two byte packet data where</p>
+<p>0-4 DAY (1-31)</p>
+<p>5-8 MONTH (1-12)</p>
+<p>9-15 YEAR (from 1980)</p>
+<p>DOS TIME is a two byte packet</p>
+<p>0-4 sec (divided by two)</p>
+<p>5-10 min</p>
+<p>11-15 hour</p>
+<p>Links pointing towards further information:</p>
+<p><strong><a href="http://msdn.microsoft.com/en-us/library/aa371853%28VS.85%29.aspx">http://msdn.microsoft.com/en-us/library/aa371853%28VS.85%29.aspx</a></strong></p>
+<p><strong><a href="http://www.vsft.com/hal/dostime.htm">http://www.vsft.com/hal/dostime.htm</a></strong></p>
+<p>
+</p>
+<h3><a name="args_">Args:</a></h3>
+<p>
+</p>
+<h4><a name="date__packed_16_bit__2_byte__value_that_represents_the_date_">date: Packed 16 bit (2 byte) value that represents the date.</a></h4>
+<p>
+</p>
+<h4><a name="time__packed_16_bit__2_byte__value_that_represents_the_time_of_day_">time: Packed 16 bit (2 byte) value that represents the time of day.</a></h4>
+<p>
+</p>
+<h2><a name="iso2epoch"><code>iso2epoch</code></a></h2>
+<p>This routine transforms a date formated according to ISO 8601
+to an epoch time (see definition on Wikipedia):</p>
+<p><strong><a href="http://en.wikipedia.org/wiki/ISO_8601">http://en.wikipedia.org/wiki/ISO_8601</a></strong></p>
+<p>
+</p>
+<h3><a name="args_">Args:</a></h3>
+<p>
+</p>
+<h4><a name="iso__a_string_containing_the_timestamp__in_iso_8601_notation_">iso: A string containing the timestamp, in ISO_8601 notation.</a></h4>
+<p>
+</p>
+<h4><a name="tz__the_timezone_of_the_file_">tz: The timezone of the file.</a></h4>
+<p>
+</p>
+<h3><a name="returns_">Returns:</a></h3>
+<p>
+</p>
+<h4><a name="an_integer_representing_the_number_of_seconds_since_epoch_">An integer representing the number of seconds since Epoch.</a></h4>
+<p>
+</p>
+<h2><a name="epoch2cftl"><code>epoch2cftl</code></a></h2>
+<p>A sub routine that converts an Epoch timestamp into a timestamp
+that CFTL (Computer Forensics Time Lab accepts in it's XML schema).</p>
+<p>
+</p>
+<h3><a name="args_">Args:</a></h3>
+<p>
+</p>
+<h4><a name="epoch__an_integer_in_the_epoch_format_">epoch: An integer in the epoch format.</a></h4>
+<p>
+</p>
+<h4><a name="tz__the_timezone_of_the_timestamp_">tz: The timezone of the timestamp.</a></h4>
+<p>
+</p>
+<h3><a name="returns_">Returns:</a></h3>
+<p>
+</p>
+<h4><a name="a_string_representing_the_timestamp_in_a_format_that_cftl_accepts_">A string representing the timestamp in a format that CFTL accepts.</a></h4>
+<p>
+</p>
+<h2><a name="epoch2text"><code>epoch2text</code></a></h2>
+<p>A sub routine that converts an Epoch timestamp into a textual human readable format.</p>
+<p>The sub routine returns the text in three different formats depending on the value of the variable use_local.</p>
+<p>The formats are:</p>
+<p>+ [0] One value: Day Month DD YYYY HH:MM:SS (GMT)</p>
+<p>+ [1] One value: Day Month DD YYYY HH:MM:SS (ZONE)</p>
+<p>+ [3] Two values: MM/DD/YYYY and HH:MM:SS</p>
+<p>
+</p>
+<h3><a name="args_">Args:</a></h3>
+<p>
+</p>
+<h4><a name="epoch__an_integer_in_the_epoch_format">epoch: An integer in the Epoch format</a></h4>
+<p>
+</p>
+<h4><a name="use_local__an_integer_that_determines_the_format_of_the_output__values_can_be_found_above_in_the_description_">use_local: An integer that determines the format of the output, values can be found above in the description.</a></h4>
+<p>
+</p>
+<h4><a name="tz__the_timezone_of_the_timestamp_">tz: The timezone of the timestamp.</a></h4>
+<p>
+</p>
+<h3><a name="returns_">Returns:</a></h3>
+<p>
+</p>
+<h4><a name="a_string_representing_the_timestamp__depending_on_the_value_of_use_local_">A string representing the timestamp, depending on the value of use_local.</a></h4>
+<p>
+</p>
+<h2><a name="month2int"><code>month2int</code></a></h2>
+<p>A small sub routine that takes as an input a string that is an abbreviated textual representation of a month and returns an integer,
+that is the month value of that particular month, eg. Jan becomes 1, Nov becomes 11, etc.</p>
+<p>
+</p>
+<h3><a name="args_">Args:</a></h3>
+<p>
+</p>
+<h4><a name="month__a_string__abbreviated_text_of_a_month__eg_jan__feb__mar______">Month: A string, abbreviated text of a month (eg Jan, Feb, Mar, ...)</a></h4>
+<p>
+</p>
+<h3><a name="returns_">Returns:</a></h3>
+<p>
+</p>
+<h4><a name="an_integer__from_1_12">An integer, from 1-12</a></h4>
+<p>
+</p>
+<h2><a name="exceldate2epoch"><code>exceldate2epoch</code></a></h2>
+<p>A method that takes a timestamp that is defined in the native Excel format
+and transforms that into an Epoch timestamp.</p>
+<p>The Excel format is:</p>
+<p>DDDD.TTTT</p>
+<p>Where DDDD is the number of days elapsed since 01/01/1901 and TTTT is the 
+number of seconds since the start of the day.</p>
+<p>Further reading:</p>
+<p><strong><a href="http://office.microsoft.com/en-us/access-help/on-time-and-how-much-has-elapsed-HA001110218.aspx">http://office.microsoft.com/en-us/access-help/on-time-and-how-much-has-elapsed-HA001110218.aspx</a></strong></p>
+<p><strong><a href="http://support.microsoft.com/kb/214019">http://support.microsoft.com/kb/214019</a></strong></p>
+<p>Since Epoch is measured in seconds since 01/01/1970 there is only 69 year difference between
+the two representations, so we can just simply calculate the difference and return that.</p>
+<p>
+</p>
+<h3><a name="args_">Args:</a></h3>
+<p>
+</p>
+<h4><a name="d__a_string_that_represents_the_timestamp_in_the_excel_format_">d: A string that represents the timestamp in the Excel format.</a></h4>
+<p>
+</p>
+<h4><a name="tz__the_timezone_of_the_file_in_question_">tz: The timezone of the file in question.</a></h4>
+<p>
+</p>
+<h3><a name="returns_">Returns:</a></h3>
+<p>
+</p>
+<h4><a name="an_integer__representing_the_timestamp_in_epoch_format_">An integer, representing the timestamp in Epoch format.</a></h4>
+<p>
+</p>
+<h2><a name="is_leap_year"><code>is_leap_year</code></a></h2>
+<p>A small method used to determine if a given year is a leap year
+or not.</p>
+<p>Method derived from this document:</p>
+<p><strong><a href="http://support.microsoft.com/kb/214019">http://support.microsoft.com/kb/214019</a></strong></p>
+<p>Essentially the method is split up in the following steps:</p>
+<p>1: Is the year evenly divisible by 4? step 2: step 5</p>
+<p>2: Is the year evenly divisible by 100? step 3: step 4</p>
+<p>3: Is the year evenly divisible by 400? step 4: step 5</p>
+<p>4: Leap year, return 1</p>
+<p>5: Not a leap year, return 0</p>
+<p>
+</p>
+<h3><a name="args_">Args:</a></h3>
+<p>
+</p>
+<h4><a name="year__a_four_digit_integer__year_">year: a four digit integer (year)</a></h4>
+<p>
+</p>
+<h3><a name="returns_">Returns:</a></h3>
+<p>
+</p>
+<h4><a name="1_if_this_is_a_leap_year__0_otherwise_">1 if this is a leap year, 0 otherwise.</a></h4>
+
+</body>
+
+</html>

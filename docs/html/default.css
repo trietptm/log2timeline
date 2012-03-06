@@ -1,0 +1,57 @@
+body {
+    background:  #FFFFFF;
+    font-family: Arial;
+}	
+input {
+    font-size: 12px;
+}
+select {
+    font-size: 12px;
+}
+tt {
+    font-family: Lucida Console;
+    font-size: 10px;
+}
+pre {
+    font-family: Lucida Console;
+    font-size: 12px;
+}
+code {
+    font-family: Lucida Console;
+    font-size: 12px;
+}
+p {
+    color: #000000;
+    font-size: 12px;
+    font-family: Arial;
+    }
+blockquote {
+    color: #000000;
+    font-size: 12px;
+    font-family: Arial;
+    font-weight: normal;
+}
+b {
+    font-weight: bold;
+}
+
+h1 { 
+    font-family: Arial;
+    font-size: 16px;
+    font-weight: bold;
+    color: #B82831;
+}
+h2 { 
+    font-family: Arial;
+    font-size: 14px;
+    font-weight: bold;
+    color: #B82831;
+}
+a:link { 
+	color: #B82831;
+        text-decoration: underline;
+}
+a:visited { 
+	color: #80933F;
+        text-decoration: underline;
+}
