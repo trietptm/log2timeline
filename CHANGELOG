@@ -8,6 +8,13 @@ Version 0.63
   portion of making the modules easier to use/understand/develop.
   - All libraries within the tool and the main API have been rewritten with this in mind, making 'man' documentation considerably
   more useful than it was.
+  - [SERIALIZE output] JSON::XS used to serialize the timestamp output, a very simple output module that simply stores
+      - This makes it possible to output using this method and then sorting is simpler since it does not require the module
+        to read in the csv and change it into something like a hash, since it is already stored as such.
+      - This migh become the default output of the tool, and then run l2t_process on that output, turning that into CSV
+        instead of using CSV as default and trying to filter that output.
+      - This also makes it easier to filter, based on certain attributes, instead of at the line level.
+  the timestamp object without really doing anything to it. Use that for easy sorting in later stages.
   - [WIN7 list] Fixed a small bug in Win7 list file (and win7_noreg). The evt module was loaded up and not the evtx one.
   - [FIREFOX3 input] Added a check to see if the SQlite database contains a -wal or -shm (in addition to -journal)
   And if it does, then do the same procedure as if it was a -journal (read-only database that gets copied to a temp location)

@@ -81,7 +81,7 @@ sub print_footer() {
     return 1;
 }
 
-#      	print_line
+#      print_line
 # A subroutine that reads a line from the access file and returns it to the
 # main script
 # @return A string containing one line of the log file (or a -1 if we've reached

@@ -1,15 +1,12 @@
 #################################################################################################
-#		OUTPUT	
+#             OUTPUT
 #################################################################################################
-# this package provides an output module for the tool log2timeline.
-# The package takes as an input a hash that contains all the needed information to print or output
-# the timeline that has been produced by a format file
-# 
+#
 # Author: Kristinn Gudjonsson
 # Version : 0.1
-# Date : xx/xx/10
+# Date : xx/xx/12
 #
-# Copyright 2009,2010 Kristinn Gudjonsson (kristinn ( a t ) log2timeline (d o t) net)
+# Copyright 2009-2012 Kristinn Gudjonsson (kristinn ( a t ) log2timeline (d o t) net)
 #
 #  This file is part of log2timeline.
 #
@@ -26,109 +23,198 @@
 #    You should have received a copy of the GNU General Public License
 #    along with log2timeline.  If not, see <http://www.gnu.org/licenses/>.
 
+=pod
+=head1 NAME
+
+OUTPUT - an output module for log2timeline.
+
+=head1 DESCRIPTION
+
+This package provides an output module for the tool log2timeline.
+
+The package takes as an input a hash that contains all the needed information to print or output
+the timeline that has been produced by an input module.
+
+=cut
+
 package Log2t::output::OUTPUT;
 
 use strict;
-use Getopt::Long;       # read parameters
+use Getopt::Long;    # read parameters
 
 my $version = "0.1";
 
-#       get_version
-# A simple subroutine that returns the version number of the format file
-#
-# @return A version number
-sub get_version()
-{
-	return $version;
+=head2 C<get_version>
+
+A simple subroutine that returns the version number of the format file
+
+=head3 Returns>
+
+=head4  A version number, expressed as a string.
+=cut
+
+sub get_version() {
+    return $version;
 }
 
-#	new
-# A simple constructor of the output module. Takes care of parsing 
-# parameters sent to the output module
-sub new($)
-{
-	my $quiet;
+=head2 C<new>
 
-        # read options from CMD
-        @ARGV = @_;
-        GetOptions(
-                "quiet!"        =>\$quiet
-        );
+A simple constructor of the output module. Takes care of parsing
+parameters sent to the output module
+
+=cut
+sub new($) {
+    my $quiet;
+
+    # read options from CMD
+    @ARGV = @_;
+    GetOptions("quiet!" => \$quiet);
 }
 
-#       get_description
-# A simple subroutine that returns a string containing a description of 
-# the funcionality of the format file. This string is used when a list of
-# all available format files is printed out
-#
-# @return A string containing a description of the format file's functionality
-sub get_description()
-{
-	return "Output timeline using this particular output method"; 
+=head2 C<get_description>
+
+A simple subroutine that returns a string containing a description of
+the funcionality of the output module. This string is used when a list of
+all available output modules is printed out
+
+=head3 Returns:
+
+=head4 A string containing a description of the output module and the
+file format it uses.
+=cut
+sub get_description() {
+    return "Output timeline using this particular output method";
 }
 
-sub print_header()
-{
-	return 1;
+=head2 C<print_header>
+
+A simple sub routine that is called once before the processing is done
+so that a header can be printed to the output file.
+
+This can also be used to do some pre-processing on the file, even though
+it is not necessarily connected to an output that gets printed. Such as
+set up tables in a database, etc.
+
+=head3 Returns:
+
+=head4 1 if successful.
+
+=cut
+sub print_header() {
+    return 1;
 }
 
-sub get_footer()
-{
-	return 0;	# no footer
+=head2 C<get_footer>
+
+Some output modules print out a footer. That makes appending to the files
+more difficult.
+
+This sub routine simply returns the footer that it will print, so that the
+main engine can remove the footer out of an already existing output file.
+
+When the footer has been removed an output can be appended to the file.
+
+=head3 Returns:
+
+=head4 False if no footer is provided (0), or a string containing the
+footer of the output format.
+
+=cut
+sub get_footer() {
+    return 0;    # no footer
 }
 
-sub print_footer()
-{
-	return 1;
+=head2 C<print_footer>
+
+A simple output routine that prints out the footer of the format this
+output module provides.
+
+=head3 Returns:
+
+=head4 1 if this completes successfully.
+
+=cut
+sub print_footer() {
+    return 1;
 }
 
-#      	print_line 
-# A subroutine that reads a line from the access file and returns it to the
-# main script
-# @return A string containing one line of the log file (or a -1 if we've reached 
-#       the end of the log file)
-sub print_line()
-{
-	# content of array t_line
-	# %t_line {
-	#       md5,
-	#       name,
-	#       inode,
-	#       mode,
-	#       uid,
-	#       gid,
-	#       size,
-	#       atime,
-	#       mtime,
-	#       ctime,
-	#       crtime
-	# }
-        my $class = shift;
-        my $t_line= shift;
-	my $text;
+=head2 C<print_line>
 
-        if( scalar( %{$t_line} ) )
+For each event extracted in the parsing phase of the engine a timestamp
+object is created.
 
-	while ( my ($key, $value) = each(%{$t_line}) ) 
-	{
-        	$text .= "$key => $value\n";
-    	}
+A timestamp object contains all the information and attributes of an event,
+one if which is the 'time', which can contain more than one timestamp, there is
+really no limit on the amount of timestamps that can be stored inside a single event.
 
-	::print_line( $text );
+All the attributes in the timestamp object describe all the timestamps that are
+stored inside it, making it a more effecient form to store the timestamps.
 
-	return 1;
+This sub routine gets called once for each event or timestamp object created
+inside the engine.
+
+This sub routine should format the output in a way that fits the output
+format that this module is implementing.
+
+It then calls the function ::print_line, which is defined in the super
+or parent (the front-end of the tool).
+
+That subroutine is usally a very simple one, just calling the print
+operation on the string this module produces.
+
+However, since this module does not return a value that needs to be
+printed the routine has the option of doing more complex operations
+on the data, such as database manipulation/insertion, etc.
+
+=head3 Args:
+
+=head4 t_line: A timestamp object that needs to be outputted.
+
+=head3 Returns:
+
+=head4 Boolean value (0/1) indicating if there was some problems parsing the
+timestamp object or not.
+
+=cut
+sub print_line() {
+
+    my $self = shift;
+    my $t_line = shift;
+    my $text;
+
+    if (scalar(%{$t_line}))
+
+      while (my ($key, $value) = each(%{$t_line})) {
+        $text .= "$key => $value\n";
+    }
+
+    ::print_line($text);
+
+    return 1;
 }
 
-#       get_help
-# A simple subroutine that returns a string containing the help 
-# message for this particular format file.
-# @return A string containing a help file for this format file
-sub get_help()
-{
-	return "This is an unknown output method.  It prints out the timeline that comes 
-from the input plugin (format file) and prints it blindly out, it contains no requirements or 
-any other relevant options or possibilites, use with care...";
+=head2 C<get_help>
 
+A simple subroutine that returns a string containing the help
+message for this particular output module.
+
+This help file is called when using -h OUTPUT in the front-end.
+
+It should usually contain information about the file format this
+module uses, or some pointers into how to use the output for further
+processing.
+
+=head3 Returns:
+
+=head4 A string containing a help file for this output module.
+
+=cut
+sub get_help() {
+    return "This is an unknown output module. It must be very simple
+since it is not being described here so no further information regarding the
+output can be provided at this point.
+
+Please change me....";
 }
 
 1;
@@ -137,42 +223,10 @@ __END__
 
 =pod
 
-=head1 NAME
+=head1 SEE ALSO
 
-structure - An example output plugin for log2timeline
+L<log2timeline>
 
-=head1 METHODS
-
-=over 4
-
-=item get_help()
-
-Returns a string that contains a longer version of the description of the output module, as well as possibly providing some assistance in how the module should be used.
-
-=item print_line( $class, \%t_line )
-
-Accepts as a parameter a reference to a hash that stores the timeline that is to be printed.  It then parses the reference and calls a method in the main script that takes care of printing a line in a particular output format
-
-=item new()
-
-A constructor that parses parameters passed to the output module, perhaps indicating a user name or additional information to include with the printed timeline
-
-=item get_version()
-
-Returns the version number of the plugin file
-
-=item get_description()
-
-Returns a string that contains a short description of the output module
-
-=item print_header()
-
-If applicaple this function calls a print function in the main script to add a header to the output file
-
-=item print_footer()
-
-If applicaple this function calls a print function in the main script to add a footer to the output file
-
-=back
+L<Log2Timeline>
 
 =cut
