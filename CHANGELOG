@@ -21,6 +21,8 @@ Version 0.63
   This was pointed to me by Svante
   - [PREFETCH input] Changed the default output so that loaded DLLs are not included by default, unless the -d|--detail
   option/parameter is used.
+  - [MFT input] Inside the verification routine a check is made to see if the magic value is FILE0, it should only be FILE.
+  Fixed that, making the mft module capable of parsing those $MFT files that do not the standard offset to the fixup array.
   - [SAM input] Changed the handling of SAM database data, it did not properly parse the SAM database file in certain cases
   due to the keys being prefilled with the CMI-CREATE....
   - [NTUSER input] Changed a value check in UserAssist key parsing causing UserAssist keys not properly being parsed.

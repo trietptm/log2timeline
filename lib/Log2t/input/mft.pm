@@ -977,9 +977,9 @@ sub verify {
     eval {
 
         # a firewall log file should start with a comment, or #, let's verify that
-        $line = Log2t::BinRead::read_ascii($self->{'file'}, \$ofs, 5);
+        $line = Log2t::BinRead::read_ascii($self->{'file'}, \$ofs, 4);
 
-        unless ($line eq 'FILE0') {
+        unless ($line eq 'FILE') {
             $return{'msg'}     = 'Wrong magic value';
             $return{'success'} = 0;
             return \%return;
