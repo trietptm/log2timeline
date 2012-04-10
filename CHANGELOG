@@ -1,4 +1,4 @@
-Version 0.63
+Version 0.63 (09/04/2012)
   - ALL modules/files were run through perltidy using the configuration file of dev/perltidy.conf.
   - Also several modules have had their documentation updated and code reformed to reflect recent release of a style guide
   for the project. perltidy is not enough to enforce that, but at least a start. Rewriting the documentation (pod) is also a vital
