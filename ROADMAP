@@ -1,5 +1,5 @@
 -----------------------------------------------------------------------------------------------------------------------------
-				ROADMAP FOR LOG2TIMELINE
+                ROADMAP FOR LOG2TIMELINE
 -----------------------------------------------------------------------------------------------------------------------------
 This is the official dynamic and constantly flexible roadmap for log2timeline.
 
@@ -8,71 +8,77 @@ or by implemented accordingly.  That being said, this is a dynamic roadmap, whic
 of the tool. Despite it's constant changes and updates it gives a pretty good picture of where log2timeline is headed and
 what to expect in coming releasese.
 
-Version 0.63
-	- fix the ShellBag addition to ntuser, make it work properly (disabled in version 0.51)
-	- Add more IE Cookie support (parse the text files instead of only index.dat file)
-	- Add a module for Thumbs.db file
-	- Add more specific registry key parsing (software + system)
-	- Add a one-to-one mapping between the timezone information provided by the registry vs. the one that is defined in DateTime
-		THE TOOL ITSELF
-	- Add a more broken down part of the description field into the timestamp object (thus making new output modules possible)
-	- Go through some optimization
-		- Mostly involves checking if DateTime can be replaced by other functions somewhere along the line
-	- Add Unicode support (should be there, but just to improve it), and especially to "fix" importing timeline into Excel.... (might need UTF-16)
-	- Add a feature to l2t_process - have a parameter that can be used in conjunction with the keyword search so that the timeline
-		actually includes not only the timestamps of a keyword hit but also to include events in temporarl proximity (eg 5 or 10 min apart)
-	- Add the possibility to choose list files, yet skip a module or add one just the same
-		So in the -f list: IN,-OUT (IN could be a name of a module or a list file, and OUT would be a module that is to be excluded)
-		OUTPUT MODULES
-	- Create a new XML output module, using standard and optional fields (built around the timestamp object)
-	- Add a more broken down part of the description field into the timestamp object and create a new SQLite output module
-	that takes advantage of it, thus creating a separate table for each source type
+Version 0.64
+  - Fix SQLite output module, problems with it.
+      - It's slow, and it seems to miss a lot of entries.
+      - Use transactions instead of INSERT for every event.
+      - Also prepare all statements (since we are re-using all statements over and over again).
+      - Take a look at: http://stackoverflow.com/questions/1711631/how-do-i-improve-the-performance-of-sqlite
+  - Complete the documentation inside all libraries (core) and perhaps an example input/output module.
+  - fix the ShellBag addition to ntuser, make it work properly (disabled in version 0.51)
+  - Add more IE Cookie support (parse the text files instead of only index.dat file)
+  - Add a module for Thumbs.db file
+  - Add more specific registry key parsing (software + system)
+  - Add a one-to-one mapping between the timezone information provided by the registry vs. the one that is defined in DateTime
+    THE TOOL ITSELF
+  - Add a more broken down part of the description field into the timestamp object (thus making new output modules possible)
+  - Go through some optimization
+    - Mostly involves checking if DateTime can be replaced by other functions somewhere along the line
+  - Add Unicode support (should be there, but just to improve it), and especially to "fix" importing timeline into Excel.... (might need UTF-16)
+  - Add a feature to l2t_process - have a parameter that can be used in conjunction with the keyword search so that the timeline
+    actually includes not only the timestamps of a keyword hit but also to include events in temporarl proximity (eg 5 or 10 min apart)
+  - Add the possibility to choose list files, yet skip a module or add one just the same
+    So in the -f list: IN,-OUT (IN could be a name of a module or a list file, and OUT would be a module that is to be excluded)
+    OUTPUT MODULES
+  - Create a new XML output module, using standard and optional fields (built around the timestamp object)
+  - Add a more broken down part of the description field into the timestamp object and create a new SQLite output module
+  that takes advantage of it, thus creating a separate table for each source type
 
-	- Either to add a Cygwin detection or to include some disclaimer in the installation instructions to Windows users that have Cygwin that they
-	do not need to remove the pcap module if they install it there
-	
-	- Test l2t_process in Windows, look at C Pogue emails and figure out if the "scatter plot" is broken in Windows.
+  - Either to add a Cygwin detection or to include some disclaimer in the installation instructions to Windows users that have Cygwin that they
+  do not need to remove the pcap module if they install it there
+  
+  - Test l2t_process in Windows, look at C Pogue emails and figure out if the "scatter plot" is broken in Windows.
 
 Version 0.63
-	- l2t_process
-		- change into Python (and do a bit of a design before proceeding, this could turn into a monster)
-		- use Matplotlib to plot the scatter plot directly
-		- Add any .exe files that reside in the temporary directory to the timeline (very suspicious)
-		- Add the keyword itself into the notes field (to see why there was a hit)
-		- Create new timeline, with the keyword hits and then 45 (changable) lines above and below the keyword hit
-	- pre-processing
-		- Add some more libraries into the pre-processing portion
-	- log2timeline engine	
-		- Add a threaded version? as an option?
-	- Add Java IDX files
-	- Add Opera history file support (binary files)
-	- Add some Plist parsing, add Mac OS X artifacts into the tool
-	- Add an input module for Word documents (older versions)
-	- Take a look at threading once again
+  - l2t_process
+    - change into Python (and do a bit of a design before proceeding, this could turn into a monster)
+    - use Matplotlib to plot the scatter plot directly
+    - Add any .exe files that reside in the temporary directory to the timeline (very suspicious)
+    - Add the keyword itself into the notes field (to see why there was a hit)
+    - Create new timeline, with the keyword hits and then 45 (changable) lines above and below the keyword hit
+  - pre-processing
+    - Add some more libraries into the pre-processing portion
+  - log2timeline engine  
+    - Add a threaded version? as an option?
+  - Add Java IDX files
+  - Add Opera history file support (binary files)
+  - Add some Plist parsing, add Mac OS X artifacts into the tool
+  - Add an input module for Word documents (older versions)
+  - Take a look at threading once again
 
 Version 0.64 (network files add-on)
-	- Add an input module for Cisco ACL entries
-	- Add an input module for IPTables firewall entries
-	- Fix the PCAP input module (collect connection information from TCP)
+  - Add an input module for Cisco ACL entries
+  - Add an input module for IPTables firewall entries
+  - Fix the PCAP input module (collect connection information from TCP)
 
 Version 0.65 (anti-virus log files)
-	- Add input modules for various anti-virus engines
+  - Add input modules for various anti-virus engines
 
 Version 0.66 (remote administration log files)
-	- Add input module for various remote administration tools (logmein, pcanywhere, vnc, ...)
+  - Add input module for various remote administration tools (logmein, pcanywhere, vnc, ...)
 
 Version 0.67 (mail box)
-	- Add support for MBOX files (input module - Mail::Box::Mbox )
-	- Consider adding other mailbox support (consider to use a C library for PST/OST files, write a XS Perl library to map between)
-	- Add MSN history files
-	- Add Yahoo messenger history files
-	- Add other IM's (Skype chat for instance)
+  - Add support for MBOX files (input module - Mail::Box::Mbox )
+  - Consider adding other mailbox support (consider to use a C library for PST/OST files, write a XS Perl library to map between)
+  - Add MSN history files
+  - Add Yahoo messenger history files
+  - Add other IM's (Skype chat for instance)
 
 Version 0.70
-	- Add the capability to provide aliases for each input module (so that input modules can be called by their 
-	aliases as well as their real names)
+  - Add the capability to provide aliases for each input module (so that input modules can be called by their 
+  aliases as well as their real names)
 
 Version 0.80
-	- Add an update mechanism to log2timeline (the possibility to update the input and output modules directly 
-	without the need to update the entire tool)
-		Basically to create a module manager, where you can add or remove modules at will
+  - Add an update mechanism to log2timeline (the possibility to update the input and output modules directly 
+  without the need to update the entire tool)
+    Basically to create a module manager, where you can add or remove modules at will

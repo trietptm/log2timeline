@@ -1558,28 +1558,28 @@ sub _open_file() {
     open(HF, '<', $self->{'file'}) or return 0;
 
     # check if this is ZIP file
-    seek(HF, 0, 0);
-    read(HF, $temp, 4) or return 0;
-    $header_check = unpack("i", $temp);
+#    seek(HF, 0, 0);
+#    read(HF, $temp, 4) or return 0;
+#    $header_check = unpack("i", $temp);
 
-    if (($header_check & 0xFFFFFF) == 0x088b1F) {
-        # we have a gzip file
-        print STDERR "ZIP FILE\n";
-    }
-    elsif (($header_check & 0xFFFFFF) == 0x685A42) {
-        # we have a bzip2 file
-        print STDERR "ZIP FILE\n";
-        seek(HF, 0, 0);
-        $self->{'fh'} = new IO::Uncompress::Bunzip2 \*HF;
-    }
-    elsif ($header_check == 0x04034b50) {
-        # we have a zip file
-        print STDERR "ZIP FILE\n";
-    }
-    else {
+#    if (($header_check & 0xFFFFFF) == 0x088b1F) {
+#        # we have a gzip file
+#        print STDERR "ZIP FILE\n";
+#    }
+#    elsif (($header_check & 0xFFFFFF) == 0x685A42) {
+#        # we have a bzip2 file
+#        print STDERR "ZIP FILE\n";
+#        seek(HF, 0, 0);
+#        $self->{'fh'} = new IO::Uncompress::Bunzip2 \*HF;
+#    }
+#    elsif ($header_check == 0x04034b50) {
+#        # we have a zip file
+#        print STDERR "ZIP FILE\n";
+#    }
+#    else {
         seek(HF, 0, 0);
         $self->{'fh'} = \*HF;
-    }
+#    }
 
     return 1;
 }

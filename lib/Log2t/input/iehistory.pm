@@ -507,7 +507,7 @@ sub _parse_timestamp {
     if ($fix & 0b01) {
 
         # we need to fix time2
-        print STDERR "[IEHISTORY] Adjusting timestamp to local timezone (time2 - $time2)\n";
+        print STDERR "[IEHISTORY] Adjusting timestamp to local timezone (time2 - $time2)\n" if $self->{'debug'};
 
         #print STDERR "FIXING EPOCH2: ", $r{'time2'};
         Log2t::Time::fix_epoch(\$r{'time2'}, $self->{'tz'});
