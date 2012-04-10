@@ -48,7 +48,7 @@ our %EXPORT_TAGS = (binary => [ 'LITTLE_E', 'BIG_E' ]);
 $VERSION = "0.63";
 
 # create a variable for nightly builds
-my $n_date    = '20120409';
+my $n_date    = '20120410';
 my $n_release = 0;            # this is 0 for a released version and 1 for a nightly build
 
 sub get_directory() {
