@@ -1,6 +1,3 @@
-TODO
-  EVTX input - fix the "let's make 50 attempts before dying" concept
-
 Version 0.63
   - ALL modules/files were run through perltidy using the configuration file of dev/perltidy.conf.
   - Also several modules have had their documentation updated and code reformed to reflect recent release of a style guide
@@ -37,7 +34,8 @@ Version 0.63
   - [IEHISTORY input] Switched time1 and time2, and started to update the module so it adheres to the newly released, not
   yet complete, style guide.
   - [EVTX input] Updated the EVTX library to the latest release, version 1.1.1 (written by Andreas Schuster)
-
+      - Also changed the 50 attempts to 15 (in case of an error in reading an entry), also only output error
+      message if debug is turned on.
 
 Version 0.62 (23/11/2011)
   - [FF_CACHE input] New input module, designed to parse the cache files of Firefox. Contributed by John Ritchie
