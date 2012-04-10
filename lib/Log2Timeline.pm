@@ -115,7 +115,7 @@ use Log2t::Common;         # common shared methods in the framework
 use Digest::MD5;           # for MD5 sum calculation
 use Pod::Usage;
 use DateTime;              # for local time zone detection
-use IO::Uncompress::Bunzip2 qw(bunzip2 $Bunzip2Error);
+#use IO::Uncompress::Bunzip2 qw(bunzip2 $Bunzip2Error);
 
 # the version variable
 use vars qw($VERSION);
