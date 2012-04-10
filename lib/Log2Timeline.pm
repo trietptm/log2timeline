@@ -115,6 +115,7 @@ use Log2t::Common;         # common shared methods in the framework
 use Digest::MD5;           # for MD5 sum calculation
 use Pod::Usage;
 use DateTime;              # for local time zone detection
+use IO::Uncompress::Bunzip2 qw(bunzip2 $Bunzip2Error);
 
 # the version variable
 use vars qw($VERSION);
@@ -1442,8 +1443,33 @@ $@\n";
 
 I<A private method (not part of the public API).>
 
-A 
+After each timestamp object has been extracted from the parsing engine
+it is passed through this sub routine.
 
+What is essentially does is processing of the timestamp object. It adds
+some values into it and fixes/adjusts others.
+
+For instance, this routine replaces all backslashes with forward slashed in the
+description field, it adds the text description field passes as an argument to the
+timestamp object, it includes information about the directory the tool was called from,
+includes hostname, etc.
+
+The sub routine also injects other values into the timestamp object, such as the inode
+value of the file and if the calculate parameter is used it calculates a MD5 sum for all
+the files passed to the tool and adds that to the timestamp object.
+
+Finally this routine is also responsible for adjusting the timestamps according to the
+value of the time offset passed as a parameter. That is if we need to adjust all the timestamps because
+of a faulty clock on the system, that time difference is added or subtracted from the timestamp in this
+routine.
+
+=head3 Args:
+
+=head4 t_line: A timestamp object (which is a reference to a hash, hence not a need to return it back).
+
+=head3 Returns:
+
+=head4 Boolean value(0/1): 0 if the timestamp object is not clearly defined, 1 if successful.
 =cut
 sub _process_timestamp($$) {
     my $self   = shift;
@@ -1471,7 +1497,6 @@ sub _process_timestamp($$) {
           unless defined $t_line->{'extra'}->{'host'};
     }
     else {
-
         # use the default one of 'unknown' unless it is already assigned in the input module
         $t_line->{'extra'}->{'host'} = 'unknown' unless defined $t_line->{'extra'}->{'host'};
     }
@@ -1490,44 +1515,28 @@ sub _process_timestamp($$) {
     foreach (keys %{ $t_line->{'time'} }) {
         next unless defined $t_line->{'time'}->{$_}->{'value'};
 
-#    if ( $self->{'debug'} )
-#    {
-#
-#      print STDERR "[KD] Defined " . $t_line->{'time'}->{$_}->{'type'} . "\n" if defined $t_line->{'time'}->{$_}->{'value'};
-#      print STDERR "[KD] Nuna: " . $t_line->{'time'}->{$_}->{'value'} . ' EFTIR: ';
-#    }
         $t_line->{'time'}->{$_}->{'value'} += $self->{'offset'};
-
-        #    print STDERR $t_line->{'time'}->{$_}->{'value'} . "\n" if $self->{'debug'};
     }
 
     # check to see if we are to calculate MD5 sum of the file
     if ($self->{'digest'}) {
+        print 'File: ' . $self->{'file'} . ' and diggest: ' . $self->{'digest'};
+        # check if we've already calculated the md5 for this file
+        if (defined($self->{'digest_list'}->{$self->{'file'}})) {
+            $t_line->{'extra'}->{'md5'} = $self->{'digest_list'}->{$self->{'file'}};
+        }
+        else {
+            # calculate the MD5 sum
+            open(TF, '<' . $self->{'file'});
+            my $sum = Digest::MD5->new;
+            $sum->addfile(*TF);
 
-        #    # check if we've already calculated the md5 for this file
-        #    if( $last_sum{'file'} eq $self->{'file'} )
-        #    {
-        #      # no need to re-calculate
-        #      $t_line->{'extra'}->{'md5'} = $last_sum{'md5'};
-        #    }
-        #    else
-        #    {
-        # we need to calculate a new sum
+            # assign the variables
+            $self->{'digest_list'}->{$self->{'file'}} = $sum->hexdigest;
+            $t_line->{'extra'}->{'md5'} = $sum->hexdigest;
+            close(TF);
+        }
 
-        # calculate the MD5 sum
-        open(TF, '<' . $self->{'file'});
-        my $sum = Digest::MD5->new;
-        $sum->addfile(*TF);
-
-        $t_line->{'extra'}->{'md5'} = $sum->hexdigest;
-
-        #      # update the last_sum object
-        #      $last_sum{'file'} = $file;
-        #      $last_sum{'md5'} = $sum->hexdigest;
-
-        close(TF);
-
-        #    }
     }
 
     return 1;
@@ -1535,16 +1544,42 @@ sub _process_timestamp($$) {
 
 =head2 C<_open_file>
 
-
 I<A private method (not part of the public API).>
+
+A simple sub routine that is responsible for opening up a file and assigning
+the filehandle to the $self->{'fh'} variable that is used in the tool.
 
 =cut
 sub _open_file() {
     my $self = shift;
+    my $header_check;
+    my $temp;
 
     open(HF, '<', $self->{'file'}) or return 0;
 
-    $self->{'fh'} = \*HF;
+    # check if this is ZIP file
+    seek(HF, 0, 0);
+    read(HF, $temp, 4) or return 0;
+    $header_check = unpack("i", $temp);
+
+    if (($header_check & 0xFFFFFF) == 0x088b1F) {
+        # we have a gzip file
+        print STDERR "ZIP FILE\n";
+    }
+    elsif (($header_check & 0xFFFFFF) == 0x685A42) {
+        # we have a bzip2 file
+        print STDERR "ZIP FILE\n";
+        seek(HF, 0, 0);
+        $self->{'fh'} = new IO::Uncompress::Bunzip2 \*HF;
+    }
+    elsif ($header_check == 0x04034b50) {
+        # we have a zip file
+        print STDERR "ZIP FILE\n";
+    }
+    else {
+        seek(HF, 0, 0);
+        $self->{'fh'} = \*HF;
+    }
 
     return 1;
 }
@@ -1552,6 +1587,9 @@ sub _open_file() {
 =head2 C<_close_file>
 
 I<A private method (not part of the public API).>
+
+A simple sub routine that has only one task, and that is to close
+the open filehandle.
 
 =cut
 sub _close_file() {
@@ -1566,6 +1604,11 @@ sub _close_file() {
 =head2 <_open_dir>
 
 I<A private method (not part of the public API).>
+
+A simple sub routine that opens up a directory and gives
+back an open handle to that directory.
+
+No arguments passed to it nor returned (only uses $self)
 
 =cut
 sub _open_dir() {
@@ -1582,6 +1625,11 @@ sub _open_dir() {
 
 I<A private method (not part of the public API).>
 
+A simple sub routine that closes a filehandle to a
+directory.
+
+No arguments passed to it nor returned (only uses $self)
+
 =cut
 sub _close_dir() {
     my $self = shift;
@@ -1594,9 +1642,24 @@ sub _close_dir() {
 
 =head2 C<_input_exists>
 
-
 I<A private method (not part of the public API).>
 
+Determine if an input module exists or not. This sub routine takes
+as an input a list of input modules. This list can consist of a single
+input module, a single reference to a list file, or it may be a more complex
+list containing both modules, lists and negative modules (list of modules
+that should be excluded).
+
+=head3 Args:
+
+=head4 in: A string that contains a list of modules/list files (comma separated).
+
+=head3 Returns:
+
+=head4 A string depending on whether or not that input module exists.
+       That is the module goes over the entires list and if it finds at least one
+       module that does not exist on the filesyste it will save the content of that
+       particular variable in the return value. Otherwise the value of 0 is returned.
 =cut
 sub _input_exists() {
     my $self = shift;
@@ -1615,7 +1678,6 @@ sub _input_exists() {
 
     # go over each one (only done once if just one is passed on)
     foreach (@s) {
-
         # we do not need further checking if $ret is 0
         next if $ret;
 
@@ -1650,6 +1712,14 @@ sub _input_exists() {
 
 I<A private method (not part of the public API).>
 
+Check for the existance of the output module. That is this
+routine checks to see if the output module chosen by the
+user exists or not.
+
+=head3 Args:
+
+=head4 out: A boolean value (0/1) indicating whether ot not the file
+            exists on the system or not.
 =cut
 sub _output_exists() {
     my $self = shift;
@@ -1681,6 +1751,16 @@ sub _output_exists() {
     return 0;
 }
 
+=head2 C<get_timezone>
+
+A small sub subroutine that simply returns back the value of the current timezone used by the
+tool.
+
+=head3 Returns:
+
+=head4 A string containing the timezone that the tool is using.
+
+=cut
 sub get_timezone() {
     my $self = shift;
 
@@ -1691,6 +1771,16 @@ sub get_timezone() {
 
 I<A private method (not part of the public API).>
 
+A routine that opens up a list file reads in all it's content and stores it in the
+input_list class attribute.
+
+If a list file is passed to the tool as a parameter this routine will use that to open up the file
+and read it in, line-by-line to get a list of all the input module it should load (the input lists
+contain a list of modules they want to use.
+
+=head3: Args:
+
+=head4 list: A string containing a listfile that needs to be parsed.
 =cut
 sub _load_input_list() {
     my $self = shift;
@@ -1698,6 +1788,13 @@ sub _load_input_list() {
 
 # the variable can either by a user supplied list (comma separated) or a file called INPUT.lst which lists the input modules that are to be used
 # we are reading from a file
+    if( ! -f $self->{'lib_dir'}
+           . $self->{'sep'} . 'Log2t'
+           . $self->{'sep'} . 'input'
+           . $self->{'sep'}
+           . $list . '.lst') {
+        return 0;
+    }
     open(LSTFILE,
              $self->{'lib_dir'}
            . $self->{'sep'} . 'Log2t'

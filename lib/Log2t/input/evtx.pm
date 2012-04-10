@@ -202,10 +202,10 @@ sub get_time {
             # try to parse the next event, while incrementing a bad
             # counter, and if we reach our limits, we will gracually
             # exit
-            print STDERR "[EVTX] Error occured while parsing file: \n$@\n";
+            print STDERR "[EVTX] Error occured while parsing file: \n$@\n" if $self->{'debug'};
             $self->{'bad_event_counter'}++;
 
-            $self->{'bad_event_counter'} == 50 ? return 0 : return \%t_line;
+            $self->{'bad_event_counter'} == 15 ? return 0 : return \%t_line;
         }
     }
 
