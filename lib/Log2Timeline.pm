@@ -123,6 +123,7 @@ use vars qw($VERSION);
 # define some constants
 use constant TRUE  => 1;
 use constant FALSE => 0;
+use constant EXCLUDE_REGEX => qr/^[a-zA-Z@0-9:\/\\, _\-\.]+$/;
 
 # define all variables used in the script
 $VERSION = Log2t::Common::get_version;
@@ -561,8 +562,8 @@ sub _build_exclusions() {
     foreach (@a) {
 
         # check the validity of the exclusion (normal ASCII and numbers only)
-        next unless /^[a-zA-Z@0-9:\/\\, _\-\.]+$/;
-        print STDERR "Pattern not excluded: '" . $_ . "'\n" unless /^[a-zA-Z@0-9_\-\.]$/;
+        next unless EXCLUDE_REGEX;
+        print STDERR "Pattern not excluded: '" . $_ . "'\n" unless EXCLUDE_REGEX;
 
         # assign the exclusion to the list
         $b{ $i++ } = $_;
@@ -818,7 +819,7 @@ sub _verify() {
     }
     elsif ($attr eq 'exclusions') {
         return 1 if $val eq '';
-        return 1 if $val =~ m/^[a-zA-Z@0-9:\/\\, _\-\.]+$/;
+        return 1 if $val =~ EXCLUDE_REGEX;
 
         print STDERR
           "[Log2timeline] Wrong usage of the parameter exclusions, please use only lowercase characters, numbers and possible underscore and minus sign.\n";
