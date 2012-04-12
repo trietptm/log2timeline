@@ -561,7 +561,7 @@ sub _build_exclusions() {
     foreach (@a) {
 
         # check the validity of the exclusion (normal ASCII and numbers only)
-        next unless /^[a-zA-Z@0-9_\-\.]$/;
+        next unless /^[a-zA-Z@0-9:\/\\, _\-\.]+$/;
         print STDERR "Pattern not excluded: '" . $_ . "'\n" unless /^[a-zA-Z@0-9_\-\.]$/;
 
         # assign the exclusion to the list
@@ -818,7 +818,7 @@ sub _verify() {
     }
     elsif ($attr eq 'exclusions') {
         return 1 if $val eq '';
-        return 1 if $val =~ m/^[a-zA-Z@0-9, _-]+$/;
+        return 1 if $val =~ m/^[a-zA-Z@0-9:\/\\, _\-\.]+$/;
 
         print STDERR
           "[Log2timeline] Wrong usage of the parameter exclusions, please use only lowercase characters, numbers and possible underscore and minus sign.\n";
