@@ -1,3 +1,15 @@
+log2timeline-perl (0.63-3) natty hardy maverick karmic lucid; urgency=low
+
+  * Fixed a small bug in the iehistory module. 
+
+ -- Kristinn Gudjonsson <kristinn@log2timeline.net>  Tue, 11 Apr 2012 11:43:56 -0800
+
+log2timeline-perl (0.63-2) natty hardy maverick karmic lucid; urgency=low
+
+  * Fixed a small bug in the main engine that slipped through the cracks and got into the release.
+
+ -- Kristinn Gudjonsson <kristinn@log2timeline.net>  Tue, 10 Apr 2012 15:33:12 -0800
+
 log2timeline-perl (0.63-1) natty hardy maverick karmic lucid; urgency=low
 
   * Mostly bug fixes, one new output module though. 

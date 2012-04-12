@@ -561,8 +561,8 @@ sub _build_exclusions() {
     foreach (@a) {
 
         # check the validity of the exclusion (normal ASCII and numbers only)
-        next unless /^[a-zA-Z@0-9_\-]$/;
-        print STDERR "Pattern not excluded: '" . $_ . "'\n" unless /^[a-zA-Z@0-9_\-]$/;
+        next unless /^[a-zA-Z@0-9_\-\.]$/;
+        print STDERR "Pattern not excluded: '" . $_ . "'\n" unless /^[a-zA-Z@0-9_\-\.]$/;
 
         # assign the exclusion to the list
         $b{ $i++ } = $_;

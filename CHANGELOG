@@ -1,3 +1,6 @@
+Version 0.64
+  - [Log2Timeline library] Added the possibility to use a dot (.) in the exclusion list.
+
 Version 0.63-1 (bug fixes) (09/10/2012)
   - Removed small additional debugging text from the iehistory module (shouldn't be printed unless we have debug turned on).
   - Fixed a small bug in the _open_file function.
