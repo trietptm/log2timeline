@@ -307,6 +307,7 @@ SELECT urls.url, urls.title, urls.visit_count, urls.typed_count, urls.last_visit
 FROM urls, visits
 WHERE
   urls.id = visits.url 
+ORDER BY visits.visit_time
     ";
 
         $sth    = $self->{'vdb'}->prepare($sql);
