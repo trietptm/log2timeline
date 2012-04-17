@@ -88,6 +88,8 @@ use vars qw($VERSION @ISA);
 $VERSION = '0.3';
 
 # http://src.chromium.org/viewvc/chrome/trunk/src/chrome/common/page_transition_types.h
+# the source can be found here (above URL is the former URL)
+# http://src.chromium.org/svn/trunk/src/content/public/common/page_transition_types.h
 
 my %translate = (
       '0' => 'User clicked a link',
@@ -262,6 +264,8 @@ sub get_time {
     #
     ##################################################################
     # the structure/schema of the urls table
+    # http://src.chromium.org/svn/trunk/src/chrome/browser/history/url_database.h
+    # http://src.chromium.org/svn/trunk/src/chrome/browser/history/url_database.cc
     ##################################################################
     # id INTEGER PRIMARY KEY
     # url LONGVARCHAR
@@ -449,12 +453,13 @@ sub _parse_timestamp {
             $text .= ' (url hidden)';
         }
         if ($r_line[3] ge 1) {
-            $text .= ' (directly typed';
-            $text .= ' ' . $r_line[3] . ' times ' if $r_line[3] gt 1;
-            $text .= ')';
+            $text .= ' (typed count: ';
+            $text .= $r_line[3] . ' time'
+            $text .= 's ' if $r_line[3] gt 1;
+            $text .= ' - does not indicate directly typed though)';
         }
         else {
-            $text .= ' (URL not typed directly)';
+            $text .= ' (URL not typed directly - no typed count)';
         }
 
         # indicate that we have a valid type

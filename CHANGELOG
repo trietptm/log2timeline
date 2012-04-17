@@ -1,5 +1,7 @@
 Version 0.64
   - [Log2Timeline library] Added the possibility to use a dot (.) in the exclusion list.
+  - [CHROME input] - Slight changes to the output based on the value of the typed_count variable, also updated the path
+  to the code that describes the transition types.
 
 Version 0.63-1 (bug fixes) (09/10/2012)
   - Removed small additional debugging text from the iehistory module (shouldn't be printed unless we have debug turned on).
