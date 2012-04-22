@@ -1430,6 +1430,7 @@ $@\n";
               . $self->{'formats'}->{$in_mod}->{'name'} . "): "
               . $ver->{'msg'} . "\n"
               if (!$self->{'recursive'} and scalar(keys %{ $self->{'in'} }) < 2);
+            $self->{'in'}->{$in_mod}->end;
         }
     }
 

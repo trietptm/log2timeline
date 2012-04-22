@@ -1,7 +1,19 @@
 Version 0.64
+  - [TESTSUITE] Added the first version of a test suite to the tool.
+      - All tests are located inside the t/ directory.
+      - Tests should be constructed for ALL possible uses of the tool, not limited to:
+          - Raw parsing of logs using input modules.
+          - Correct output for output modules.
+          - Correct output from each function inside modules/libraries.
+      - The first TEST suite is raw and not nearly complete, needs loads of stuff to be 'proper' but it is a start.
   - [Log2Timeline library] Added the possibility to use a dot (.) in the exclusion list.
+      - Changed the exclusion list so it can be easily changed
+      - Added a call to ->end on each input module if verification failed.
   - [CHROME input] - Slight changes to the output based on the value of the typed_count variable, also updated the path
   to the code that describes the transition types.
+  - [SKYPE input] Fixed the verification routine a bit, cleaned it up slightly and fixed a small bug that caused the tool
+  not to include SKYPE data when recursive mode was set on.
+  - [PREFETCH input] Small changes to the verification module.
 
 Version 0.63-1 (bug fixes) (09/10/2012)
   - Removed small additional debugging text from the iehistory module (shouldn't be printed unless we have debug turned on).

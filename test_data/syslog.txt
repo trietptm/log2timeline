@@ -1,0 +1,4 @@
+Apr 21 21:17:43 MYmachineNAME somepid[102]: There was a bug in the process, causing malfunction in the built-up queue.
+Apr 21 21:17:44 MYmachineNAME somepid[102]: Queue flushed: No end result summary provided.
+Apr 24 08:12:50 MYmachineNAME anotherpid[153]: Connection came from an unknown source: malicious?
+Apr 24 08:15:06 MYmachineNAME anotherpid[153]: Assertion: Too many unexplained user created processes, threshold reached.

@@ -514,7 +514,6 @@ Which is used to define the username of the user that ownes the history file or 
 # @return An array containing an integer and a string.  The integer indicates a success or failure and the
 #       string is the error message (if the file is not correctly formed)
 sub verify {
-
     # define an array to keep
     my %return;
     my $line;
@@ -524,25 +523,13 @@ sub verify {
     my $self  = shift;
     my $vsth;
 
-    # we assume that the file is not FF3
+    # we assume that the file is not a SQLite database.
     $return{'success'} = 0;
     $return{'msg'}     = 'unknown';
 
     return \%return unless -f ${ $self->{'name'} };
 
-    # open the file (at least try to open it)
-
-    #unless( $self->{'quick'} )
-    #{
-    #  # read the first character to see if it matches the first part of the signature
-    #  seek($self->{'file'},0,0);
-    #  read($self->{'file'},$temp,1);
-    #
-    #    return \%return unless $temp eq 'S';
-    #  }
-
-  # now that we've got a match for the first character, let's move one and test the entire signature
-  # read the first few bits, see if it matches signature
+    # read the first few bits, see if it matches signature
     for (my $i = 0; $i < 15; $i++) {
         seek($self->{'file'}, $i, 0);
         read($self->{'file'}, $temp, 1);
@@ -550,101 +537,88 @@ sub verify {
     }
 
     # check if the line indicates a real sqlite database (version 3)
-    if ($line eq $magic) {
-
-        # we know that this is a SQLite database, but is it a Firefox3 database?
-
-        # start by checking if we have a database journal as well
-        if (-f ${ $self->{'name'} } . "-journal") {
-            eval {
-
-                # create a new variable to store the temp location
-                $temp = int(rand(100));
-                $temp = '/tmp/tmp_ch.' . $temp . 'v.db';
-
-                # we need to copy the file to a temp location and start again
-                copy(${ $self->{'name'} }, $temp) || ($return{'success'} = 0);
-                copy(${ $self->{'name'} } . "-journal", $temp . "-journal")
-                  || ($return{'success'} = 0);
-
-                #print STDERR "[CHROME] Created a temp file $temp from $db \n";
-
-                ${ $self->{'name'} } = $temp;
-                $self->{'db_lock'} = 1;    # indicate that we need to delete the lock file
-            };
-            if ($@) {
-                $return{'success'} = 0;
-                $return{'msg'} =
-                  'Database is locked and unable to copy to a temporary location (' . $temp . ')';
-            }
-        }
-
-        # set a temp variable to 0 (assume we don't have a FF3.5 database)
-        $temp = 0;
-
+    if ($line ne $magic) {
+        $return{'success'} = 0;
+        $return{'msg'}     = "Wrong magic value.  Is this really a sqlite database?\n";
+    }
+        
+    # we know that this is a SQLite database, but is it a Skype one?
+    # start by checking if we have a database journal as well
+    if (-f ${ $self->{'name'} } . "-journal") {
         eval {
+            # create a new variable to store the temp location
+            my $rand_int = int(rand(100));
+            my $tmp_path = '/tmp/tmp_ch.' . $rand_int . 'v.db';
 
-            # connect to the database
-            $self->{'vdb'} = DBI->connect("dbi:SQLite:dbname=" . ${ $self->{'name'} }, "", "")
-              or ($temp = 1);
+            # we need to copy the file to a temp location and start again
+            copy(${ $self->{'name'} }, $tmp_path) || ($return{'success'} = 0);
+            copy(${ $self->{'name'} } . "-journal", $tmp_path . "-journal")
+              || ($return{'success'} = 0);
 
-       #$self->{'vdb'} = DBI->connect("dbi:SQLite:dbname=" . $self->{'file'},"","") or ( $temp = 1);
-
-            if ($temp) {
-                $return{'success'} = 0;
-                $return{'msg'}     = 'Unable to connect to the database';
-                return \%return;
-            }
-
-            # get a list of all available talbes
-            $vsth =
-              $self->{'vdb'}->prepare(
-                "SELECT skypeout_precision,chat_policy,nr_of_other_instances,skypename,fullname FROM Accounts"
-              ) or ($temp = 0);
-
-            # execute the query
-            $temp = 0;
-            my $res = $vsth->execute();
-
-            # check if we have a moz_places table
-            @words = $vsth->fetchrow_array();
-
-            $self->{'account'}  = $words[3];
-            $self->{'fullname'} = $words[4];
-
-            $temp = 1 unless $self->{'account'} eq '';
-
-            # check if temp is set
-            if ($temp) {
-
-                # now we have a Chrome history SQLite database
-                $return{'success'} = 1;
-                $return{'msg'}     = 'Success';
-            }
-            else {
-                $return{'success'} = 0;
-                $return{'msg'}     = 'This is not a Skype SQLite database';
-            }
-
-            # disconnect from the database
-            $vsth->finish;
-            undef $vsth;
+            ${ $self->{'name'} } = $tmp_path;
+            $self->{'db_lock'} = 1;    # indicate that we need to delete the lock file
         };
         if ($@) {
             $return{'success'} = 0;
             $return{'msg'} =
-              'Database error ocurred, making verification not possible.  The error message is: '
-              . $@;
+              'Database is locked and unable to copy to a temporary location (' . $tmp_path . ')';
         }
     }
-    else {
+
+    # assume we don't have the correct DB structure
+    my $skype_db = 0;
+
+    eval {
+        # connect to the database
+        $self->{'vdb'} = DBI->connect("dbi:SQLite:dbname=" . ${ $self->{'name'} }, "", "")
+          or ($skype_db = 1);
+
+        if ($skype_db) {
+            $return{'success'} = 0;
+            $return{'msg'}     = 'Unable to connect to the database';
+            return \%return;
+        }
+
+        # get a list of all available tables
+        $vsth =
+          $self->{'vdb'}->prepare(
+            "SELECT skypeout_precision,chat_policy,nr_of_other_instances,skypename,fullname FROM Accounts"
+          ) or ($skype_db = 0);
+
+        # execute the query
+        my $res = $vsth->execute();
+
+        # check if we have a moz_places table
+        @words = $vsth->fetchrow_array();
+
+        $self->{'account'}  = $words[3];
+        $self->{'fullname'} = $words[4];
+
+        $skype_db = 1 unless $self->{'account'} eq '';
+
+        # check if temp is set
+        if ($skype_db) {
+            # now we have a Skype history SQLite database
+            $return{'success'} = 1;
+            $return{'msg'}     = 'Success';
+        }
+        else {
+            $return{'success'} = 0;
+            $return{'msg'}     = 'This is not a Skype SQLite database';
+        }
+
+        # disconnect from the database
+        $vsth->finish;
+        undef $vsth;
+    };
+    if ($@) {
         $return{'success'} = 0;
-        $return{'msg'}     = "Wrong magic value.  Is this really a sqlite database?\n";
+        $return{'msg'} =
+          'Database error ocurred, making verification not possible.  The error message is: '
+          . $@;
     }
 
     return \%return;
 }
-
-# functions
 
 1;

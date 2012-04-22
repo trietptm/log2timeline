@@ -282,6 +282,7 @@ sub verify {
     my $ok_pf     = 0;
     my $ok_layout = 0;
     my %file_hash = undef;
+    $self->{'files'} = undef;
 
     # default values
     $return{'success'} = 0;
@@ -295,7 +296,6 @@ sub verify {
 
     # let the fun begin
     eval {
-
         # initialize variables
         $self->{'files'} = undef;
         $self->{'count'} = 0;
