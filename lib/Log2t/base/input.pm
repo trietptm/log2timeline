@@ -163,6 +163,7 @@ sub get_time() {
     my $date;
 
     # get the filehandle and read the next line
+    return undef unless defined $self->{'file'};
     my $fh = $self->{'file'};
     my $line = <$fh> or return undef;
 

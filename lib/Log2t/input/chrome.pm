@@ -455,7 +455,7 @@ sub _parse_timestamp {
         }
         if ($r_line[3] ge 1) {
             $text .= ' (typed count: ';
-            $text .= $r_line[3] . ' time'
+            $text .= $r_line[3] . ' time';
             $text .= 's ' if $r_line[3] gt 1;
             $text .= ' - does not indicate directly typed though)';
         }

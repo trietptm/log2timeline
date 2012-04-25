@@ -540,15 +540,18 @@ sub verify {
     if ($line ne $magic) {
         $return{'success'} = 0;
         $return{'msg'}     = "Wrong magic value.  Is this really a sqlite database?\n";
+
+        return \%return;
     }
-        
+
     # we know that this is a SQLite database, but is it a Skype one?
     # start by checking if we have a database journal as well
+    my $tmp_path = '';
     if (-f ${ $self->{'name'} } . "-journal") {
         eval {
             # create a new variable to store the temp location
             my $rand_int = int(rand(100));
-            my $tmp_path = '/tmp/tmp_ch.' . $rand_int . 'v.db';
+            $tmp_path = '/tmp/tmp_ch.' . $rand_int . 'v.db';
 
             # we need to copy the file to a temp location and start again
             copy(${ $self->{'name'} }, $tmp_path) || ($return{'success'} = 0);

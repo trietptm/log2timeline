@@ -9,6 +9,7 @@ Version 0.64
   - [Log2Timeline library] Added the possibility to use a dot (.) in the exclusion list.
       - Changed the exclusion list so it can be easily changed
       - Added a call to ->end on each input module if verification failed.
+      - Minor bug fixes in the main engine.
   - [CHROME input] - Slight changes to the output based on the value of the typed_count variable, also updated the path
   to the code that describes the transition types.
   - [SKYPE input] Fixed the verification routine a bit, cleaned it up slightly and fixed a small bug that caused the tool

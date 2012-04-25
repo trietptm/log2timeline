@@ -123,7 +123,7 @@ use vars qw($VERSION);
 # define some constants
 use constant TRUE  => 1;
 use constant FALSE => 0;
-use constant EXCLUDE_REGEX => qr/^[a-zA-Z@0-9:\/\\, _\-\.]+$/;
+use constant EXCLUDE_REGEX => qr/^[a-zA-Z\@0-9:\/\\, _\-\.]+$/;
 
 # define all variables used in the script
 $VERSION = Log2t::Common::get_version;
@@ -388,14 +388,6 @@ sub _new() {
         return 0;
     }
 
-    # set the separator
-    if ($self->{'os'} =~ m/MSWin/) {
-        $self->{'sep'} = '\\';
-    }
-    else {
-        $self->{'sep'} = '/';
-    }
-
     # check debug level
     print STDERR "[LOG2T] Reading configuration:\n" if $self->{'debug'};
 
@@ -404,6 +396,17 @@ sub _new() {
 
     # indicate that we haven't loaded the output module
     $self->{'output_loaded'} = 0;
+
+    # detect the OS
+    $self->{'os'} = $^O;
+
+    # set the separator
+    if ($self->{'os'} =~ m/MSWin/) {
+        $self->{'sep'} = '\\';
+    }
+    else {
+        $self->{'sep'} = '/';
+    }
 
     # get the library directory
     $self->{'lib_dir'} = Log2t::Common::get_directory();
@@ -428,9 +431,6 @@ sub _new() {
 
     # to include a validation entry
     $self->{'valid'} = 1;
-
-    # detect the OS
-    $self->{'os'} = $^O;
 
     # now we should be ready for our next step
     return $self;
@@ -757,7 +757,7 @@ sub _verify() {
 
         # check if this is "text" based, with "normal" ASCII chars
         return 1 if $val eq '';
-        return 1 if ($val =~ m/^[a-zA-Z0-9_-\s\/\\:\.]+$/);
+        return 1 if ($val =~ m/^[a-zA-Z0-9_\-\s\/\\:\.]+$/);
 
         print STDERR
           "[Log2timeline] Illegal characters included in the parameter [$attr], please use only a-z,A-Z,0-9,_,-,space,:,.\\,\/\n";
@@ -767,7 +767,7 @@ sub _verify() {
 
         # check if this is "text" based, with "normal" ASCII chars
         return 1 if $val eq '';
-        return 1 if ($val =~ m/^[a-zA-Z0-9_-\s\.]+$/);
+        return 1 if ($val =~ m/^[a-zA-Z0-9_\-\s\.]+$/);
         print STDERR
           "[Log2timeline] Illegal characters included in the hostname parameter, only use ASCII characters and numbers (plus - and _).\n";
 
@@ -867,7 +867,7 @@ sub get_timezone_list() {
     }
 
     # let's sort the list
-    my @t_sort = sort { $a cmp $b } @t_list;
+    @t_sort = sort { $a cmp $b } @t_list;
 
     # and finally to print
     my $txt = "
