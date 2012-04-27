@@ -66,6 +66,7 @@ WriteMakefile(
     "DateTime::Format::Strptime" => "0",
     "Mac::PropertyList" => "0",
     "Test::More" => "0.88",
+    "Switch" => "0",
   },
   'VERSION_FROM' => 'lib/Log2t/Common.pm', # finds $VERSION
   'LICENSE' => 'gpl',  
