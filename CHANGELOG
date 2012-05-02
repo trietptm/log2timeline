@@ -15,6 +15,7 @@ Version 0.64
   - [SKYPE input] Fixed the verification routine a bit, cleaned it up slightly and fixed a small bug that caused the tool
   not to include SKYPE data when recursive mode was set on.
   - [PREFETCH input] Small changes to the verification module.
+  - [WinReg] Fixed a small bug in the code that caused the deleted entries lookup sometimes to loop forever.
 
 Version 0.63-1 (bug fixes) (09/10/2012)
   - Removed small additional debugging text from the iehistory module (shouldn't be printed unless we have debug turned on).

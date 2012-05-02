@@ -53,7 +53,6 @@ use Log2t::Time;           # to manipulate time
 use Log2t::BinRead;    # methods to read binary files (it is preferable to always load this library)
 
 #use Log2t::Network;  # information about network traffic
-use Switch;
 
 # define the VERSION variable
 use vars qw($VERSION @ISA);
@@ -63,6 +62,39 @@ use vars qw($VERSION @ISA);
 
 # indicate the version number of this input module
 $VERSION = '0.1';
+
+my %REACTION_LEVEL = {
+    '0' => 'Invalid',
+    '1' => 'None',
+    '2' => 'Log',
+    '3' => 'Deny',
+    '4' => 'Kill',
+    '5' => 'Kill Terminal',
+    '6' => 'Kill User',
+    '9' => 'Prevent by kill',
+    '10' => 'Create exception'
+};
+
+my %SEVERITY_LEVEL = {
+    '0' => 'Disabled',
+    '1' => 'Info',
+    '2' => 'Low',
+    '3' => 'Medium',
+    '4' => 'High'
+};
+
+my %EVENT_LEVEL = {
+    '1' => 'Debug',
+    '2' => 'PGPError',
+    '3' => 'System',
+    '4' => 'Service',
+    '5' => 'IPSec',
+    '6' => 'Intrusion',
+    '7' => 'Traffic',
+    '8' => 'Process',
+    '10' => 'Entercept'
+};
+
 
 # ------------------------------------------------------------------------------------------------
 #       Event.log (one line per event)
@@ -125,58 +157,26 @@ sub get_description() {
 
 # return a readable string for a given integer reaction
 sub ReturnReaction {
-    my $reactionLevel = shift(@_);
+    my $reactionLevel = shift;
 
-    switch ($reactionLevel) {
-        case (0)  { return "Invalid"; }
-        case (1)  { return "None"; }
-        case (2)  { return "Log"; }
-        case (3)  { return "Deny"; }
-        case (4)  { return "Kill"; }
-        case (5)  { return "Kill Terminal"; }
-        case (6)  { return "Kill User"; }
-        case (9)  { return "Prevent by kill"; }
-        case (10) { return "Create exception"; }
-        default   { return $reactionLevel; }
-    }
-
-    return "Unknown";
+    return $REACTION_LEVEL{$reactionLevel} if exists $REACTION_LEVEL{$reactionLevel};
+    return "Unknown [Level $reactionLevel]";
 }
 
 # return a readable string for a given integer severity
 sub ReturnSeverity {
-    my $severityLevel = shift(@_);
+    my $severityLevel = shift;
 
-    switch ($severityLevel) {
-        case (0) { return "Disabled"; }
-        case (1) { return "Info"; }
-        case (2) { return "Low"; }
-        case (3) { return "Medium"; }
-        case (4) { return "High"; }
-        default  { return $severityLevel; }
-    }
-
-    return "Unknown";
+    return $SEVERITY_LEVEL{$severityLevel} if exists $SEVERITY_LEVEL{$severityLevel};
+    return "Unknown [Level $severityLevel]";
 }
 
 # return a readable string for a given integer event
 sub ReturnEvent {
-    my $eventLevel = shift(@_);
+    my $eventLevel = shift;
 
-    switch ($eventLevel) {
-        case (1)  { return "Debug"; }
-        case (2)  { return "PGPError"; }
-        case (3)  { return "System"; }
-        case (4)  { return "Service"; }
-        case (5)  { return "IPSEC"; }
-        case (6)  { return "Intrusion"; }
-        case (7)  { return "Traffic"; }
-        case (8)  { return "Process"; }
-        case (10) { return "Entercept"; }
-        default   { return $eventLevel; }
-    }
-
-    return "Unknown";
+    return $EVENT_LEVEL{$eventLevel} if exists $EVENT_LEVEL{$eventLevel};
+    return "Unknown [Level $eventLevel]";
 }
 
 #       init

@@ -123,9 +123,11 @@ sub get_deleted_entries($) {
 
     for my $key (sort { $a <=> $b } keys %free_cells) {
         if ($free_cells{$key} > MIN_NK_SIZE) {
+            print STDERR "Locating\n";
             locate_key_nodes($key, $free_cells{$key});
         }
     }
+    print STDERR "HERE\n";
 
     # slack space (we will skip this since it contains no timestamps)
     #	for my $offset ( sort {$a <=> $b } keys %free_cells ) {
@@ -319,7 +321,10 @@ sub parse_key_path {
     my $path      = "";
     my $signature = "";
     my $type      = "";
+    my $loop_counter = 0;
+    my $loop_max = 50;
     do {
+        $loop_counter++;
 
         # parse key type
         seek($fh, $offset + KEY_TYPE_OFFSET, 0);
@@ -348,6 +353,8 @@ sub parse_key_path {
         # read parent signature
         seek($fh, $offset + CELL_SIGNATURE_OFFSET, 0);
         read($fh, $signature, WORD);
+
+        return $path if $loop_counter ge $loop_max;
 
     } until (($signature ne "nk"));
 

@@ -37,8 +37,6 @@ WriteMakefile(
     "File::Copy" => "0",
     "Digest::MD5" => "0",
     "Getopt::Long" => "0",
-#    "Glib" => "0",
-#    "Gtk2" => "0",
     "HTML::Scrubber" => "0",
     "Image::ExifTool" => "0",
     "Net::Pcap" => "0", 
@@ -66,6 +64,7 @@ WriteMakefile(
     "DateTime::Format::Strptime" => "0",
     "Mac::PropertyList" => "0",
     "Test::More" => "0.88",
+    "Text::CSV" => "0",
   },
   'VERSION_FROM' => 'lib/Log2t/Common.pm', # finds $VERSION
   'LICENSE' => 'gpl',  
