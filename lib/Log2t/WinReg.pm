@@ -123,11 +123,9 @@ sub get_deleted_entries($) {
 
     for my $key (sort { $a <=> $b } keys %free_cells) {
         if ($free_cells{$key} > MIN_NK_SIZE) {
-            print STDERR "Locating\n";
             locate_key_nodes($key, $free_cells{$key});
         }
     }
-    print STDERR "HERE\n";
 
     # slack space (we will skip this since it contains no timestamps)
     #	for my $offset ( sort {$a <=> $b } keys %free_cells ) {
