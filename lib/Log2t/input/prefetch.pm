@@ -294,6 +294,9 @@ sub verify {
     # start by setting the endian correctly
     Log2t::BinRead::set_endian(LITTLE_E);
 
+    # rewind the directory to the beginning
+    seekdir $self->{'file'}, 0;
+
     # let the fun begin
     eval {
         # initialize variables

@@ -583,14 +583,6 @@ sub verify {
             return \%return;
         }
 
-            # check if we have a moz_places table
-            while (@words = $vsth->fetchrow_array()) {
-
-                # check for moz_places
-                #print STDERR "RESULT IS " . $words[0] . "\n";
-                $temp = 1 if $words[0] eq 'moz_places';
-            }
-
         # get a list of all available tables
         $vsth = $self->{'vdb'}->prepare("SELECT name FROM sqlite_master WHERE type='table'")
           or die('Not able to query the database.');

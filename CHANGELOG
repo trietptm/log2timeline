@@ -22,6 +22,10 @@ Version 0.64
   to make the DB output faster than before (since it was increadibly slow before).
   - [CHROME input] Small bug to fix UTF-8 support.
   - [FIREFOX3 input] Small bug to fix UTF-8 support.
+  - [PREFETCH input] Fixed a bug, added a seekdir so that prefetch information is contained within the timeline if recursive
+      is turned on.
+  - [RECYCLER input] Fixed a bug, added a seekdir so that recycler information is contained within the timeline if recursive
+      is turned on.
 
 Version 0.63-1 (bug fixes) (09/10/2012)
   - Removed small additional debugging text from the iehistory module (shouldn't be printed unless we have debug turned on).

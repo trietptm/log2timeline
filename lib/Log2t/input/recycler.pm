@@ -426,6 +426,8 @@ sub verify {
 
     # first of all we need to be reading a directory content
     return \%return unless -d ${ $self->{'name'} };
+    # rewind the directory to the beginning
+    seekdir $self->{'file'}, 0;
 
     # now to verify that we have either INFO2 or $I
     $self->{'older_version'} = -f ${ $self->{'name'} } . $self->{'sep'} . "INFO2" ? 1 : 0;
@@ -461,7 +463,9 @@ sub verify {
         eval {
             $self->{'count'} = 0;
 
-# now we do not have a INFO2 file, so this is either a Vista/Win7 or later versions of Windows, or not a recycle bin after all
+            # now we do not have a INFO2 file, so this is either a Vista/Win7 or later versions of Windows, or not a recycle bin after all
+            # rewind the directory to the beginning
+            seekdir $self->{'file'}, 0;
             %file_hash = map { $self->{'count'}++ => $_ } grep { /^\$I/ } readdir($self->{'file'});
             $self->{'files'} = \%file_hash;
         };
