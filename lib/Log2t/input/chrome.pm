@@ -79,6 +79,7 @@ use Log2t::Numbers;
 use Log2t::Time;
 use Log2t::Common;
 use Log2t::base::input;    # the SUPER class or parent
+use Encode;
 
 use vars qw($VERSION @ISA);
 
@@ -431,7 +432,7 @@ sub _parse_timestamp {
         if ($from->{'s_url'} ne '') {
             $text .=
                 $r_line[0] . ' ('
-              . $r_line[1]
+              . decode('utf-8', $r_line[1])
               . ') [count: '
               . $r_line[2]
               . '] Host: '
@@ -441,7 +442,7 @@ sub _parse_timestamp {
         }
         else {
             $text .=
-              $r_line[0] . ' (' . $r_line[1] . ') [count: ' . $r_line[2] . '] Host: ' . $hostname;
+              $r_line[0] . ' (' . decode('utf-8', $r_line[1]) . ') [count: ' . $r_line[2] . '] Host: ' . $hostname;
         }
 
         # and include the visit transition
@@ -726,6 +727,7 @@ WHERE
     $return{'s_host'} = $self->_fix_hostname($return{'s_url'});
     $return{'s_date'} =
       Log2t::Numbers::roundup(($return{'s_date'} - $self->{'chrome_date_ofs'}) / 1000000);
+    $return{'s_title'} = decode('utf-8', $return{'s_title'});
 
     # return the array
     return \%return;

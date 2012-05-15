@@ -14,8 +14,14 @@ Version 0.64
   to the code that describes the transition types.
   - [SKYPE input] Fixed the verification routine a bit, cleaned it up slightly and fixed a small bug that caused the tool
   not to include SKYPE data when recursive mode was set on.
+      - Also fixed UTF-8 support, should properly display UTF-8 by now.
   - [PREFETCH input] Small changes to the verification module.
   - [WinReg] Fixed a small bug in the code that caused the deleted entries lookup sometimes to loop forever.
+  - [SQLITE output] Changed the way the SQLite code is written considerably, pre-compiling statements to prevent them
+  being compiled for each insert, using transactions instead of writing them constantly to the DB, and other minor tweaks
+  to make the DB output faster than before (since it was increadibly slow before).
+  - [CHROME input] Small bug to fix UTF-8 support.
+  - [FIREFOX3 input] Small bug to fix UTF-8 support.
 
 Version 0.63-1 (bug fixes) (09/10/2012)
   - Removed small additional debugging text from the iehistory module (shouldn't be printed unless we have debug turned on).

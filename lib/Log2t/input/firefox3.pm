@@ -44,6 +44,7 @@ use Getopt::Long;          # read parameters
 use Log2t::Numbers;
 use Log2t::Time;
 use Log2t::Common;
+use Encode;
 
 use vars qw($VERSION @ISA);
 
@@ -325,7 +326,7 @@ sub _parse_timestamp {
         if ($from->{'s_url'} ne '') {
             $text .=
                 $r_line[1] . ' ('
-              . $r_line[2]
+              . decode('utf-8', $r_line[2])
               . ') [count: '
               . $r_line[3]
               . '] Host: '
@@ -335,7 +336,7 @@ sub _parse_timestamp {
         }
         else {
             $text .=
-              $r_line[1] . ' (' . $r_line[2] . ') [count: ' . $r_line[3] . '] Host: ' . $hostname;
+              $r_line[1] . ' (' . decode('utf-8', $r_line[2]) . ') [count: ' . $r_line[3] . '] Host: ' . $hostname;
         }
 
         if ($r_line[7] eq 1) {
@@ -404,12 +405,12 @@ sub _parse_timestamp {
         if ($r_line[0] eq 1) {
             $text .=
                 ' Bookmark URL '
-              . $r_line[1] . ' ('
+              . decode('utf-8', $r_line[1]) . ' ('
               . $r_line[4] . ') ['
               . $r_line[5]
               . '] count '
               . $r_line[7];
-            $title = ' Bookmarked ' . $r_line[1] . ' (' . $r_line[4] . ')';
+            $title = ' Bookmarked ' . decode('utf-8', $r_line[1]) . ' (' . $r_line[4] . ')';
         }
         else {
 
@@ -453,8 +454,8 @@ sub _parse_timestamp {
             }
         }
 
-        $text .= 'Bookmark Folder [' . $r_line[0] . ']';
-        $title = 'Bookmark folder ' . $r_line[0];
+        $text .= 'Bookmark Folder [' . decode('utf-8', $r_line[0]) . ']';
+        $title = 'Bookmark folder ' . decode('utf-8', $r_line[0]);
     }
     elsif ($self->{'r_type'} eq 'annos') {
         $type = 'annotations';

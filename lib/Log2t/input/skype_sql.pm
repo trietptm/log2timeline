@@ -46,6 +46,7 @@ use File::Copy;
 use Log2t::Numbers;
 use Log2t::Time;
 use Log2t::Common;
+use Encode;
 
 use vars qw($VERSION @ISA);
 
@@ -393,17 +394,17 @@ sub _parse_timestamp {
 
             # then the user is the one talking
             $text .= 'MSG written to';
-            $text .= ' ' . $self->{'friendlynames'}->{ $self->{'r_line'}->{'dialog_partner'} }
+            $text .= ' ' . decode('utf-8', $self->{'friendlynames'}->{ $self->{'r_line'}->{'dialog_partner'} })
               if exists $self->{'friendlynames'}->{ $self->{'r_line'}->{'dialog_partner'} };
-            $text .= ' (' . $self->{'r_line'}->{'dialog_partner'} . ')';
+            $text .= ' (' . decode('utf-8', $self->{'r_line'}->{'dialog_partner'}) . ')';
         }
         else {
 
             # then someone is talking to the user
             $text .=
                 'MSG from '
-              . $self->{'r_line'}->{'from_dispname'} . ' ('
-              . $self->{'r_line'}->{'author'} . ')';
+              . decode('utf-8', $self->{'r_line'}->{'from_dispname'}) . ' ('
+              . decode('utf-8', $self->{'r_line'}->{'author'}) . ')';
         }
 
         #  Chats.friendlyname
@@ -421,7 +422,7 @@ sub _parse_timestamp {
         $short =~ s/\r//g;
 
         # add the content to the text
-        $text .= ': ' . $self->{'r_line'}->{'body_xml'};
+        $text .= ': ' . decode('utf-8', $self->{'r_line'}->{'body_xml'});
 
         # "fix the text"
         # $text =~ .... # need to remove smiley stuff and replace with something shorter
@@ -568,36 +569,52 @@ sub verify {
         }
     }
 
-    # assume we don't have the correct DB structure
-    my $skype_db = 0;
+    # assume we have the correct DB structure
+    my $skype_db = 1;
 
     eval {
         # connect to the database
         $self->{'vdb'} = DBI->connect("dbi:SQLite:dbname=" . ${ $self->{'name'} }, "", "")
-          or ($skype_db = 1);
+          or ($skype_db = 0);
 
-        if ($skype_db) {
+        unless ($skype_db) {
             $return{'success'} = 0;
             $return{'msg'}     = 'Unable to connect to the database';
             return \%return;
         }
 
+            # check if we have a moz_places table
+            while (@words = $vsth->fetchrow_array()) {
+
+                # check for moz_places
+                #print STDERR "RESULT IS " . $words[0] . "\n";
+                $temp = 1 if $words[0] eq 'moz_places';
+            }
+
         # get a list of all available tables
-        $vsth =
-          $self->{'vdb'}->prepare(
-            "SELECT skypeout_precision,chat_policy,nr_of_other_instances,skypename,fullname FROM Accounts"
-          ) or ($skype_db = 0);
+        $vsth = $self->{'vdb'}->prepare("SELECT name FROM sqlite_master WHERE type='table'")
+          or die('Not able to query the database.');
 
         # execute the query
         my $res = $vsth->execute();
 
-        # check if we have a moz_places table
-        @words = $vsth->fetchrow_array();
+        $self->{'account'} = '';
+        $self->{'fullname'} = '';
+        while (@words = $vsth->fetchrow_array()) {
+            if ($words[0] eq 'Accounts') {
+                my $account_sth =
+                  $self->{'vdb'}->prepare(
+                    "SELECT skypeout_precision,chat_policy,nr_of_other_instances,skypename,fullname FROM Accounts"
+                    ) or die('Not the correct DB structure.');
 
-        $self->{'account'}  = $words[3];
-        $self->{'fullname'} = $words[4];
+                my $account_res = $account_sth->execute();
+                my @account_rows = $account_sth->fetchrow_array();
+                $self->{'account'}  = $account_rows[3];
+                $self->{'fullname'} = $account_rows[4];
+            }
+        }
 
-        $skype_db = 1 unless $self->{'account'} eq '';
+        $skype_db = 0 if $self->{'account'} eq '';
 
         # check if temp is set
         if ($skype_db) {
