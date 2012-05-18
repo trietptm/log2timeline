@@ -1,3 +1,11 @@
+log2timeline-perl (0.64-1) natty hardy maverick karmic lucid; urgency=low
+
+  * Added a basic testing infrastructure.
+  * Added a new module to parse the LSQuarantineEvents SQLite db on Mac OS X.
+  * Mostly bug fixes.
+
+ -- Kristinn Gudjonsson <kristinn@log2timeline.net>  Fri, 18 May 2012 13:30:24 -0800
+
 log2timeline-perl (0.63-3) natty hardy maverick karmic lucid; urgency=low
 
   * Fixed a small bug in the iehistory module. 

@@ -2005,7 +2005,7 @@ I<A private method (not part of the public API).>
 sub _load_output() {
     my $self = shift;
 
-    print STDERR "Loading output file: " . $self->{output} . "\n";
+    print STDERR "Loading output module: " . $self->{output} . "\n";
 
     eval {
         $self->{'out_mod'} = 'Log2t::output::' . $self->{output};
