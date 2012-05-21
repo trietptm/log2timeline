@@ -4,3 +4,6 @@ pcap
 syslog
 generic_linux
 proftpd_xferlog
+chrome
+safari
+firefox3
