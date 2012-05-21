@@ -1,0 +1,174 @@
+<?xml version="1.0" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>B&lt;l2t_process&gt; - A small script to process the CSV output from B&lt;log2timeline&gt;, sorts and extracts sorten dates</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rev="made" href="mailto:root@localhost" />
+</head>
+
+<body style="background-color: white">
+
+
+<!-- INDEX BEGIN -->
+<div name="index">
+<p><a name="__index__"></a></p>
+
+<ul>
+
+	<li><a href="#name">NAME</a></li>
+	<li><a href="#synopsis">SYNOPSIS</a></li>
+	<li><a href="#options">OPTIONS</a></li>
+	<li><a href="#description">DESCRIPTION</a></li>
+	<li><a href="#examples">EXAMPLES</a></li>
+	<li><a href="#author">AUTHOR</a></li>
+	<li><a href="#copyright_and_license">COPYRIGHT AND LICENSE</a></li>
+</ul>
+
+<hr name="index" />
+</div>
+<!-- INDEX END -->
+
+<p>
+</p>
+<hr />
+<h1><a name="name">NAME</a></h1>
+<p><strong>l2t_process</strong> - A small script to process the CSV output from <strong>log2timeline</strong>, sorts and extracts sorten dates</p>
+<p>
+</p>
+<hr />
+<h1><a name="synopsis">SYNOPSIS</a></h1>
+<p><strong>l2t_process</strong> [OPTIONS] -b CSV_FILE [DATE_RANGE]</p>
+<dl>
+<dt><strong><a name="where_date_range_is_mm_dd_yyyy_or_mm_dd_yyyy_mm_dd_yyyy" class="item">Where DATE_RANGE is MM-DD-YYYY or MM-DD-YYYY..MM-DD-YYYY</a></strong></dt>
+
+</dl>
+<p>
+</p>
+<hr />
+<h1><a name="options">OPTIONS</a></h1>
+<dl>
+<dt><strong><a name="b_body_csvfile" class="item"><strong>-b|-body CSVFILE</strong></a></strong></dt>
+
+<dd>
+<p>The name of the file that contains the CSV output produced by <strong>log2timeline</strong>.</p>
+</dd>
+<dt><strong><a name="t_tab" class="item"><strong>-t|-tab</strong></a></strong></dt>
+
+<dd>
+<p>The default input to the tool is a file that was created using the CSV output module.  However, the TAB module can also be used, however you will need to tell the tool that the file is TAB delimited instead of comma separated, using this option.</p>
+</dd>
+<dt><strong><a name="i_include" class="item"><strong>-i|-include</strong></a></strong></dt>
+
+<dd>
+<p>The tool detects possible timestomping activity against changes made to MFT records (millisecond is of zero value). This option makes the tool add lines that contain suspicious entries even though they fall outside the supplied date filter.</p>
+</dd>
+<dt><strong><a name="e_exclude" class="item"><strong>-e|-exclude</strong></a></strong></dt>
+
+<dd>
+<p>The tool detects possible timestomping activity against changes made to MFT records (millisecond is of zero value). If this option is supplied the tool will not ask the user to add the lines that are suspicous yet are outside the supplied date range.</p>
+</dd>
+<dt><strong><a name="v_verbose" class="item"><strong>-v|-verbose</strong></a></strong></dt>
+
+<dd>
+<p>Making the script produce mode debug information (be more verbose)</p>
+</dd>
+<dt><strong><a name="y" class="item"><strong>-y</strong></a></strong></dt>
+
+<dd>
+<p>The default format for the date variable is mm-dd-yyyy, however this default behavior can be changed with this option so the format read is yyyy-mm-dd.</p>
+</dd>
+<dt><strong><a name="v_version" class="item"><strong>-V|-Version</strong></a></strong></dt>
+
+<dd>
+<p>Print the tools version number and exit.</p>
+</dd>
+<dt><strong><a name="k_keyword_file" class="item"><strong>-k|-keyword FILE</strong></a></strong></dt>
+
+<dd>
+<p>Include a keyword file that contains one keyword per line.  The tool will read the keyword file line-by-line, and then compare each line in the CSV file against each of those keywords.  The tool will only print out those lines that match the keywords.</p>
+<p>The words inside the keyword list are case insensitive.</p>
+</dd>
+<dt><strong><a name="w_whitelist_file" class="item"><strong>-w|-whitelist FILE</strong></a></strong></dt>
+
+<dd>
+<p>Include a keyword file that contains one keyword per line. The file has the same format as the keyword file, and does the same thing, except that this file lists up keywords of words that should not be contained in the timeline. That is to say, this file defines the &quot;known good&quot; or whitelisted lines that should be kept out of the timeline.</p>
+<p>The tool starts by comparing the known keywords before processing the whitelist, meaning that keywords are first filtered out before the whitelist is processed. So the whitelist can be used in conjunction to the blacklist to narrow down the scope even more.</p>
+<p>It can also be used to remove known &quot;good entries&quot; or entries that are not relevant to the current investigation out of the timeline.</p>
+</dd>
+<dt><strong><a name="s_scatter_file" class="item"><strong>-s|-scatter FILE</strong></a></strong></dt>
+
+<dd>
+<p>This only makes sense when the timeline contains records from the MFT parser (NTFS filesystem). Then the tool will take the creation time of each file that resides in the WINDOWS/System32 directory and scatter plot it against the MFT number of that file. The tool will both plot the $FN and $SI creation time of the file.</p>
+<p>This can be useful during malware investigations, to quickly find files that might have been added to the system32 folder. When the operating system in installed, and during patching there are usually several files written to the system32 folder at once and since MFT's are associated sequentially there should be clear association between MFT numbers and creation time. However a typical malware does not create several files in the system32 directory, a typical malware tries to hide and does so by creating as few files as possible. That makes it possible to view a scatter plot, showing the relationship between creation time and MFT numbers to quickly spot those outliers or anomalies. This technique can therefore be used for data reduction.</p>
+<p>This option creates a simple gnuplot data file and a gnuplot script that can be used to create a simple scatter plot to see those outliers. It will also make an attempt at identifying those outliers with a simple algorithm. By default the tool treats the entire dataset as a single slice and tries to find the obvious outliers, however that behaviour can be changed using the -m or --multi option to tell the tool to try to split the dataset into slices.</p>
+<p>The FILE portion should be the name of the output file the tool writes to, it should only contain ASCII letters: a-z, A-Z, underscore (_) and numbers 0-9, no dot.  The files created will be:
+FILE.dat and FILE.cmd</p>
+<p>Then the tool gnuplot has to be run, like:</p>
+<p>gnuplot FILE.cmd</p>
+<p>Which will produce a file called FILE.png, containing the scatter plot.</p>
+<p>If the tool detects any outliers in the dataset then the file FILE_outliers.txt will be created. That file will contain a list of all those files that the tool detected as outliers.</p>
+</dd>
+<dt><strong><a name="m_multi" class="item"><strong>-m|--multi</strong></a></strong></dt>
+
+<dd>
+<p>This option is only available when used with the -s FILE, to create scatter plot of the creation time vs. $MFT entry numbers. By default the tool treats the entire dataset as a single slice and tries to detect outliers in it. Since the relationship between $MFT entry numbers and creation time isn't a simple line, in reality it consists of several straight lines, there will be many false negatives when treating the dataset as a single slice. Therefore the option of trying to split the dataset into multiple smaller slices, and calculating the outliers for each one of those has been provided.</p>
+<p>This is a simple approach to this problem, and by no means solves the issue at hand. This method does produce lots of false positives (and it could also miss some, or produce false negatives). However it will catch many of the items that get missed by the first attempt.</p>
+<p>Perhaps the best approach is to start with the default behaviour of the tool, examine the graph manually. And if there are some outliers in the dataset that are perhaps aligned with another line, yet are obvious outliers, then to re-run the tool using this option to try to see if it gets detected.</p>
+</dd>
+<dt><strong><a name="h_help" class="item"><strong>-h|-help</strong></a></strong></dt>
+
+<dd>
+<p>Print this help message</p>
+</dd>
+<dt><strong><a name="date_range" class="item"><strong>[DATE_RANGE]</strong></a></strong></dt>
+
+<dd>
+<p>The date range is formulated as one of the following:</p>
+<dl>
+<dt><strong><a name="mm_dd_yyyy" class="item">MM-DD-YYYY</a></strong></dt>
+
+<dd>
+<p>All dates from the date supplied date and forward from them.  That is to say, the date defines the starting date and all dates after that date will be part of the selection.</p>
+</dd>
+<dt><strong><a name="mm_dd_yyyy_mm_dd_yyyy" class="item">MM-DD-YYYY..MM-DD-YYYY</a></strong></dt>
+
+<dd>
+<p>This is a range, so all events that fall within the boundaries set by these two dates will be part of the selection.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p>
+</p>
+<hr />
+<h1><a name="description">DESCRIPTION</a></h1>
+<p><strong>l2t_process</strong> takes as an input the CSV output produced from the CSV output module of <strong>log2timeline</strong> and sorts the file.  It also has the capability to only let the file contain entries from a certain date range, or a similar behavior of the tool mactime from the SleuthKit (which works on mactime body files).</p>
+<p>The tool also removes any duplicate entries that might appear in the timeline. This can occur when recursive scans are made, since the same timestamp can be present in more than one file, such as registry entries both in NTUSER.DAT and inside various restore points.  The tool will remove the duplicate entries and change the filename so it includes all the files that the timestamp is found in.</p>
+<p>There is also &quot;timestomp&quot; detection, in the sense that if you used the MFT module of log2timeline to parse the NTFS $MFT file, and there are entries that have zero nanoseconds (second precision), which might be an indication of timestomping (since those tools only work on 32-bits of the timestamp, that is up to the second).  So if you run the tool with limited date range, and there are entries that fall outside the date entry that have zero nanoseonds (second precision), the tool will ask if you would like to include them in the timeline.</p>
+<p>
+</p>
+<hr />
+<h1><a name="examples">EXAMPLES</a></h1>
+<p>Process the file combined.txt and only include entries that occured from January the 1st, 2004,  until March the 31st the same year.</p>
+<p>l2t_process -b combined.txt -y 2004-01-01..2004-03-31  &gt;  examine.txt</p>
+<p>Go over the file combined.txt and only include lines that fit the keyword list provided in the file dirty.txt</p>
+<p>l2t_process -k dirty.txt -b combined.txt &gt; dirty.txt</p>
+<p>
+</p>
+<hr />
+<h1><a name="author">AUTHOR</a></h1>
+<p>Kristinn Gudjonsson &lt;kristinn (a t) log2timeline ( d o t ) net&gt; is the original author of the program.</p>
+<p>The tool is released under GPL so anyone can contribute to the tool.</p>
+<p>
+</p>
+<hr />
+<h1><a name="copyright_and_license">COPYRIGHT AND LICENSE</a></h1>
+<p>Copyright 2009-2011 by Kristinn Gudjonsson (kristinn ( a t ) log2timeline ( d o t ) net )</p>
+<p><strong>log2timeline</strong> is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.</p>
+<p><strong>log2timeline</strong> is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.</p>
+<p>You should have received a copy of the GNU General Public License along with <strong>log2timeline</strong>.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</p>
+
+</body>
+
+</html>

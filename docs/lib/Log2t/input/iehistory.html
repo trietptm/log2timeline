@@ -1,0 +1,208 @@
+<?xml version="1.0" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>iehistory - A module that parses an index.dat file that Internet Explorer creates.</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rev="made" href="mailto:root@localhost" />
+</head>
+
+<body style="background-color: white">
+
+
+<!-- INDEX BEGIN -->
+<div name="index">
+<p><a name="__index__"></a></p>
+
+<ul>
+
+	<li><a href="#name">NAME</a></li>
+	<li><a href="#description">DESCRIPTION</a></li>
+	<li><a href="#methods">METHODS</a></li>
+	<ul>
+
+		<li><a href="#new"><code>new</code></a></li>
+		<li><a href="#get_description">get_description</a></li>
+		<ul>
+
+			<li><a href="#returns_">Returns:</a></li>
+			<ul>
+
+				<li><a href="#a_string_containing_a_description_of_the_format_file_s_functionality">A string containing a description of the format file's functionality</a></li>
+			</ul>
+
+		</ul>
+
+		<li><a href="#init">init</a></li>
+		<ul>
+
+			<ul>
+
+				<li><a href="#an_integer_is_returned_to_indicate_whether_the_file_preparation_was_successful_or_not_">An integer is returned to indicate whether the file preparation was successful or not.</a></li>
+			</ul>
+
+		</ul>
+
+		<li><a href="#get_time">get_time</a></li>
+		<ul>
+
+			<li><a href="#returns_">Returns:</a></li>
+			<ul>
+
+				<li><a href="#a_container__or_a_reference_to_a_hash_variable_that_contains_all_the_timestamp_objects_">A container, or a reference to a hash variable that contains all the timestamp objects.</a></li>
+			</ul>
+
+		</ul>
+
+		<li><a href="#get_version">get_version</a></li>
+		<ul>
+
+			<li><a href="#returns_">Returns:</a></li>
+			<ul>
+
+				<li><a href="#a_string_that_contains_the_version_number_of_the_module_">A string that contains the version number of the module.</a></li>
+			</ul>
+
+		</ul>
+
+		<li><a href="#_parse_timestamp">_parse_timestamp</a></li>
+	</ul>
+
+	<li><a href="#copyright_and_license">COPYRIGHT AND LICENSE</a></li>
+</ul>
+
+<hr name="index" />
+</div>
+<!-- INDEX END -->
+
+<p>
+</p>
+<hr />
+<h1><a name="name">NAME</a></h1>
+<p>iehistory - A module that parses an index.dat file that Internet Explorer creates.</p>
+<p>
+</p>
+<hr />
+<h1><a name="description">DESCRIPTION</a></h1>
+<p>This script reads the index.dat file that contain Internet Explorer history files</p>
+<p>Based partly on the information found in the document: &quot;Forensic Analysis of Internet Explorer 
+Activity Files&quot; written by Keith J Jones (3/19/03 revised 5/6/03)</p>
+<p>Another great source of information was the:
+&quot;MSIE Cache File (index.dat) format specification: Analysis of the index.dat file format&quot; 
+written By Joachim Metz.</p>
+<p>
+</p>
+<hr />
+<h1><a name="methods">METHODS</a></h1>
+<p>
+</p>
+<h2><a name="new"><code>new</code></a></h2>
+<p>A simple constructor for the input module.</p>
+<p>The constructor simply calls the super class and changes one value.
+The value that get's changed is the multi_line attribute, indicating to the 
+main engine that this module parses binary files (as opposed to line-by-line
+log file).</p>
+<p>
+</p>
+<h2><a name="get_description">get_description</a></h2>
+<p>A simple subroutine that returns a string containing a description of the funcionality of the format file. This string is used when a list of all available format files is printed out</p>
+<p>
+</p>
+<h3><a name="returns_">Returns:</a></h3>
+<p>
+</p>
+<h4><a name="a_string_containing_a_description_of_the_format_file_s_functionality">A string containing a description of the format file's functionality</a></h4>
+<p>
+</p>
+<h2><a name="init">init</a></h2>
+<p>This subroutine starts by reading the parameters passed to the function
+then it opens the index.dat file and starts reading the header information
+found inside the file.</p>
+<p>The function prints out minimum information about the index file to STDERR
+for informational value.</p>
+<p>It then parses all the HASH tables found inside the index.dat file and constructs
+an hash containing pointers to URL activities</p>
+<pre>
+
+=head3 Returns:</pre>
+<p>
+</p>
+<h4><a name="an_integer_is_returned_to_indicate_whether_the_file_preparation_was_successful_or_not_">An integer is returned to indicate whether the file preparation was successful or not.</a></h4>
+<p>
+</p>
+<h2><a name="get_time">get_time</a></h2>
+<p>A method that returns a reference to a hash that contains all the timestamp objects in the index.dat file.</p>
+<p>This method is called once by the main engine and it set's up all the parsing of the module. It's mostly used
+to call other methods that take care of the actual parsing.</p>
+<p>It starts by parsing the header information of the index.dat file. The header contains information such as
+the offset to the first hash table.</p>
+<p>That offset is used to call the method _read_hash_table to read the first hash table in the index.dat file.</p>
+<p>Each hash table has a reference to the location/offset to the next hash table inside the history file.
+After reading the first hash table, we enter a loop that continues until there are no more next entries
+for a hash table.</p>
+<p>Within the loop the next hash table is read and parsed, all the time filling the container, or the hash
+table that contains all the timestamp objects.</p>
+<p>When all the hash tables have been parsed we return the container to the main engine for further processing.</p>
+<p>
+</p>
+<h3><a name="returns_">Returns:</a></h3>
+<p>
+</p>
+<h4><a name="a_container__or_a_reference_to_a_hash_variable_that_contains_all_the_timestamp_objects_">A container, or a reference to a hash variable that contains all the timestamp objects.</a></h4>
+<p>
+</p>
+<h2><a name="get_version">get_version</a></h2>
+<p>A method that returns the version number.</p>
+<p>A simple subroutine that returns the version number of the format file
+There shouldn't be any need to change this routine, it serves its purpose 
+just the way it is defined right now.</p>
+<p>
+</p>
+<h3><a name="returns_">Returns:</a></h3>
+<p>
+</p>
+<h4><a name="a_string_that_contains_the_version_number_of_the_module_">A string that contains the version number of the module.</a></h4>
+<p>
+</p>
+<h2><a name="_parse_timestamp">_parse_timestamp</a></h2>
+<p>A method that parses a URL record from an index.dat file.</p>
+<p>This method parses the URL record from the history file.</p>
+<p>The format of an URL record is the following:
+Offset  Size  Value  Description
+0  4
+4  4
+8  8
+16  8
+24  4
+28  4
+32  4
+36  4
+40  4
+44  4
+48  4  
+52  4
+56  4</p>
+<p>
+</p>
+<hr />
+<h1><a name="copyright_and_license">COPYRIGHT AND LICENSE</a></h1>
+<p>Copyright 2009-2011 Kristinn Gudjonsson (kristinn ( a t ) log2timeline (d o t) net)</p>
+<pre>
+  This file is part of log2timeline.</pre>
+<pre>
+    log2timeline is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.</pre>
+<pre>
+    log2timeline is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.</pre>
+<pre>
+    You should have received a copy of the GNU General Public License
+    along with log2timeline.  If not, see &lt;<a href="http://www.gnu.org/licenses/&gt">http://www.gnu.org/licenses/&gt</a>;.</pre>
+
+</body>
+
+</html>

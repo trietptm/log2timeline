@@ -1,0 +1,1162 @@
+<?xml version="1.0" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Log2Timeline - The main engine of log2timeline and the API to interface with.</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rev="made" href="mailto:root@localhost" />
+</head>
+
+<body style="background-color: white">
+
+
+<!-- INDEX BEGIN -->
+<div name="index">
+<p><a name="__index__"></a></p>
+
+<ul>
+
+	<li><a href="#name">NAME</a></li>
+	<li><a href="#description">DESCRIPTION</a></li>
+	<li><a href="#synopsis">SYNOPSIS</a></li>
+	<li><a href="#methods">METHODS</a></li>
+	<ul>
+
+		<li><a href="#new"><code>new</code></a></li>
+		<ul>
+
+			<li><a href="#args_">Args:</a></li>
+			<ul>
+
+				<li><a href="#a_hash_that_defines_the_parameters_and_their_values__a_key_and_a_value__where_the_key_is">A hash that defines the parameters and their values. A key and a value, where the key is</a></li>
+			</ul>
+
+			<li><a href="#returns_">Returns:</a></li>
+			<ul>
+
+				<li><a href="#an_instance_of_this_module_">An instance of this module.</a></li>
+			</ul>
+
+		</ul>
+
+		<li><a href="#_new"><code>_new</code></a></li>
+		<li><a href="#is_valid"><code>is_valid</code></a></li>
+		<ul>
+
+			<li><a href="#returns_">Returns:</a></li>
+			<ul>
+
+				<li><a href="#an_integer__1_if_this_is_a_valid_l2t_instance__self____valid___is_set___otherwise_0_">An integer, 1 if this is a valid l2t instance (self-&gt;{'valid'} is set), otherwise 0.</a></li>
+			</ul>
+
+		</ul>
+
+		<li><a href="#_run_preprocess"><code>_run_preprocess</code></a></li>
+		<li><a href="#_build_exclusions"><code>_build_exclusions</code></a></li>
+		<ul>
+
+			<li><a href="#returns_">Returns:</a></li>
+			<ul>
+
+				<li><a href="#an_integer_that_inticates_whether_or_not_the_exclusion_building_has_been_successful_">An integer that inticates whether or not the exclusion building has been successful.</a></li>
+			</ul>
+
+		</ul>
+
+		<li><a href="#version"><code>version</code></a></li>
+		<ul>
+
+			<li><a href="#returns_">Returns:</a></li>
+			<ul>
+
+				<li><a href="#a_string_that_contains_the_version_of_the_tool_">A string that contains the version of the tool.</a></li>
+			</ul>
+
+		</ul>
+
+		<li><a href="#_set_timezone"><code>_set_timezone</code></a></li>
+		<ul>
+
+			<li><a href="#args_">Args:</a></li>
+			<ul>
+
+				<li><a href="#tz_test__a_string_of_the_timezone_supplied_to_the_tool_and_needs_to_be_verified">tz_test: A string of the timezone supplied to the tool and needs to be verified</a></li>
+				<li><a href="#tz_mode__boolean_variable_that_defines_if_we_are_testing_an_input_or_output_timezone_">tz_mode: Boolean variable that defines if we are testing an input or output timezone.</a></li>
+			</ul>
+
+			<li><a href="#returns_">Returns:</a></li>
+			<ul>
+
+				<li><a href="#a_list_containing_two_variables__tz_ret_a_string_representing_the_timezone__might_be_long_">A list containing two variables, tz_ret a string representing the timezone (might be long)</a></li>
+			</ul>
+
+		</ul>
+
+		<li><a href="#_verify"><code>_verify</code></a></li>
+		<ul>
+
+			<li><a href="#args_">Args:</a></li>
+			<ul>
+
+				<li><a href="#attr__a_string_containing_the_name_of_the_attribute_that_needs_to_be_validated_">attr: A string containing the name of the attribute that needs to be validated.</a></li>
+				<li><a href="#val__the_value_of_said_attribute_">val: The value of said attribute.</a></li>
+			</ul>
+
+			<li><a href="#returns_">Returns:</a></li>
+			<ul>
+
+				<li><a href="#a_boolean_value__0_if_the_attribute_was_not_valid__1_if_it_was_deemed_valid_">A boolean value, 0 if the attribute was not valid, 1 if it was deemed valid.</a></li>
+			</ul>
+
+		</ul>
+
+		<li><a href="#get_timezone_list"><code>get_timezone_list</code></a></li>
+		<ul>
+
+			<li><a href="#returns_">Returns:</a></li>
+			<ul>
+
+				<li><a href="#a_string_containing_a_list_of_all_available_timezones_that_the_datetime_library_supports_">A string containing a list of all available timezones that the DateTime library supports.</a></li>
+			</ul>
+
+		</ul>
+
+		<li><a href="#start"><code>start</code></a></li>
+		<li><a href="#get_out_footer"><code>get_out_footer</code></a></li>
+		<ul>
+
+			<li><a href="#returns_">Returns:</a></li>
+			<ul>
+
+				<li><a href="#the_footer__raw__mostly_strings__but_could_be_something_else__that_the_output">The footer (raw, mostly strings, but could be something else) that the output</a></li>
+			</ul>
+
+		</ul>
+
+		<li><a href="#_parse_dir"><code>_parse_dir</code></a></li>
+		<ul>
+
+			<li><a href="#returns_">Returns:</a></li>
+			<ul>
+
+				<li><a href="#an_integer_with_the_value_of_1__true__if_successful_">An integer with the value of 1 (true) if successful.</a></li>
+			</ul>
+
+		</ul>
+
+		<li><a href="#_parse_file"><code>_parse_file</code></a></li>
+		<ul>
+
+			<li><a href="#returns_">Returns:</a></li>
+			<ul>
+
+				<li><a href="#an_integer__0_if_an_error_occured_or_1_if_the_operation_was_successful_">An integer, 0 if an error occured or 1 if the operation was successful.</a></li>
+			</ul>
+
+		</ul>
+
+		<li><a href="#_process_timestamp"><code>_process_timestamp</code></a></li>
+		<ul>
+
+			<li><a href="#args_">Args:</a></li>
+			<ul>
+
+				<li><a href="#t_line__a_timestamp_object__which_is_a_reference_to_a_hash__hence_not_a_need_to_return_it_back__">t_line: A timestamp object (which is a reference to a hash, hence not a need to return it back).</a></li>
+			</ul>
+
+			<li><a href="#returns_">Returns:</a></li>
+			<ul>
+
+				<li><a href="#boolean_value_0_1___0_if_the_timestamp_object_is_not_clearly_defined__1_if_successful_">Boolean value(0/1): 0 if the timestamp object is not clearly defined, 1 if successful.</a></li>
+			</ul>
+
+		</ul>
+
+		<li><a href="#_open_file"><code>_open_file</code></a></li>
+		<li><a href="#_close_file"><code>_close_file</code></a></li>
+		<li><a href="#__open_dir_">&lt;_open_dir&gt;</a></li>
+		<li><a href="#__close_dir_">&lt;_close_dir&gt;</a></li>
+		<li><a href="#_input_exists"><code>_input_exists</code></a></li>
+		<ul>
+
+			<li><a href="#args_">Args:</a></li>
+			<ul>
+
+				<li><a href="#in__a_string_that_contains_a_list_of_modules_list_files__comma_separated__">in: A string that contains a list of modules/list files (comma separated).</a></li>
+			</ul>
+
+			<li><a href="#returns_">Returns:</a></li>
+			<ul>
+
+				<li><a href="#a_string_depending_on_whether_or_not_that_input_module_exists_">A string depending on whether or not that input module exists.</a></li>
+			</ul>
+
+		</ul>
+
+		<li><a href="#_output_exists"><code>_output_exists</code></a></li>
+		<ul>
+
+			<li><a href="#args_">Args:</a></li>
+			<ul>
+
+				<li><a href="#out__a_boolean_value__0_1__indicating_whether_ot_not_the_file">out: A boolean value (0/1) indicating whether ot not the file</a></li>
+			</ul>
+
+		</ul>
+
+		<li><a href="#get_timezone"><code>get_timezone</code></a></li>
+		<ul>
+
+			<li><a href="#returns_">Returns:</a></li>
+			<ul>
+
+				<li><a href="#a_string_containing_the_timezone_that_the_tool_is_using_">A string containing the timezone that the tool is using.</a></li>
+			</ul>
+
+		</ul>
+
+		<li><a href="#_load_input_list"><code>_load_input_list</code></a></li>
+		<ul>
+
+			<ul>
+
+				<li><a href="#list__a_string_containing_a_listfile_that_needs_to_be_parsed_">list: A string containing a listfile that needs to be parsed.</a></li>
+			</ul>
+
+		</ul>
+
+		<li><a href="#_load_input_module"><code>_load_input_module</code></a></li>
+		<li><a href="#_load_input"><code>_load_input</code></a></li>
+		<li><a href="#_load_output"><code>_load_output</code></a></li>
+		<li><a href="#_get_module_help"><code>_get_module_help</code></a></li>
+		<li><a href="#_format_sort"><code>_format_sort</code></a></li>
+		<li><a href="#_calc_offset"><code>_calc_offset</code></a></li>
+	</ul>
+
+	<li><a href="#author">AUTHOR</a></li>
+	<li><a href="#copyright">COPYRIGHT</a></li>
+	<li><a href="#see_also">SEE ALSO</a></li>
+</ul>
+
+<hr name="index" />
+</div>
+<!-- INDEX END -->
+
+<p>
+</p>
+<hr />
+<h1><a name="name">NAME</a></h1>
+<p>Log2Timeline - The main engine of log2timeline and the API to interface with.</p>
+<p>
+</p>
+<hr />
+<h1><a name="description">DESCRIPTION</a></h1>
+<p>This is the main engine of the tool <strong>log2timeline</strong>.  This file or engine serves as the communicator
+between different parts of the tool.  This is the API that the front-end talks to, and the
+engine that iniates both the input and output modules as well as to control the flow of them.</p>
+<pre>
+
+So this is the bread and butter of log2timeline so to speak and the library that can be imported
+into any tool that wishes to implement a front-end for the tool. And this documentation should
+serve as a guideline into how to use the API. If the intention is to develop a new front-end or
+a tool that interacts with the engine, either consult this manual, the tool's wiki (
+https://code.google.com/p/log2timeline/) or examine the example front-end found inside the dev/
+folder from the source tarball.</pre>
+<p>
+</p>
+<hr />
+<h1><a name="synopsis">SYNOPSIS</a></h1>
+<pre>
+  use constant FALSE =&gt; 0;
+  use constant TRUE =&gt; 1;</pre>
+<pre>
+  # create a new instance of log2timeline
+  my $l = Log2Timeline-&gt;new( 
+    'file' =&gt; '.',
+    'recursive' =&gt; FALSE,
+    'input' =&gt; 'all',
+    'output' =&gt; 'csv',
+    'time_zone' =&gt; 'local',
+    'offset' =&gt; FALSE,
+    'exclusions' =&gt; '',
+    'text' =&gt; '',
+    'debug' =&gt; FALSE,
+    'digest' =&gt; FALSE,
+    'quick' =&gt; FALSE,
+    'raw' =&gt; FALSE,
+    'hostname' =&gt; '',
+    'preprocess' =&gt; 0,
+  );
+    
+  # check if there is a new version available
+  print $l-&gt;check_upgrade;</pre>
+<pre>
+  # get the current version number of the tool
+  print $l-&gt;version;
+  
+  # get the help text from an input module
+  print $l-&gt;get_help_in( 'recycler' );</pre>
+<pre>
+  # get the help text from an output module
+  print $l-&gt;get_help_out( 'csv' );</pre>
+<pre>
+  # change some of the tools settings
+  $l-&gt;set( 'recursive' =&gt; 'yes' );</pre>
+<pre>
+  # get a list of all the available input modules and lists
+  $l-&gt;get_inputs;</pre>
+<pre>
+  # get a list of all the available output modules
+  $l-&gt;get_outputs;</pre>
+<pre>
+  # start parsing through the files, gathering timestamps
+  $l-&gt;start;</pre>
+<pre>
+  # get a list of all the available timezones
+  $l-&gt;get_timezone_list;</pre>
+<pre>
+  # get the currently set timezone
+  $l-&gt;get_timezone;</pre>
+<p>
+</p>
+<hr />
+<h1><a name="methods">METHODS</a></h1>
+<p>This documentation contains a list and description of both public and private methods.
+All private methods start with an underscore character (_) and should not be used or called
+by front-ends or other tools interacting with the API.</p>
+<p>All other methods (excluding private) are considered to be part of the API and can be used
+or called by various front-ends.</p>
+<p>
+</p>
+<h2><a name="new"><code>new</code></a></h2>
+<p>The constructor, a very simple one, just returns the value of the secondary constructor.
+When a new Log2Timeline object is created it can be created without any parameters, the tool
+will simply accept them all as the default value.</p>
+<p>IF however, there is a need to overwrite some of the default behavior of the tool, such as to
+instruct it to parse another file than the current directory using the local timezone of the machine,
+etc. then there are two options. Either to use the parameters to the constructor to define the options
+or to use the <em>set</em> sub routine to change a value of a parameter.</p>
+<p>Since this constructor only calls a secondary one, please refer to the description of the <code>_new</code>
+to get a more detailed description of what is done in this phase.</p>
+<p>
+</p>
+<h3><a name="args_">Args:</a></h3>
+<p>
+</p>
+<h4><a name="a_hash_that_defines_the_parameters_and_their_values__a_key_and_a_value__where_the_key_is_the_name_of_the_variable_needed_to_be_changed_from_the_default_one_and_the_value_is_the_new_value_of_that_particular_variable_">A hash that defines the parameters and their values. A key and a value, where the key is
+the name of the variable needed to be changed from the default one and the value is the new value
+of that particular variable.</a></h4>
+<p>
+</p>
+<h3><a name="returns_">Returns:</a></h3>
+<p>
+</p>
+<h4><a name="an_instance_of_this_module_">An instance of this module.</a></h4>
+<p>
+</p>
+<h2><a name="_new"><code>_new</code></a></h2>
+<p>The constructor of the tool does not really do anything except to call the private constructor
+(this sub routine) and return the value that this sub routine returns.</p>
+<p>This routine takes the hash value that is passed to the constructor as a parameter and sets up
+all the values of the needed variables in the tool. There are some values that need to be set
+for the tool to properly operate, such as the path to the file/directory that needs to be parsed,
+the name(s)/list of input modules to load up, time zone of the image and the output, etc.</p>
+<p>This routine takes care of assigning values to each of these variables. It compares the hash
+that is sent to the routine as a parameter and checks if it recognizes the variable. If it does
+it will assign the value that is passed to it, otherwise it will assign it to the default value
+that is hardcoded into this sub routine. This means that no values need to be sent to the engine
+in order for it to work, it is only necessary to define those that need to be changed from the
+default values (listed below).</p>
+<p>The variables that the sub routine recognizes are (default values inside brackets []):</p>
+<dl>
+<dt><strong><a name="file" class="item"><strong>file</strong>:</a></strong></dt>
+
+<dd>
+<p>The path to the directory/file to be parsed/examined.</p>
+</dd>
+<dt><strong><a name="recursive" class="item"><strong>recursive</strong>:</a></strong></dt>
+
+<dd>
+<p>Boolean value (0/1) that indicates if we should use recursive through a mount
+point/directory [0/FALSE]</p>
+</dd>
+<dt><strong><a name="input" class="item"><strong>input</strong>:</a></strong></dt>
+
+<dd>
+<p>String, containg a list of all input modules (comma separated) that
+should be loaded. Names can be either a name of a module or a list file, and it can also
+be negated with a - sign, indicating that module should be omitted from being loaded. [all]</p>
+</dd>
+<dt><strong><a name="output" class="item"><strong>output</strong>:</a></strong></dt>
+
+<dd>
+<p>String containing the name of the output module used for output. [csv]</p>
+</dd>
+<dt><strong><a name="time_zone" class="item"><strong>time_zone</strong>:</a></strong></dt>
+
+<dd>
+<p>String containing the time zone of the image/file that needs to be parsed.
+The string can be of any value that the DateTime library supports with the addition of 'local' and 'list'.
+'local' will use the local timezone of the computer the tool is run from and 'list' will make the engine
+build a list of all available time zones and print them out. [local]</p>
+</dd>
+<dt><strong><a name="out_time_zone" class="item"><strong>out_time_zone</strong>:</a></strong></dt>
+
+<dd>
+<p>String containing the time zone that is printed in the output. If the investigator
+would like all the output in the same time zone, irrelevant of the input time zone then that can be defined
+here. [defaults to the same value as time_zone]</p>
+</dd>
+<dt><strong><a name="offset" class="item"><strong>offset</strong>:</a></strong></dt>
+
+<dd>
+<p>The time on any given computer can be vastly different from a correct clock, which is essential
+to correct if the offset to the real clock is known and timestamps from more than one system are being correlated.
+This option provides a way to do that. This is a string value or an integer value. If it is an int, then it represents
+the number of seconds the clock differs (can be prepended with a - sign indicating a negative difference). It can also
+be a string of the form (regular expression) &quot;^-?\d+[hms]?$&quot;, whereas 1h means exactly one hour difference, (h = hour,
+m = minute, s = second).</p>
+</dd>
+<dt><strong><a name="exclusions" class="item"><strong>exclusions</strong>:</a></strong></dt>
+
+<dd>
+<p>A string containg a list of exclusions (comma separated). Sometimes the tool does fail (ohh
+yes that has actually happened) and fixing that bug is not trivial/done in time/no time to wait. Or that you simply
+do not want to include certain files in the timeline then this list can be used. It is a comma separated list of
+strings that are used in regular expressions for exclusions (so do not put something like 'a' in there since that
+will exclude all files that have the character a somewhere in the path). [empty]</p>
+</dd>
+<dt><strong><a name="text" class="item"><strong>text</strong>:</a></strong></dt>
+
+<dd>
+<p>A string that will be prepended to every path in the output. If the tool is run with the text
+variable set to 'C:' that text will be prepended to every path printed out in the tool. [empty]</p>
+</dd>
+<dt><strong><a name="temp" class="item"><strong>temp</strong>:</a></strong></dt>
+
+<dd>
+<p>A string that contains the path to a temporary directory. The tool sometimes needs to write files
+to a temporary directory, this occurs for instance when dealing with locked SQLite databases and possible other
+scenarios. Therefore the tool needs ready access to a temporary directory where it can write data. Different
+OS's have their default directories, such as the /tmp one in *NIX. The tool does attempt to detect this directory,
+but for various reasons it may be desired to overwrite the location of it. ['']</p>
+</dd>
+<dt><strong><a name="debug" class="item"><strong>debug</strong>:</a></strong></dt>
+
+<dd>
+<p>An integer indicating the debug level of the tool. There are currently three level observed:</p>
+<p>0 = no debug</p>
+<p>1 = debug information turned on.</p>
+<p>2 = excessive debug information turned on.</p>
+</dd>
+<dt><strong><a name="digest" class="item"><strong>digest</strong>:</a></strong></dt>
+
+<dd>
+<p>A boolean (0/1) that indicates whether or not we should calculate a MD5 hash for every file
+to include as an attribute. N.b. this increases the time it takes the tool to complete by considerable amount.
+[FALSE]</p>
+</dd>
+<dt><strong><a name="quick" class="item"><strong>quick</strong>:</a></strong></dt>
+
+<dd>
+<p>Boolean value (0/1). One of the bottlenecks of this tool are the verification of each and every 
+file passed to the
+tool, making the verification process extremely important to be quick and accurate. However, sometimes the tests
+that are made might be too slow/accurate and in order to make it possible to create less accurate yet quicker test
+this option is available. Some input modules (although not nearly all of them) may support this option that skips
+the more detailed tests and accepts more rudementary validation that a file is what it says it is. [FALSE]</p>
+</dd>
+<dt><strong><a name="log_file" class="item"><strong>log_file</strong>:</a></strong></dt>
+
+<dd>
+<p>The file that the tool writes it's output to. [STDOUT]</p>
+</dd>
+<dt><strong><a name="raw" class="item"><strong>raw</strong>:</a></strong></dt>
+
+<dd>
+<p>A boolean (0/1) that flags whether or not the tool uses the output
+mechanism that the output modules provide. If this is set to false the tool will operate
+as usual, but if true the tool will return the RAW timestamp object instead of a formatted
+one, as is done in the case of an output module being used. [FALSE]</p>
+</dd>
+<dt><strong><a name="append" class="item"><strong>append</strong>:</a></strong></dt>
+
+<dd>
+<p>A boolean value (0/1) that indicates if we want to append to the output
+file or to overwrite it. [FALSE]</p>
+</dd>
+<dt><strong><a name="detailed_time" class="item"><strong>detailed_time</strong>:</a></strong></dt>
+
+<dd>
+<p>Boolean (0/1) This is a bit of a misnamer. However, some input modules
+to tend to give excessive details in its message/description and even provide additional timetamps
+that may or may not be pertinent in every case. This option was added to the tool so that these
+perhaps too verbose messages/details wouldn't be introduced into the tool unless wanted/needed.
+This means that $FN timestamps are skipped in the $MFT module, loaded drivers are not printed in
+the prefetch one, etc. [FALSE]</p>
+</dd>
+<dt><strong><a name="hostname" class="item"><strong>hostname</strong>:</a></strong></dt>
+
+<dd>
+<p>A string that contains the hostname of the image/host the files are
+extracted from. Some input modules have the capability to extract the hostname, as does
+some pre-processors. This variable can however be set to override that and to make sure
+the hostname is printed on every event. [unknown]</p>
+</dd>
+<dt><strong><a name="preprocess" class="item"><strong>preprocess</strong>:</a></strong></dt>
+
+<dd>
+<p>A boolean (0/1) that defines if we should run pre-processors before
+the start of the run. [FALSE]</p>
+</dd>
+</dl>
+<p>When all values have been assigned the routine will go over each assigned variable and call
+a verification routine on them to verify that the variable is valid and that the supplied
+value of it is also valid.</p>
+<p>When all this is done the routine will assign some other values that are used by the module,
+such as the OS of the computer using the tool, etc. It will also assign the value of 1 (TRUE)
+to the variable is_valid, indicating that we have properly set up the module and that this
+instance is a valid instance of Log2Timeline.</p>
+<p>
+</p>
+<h2><a name="is_valid"><code>is_valid</code></a></h2>
+<p>A simple subroutine that checks if the variable valid is set or not</p>
+<p>
+</p>
+<h3><a name="returns_">Returns:</a></h3>
+<p>
+</p>
+<h4><a name="an_integer__1_if_this_is_a_valid_l2t_instance__self____valid___is_set___otherwise_0_">An integer, 1 if this is a valid l2t instance (self-&gt;{'valid'} is set), otherwise 0.</a></h4>
+<p>
+</p>
+<h2><a name="_run_preprocess"><code>_run_preprocess</code></a></h2>
+<p><em>A private method (not part of the public API).</em></p>
+<p>The notion of a pre-processor is something that is run prior to the real execution of the tool
+in order to collect information from the image. Each pre-processor can then either choose to simply
+output the result of this finding or save it in the class variable that can then be used by other
+input/output modules to give more context around events.</p>
+<p>This routine starts by finding all the available modules that are available in the 
+pre-processing directory.  Then it will run each one of those to gather the necessary information
+and update the settings of the tool.</p>
+<p>
+</p>
+<h2><a name="_build_exclusions"><code>_build_exclusions</code></a></h2>
+<p><em>A private method (not part of the public API).</em></p>
+<p>A simple routine that examines the exclusion list passed to the tool and converts it into a hash
+The exclusion list is a string list, separated with commas (,), containing file names or parts of filenames
+that should be excluded from the recursive scanner.</p>
+<p>The routine simply reads the class variable 'exclusions' and builds a hash called 'exclude_list'
+that contains all the patterns found in the exclusion list.</p>
+<p>
+</p>
+<h3><a name="returns_">Returns:</a></h3>
+<p>
+</p>
+<h4><a name="an_integer_that_inticates_whether_or_not_the_exclusion_building_has_been_successful_">An integer that inticates whether or not the exclusion building has been successful.</a></h4>
+<p>
+</p>
+<h2><a name="version"><code>version</code></a></h2>
+<p>A very simple routine that only returns the current version of the tool.</p>
+<p>
+</p>
+<h3><a name="returns_">Returns:</a></h3>
+<p>
+</p>
+<h4><a name="a_string_that_contains_the_version_of_the_tool_">A string that contains the version of the tool.</a></h4>
+<p>
+</p>
+<h2><a name="_set_timezone"><code>_set_timezone</code></a></h2>
+<p><em>A private method (not part of the public API).</em></p>
+<p>This routine is used to check if a string representing a timezone is a valid
+timezone that is accepted by the DateTime library.</p>
+<p>Since there are potentially two time zones defined by the end user, both the one
+of the suspect system/files and of the desired output there is a switch indicating
+which one we are testing. There is no difference between the two tests, this switch
+was simply introduced to make debugging information more concise, that is the difference
+is simply in the text used in the debug dialog.</p>
+<p>The test that is performed is simply to load the DateTime library with the supplied
+timezone. If it successfully loads up it is considered to be a valid timezone string.</p>
+<p>If the timezone that was selected is 'local' then the extracted name of said timezone
+is pulled from the DateTime object created (all the 'local' magic occurs within the
+DateTime library).</p>
+<p>It is possible to define a long name for the timezone (e.g 'Australia/Sydney') so the
+DateTime library is checked to see if there is a short name for that particular timezone,
+and if so that is also returned (and used in the output instead of the longer one).</p>
+<p>
+</p>
+<h3><a name="args_">Args:</a></h3>
+<p>
+</p>
+<h4><a name="tz_test__a_string_of_the_timezone_supplied_to_the_tool_and_needs_to_be_verified_before_being_used_">tz_test: A string of the timezone supplied to the tool and needs to be verified
+before being used.</a></h4>
+<p>
+</p>
+<h4><a name="tz_mode__boolean_variable_that_defines_if_we_are_testing_an_input_or_output_timezone_">tz_mode: Boolean variable that defines if we are testing an input or output timezone.</a></h4>
+<p>
+</p>
+<h3><a name="returns_">Returns:</a></h3>
+<p>
+</p>
+<h4><a name="a_list_containing_two_variables__tz_ret_a_string_representing_the_timezone__might_be_long__and_a_shorter_version_of_that_timezone_name_">A list containing two variables, tz_ret a string representing the timezone (might be long)
+and a shorter version of that timezone name.</a></h4>
+<p>
+</p>
+<h2><a name="_verify"><code>_verify</code></a></h2>
+<p><em>A private method (not part of the public API).</em></p>
+<p>Since we are accepting values from the user of the tool, or from a front-end that cannot
+be trusted we need to validate that each attribute is correctly formed. This is not just
+as an attempt to verify user inputted data for security purposes, this is also put here
+to prevent the tool from crashing in later stages due to a bug in one of the parameters.</p>
+<p>For each attribute/parameter of the tool that can be defined through the API it's value
+has to be validated. An attribute is not assigned a value unless this validation returns
+a true value.</p>
+<p>The validation can be very simple, or comprehensive, depending on several factors (one
+being not completing the implementation).</p>
+<p>The routine has a list of all accepted attributes, and if one is passed to the tool
+that the validation routine does not recognize it is deemed as an invalid attribute
+and therefore not saved/assigned.</p>
+<p>
+</p>
+<h3><a name="args_">Args:</a></h3>
+<p>
+</p>
+<h4><a name="attr__a_string_containing_the_name_of_the_attribute_that_needs_to_be_validated_">attr: A string containing the name of the attribute that needs to be validated.</a></h4>
+<p>
+</p>
+<h4><a name="val__the_value_of_said_attribute_">val: The value of said attribute.</a></h4>
+<p>
+</p>
+<h3><a name="returns_">Returns:</a></h3>
+<p>
+</p>
+<h4><a name="a_boolean_value__0_if_the_attribute_was_not_valid__1_if_it_was_deemed_valid_">A boolean value, 0 if the attribute was not valid, 1 if it was deemed valid.</a></h4>
+<p>
+</p>
+<h2><a name="get_timezone_list"><code>get_timezone_list</code></a></h2>
+<p>This is a simple sub routine that pulls out all names of supported timezones of the DateTime
+library and puts them in a list.</p>
+<p>Ithen sorts that list alphabetically and surrounds it with a banner that gets returned for
+output.</p>
+<p>
+</p>
+<h3><a name="returns_">Returns:</a></h3>
+<p>
+</p>
+<h4><a name="a_string_containing_a_list_of_all_available_timezones_that_the_datetime_library_supports_">A string containing a list of all available timezones that the DateTime library supports.</a></h4>
+<p>
+</p>
+<h2><a name="start"><code>start</code></a></h2>
+<p>This is one of the main sub routines, the glue that holds all together.
+When all values have been assigned to the module and processing can be started
+this is the routine that starts it all.</p>
+<p>The routine starts by checking if it should do a recursive search or simply
+look at a single file.</p>
+<p>It will then invoke various internal/protected sub routines that verify and
+load up needed functionality. Examples of the magic that occurs in this
+routine are; initiating pre-processing, loading input and output modules,
+figuring out what the temporary directory is, calculating the clock offset,
+assigning timezones, building exclusions.</p>
+<p>When all that preparation is done the routine will either call a function
+to parse the file or initiate the recursive scan of a mount point/directory.</p>
+<p>
+</p>
+<h2><a name="get_out_footer"><code>get_out_footer</code></a></h2>
+<p>This subroutine can be called to retrieve the footer of a output file.</p>
+<p>This is designed for a front-end to be able to append to an output file even though
+the output file has a footer.</p>
+<p>The problem this routine tries to solve is that if a file has already been created to
+store the timestamp and that particular format contains a footer, simply appending to it
+will not cut it. That will brake the format.</p>
+<p>The purpose of this routine is to invoke the desired output module and retrieve the footer
+that it will output and return that to the front-end that then can remove the footer from
+the previous file before starting to output new data.</p>
+<p>
+</p>
+<h3><a name="returns_">Returns:</a></h3>
+<p>
+</p>
+<h4><a name="the_footer__raw__mostly_strings__but_could_be_something_else__that_the_output_module_produces_">The footer (raw, mostly strings, but could be something else) that the output
+module produces.</a></h4>
+<p>
+</p>
+<h2><a name="_parse_dir"><code>_parse_dir</code></a></h2>
+<p><em>A private method (not part of the public API).</em></p>
+<p>This is the recursive method/routine/scanner of the engine. When the tool encounters a
+directory and it is in a recursive mode it will use this recursive method to go through
+every possible file in the supplied directory, and if it stumples upon a directory it will
+call itself with that directory as the root (and thus a recursive method is born).</p>
+<p>It is here that the exclusion list is honored. For each file/directory that is found
+within the supplied directory the path is compared to the entries found inside the
+exclusion list. If a match is found, that particular file is not tested.</p>
+<p>The logic in this method is simple:</p>
+<ol>
+<li>
+<p>List up all files within the supplied directory.</p>
+<dl>
+<dt><strong><a name="a" class="item"><strong>a</strong></a></strong></dt>
+
+<dd>
+<p>Check against exclusion list, if not there continue.</p>
+</dd>
+<dt><strong><a name="b" class="item"><strong>b</strong></a></strong></dt>
+
+<dd>
+<p>Try to parse (if this is a file or a directory).</p>
+</dd>
+<dt><strong><a name="c" class="item"><strong>c</strong></a></strong></dt>
+
+<dd>
+<p>If this is a directory then call self again, this time with the current directory
+as the root one.</p>
+</dd>
+</dl>
+</li>
+<li>
+<p>Done.</p>
+</li>
+</ol>
+<p>
+</p>
+<h3><a name="returns_">Returns:</a></h3>
+<p>
+</p>
+<h4><a name="an_integer_with_the_value_of_1__true__if_successful_">An integer with the value of 1 (true) if successful.</a></h4>
+<p>
+</p>
+<h2><a name="_parse_file"><code>_parse_file</code></a></h2>
+<p><em>A private method (not part of the public API).</em></p>
+<p>This sub routine reads the class variable 'file' that contains the path
+name to a file that needs to be parsed. It accepts only a single string to
+either a file or a directory.</p>
+<p>It will then test to see if this is a file, and then open it or a directory
+and then open that.</p>
+<p>Then the routine will go over each input module that has been loaded up in the tool
+and attempt to parse the file/directory using that module. It will provide the input
+module with the necessary information it needs, such as:</p>
+<p><strong>fh</strong>: A filehandle to the file that needs to be parsed.</p>
+<p><strong>name</strong>: Name of the file (the full path).</p>
+<p>It will then attempt to verify the module can parse the file, and if it successfully
+validates it will check to see if the module returns a single timestamp object or a
+one object per line read (variable 'multi-line').</p>
+<p>The routine will then either collect that single container and go over each entry therein
+or call the get_time until all timestamp objects have been collected.</p>
+<p>For each output object gathered the tool will check if it should return the raw object
+(as defined in the 'raw' class variable) or process the output with an output module.</p>
+<p>When the routine has completed parsing the file it will close it.</p>
+<p>
+</p>
+<h3><a name="returns_">Returns:</a></h3>
+<p>
+</p>
+<h4><a name="an_integer__0_if_an_error_occured_or_1_if_the_operation_was_successful_">An integer, 0 if an error occured or 1 if the operation was successful.</a></h4>
+<p>
+</p>
+<h2><a name="_process_timestamp"><code>_process_timestamp</code></a></h2>
+<p><em>A private method (not part of the public API).</em></p>
+<p>After each timestamp object has been extracted from the parsing engine
+it is passed through this sub routine.</p>
+<p>What is essentially does is processing of the timestamp object. It adds
+some values into it and fixes/adjusts others.</p>
+<p>For instance, this routine replaces all backslashes with forward slashed in the
+description field, it adds the text description field passes as an argument to the
+timestamp object, it includes information about the directory the tool was called from,
+includes hostname, etc.</p>
+<p>The sub routine also injects other values into the timestamp object, such as the inode
+value of the file and if the calculate parameter is used it calculates a MD5 sum for all
+the files passed to the tool and adds that to the timestamp object.</p>
+<p>Finally this routine is also responsible for adjusting the timestamps according to the
+value of the time offset passed as a parameter. That is if we need to adjust all the timestamps because
+of a faulty clock on the system, that time difference is added or subtracted from the timestamp in this
+routine.</p>
+<p>
+</p>
+<h3><a name="args_">Args:</a></h3>
+<p>
+</p>
+<h4><a name="t_line__a_timestamp_object__which_is_a_reference_to_a_hash__hence_not_a_need_to_return_it_back__">t_line: A timestamp object (which is a reference to a hash, hence not a need to return it back).</a></h4>
+<p>
+</p>
+<h3><a name="returns_">Returns:</a></h3>
+<p>
+</p>
+<h4><a name="boolean_value_0_1___0_if_the_timestamp_object_is_not_clearly_defined__1_if_successful___cut_sub__process_timestamp_______my__self___shift__my__t_line___shift_">Boolean value(0/1): 0 if the timestamp object is not clearly defined, 1 if successful.
+=cut
+sub <code>_process_timestamp($$)</code> {
+    my $self   = shift;
+    my $t_line = shift;</a></h4>
+<pre>
+    return 0 unless defined $t_line-&gt;{'desc'};
+    return 0 if $t_line-&gt;{'desc'} eq '';</pre>
+<pre>
+    # fix the \ vs. / problem in the output
+    $t_line-&gt;{'desc'}  =~ s/\\/\//g;
+    $t_line-&gt;{'short'} =~ s/\\/\//g;</pre>
+<pre>
+    if (defined $self-&gt;{'text'} and $self-&gt;{'text'} ne '') {
+        $t_line-&gt;{'extra'}-&gt;{'path'} = $self-&gt;{'text'};
+    }</pre>
+<pre>
+    # add information about the directory passed on to the tool
+    $t_line-&gt;{'extra'}-&gt;{'parse_dir'} = $self-&gt;{'file_orig'} if $self-&gt;{'recursive'};</pre>
+<pre>
+    # default value of self-&gt;hostname is unknown
+    if ($self-&gt;{'hostname'} ne 'unknown') {</pre>
+<pre>
+        # we have a user supplied hostname, use that and overwrite what ever is in this field
+        $t_line-&gt;{'extra'}-&gt;{'host'} = $self-&gt;{'hostname'}
+          unless defined $t_line-&gt;{'extra'}-&gt;{'host'};
+    }
+    else {
+        # use the default one of 'unknown' unless it is already assigned in the input module
+        $t_line-&gt;{'extra'}-&gt;{'host'} = 'unknown' unless defined $t_line-&gt;{'extra'}-&gt;{'host'};
+    }</pre>
+<pre>
+    # add the filename to the t_line
+    $t_line-&gt;{'extra'}-&gt;{'filename'} = $self-&gt;{'file'}
+      unless defined $t_line-&gt;{'extra'}-&gt;{'filename'};
+    $t_line-&gt;{'extra'}-&gt;{'format'} = $self-&gt;{'cur_in'}
+      unless defined $t_line-&gt;{'extra'}-&gt;{'format'};</pre>
+<pre>
+    # check the inode value (and fix it if is set to zero)
+    $t_line-&gt;{'extra'}-&gt;{'inode'} = (stat($self-&gt;{'file'}))[1]
+      unless defined $t_line-&gt;{'extra'}-&gt;{'inode'};</pre>
+<pre>
+    # fix the time settings (using time_offset)
+    foreach (keys %{ $t_line-&gt;{'time'} }) {
+        next unless defined $t_line-&gt;{'time'}-&gt;{$_}-&gt;{'value'};</pre>
+<pre>
+        $t_line-&gt;{'time'}-&gt;{$_}-&gt;{'value'} += $self-&gt;{'offset'};
+    }</pre>
+<pre>
+    # check to see if we are to calculate MD5 sum of the file
+    if ($self-&gt;{'digest'}) {
+        print 'File: ' . $self-&gt;{'file'} . ' and diggest: ' . $self-&gt;{'digest'};
+        # check if we've already calculated the md5 for this file
+        if (defined($self-&gt;{'digest_list'}-&gt;{$self-&gt;{'file'}})) {
+            $t_line-&gt;{'extra'}-&gt;{'md5'} = $self-&gt;{'digest_list'}-&gt;{$self-&gt;{'file'}};
+        }
+        else {
+            # calculate the MD5 sum
+            open(TF, '&lt;' . $self-&gt;{'file'});
+            my $sum = Digest::MD5-&gt;new;
+            $sum-&gt;addfile(*TF);</pre>
+<pre>
+            # assign the variables
+            $self-&gt;{'digest_list'}-&gt;{$self-&gt;{'file'}} = $sum-&gt;hexdigest;
+            $t_line-&gt;{'extra'}-&gt;{'md5'} = $sum-&gt;hexdigest;
+            close(TF);
+        }</pre>
+<pre>
+    }</pre>
+<pre>
+    return 1;
+}</pre>
+<p>
+</p>
+<h2><a name="_open_file"><code>_open_file</code></a></h2>
+<p><em>A private method (not part of the public API).</em></p>
+<p>A simple sub routine that is responsible for opening up a file and assigning
+the filehandle to the $self-&gt;{'fh'} variable that is used in the tool.</p>
+<p>
+</p>
+<h2><a name="_close_file"><code>_close_file</code></a></h2>
+<p><em>A private method (not part of the public API).</em></p>
+<p>A simple sub routine that has only one task, and that is to close
+the open filehandle.</p>
+<p>
+</p>
+<h2><a name="__open_dir_">&lt;_open_dir&gt;</a></h2>
+<p><em>A private method (not part of the public API).</em></p>
+<p>A simple sub routine that opens up a directory and gives
+back an open handle to that directory.</p>
+<p>No arguments passed to it nor returned (only uses $self)</p>
+<p>
+</p>
+<h2><a name="__close_dir_">&lt;_close_dir&gt;</a></h2>
+<p><em>A private method (not part of the public API).</em></p>
+<p>A simple sub routine that closes a filehandle to a
+directory.</p>
+<p>No arguments passed to it nor returned (only uses $self)</p>
+<p>
+</p>
+<h2><a name="_input_exists"><code>_input_exists</code></a></h2>
+<p><em>A private method (not part of the public API).</em></p>
+<p>Determine if an input module exists or not. This sub routine takes
+as an input a list of input modules. This list can consist of a single
+input module, a single reference to a list file, or it may be a more complex
+list containing both modules, lists and negative modules (list of modules
+that should be excluded).</p>
+<p>
+</p>
+<h3><a name="args_">Args:</a></h3>
+<p>
+</p>
+<h4><a name="in__a_string_that_contains_a_list_of_modules_list_files__comma_separated__">in: A string that contains a list of modules/list files (comma separated).</a></h4>
+<p>
+</p>
+<h3><a name="returns_">Returns:</a></h3>
+<p>
+</p>
+<h4><a name="a_string_depending_on_whether_or_not_that_input_module_exists__that_is_the_module_goes_over_the_entires_list_and_if_it_finds_at_least_one_module_that_does_not_exist_on_the_filesyste_it_will_save_the_content_of_that_particular_variable_in_the_return_value__otherwise_the_value_of_0_is_returned___cut_sub__input_exists_____my__self___shift__my__in___shift__my__ret___0____the_default_return_value_my___a___b__">A string depending on whether or not that input module exists.
+       That is the module goes over the entires list and if it finds at least one
+       module that does not exist on the filesyste it will save the content of that
+       particular variable in the return value. Otherwise the value of 0 is returned.
+=cut
+sub <code>_input_exists()</code> {
+    my $self = shift;
+    my $in   = shift;
+    my $ret  = 0;       # the default return value
+    my ($a, $b);</a></h4>
+<pre>
+    # we can be guessing.. so check out if that's the case
+    return 0 if $in eq 'all';</pre>
+<pre>
+    # the list might contain a minus sign, let's remove them all
+    $in =~ s/-//g;</pre>
+<pre>
+    # we might be using several modules
+    my @s = split(/,/, $in);</pre>
+<pre>
+    # go over each one (only done once if just one is passed on)
+    foreach (@s) {
+        # we do not need further checking if $ret is 0
+        next if $ret;</pre>
+<pre>
+        # set the default values
+        $a = 0;
+        $b = 0;</pre>
+<pre>
+        # check if we are about to use a list file
+        $a = 1
+          if -f $self-&gt;{'lib_dir'}
+              . $self-&gt;{'sep'} . 'Log2t'
+              . $self-&gt;{'sep'} . 'input'
+              . $self-&gt;{'sep'}
+              . $_ . '.lst';</pre>
+<pre>
+        # or we are using a single input module
+        $b = 1
+          if -f $self-&gt;{'lib_dir'}
+              . $self-&gt;{'sep'} . 'Log2t'
+              . $self-&gt;{'sep'} . 'input'
+              . $self-&gt;{'sep'}
+              . $_ . '.pm';</pre>
+<pre>
+        # either a or b needs to be true
+        $ret = $_ unless ($a or $b);
+    }</pre>
+<pre>
+    return $ret;
+}</pre>
+<p>
+</p>
+<h2><a name="_output_exists"><code>_output_exists</code></a></h2>
+<p><em>A private method (not part of the public API).</em></p>
+<p>Check for the existance of the output module. That is this
+routine checks to see if the output module chosen by the
+user exists or not.</p>
+<p>
+</p>
+<h3><a name="args_">Args:</a></h3>
+<p>
+</p>
+<h4><a name="out__a_boolean_value__0_1__indicating_whether_ot_not_the_file_exists_on_the_system_or_not___cut_sub__output_exists_____my__self___shift__my__out___shift_">out: A boolean value (0/1) indicating whether ot not the file
+            exists on the system or not.
+=cut
+sub <code>_output_exists()</code> {
+    my $self = shift;
+    my $out  = shift;</a></h4>
+<pre>
+    print STDERR &quot;[LOG2T] Testing the existence of &quot;,
+        $self-&gt;{'lib_dir'}
+      . $self-&gt;{'sep'} . 'Log2t'
+      . $self-&gt;{'sep'}
+      . 'output'
+      . $self-&gt;{'sep'}
+      . $out . &quot;.pm\n&quot;
+      if $self-&gt;{'debug'};</pre>
+<pre>
+    return 1
+      if -f $self-&gt;{'lib_dir'}
+          . $self-&gt;{'sep'} . 'Log2t'
+          . $self-&gt;{'sep'}
+          . 'output'
+          . $self-&gt;{'sep'}
+          . $out . '.pm';
+    print STDERR &quot;SEPERATOR [&quot; . $self-&gt;{'sep'} . &quot;]\n&quot;;
+    print STDERR $self-&gt;{'lib_dir'}
+      . $self-&gt;{'sep'} . 'Log2t'
+      . $self-&gt;{'sep'}
+      . 'output'
+      . $self-&gt;{'sep'}
+      . $out . '.pm' . &quot;\n&quot;;
+    return 0;
+}</pre>
+<p>
+</p>
+<h2><a name="get_timezone"><code>get_timezone</code></a></h2>
+<p>A small sub subroutine that simply returns back the value of the current timezone used by the
+tool.</p>
+<p>
+</p>
+<h3><a name="returns_">Returns:</a></h3>
+<p>
+</p>
+<h4><a name="a_string_containing_the_timezone_that_the_tool_is_using_">A string containing the timezone that the tool is using.</a></h4>
+<p>
+</p>
+<h2><a name="_load_input_list"><code>_load_input_list</code></a></h2>
+<p><em>A private method (not part of the public API).</em></p>
+<p>A routine that opens up a list file reads in all it's content and stores it in the
+input_list class attribute.</p>
+<p>If a list file is passed to the tool as a parameter this routine will use that to open up the file
+and read it in, line-by-line to get a list of all the input module it should load (the input lists
+contain a list of modules they want to use.</p>
+<p>
+</p>
+<h4><a name="list__a_string_containing_a_listfile_that_needs_to_be_parsed___cut_sub__load_input_list_____my__self___shift__my__list___shift_">list: A string containing a listfile that needs to be parsed.
+=cut
+sub <code>_load_input_list()</code> {
+    my $self = shift;
+    my $list = shift;</a></h4>
+<p># the variable can either by a user supplied list (comma separated) or a file called INPUT.lst which lists the input modules that are to be used
+# we are reading from a file
+    if( ! -f $self-&gt;{'lib_dir'}
+           . $self-&gt;{'sep'} . 'Log2t'
+           . $self-&gt;{'sep'} . 'input'
+           . $self-&gt;{'sep'}
+           . $list . '.lst') {
+        return 0;
+    }
+    open(LSTFILE,
+             $self-&gt;{'lib_dir'}
+           . $self-&gt;{'sep'} . 'Log2t'
+           . $self-&gt;{'sep'} . 'input'
+           . $self-&gt;{'sep'}
+           . $list . '.lst'
+        );
+    while (&lt;LSTFILE&gt;) {
+        s/\n//;
+        $self-&gt;{'input_list'}-&gt;{$_}++;
+    }</p>
+<pre>
+    close(LSTFILE);
+}</pre>
+<p>
+</p>
+<h2><a name="_load_input_module"><code>_load_input_module</code></a></h2>
+<p><em>A private method (not part of the public API).</em></p>
+<p># either remove or add a module to the input list
+=cut
+sub <code>_load_input_module()</code> {
+    my $self = shift;
+    my $mod  = shift;</p>
+<pre>
+    # check for the first letter (if it is - then we use all except the ones listed
+    if (substr($mod, 0, 1) eq '-') {</pre>
+<pre>
+        # remove the -
+        $mod = substr($mod, 1);</pre>
+<pre>
+        # check if the module exists (and remove it from the list if it exists...
+        if (  -f $self-&gt;{'lib_dir'}
+            . $self-&gt;{'sep'} . 'Log2t'
+            . $self-&gt;{'sep'} . 'input'
+            . $self-&gt;{'sep'}
+            . $mod . '.pm')
+        {
+            print STDERR &quot;[DEBUG] Removing the module $mod.\n&quot;
+              if ($self-&gt;{'debug'} and defined($self-&gt;{'input_list'}-&gt;{$mod}));</pre>
+<pre>
+            delete($self-&gt;{'input_list'}-&gt;{$mod}) if exists($self-&gt;{'input_list'}-&gt;{$mod});
+        }
+        else {
+            print STDERR &quot;[DEBUG] Module ($mod) does not exist.\n&quot;;
+        }</pre>
+<pre>
+    }
+    else {</pre>
+<pre>
+        # add the module to the list
+        if (  -f $self-&gt;{'lib_dir'}
+            . $self-&gt;{'sep'} . 'Log2t'
+            . $self-&gt;{'sep'} . 'input'
+            . $self-&gt;{'sep'}
+            . $mod . '.pm')
+        {
+            print STDERR &quot;[DEBUG] Adding the module $mod.\n&quot; if $self-&gt;{'debug'};
+            $self-&gt;{'input_list'}-&gt;{$mod}++;
+        }
+        else {
+            print STDERR &quot;[DEBUG] Module ($mod) does not exist.\n&quot; if $self-&gt;{'debug'};
+        }
+    }
+}</pre>
+<p>
+</p>
+<h2><a name="_load_input"><code>_load_input</code></a></h2>
+<p><em>A private method (not part of the public API).</em></p>
+<p>
+</p>
+<h2><a name="_load_output"><code>_load_output</code></a></h2>
+<p><em>A private method (not part of the public API).</em></p>
+<p>
+</p>
+<h2><a name="_get_module_help"><code>_get_module_help</code></a></h2>
+<p><em>A private method (not part of the public API).</em></p>
+<p>
+</p>
+<h2><a name="_format_sort"><code>_format_sort</code></a></h2>
+<p><em>A private method (not part of the public API).</em></p>
+<p>A sorting 'algorithm' for input modules.</p>
+<p>The problem with some of the input modules is that there might be two input modules
+that are capable of parsing the same file. And since the tool stops processing each file
+when a match is found you might end up parsing a file using a module that is not really
+suited to do so.</p>
+<p>The most prelevant example is the exif module that is capable of extracting a generic
+metadata from vast amount of different types of files. There might be other modules that
+are specifically written to parse that particular file, which do a lot better job of
+extracting relevant data from it. This routine is therefore written to lower the priority
+of these more generic modules so that they do not parse files before the more specific
+ones do.</p>
+<p>Currently the following modules do have lower priority associated to them:</p>
+<dl>
+<dt><strong><a name="exif" class="item"><strong>exif</strong></a></strong></dt>
+
+<dt><strong><a name="generic_linux" class="item"><strong>generic_linux</strong></a></strong></dt>
+
+</dl>
+<p>
+</p>
+<h2><a name="_calc_offset"><code>_calc_offset</code></a></h2>
+<p><em>A private method (not part of the public API).</em></p>
+<p>A sub routine that takes the offset value that is given to the API and converts it
+into an integer that is used to balance of the timestamps read.</p>
+<p>The offset can be one of each values:</p>
+<p>+ int: numbers of seconds (eg. 52 or -12)</p>
+<p>+ string: An int with appended character indicating the unit of the int. Accepted
+values are h, m or s that correspond to hours, minutes and seconds. Examples:
+52s or 1h (n.b. it is not possible to use 4h2m1s to represent the time in more granularity,
+it is only possible to use one string, making the int option most useful since offset rarely
+comes in whole hours.</p>
+<p>No arguments are needed since the routine only uses and sets class variables.</p>
+<p>
+</p>
+<hr />
+<h1><a name="author">AUTHOR</a></h1>
+<p>Kristinn Gudjonsson &lt;kristinn (a t) log2timeline ( d o t ) net&gt; is the original author of the program.</p>
+<p>
+</p>
+<hr />
+<h1><a name="copyright">COPYRIGHT</a></h1>
+<p>The tool is released under GPL so anyone can contribute to the tool and examine the source code. Copyright 2009-2012.</p>
+<p>
+</p>
+<hr />
+<h1><a name="see_also">SEE ALSO</a></h1>
+<p>Documentation for each input module follows the name of Log2t::input::MODULE and for output modules Log2t::output::MODULE</p>
+<p><em>log2timeline</em>, <a href="/Log2t/Time.html">the Log2t::Time manpage</a>, <a href="/Log2t/BinRead.html">the Log2t::BinRead manpage</a>, <a href="/Log2t/Common.html">the Log2t::Common manpage</a>, <a href="/Log2t/Network.html">the Log2t::Network manpage</a>, <a href="/Log2t/Numbers.html">the Log2t::Numbers manpage</a>, <a href="/Log2t/Win.html">the Log2t::Win manpage</a>, <a href="/Log2t/WinReg.html">the Log2t::WinReg manpage</a></p>
+
+</body>
+
+</html>

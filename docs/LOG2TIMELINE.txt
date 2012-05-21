@@ -32,6 +32,13 @@ Options:
             the CSV output. To see a list of all available output formats,
             use -o list
 
+    -d|-detail
+            Some input modules have the capability to include very detailed
+            amount of information (such as MFT, setupapi and prefetch). This
+            switch will instruct modules to include those details in the
+            timeline, so for instance to tell the MFT module to include the
+            $FN timestamps, or the prefetch one to include loaded DLLs.
+
     -w|-write FILENAME
             Specify a file to write output to (otherwise STDOUT will be
             chosen).
@@ -42,6 +49,28 @@ Options:
             variable is the local timezone of the computer log2timeline is
             run on. There is an option to define -z list to get a list of
             all available timezones.
+
+    -Z|-Zone TIMEZONE
+            This option defines the timezone that is used in the output
+            module of the tool. The default value for this variable is the
+            same value that is defined in the -z option or the timezone of
+            the host. This option is used so that output modules can output
+            in a different timezone than the host is in, for instance to
+            output in UTC even though the timezone of the host is in another
+            timezone.
+
+    -t|-temp DIR
+            This option defines the temporary directory the tool uses. By
+            default the front-end does not set the temporary directory, but
+            allows the engine to automatically detect it. This option
+            therefore overwrites the default temporary directory location.
+
+            The engine checks the operating system in question, if it is
+            Windows, it will try to determine the temporary path based on
+            the Win32::API (so this might fail on 64-bit systems, perhaps
+            better to use this option to set it manually on those systems).
+            Otherwise it will use /tmp/ as the temporary directory (should
+            work on *NIX systems).
 
     -log FILENAME
             Specify a file to write error and information messages from the
