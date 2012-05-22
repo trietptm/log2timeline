@@ -838,8 +838,7 @@ sub _decodeFNAttribute {
     # read the name
     for (my $i = 0; $i < $d{'nlen'} * 2; $i += 2) {
 
-        #$d{'name'} .= encode('iso8859-1', substr $s, 66+$i,2);
-        $d{'name'} .= encode('utf-8', substr $s, 66 + $i, 2);
+        $d{'name'} .= decode('utf16le', substr $s, 66 + $i, 2);
 
         #$d{'name'} .=  unpack( "U*", substr $s, 66+$i,2);
         #    $d{'name'} .=  substr $s, 66+$i,2;
@@ -879,7 +878,7 @@ sub _decodeAttributeList {
 
     # read the name
     for (my $i = 0; $i < $d{'nlen'} * 2; $i += 2) {
-        $d{'name'} .= encode('utf-8', substr $s, 26 + $i, 2);
+        $d{'name'} .= decode('utf16le', substr $s, 26 + $i, 2);
     }
     $d{'name'} =~ s/[[:cntrl:]]//g;
     $d{'name'} =~ s/\00//g;

@@ -29,6 +29,7 @@ Version 0.64 (05/18/2012)
   - [RECYCLER input] Fixed a bug, added a seekdir so that recycler information is contained within the timeline if recursive
       is turned on.
   - [LIST files] Added few items into the Windows list files, as well as to create a Mac OS X one.
+  - [MFT input] Fixed a bug with Unicode support.
 
 Version 0.63-1 (bug fixes) (09/10/2012)
   - Removed small additional debugging text from the iehistory module (shouldn't be printed unless we have debug turned on).

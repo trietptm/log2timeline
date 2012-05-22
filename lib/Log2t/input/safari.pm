@@ -134,10 +134,7 @@ sub get_time {
         return (undef);
     }
 
-    print STDERR "[SAFARI] LAST CHECK\n";
     return (undef) unless (ref($$Data{'WebHistoryDates'}));
-
-    print STDERR "[SAFARI] NOW THE PARSING BEGINS...\n";
 
     # Get a new history record (go through all of them)
     foreach my $ref (@{ $$Data{'WebHistoryDates'} }) {
