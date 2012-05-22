@@ -633,6 +633,7 @@ sub verify {
             # connect to the database
             $self->{'vdb'} = DBI->connect("dbi:SQLite:dbname=" . ${ $self->{'name'} }, "", "")
               or ($temp = 1);
+            $self->{'vdb'}->{'PrintError'} = 0;
 
             if ($temp) {
                 $return{'success'} = 0;
@@ -642,7 +643,7 @@ sub verify {
 
             # get a list of all available talbes
             $vsth = $self->{'vdb'}->prepare("SELECT name FROM sqlite_master WHERE type='table'")
-              or ($temp = 0);
+              or die ('not the correct database schema');
 
             # execute the query
             $temp = 0;

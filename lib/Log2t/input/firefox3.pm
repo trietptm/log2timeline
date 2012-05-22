@@ -703,6 +703,7 @@ sub verify {
             # connect to the database
             $self->{'vdb'} = DBI->connect("dbi:SQLite:dbname=" . ${ $self->{'name'} }, "", "")
               or ($temp = 1);
+            $self->{'vdb'}->{'PrintError'} = 0;
 
             if ($temp) {
                 $return{'success'} = 0;

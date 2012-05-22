@@ -576,6 +576,7 @@ sub verify {
         # connect to the database
         $self->{'vdb'} = DBI->connect("dbi:SQLite:dbname=" . ${ $self->{'name'} }, "", "")
           or ($skype_db = 0);
+        $self->{'vdb'}->{'PrintError'} = 0;
 
         unless ($skype_db) {
             $return{'success'} = 0;
