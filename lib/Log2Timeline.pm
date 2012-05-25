@@ -408,6 +408,18 @@ sub _new() {
         $self->{'sep'} = '/';
     }
 
+    if ($self->{'os'} eq 'MSWin32') {
+        eval {
+            require Win32::API; 
+            $self->{'fileattributes'} = new Win32::API('kernel32', 'GetFileAttributes', 'P', 'N');
+        };
+        if ($@) {
+            # unable to load the windows api
+            print STDERR "[Win32 Error] Unable to load the Win32 API\n";
+            $self->{'fileattributes'} = '';
+        }
+    }
+
     # get the library directory
     $self->{'lib_dir'} = Log2t::Common::get_directory();
 
@@ -1201,8 +1213,19 @@ sub _parse_dir($) {
         # we don't want to process symbolic links, so test for that
         next unless (-f $_ or -d $_);
         next if -l $_;    # especially skip if we are hitting a symlink
+        my $f = $_;
 
-        my $f    = $_;
+        # Add a check for Windows systems.
+        if ($self->{'os'} eq 'MSWin32') {
+            eval {
+                #FILE_ATTRIBUTE_REPARSE_POINT
+                next if $self->{'fileattributes'}->Call($f) & 0x400;
+            };
+            if ($@) {
+                print STDERR "[PARSE_DIR] Error while trying to evaluate if this is a shortcut or not.\n";
+            }
+        }
+
         my $skip = 0;     # a variable defining if we need to skip over to the next file
 
         # check if the file is excluded from check

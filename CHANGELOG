@@ -12,6 +12,7 @@ Version 0.64 (05/18/2012)
       - Added a call to ->end on each input module if verification failed.
       - Minor bug fixes in the main engine.
       - Changed wording when an output module is loaded (from "Loading output file" to "Loading output module").
+      - Added support to detect shortcuts in Windows systems.
   - [CHROME input] - Slight changes to the output based on the value of the typed_count variable, also updated the path
   to the code that describes the transition types.
   - [SKYPE input] Fixed the verification routine a bit, cleaned it up slightly and fixed a small bug that caused the tool
