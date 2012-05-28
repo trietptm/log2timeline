@@ -12,6 +12,9 @@
 # The input module uses the Parse::Evtx libraries developed by Andreas Schuster, libraries
 # that are included with the framwework with permission from Andreas.
 #
+# The namespace has been changed to Parse::Evtx2 to prevent conflicts with someone
+# installing Parse::Evtx themselves.
+#
 # The input modules uses part of the code evtxdump.pl written by Andreas Schuster.
 #
 # Author: Kristinn Gudjonsson
@@ -55,8 +58,8 @@ use XML::LibXML;
 use XML::LibXML::Common;
 
 # include Andreas Schuster EVTX libraries
-use Parse::Evtx;
-use Parse::Evtx::Chunk;
+use Parse::Evtx2;
+use Parse::Evtx2::Chunk;
 
 # define the VERSION variable
 use vars qw($VERSION @ISA);
@@ -99,12 +102,12 @@ sub init {
     #$self->{'fh'} = IO::File->new($self->{'name'}, "r");
 
     print STDERR "[EVTX] Preparing to parse the EVTX file\n" if $self->{'debug'};
-    $self->{'evtx'} = Parse::Evtx->new('FH' => $self->{'file'});
+    $self->{'evtx'} = Parse::Evtx2->new('FH' => $self->{'file'});
 
     if (!defined $self->{'evtx'}) {
 
         # if it's not a complete file, is it a chunk then?
-        $self->{'evtx'} = Parse::Evtx::Chunk->new('FH' => $self->{'file'});
+        $self->{'evtx'} = Parse::Evtx2::Chunk->new('FH' => $self->{'file'});
     }
 
     # create the ACL list

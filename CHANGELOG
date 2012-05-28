@@ -34,6 +34,9 @@ Version 0.64 (05/18/2012)
   - [MFT input] Fixed a bug with Unicode support.
   - [RECYCLER input] Fixed a small bug (issue 5) with the path not showing the correct path as indicated by -m TEXT
   - [SOL input] Fixed a small bug (issue 5) with the path not showing the correct path as indicated by -m TEXT
+  - [EVTX input] Changed the dependencies to Parse::Evtx2 instead of Parse::Evtx (same library, changed the namespace).
+    - Issue when Parse::Evtx was installed on SIFT, causing the tool to first load the library from Schuster, and not the
+    slightly changed one distributed by the tool, causing the module to not work.
 
 Version 0.63-1 (bug fixes) (09/10/2012)
   - Removed small additional debugging text from the iehistory module (shouldn't be printed unless we have debug turned on).
