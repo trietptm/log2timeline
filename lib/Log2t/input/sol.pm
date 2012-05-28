@@ -273,13 +273,18 @@ sub _parse_timestamp {
     }
 
     # construct the text variable
-    $text .= 'File: ' . ${ $self->{'name'} } . ' and object name: ' . $data{'name'} . ' variable: {'
+    my $path = ${ $self->{'name'} };
+
+    if ($self->{'path'} ne '') {
+        $path =~ s/^$self->{'path_orig'}//;
+    }
+    $text .= 'File: ' . $path . ' and object name: ' . $data{'name'} . ' variable: {'
       if $self->{'path'} eq '';
     $text .=
         'File: '
       . $self->{'path'}
       . $self->{'sep'}
-      . ${ $self->{'name'} }
+      . $path
       . ' and object name: '
       . $data{'name'}
       . ' variable: {'

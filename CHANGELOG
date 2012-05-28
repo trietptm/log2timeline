@@ -13,6 +13,7 @@ Version 0.64 (05/18/2012)
       - Minor bug fixes in the main engine.
       - Changed wording when an output module is loaded (from "Loading output file" to "Loading output module").
       - Added support to detect shortcuts in Windows systems.
+      - Added the "path_orig" to all input modules (making it possible to "fix" paths).
   - [CHROME input] - Slight changes to the output based on the value of the typed_count variable, also updated the path
   to the code that describes the transition types.
   - [SKYPE input] Fixed the verification routine a bit, cleaned it up slightly and fixed a small bug that caused the tool
@@ -31,6 +32,8 @@ Version 0.64 (05/18/2012)
       is turned on.
   - [LIST files] Added few items into the Windows list files, as well as to create a Mac OS X one.
   - [MFT input] Fixed a bug with Unicode support.
+  - [RECYCLER input] Fixed a small bug (issue 5) with the path not showing the correct path as indicated by -m TEXT
+  - [SOL input] Fixed a small bug (issue 5) with the path not showing the correct path as indicated by -m TEXT
 
 Version 0.63-1 (bug fixes) (09/10/2012)
   - Removed small additional debugging text from the iehistory module (shouldn't be printed unless we have debug turned on).

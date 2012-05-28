@@ -129,6 +129,9 @@ sub _parse_i_file() {
 
     close(IF);
 
+    if ($self->{'path'} ne '') {
+        $name=~ s/^$self->{'path_orig'}//;
+    }
     $text = $path . ' <-' . $name;
 
     # content of array t_line ([optional])
@@ -286,6 +289,9 @@ sub _parse_info2 {
 
         # join the characters into a single line
         $path = join('', @chars);
+        if ($self->{'path'} ne '') {
+            $path =~ s/^$self->{'path_orig'}//;
+        }
 
         # delete unneccesary characters
         $path =~ s/\00//g;

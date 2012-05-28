@@ -379,7 +379,6 @@ sub _new() {
     # BUT not before verifying them (and stopping the process if the verification fails)
     if ($self->_verify('file', $c{'file'})) {
         $self->{'file'}      = $c{'file'};
-        $self->{'file_orig'} = $c{'file'};
     }
     else {
 
@@ -739,7 +738,10 @@ sub _verify() {
 
     if ($attr eq 'file') {
         print STDERR "[Log2timeline] File/dir does not exist ($val)\n" unless (-f $val or -d $val);
-        return 1 if (-f $val or -d $val);
+        if (-f $val or -d $val) {
+            $self->{'file_orig'} = $val;
+            return 1;
+        }
 
         return 0;
     }
@@ -1048,7 +1050,7 @@ sub start($) {
 
     # check if recursive
     if ($self->{'recursive'}) {
-        print STDERR "[LOG2T] Going through a directory using a recursive scanner \n"
+        print STDERR "[LOG2T] Going through a directory using a recursive scanner\n"
           if $self->{'debug'};
         eval { $ret = $self->_parse_dir if -d $self->{'file'}; };
         if ($@) {
@@ -1998,6 +2000,7 @@ sub _load_input() {
             $self->{'in'}->{$_}->{'quick'}         = 1 if $self->{'quick'};
             $self->{'in'}->{$_}->{'tz'}            = $self->{'time_zone'};
             $self->{'in'}->{$_}->{'path'}          = $self->{'text'};
+            $self->{'in'}->{$_}->{'path_orig'}     = $self->{'file_orig'};
             $self->{'in'}->{$_}->{'detailed_time'} = $self->{'detailed_time'};
             $self->{'in'}->{$_}->{'temp'}          = $self->{'temp'};
             $self->{'in'}->{$_}->{'sep'}           = $self->{'sep'};
