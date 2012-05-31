@@ -116,6 +116,6 @@ _log2timeline()
 	esac
 
 }
-complete -F _log2timeline log2timeline
+complete -F _log2timeline $filenames log2timeline
 
 
