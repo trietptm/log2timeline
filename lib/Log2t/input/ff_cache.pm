@@ -3,7 +3,7 @@
 # this script handles Firefox Cache entries and is a part of the log2timeline program.
 #
 # Author: John Ritchie
-# Version : 0.2
+# Version : 0.3
 # Date : 2011-11-17
 #
 #  Distributed with and under the same licensing terms as log2timeline
@@ -37,7 +37,7 @@ use vars qw($VERSION @ISA);
 @ISA = ("Log2t::base::input");
 
 # version number
-$VERSION = '0.2';
+$VERSION = '0.3';
 
 #  These are hard-coded sanity checks against valid Mozilla version numbers from the cache headers
 #    These will need to be changed when Mozilla changes version numbers
@@ -206,7 +206,7 @@ sub get_time() {
             && $request_size < 6400
             && $info_size < 6400
             && $request_size > 0
-            && $info_size > 0
+            && $info_size >= 0
             && $fetch_count < 1000
             && $fetch_count > 0)
         {
