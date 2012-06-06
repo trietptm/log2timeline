@@ -919,6 +919,11 @@ sub _decodeObjectID {
     $d{'orig_objid'} = _createObjectID(substr $s, 32, 16);
     $d{'orig_domid'} = _createObjectID(substr $s, 48, 16);
 
+    $d{'objid'} = 'N/A' unless $d{'objid'}; 
+    $d{'orig_volid'} = 'N/A' unless $d{'orig_volid'}; 
+    $d{'orig_objid'} = 'N/A' unless $d{'orig_objid'}; 
+    $d{'orig_domid'} = 'N/A' unless $d{'orig_domid'}; 
+
     return \%d;
 }
 
