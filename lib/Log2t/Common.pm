@@ -10,7 +10,7 @@
 # Author: Kristinn Gudjonsson
 # Date : 01/02/10
 #
-# Copyright 2009-2011 Kristinn Gudjonsson (kristinn ( a t ) log2timeline (d o t) net)
+# Copyright 2009-2012 Kristinn Gudjonsson (kristinn ( a t ) log2timeline (d o t) net)
 #
 #  This file is part of log2timeline.
 #
@@ -45,11 +45,11 @@ use constant {
 our @EXPORT_OK = ('LITTLE_E', 'BIG_E');
 our %EXPORT_TAGS = (binary => [ 'LITTLE_E', 'BIG_E' ]);
 
-$VERSION = "0.64";
+$VERSION = "0.65";
 
 # create a variable for nightly builds
-my $n_date    = '20120518';
-my $n_release = 0;            # this is 0 for a released version and 1 for a nightly build
+my $n_date    = '20120611';
+my $n_release = 1;            # this is 0 for a released version and 1 for a nightly build
 
 sub get_directory() {
     my $folder = undef;
