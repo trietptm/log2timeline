@@ -376,8 +376,8 @@ sub get_time() {
         my $utTypeString = $self->{'ut_types'}->{$utType};
         $utTypeString = "unknown" unless defined $utTypeString;
         my $ipv4String = join ".", map { (($utAddr >> 8 * ($_)) & 0xFF) } 0 .. 3;
-        my $srcType = "wtmp login/logout type $utTypeString";
-        $srcType = "btmp failed login" if ($self->{'is_btmp'});
+        my $srcType = "$short";
+        $srcType = "Failed Login" if ($self->{'is_btmp'});
 
         $t_lines{ $t_counter++ } = {
             'time'   => { 0 => { 'value' => $tvSec, 'type' => 'Time Written', 'legacy' => 15 } },
