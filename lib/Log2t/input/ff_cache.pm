@@ -3,7 +3,7 @@
 # this script handles Firefox Cache entries and is a part of the log2timeline program.
 #
 # Author: John Ritchie
-# Version : 0.3
+# Version : 0.4
 # Date : 2011-11-17
 #
 #  Distributed with and under the same licensing terms as log2timeline
@@ -37,7 +37,7 @@ use vars qw($VERSION @ISA);
 @ISA = ("Log2t::base::input");
 
 # version number
-$VERSION = '0.3';
+$VERSION = '0.4';
 
 #  These are hard-coded sanity checks against valid Mozilla version numbers from the cache headers
 #    These will need to be changed when Mozilla changes version numbers
@@ -168,10 +168,15 @@ sub get_time() {
 
     #  Use the filename to determine which blocksize to use
     my $filename = ${ $self->{'name'} };
-    $filename =~ s/.*\/_CACHE_00(\d)_$/$1/;
+    $filename =~ s/.*\///;
+    $filename =~ s/^_CACHE_00(\d)_$/$1/;
 
     my $blocksize = $bs_hash{$filename};
 
+    unless (defined $blocksize) {
+        print STDERR "[FF_CACHE] Unrecognized Cache file $filename\n" if $self->{'debug'};
+        return undef;
+    }
     print STDERR "[FF_CACHE] Begin parsing using $blocksize byte blocks...\n" if $self->{'debug'};
 
     my $data = "";
@@ -420,7 +425,9 @@ sub verify {
     return \%return unless -f ${ $self->{'name'} };
 
     # first (and perhaps only check) will be to check filename
-    return \%return unless (${ $self->{'name'} } =~ /_CACHE_00[123]_$/);
+    my $filename = ${ $self->{'name'} };
+    $filename =~ s/.*\///;
+    return \%return unless ($filename =~ /^_CACHE_00[123]_$/);
     $return{'success'} = 1;
 
 #  possible verification could include looking for FFFFFFFFs in beginning of file (the alloc map)
