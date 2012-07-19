@@ -74,7 +74,11 @@ sub init {
 
     # get the filehandle and read the next line
     my $fh = $self->{'file'};
-    $line = <$fh> or return undef;
+    $line = <$fh>;
+    if (not $line) {
+        print STDERR "[ISATEXT] Unable to read in first line.\n";
+        return 0;
+    }
 
     # start by finding out the structure
     $line =~ s/\n//g;
@@ -125,7 +129,11 @@ sub get_time {
 
     # get the filehandle and read the next line
     my $fh = $self->{'file'};
-    my $line = <$fh> or return undef;
+    my $line = <$fh>;
+    if (not $line) {
+        print STDERR "[ISATXT] Unable to read in line.\n" if $self->{'debug'};
+        return undef; 
+    }
 
     # check line (skip lines containing comments)
     if ($line =~ m/^#/) {

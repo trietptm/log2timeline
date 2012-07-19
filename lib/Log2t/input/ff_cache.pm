@@ -367,7 +367,7 @@ sub get_help() {
     # than the description field.  It might contain information about the
     # path names that the file might be found that this module parses, or
     # URLs for additional information regarding the structure or forensic value of it.
-    return "This parses Firefox browser cache files _CACHE_001_, _CACHE_002_ and _CACHE_003_,
+    return 'This parses Firefox browser cache files _CACHE_001_, _CACHE_002_ and _CACHE_003_,
 typically located in the following places:
 
 Win XP:
@@ -389,7 +389,7 @@ Linux:
   (typically /home/[user]/.mozilla/firefox/XXXXXXXX.default/Cache/)
 
 For more information: https://code.google.com/p/firefox-cache-forensics/
-";
+';
 }
 
 #  verify

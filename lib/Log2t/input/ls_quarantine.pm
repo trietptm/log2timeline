@@ -120,8 +120,14 @@ sub get_time {
 FROM LSQuarantineEvent
 ORDER BY Epoch";
 
-    $sth    = $self->{'vdb'}->prepare($sql);
-    $result = $sth->execute();
+    eval {
+        $sth    = $self->{'vdb'}->prepare($sql);
+        $result = $sth->execute();
+    };
+    if ($@) {
+        print STDERR "[LS_QUARANTINE] Database error ocurred, making parsing of lines not possible. Error msg: $@\n";
+        return \%ret_lines;
+    }
 
     # load the result into an array
     while ($dump = $sth->fetchrow_hashref) {

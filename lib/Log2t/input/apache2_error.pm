@@ -97,7 +97,11 @@ sub get_time() {
 
     # get the filehandle and read the next line
     my $fh = $self->{'file'};
-    my $line = <$fh> or return undef;
+    my $line = <$fh>;
+    if (not $line) {
+      print STDERR "[APACHE2_ERROR] Warning: unable to read in a line.\n" if $self->{'debug'};
+      return undef;
+    }
     $line =~ s/\s+/ /g;
 
     # empty lines, skip them

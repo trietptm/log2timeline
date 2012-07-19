@@ -185,7 +185,11 @@ sub get_time() {
 
     # get the filehandle and read the next line
     my $fh = $self->{'file'};
-    my $line = <$fh> or return undef;
+    my $line = <$fh>;
+    if (not $line) {
+        print STDERR "[SYMANTEC] Unable to read in more lines.\n" if $self->{'debug'};
+        return undef;
+    }
 
     # then split up the data
     @fields = split(/,/, $line);

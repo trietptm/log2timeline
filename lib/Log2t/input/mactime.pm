@@ -85,7 +85,11 @@ sub get_time {
 
     # get the filehandle and read the next line
     my $fh = $self->{'file'};
-    my $line = <$fh> or return undef;
+    my $line = <$fh>;
+    if (not $line) {
+        print STDERR "[MACTIME] Unable to read in a new line.\n" if $self->{'debug'};
+        return undef;
+    }
 
     if ($line =~ m/^#/) {
 

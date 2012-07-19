@@ -83,7 +83,8 @@ sub init {
     # the first line is this:
     #  Filename  Full Path  Size  Created  Modified  Accessed  Is Deleted
     # so we want to read that one before continuing on processing each line
-    my $line = <$fh> or return undef;
+    my $line = <$fh>;
+    return 0 if not $line;
 
     return 1;
 }
@@ -109,7 +110,11 @@ sub get_time {
 
     # get the filehandle and read the next line
     my $fh = $self->{'file'};
-    my $line = <$fh> or return undef;
+    my $line = <$fh>;
+    if (not $line) {
+        print STDERR "{FTK_DIRLISTING] Unable to read in a line.\n" if $self->{'debug'};
+        return undef;
+    }
 
     if ($line =~ m/([^\t]+)\t([^\t]+)\t([^\t]+)\t([^\t]+)\t([^\t]+)\t([^\t]+)\t([^\t]+)$/) {
         %info = (

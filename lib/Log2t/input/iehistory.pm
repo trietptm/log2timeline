@@ -385,7 +385,7 @@ sub _parse_timestamp {
     }
 
     # get the pointer part of the pointer
-    my $ofs = $self->{'record'}->{'pointer'} & 0x00ffffff;
+    $ofs = $self->{'record'}->{'pointer'} & 0x00ffffff;
 
     $r{start} = $ofs;    # save the starting point
 

@@ -200,7 +200,11 @@ sub get_time {
     else {
 
         # get the filehandle and read the next line
-        $line = <$fh> or return undef;
+        $line = <$fh>;
+        if (not $line) {
+            print STDERR "[MCAFEE] Unable to read in the next line, may have some trouble with parsing.\n";
+            return \%t_line;
+        }
     }
 
     @fields = split(/\t/, $line);
@@ -340,7 +344,8 @@ sub get_time {
                     print STDERR "[MCAFEE] Loading a new line\n" if $self->{'debug'};
 
                     # load a new line and process it (we may have reached the end of file)
-                    $line = <$fh> or $self->{'eof'} = 1;
+                    $line = <$fh>;
+                    $self->{'eof'} = 1 if not $line;
                     $date = undef if $self->{'eof'};
                     next if $self->{'eof'};
 
@@ -414,7 +419,8 @@ sub get_time {
                     print STDERR "[MCAFEE] Loading a new line\n" if $self->{'debug'};
 
                     # load a new line and process it (we may have reached the end of file)
-                    $line = <$fh> or $self->{'eof'} = 1;
+                    $line = <$fh>;
+                    $self->{'eof'} = 1 if not $line;
                     $date = undef if $self->{'eof'};
                     next if $self->{'eof'};
 
@@ -457,7 +463,8 @@ sub get_time {
                         print STDERR "[MCAFEE] Loading a new line\n" if $self->{'debug'};
 
                         # load a new line and process it (we may have reached the end of file)
-                        $line = <$fh> or $self->{'eof'} = 1;
+                        $line = <$fh>;
+                        $self->{'eof'} = 1 if not $line;
                         $date = undef if $self->{'eof'};
                         next if $self->{'eof'};
 

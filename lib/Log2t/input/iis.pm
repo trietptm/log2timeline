@@ -103,7 +103,11 @@ sub get_time {
 
     # get the filehandle and read the next line
     my $fh = $self->{'file'};
-    my $line = <$fh> or return undef;
+    my $line = <$fh>;
+    if (not $line) {
+        print STDERR "[IIS] Unable to read in a line.\n" if $self->{'debug'};
+        return undef; 
+    }
 
     # check line
     if ($line =~ m/^#/) {

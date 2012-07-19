@@ -87,7 +87,11 @@ sub get_time() {
 
     # get the filehandle and read the next line
     my $fh = $self->{'file'};
-    my $line = <$fh> or return undef;
+    my $line = <$fh>;
+    if (not $line) {
+        print STDERR "[FIREWALL] No more lines to read in.\n" if $self->{'debug'};
+        return undef;
+    }
 
     #print "READING LINE: $line\n" if $self->{'debug'};
 

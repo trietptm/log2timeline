@@ -2249,7 +2249,8 @@ Currently the following modules do have lower priority associated to them:
 
 =cut
 sub _format_sort($$) {
-    my $self = shift;
+    my $a = shift;
+    my $b = shift;
 
     return 1  if $a eq 'exif';
     return -1 if $b eq 'exif';

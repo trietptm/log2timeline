@@ -112,7 +112,11 @@ sub get_time {
 
     # get the filehandle and read the next line
     my $fh = $self->{'file'};
-    my $line = <$fh> or return undef;
+    my $line = <$fh>;
+    if (not $line) {
+      print STDERR "[OPENVPN] Warning: unable to read in a line.\n";
+      return \%t_line;
+    }
 
     # check for an emtpy line
     if ($line =~ m/^$/) {
@@ -245,7 +249,7 @@ sub verify {
     my @fields;
 
 # defines the maximum amount of lines that we read until we determine that we do not have a Linux syslog file
-    my $max = 15;
+    my $max = 20;
     my $i   = 0;
 
     $return{'success'} = 0;

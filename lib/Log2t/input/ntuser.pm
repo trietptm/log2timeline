@@ -1684,7 +1684,7 @@ sub _parse_rd() {
             my @list = split(/,/, $rdvals{$tag});
 
             # get the first tag in the MRU list (the one that the timestamp corresponds to)
-            my $first = @list[0];
+            my $first = $list[0];
 
             $text =
                 'Recently opened file of extension: ' 

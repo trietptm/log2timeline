@@ -150,7 +150,7 @@ my %known_guids = (
       { 'name' => 'Start Menu', 'path' => '%ALLUSERSPROFILE%\Microsoft\Windows\Start Menu' },
     '{82A5EA35-D9CD-47C5-9629-E15D2F714E6E}' => {
                          'name' => 'Startup',
-                         'path' => '	%ALLUSERSPROFILE%\Microsoft\Windows\Start Menu\Programs\StartU'
+                         'path' => '%ALLUSERSPROFILE%\Microsoft\Windows\Start Menu\Programs\StartU'
     },
     '{B94237E7-57AC-4347-9151-B08C6C32D1F7}' =>
       { 'name' => 'Templates', 'path' => '%ALLUSERSPROFILE%\Microsoft\Windows\Templates' },
@@ -351,22 +351,22 @@ my %known_guids = (
 
     # GUID from http://forum.securitycadets.com/index.php?showtopic=12840
     '{00000409-78E1-11D2-B60F-006097C998E7}' =>
-      { name => '[should be] Microsoft Office 2000 SR-1 Premium', path => 'NA' },
+      { name => '[should be] Microsoft Office 2000 SR-1 Premium', 'path' => 'NA' },
     '{025C3792-E9C6-432A-92C1-661F99D021CA}' =>
-      { name => '[should be] Ulead Photo Explorer 8.5 SE', path => 'NA' },
+      { name => '[should be] Ulead Photo Explorer 8.5 SE', 'path' => 'NA' },
     '{04410044-9149-45C6-A806-F2BF9CFCE762}' =>
       { name => '[should be] Microsoft Encarta Encyclopedia Standard 2004', path => 'NA' },
     '{09DA4F91-2A09-4232-AB8C-6BC740096DE3}' => { name => 'Sonic Update Manager', path => 'NA' },
     '{11F1920A-56A2-4642-B6E0-3B31A12C9288}' => { name => 'Dell Solution Center', path => 'NA' },
-    '{1206EF92-2E83-4859-ACCB-2048C3CB7DA6}' => { name => 'Sonic DLA, path' => 'NA' },
+    '{1206EF92-2E83-4859-ACCB-2048C3CB7DA6}' => { name => 'Sonic DLA', 'path' => 'NA' },
     '{12BDDF23-B1DB-49C8-92D3-3E6841CCED61}' =>
       { name => '[should be] Microsoft Streets and Trips 2002', path => 'NA' },
     '{1D643CD7-4DD6-11D7-A4E0-000874180BB3}' => { name => 'Microsoft Money 2004', path => 'NA' },
     '{1F90C982-33C6-11D3-A3E0-00C04F7989D8}' =>
       { name => 'Microsoft Home Publishing Express 2000', path => 'NA' },
-    '{206A595B-6ED6-4547-9293-C448139826EC}' => { name => 'CallAtlanta, path' => 'NA' },
+    '{206A595B-6ED6-4547-9293-C448139826EC}' => { name => 'CallAtlanta', 'path' => 'NA' },
     '{25569723-DC5A-4467-A639-79535BF01B71}' =>
-      { name => '[should be] Adobe Help Center 2.1', path => 'NA' },
+      { name => '[should be] Adobe Help Center 2.1', 'path' => 'NA' },
     '{2637C347-9DAD-11D6-9EA2-00055D0CA761}' => { name => 'Dell Media Experience', path => 'NA' },
     '{26A24AE4-039D-4CA4-87B4-2F83216010FF}' =>
       { name => '[should be] Java (TM) 6 Update 13', path => 'NA' },
@@ -440,8 +440,8 @@ my %known_guids = (
     '{96E16100-A77F-4B31-B9AD-FFBA040EE1BD}' =>
       { name => '[should be] Sound Blaster Live!', path => 'NA' },
     '{9867A917-5D17-40DE-83BA-BEA5293194B1}' =>
-      { name => '[should be] HP Photo and Imaging 2.0 - All-in-One, path' => 'NA' },
-    '{A14F19F4-2E19-4CA5-83AB-FC9EE3FEA1E0}' => { name => 'NovaBACKUP, path' => 'NA' },
+      { name => '[should be] HP Photo and Imaging 2.0 - All-in-One', 'path' => 'NA' },
+    '{A14F19F4-2E19-4CA5-83AB-FC9EE3FEA1E0}' => { name => 'NovaBACKUP', 'path' => 'NA' },
     '{A5FCC3DE-56BD-48b2-8054-4BBE70BE186B}' =>
       { name => '[should be] eFax Messenger Plus 3.3', path => 'NA' },
     '{A7B609FB-83D8-4FC3-8477-1BC65ECFE85B}' =>

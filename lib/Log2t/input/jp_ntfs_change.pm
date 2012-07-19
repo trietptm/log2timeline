@@ -135,9 +135,21 @@ sub init() {
 
     # read the first three lines (header)
     my $fh = $self->{'file'};
-    my $line = <$fh> or return undef;
-    $line = <$fh> or return undef;
-    $line = <$fh> or return undef;
+    my $line = <$fh>;
+    if (not $line) {
+        print STDERR "[JP_NTFS_CHANGE] Unable to read in first line.\n";
+        return 0;
+    }
+    $line = <$fh>;
+    if (not $line) {
+        print STDERR "[JP_NTFS_CHANGE] Unable to read in the second line.\n";
+        return 0;
+    }
+    $line = <$fh>;
+    if (not $line) {
+        print STDERR "[JP_NTFS_CHANGE] Unable to read in the third line.\n";
+        return 0;
+    }
 
     return 1;
 }
@@ -181,7 +193,11 @@ sub get_time() {
 
     # get the filehandle and read the next line
     my $fh = $self->{'file'};
-    my $line = <$fh> or return undef;
+    my $line = <$fh>;
+    if (not $line) {
+        print STDERR "[JP_NTFS_CHANGE] Unable to read in line.\n" if $self->{'debug'};
+        return undef;
+    }
     $line =~ s/\n//g;
     $line =~ s/\r//g;
 

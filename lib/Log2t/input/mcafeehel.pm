@@ -63,7 +63,7 @@ use vars qw($VERSION @ISA);
 # indicate the version number of this input module
 $VERSION = '0.1';
 
-my %REACTION_LEVEL = {
+my %REACTION_LEVEL = (
     '0' => 'Invalid',
     '1' => 'None',
     '2' => 'Log',
@@ -73,17 +73,17 @@ my %REACTION_LEVEL = {
     '6' => 'Kill User',
     '9' => 'Prevent by kill',
     '10' => 'Create exception'
-};
+);
 
-my %SEVERITY_LEVEL = {
+my %SEVERITY_LEVEL = (
     '0' => 'Disabled',
     '1' => 'Info',
     '2' => 'Low',
     '3' => 'Medium',
     '4' => 'High'
-};
+);
 
-my %EVENT_LEVEL = {
+my %EVENT_LEVEL = (
     '1' => 'Debug',
     '2' => 'PGPError',
     '3' => 'System',
@@ -93,7 +93,7 @@ my %EVENT_LEVEL = {
     '7' => 'Traffic',
     '8' => 'Process',
     '10' => 'Entercept'
-};
+);
 
 
 # ------------------------------------------------------------------------------------------------
@@ -231,7 +231,11 @@ sub get_time {
 
     # get the filehandle and read the next line
     my $fh = $self->{'file'};
-    my $line = <$fh> or return undef;
+    my $line = <$fh>;
+    if (not $line) {
+        print STDERR "[MCAFEEHEL] Unable to read in line.\n";
+        return \%t_line;
+    }
 
     #remove any newlines
     $line =~ s/\r|\n//g;

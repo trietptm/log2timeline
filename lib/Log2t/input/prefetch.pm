@@ -377,7 +377,7 @@ sub _getMetaData {
     # addition by kristinn, check if this is prefetch or superfetch
     my $ofs     = 0;
     my $version = Log2t::BinRead::read_16(\*FH, \$ofs);
-    my $ofs     = 0x4;
+    $ofs     = 0x4;
     my $magic   = Log2t::BinRead::read_ascii(\*FH, \$ofs, 4);
 
     if ($magic eq 'SCCA') {
@@ -410,7 +410,7 @@ sub _getMetaData {
     $runcount = unpack("V", $data);
 
     # what follows was added by Kristinn
-    my $ofs = 0x10;                           # start of name part
+    $ofs = 0x10;                           # start of name part
     $exe = Log2t::BinRead::read_unicode_end(\*FH, \$ofs, 100);
 
     # get the offset for the DLL path

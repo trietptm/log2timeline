@@ -165,7 +165,7 @@ sub get_time() {
     # get the filehandle and read the next line
     return undef unless defined $self->{'file'};
     my $fh = $self->{'file'};
-    my $line = <$fh> or return undef;
+    my $line = defined(<$fh>) or return \%t_line;
 
     # check line, to see if there are any comments or other such non-related stuff
     if ($line =~ m/^#/) {

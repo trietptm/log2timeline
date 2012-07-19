@@ -78,7 +78,11 @@ sub init {
 # the first line is this:
 #  Name  Filter  In Report  File Ext  File Type  File Category  Signature  Description  Is Deleted  Last Accessed  File Created  Last Written  Entry Modified  File Deleted  File Acquired  Logical Size  Initialized Size  Physical Size  Starting Extent  File Extents  Permissions  References  Physical Location  Physical Sector  Evidence File  File Identifier  Code Page  Hash Value  Hash Set  Hash Category  Hash Properties  Full Path  Short Name  Unique Name  Original Path  Symbolic Link  Is Duplicate  Is Internal  Is Overwritten
 # so we want to read that one before continuing on processing each line
-    my $line = <$fh> or return undef;
+    my $line = <$fh>;
+    if (not $line) { 
+        print STDERR "{ENCASE_DIRLISTING] Not able to read in a line.\n";
+        return 0;
+    }
 
     return 1;
 }
@@ -101,7 +105,11 @@ sub get_time {
 
     # get the filehandle and read the next line
     my $fh = $self->{'file'};
-    my $line = <$fh> or return undef;
+    my $line = <$fh>;
+    if (not $line) {
+        print STDERR "[ENCASE_DIRLISTING] Unable to read in a line.\n" if $self->{'debug'};
+        return undef;
+    }
 
 # so we've got the line with the following format (tab to separate fields)
 #  Name  Filter  In Report  File Ext  File Type  File Category  Signature  Description  Is Deleted  Last Accessed  File Created  Last Written  Entry Modified  File Deleted  File Acquired  Logical Size  Initialized Size  Physical Size  Starting Extent  File Extents  Permissions  References  Physical Location  Physical Sector  Evidence File  File Identifier  Code Page  Hash Value  Hash Set  Hash Category  Hash Properties  Full Path  Short Name  Unique Name  Original Path  Symbolic Link  Is Duplicate  Is Internal  Is Overwritten

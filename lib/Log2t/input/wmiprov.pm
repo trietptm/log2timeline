@@ -86,7 +86,11 @@ sub get_time {
 
     # get the filehandle and read the next line
     my $fh = $self->{'file'};
-    my $line = <$fh> or return undef;
+    my $line = <$fh>;
+    if (not $line) {
+        print STDERR "[WMIPROV] No more lines to parse.\n" if $self->{'debug'};
+        return undef;
+    }
 
     # remove new line chars
     $line =~ s/\n//g;

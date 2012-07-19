@@ -146,7 +146,8 @@ sub end() {
 # returned time has local and UTC components!
 # the format of the date/time is YYYYMMDDhhmmss.<?fractions of a second?>+240 (pretty much ISO8601)
 # 20110118080628.296000+240 = 01/18/2011 08:06:28.296000 +240 = +4 hours to get UTC time.
-sub ConvertAltirisTime($) {
+sub ConvertAltirisTime($$) {
+    my $self = shift;
     my %evTime;
     my $altTime = shift(@_);
     $altTime =~ /(\d{4})(\d{2})(\d{2})(\d{2})(\d{2})(\d{2})\.(\d+)([\+-])(\d+)/;
@@ -155,16 +156,22 @@ sub ConvertAltirisTime($) {
     # the timestamp is in local time, but instead of using
     # the supplied timezone, we will get it directly from the altiris
     # timestamp after this
-    $altTime = DateTime->new(
-                             year      => $1,
-                             month     => $2,
-                             day       => $3,
-                             hour      => $4,
-                             minute    => $5,
-                             second    => $6,
-                             time_zone => 'UTC'
-                            );
-    $evTime{'local'} = $altTime->epoch();
+    eval {
+      $altTime = DateTime->new(
+                               year      => $1,
+                               month     => $2,
+                               day       => $3,
+                               hour      => $4,
+                               minute    => $5,
+                               second    => $6,
+                               time_zone => 'UTC'
+                              );
+      $evTime{'local'} = $altTime->epoch();
+    };
+    if ($@) {
+      $evTime{'local'} = 0;
+      print STDERR "[ALTIRIS] Error occured during time conversion. (time set to zero).\nError msg: $@\n" if $self->{'debug'};
+    }
 
     # modify the local epoch time into UTC epoch time using the timezone information
     if    ($8 eq '-') { $evTime{'UTC'} = $evTime{'local'} - ($9 * 60); }
@@ -195,7 +202,11 @@ sub get_time() {
 
     # get the filehandle and read the next line
     my $fh = $self->{'file'};
-    my $line = <$fh> or return undef;
+    my $line = <$fh>;
+    if (not $line) {
+      print STDERR "[ALTIRIS] Warning: unable to read in a line.\n" if $self->{'debug'};
+      return undef;
+    }
 
     my $shrtDesc;
 
@@ -250,7 +261,7 @@ sub get_time() {
 
             # get the date/time and convert it into something log2timeline expects
             # ConvertAltirisTime will return the localized time
-            $time1 = ConvertAltirisTime($content[8]);
+            $time1 = $self->ConvertAltirisTime($content[8]);
 
             #print "time1 is %time1\n";
             #print "time is:".$time1->{'local'}."\n";
@@ -274,7 +285,7 @@ sub get_time() {
 
             # get the date/time and convert it into something log2timeline expects
             # ConvertAltirisTime will return the localized time
-            $time2 = ConvertAltirisTime($content[9]);
+            $time2 = $self->ConvertAltirisTime($content[9]);
 
             if ($time2->{'UTC'} == -1) {
                 print STDERR "Could not convert start time!\n" if $self->{'debug'};
@@ -356,7 +367,7 @@ sub get_time() {
         chop($content[$#content]);
 
         # convert the time
-        $date = ConvertAltirisTime($content[1]);
+        $date = $self->ConvertAltirisTime($content[1]);
 
         if ($date->{'UTC'} == -1) {
             print "Could not convert time!\n";

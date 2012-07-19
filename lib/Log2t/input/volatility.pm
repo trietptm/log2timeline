@@ -132,7 +132,11 @@ sub get_time() {
     my %t_line = undef;
 
     my $fh = $self->{'file'};
-    $line = <$fh> or return undef;
+    $line = <$fh>;
+    if (not $line) {
+        print STDERR "[VOLATILITY] No more lines to parse.\n" if $self->{'debug'};
+        return undef;
+    }
 
     print STDERR "[PARSE VOLATILITY] Parsing line $line\n" if $self->{'debug'};
 

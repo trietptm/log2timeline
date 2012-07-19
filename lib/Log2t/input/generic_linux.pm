@@ -111,10 +111,14 @@ sub get_time
   my $date_s; 
   my $ee;
 
-        # get the filehandle and read the next line
-        my $fh = $self->{'file'};
-        my $line = <$fh> or return undef;
+  # get the filehandle and read the next line
+  my $fh = $self->{'file'};
+  my $line = <$fh>;
 
+  if (not $line) {
+      print STDERR "[GENERIC_LINUX] Warning: unable to read in a line.\n" if $self->{'debug'};
+      return undef; 
+  }
   # substitute multiple spaces with one for splitting the string into variables
   $line =~ s/\s+/ /g;
 
@@ -154,21 +158,27 @@ sub get_time
 
 #print %date;
 #print "\n";
-    $date_s = DateTime->new( \%date );
-    $date_e = $date_s->epoch;
+    eval {
+        $date_s = DateTime->new( \%date );
+        $date_e = $date_s->epoch;
+    };
+    if ($@) {
+        $date_e = 0;
+        print STDERR "[GENERIC_LINUX] Warning, failed parsing line [$line] ($@)\n" if $self->{'debug'};
+    }
 
  
-                  %t_line = (
-                          'time' => { 0 => { 'value' => $date_e, 'type' => 'Entry written', 'legacy' => 15 } },
-                          'desc' =>  "$ee",
-                          'short' => "$ee",
-                          'source' => 'Generic Linux Log',
-                          'sourcetype' => 'Generic Linux Log',
-                    'version' => 2,
-                        'extra' => {  }
-                  );
+    %t_line = (
+      'time' => { 0 => { 'value' => $date_e, 'type' => 'Entry written', 'legacy' => 15 } },
+      'desc' =>  "$ee",
+      'short' => "$ee",
+      'source' => 'Generic Linux Log',
+      'sourcetype' => 'Generic Linux Log',
+      'version' => 2,
+      'extra' => {  }
+    );
  
-                  return \%t_line;
+    return \%t_line;
 }
                  
 #                 get_help

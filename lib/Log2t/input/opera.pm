@@ -192,7 +192,11 @@ sub get_time {
     if ($self->{'type'} eq GLOBAL_HISTORY) {
 
         # get the filehandle and read the next line
-        my $line = <$fh> or return undef;
+        my $line = <$fh>;
+        if (not $line) {
+            print STDERR "[OPERA] Unable to read in a new line.\n";
+            return \%t_line;
+        }
 
         # Title
         $title = $line;

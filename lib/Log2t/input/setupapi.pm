@@ -118,7 +118,11 @@ sub init() {
 #
 sub _read_header($) {
     my $fh = shift;
-    my $line = <$fh> or return undef;
+    my $line = <$fh>;
+    if (not $line) {
+        print STDERR "[SETUPAPI] Unable to read in a new line (trying to read header).\n";
+        return 0;
+    }
 
     # fill the structure
     $structure{'magic'} = $line;
@@ -127,7 +131,8 @@ sub _read_header($) {
 
     # read the next six lines which are part of the header
     for (my $i = 0; $i < 6; $i++) {
-        $_ = <$fh> or return undef;
+        $_ = <$fh>;
+        next unless $_;
 
         # split the line
         /(.+)\s\=\s(.+)/;
@@ -178,7 +183,11 @@ sub get_time() {
     else {
 
         # line hasn't been loaded yet, so let's read in a new line
-        $line = <$fh> or return undef;
+        $line = <$fh>;
+        if (not $line) {
+            print STDERR "[SetupAPI] Unable to read in new line [End of file]\n" if $self->{'debug'};
+            return undef;
+        }
 
         # check if we have a section marker or a message
         # possibilites are that the line starts with:
@@ -189,7 +198,7 @@ sub get_time() {
 
             #print STDERR "<LINE> $line\n";
             #print STDERR "[LINE NOT CORRECT] Not the correct structure, let's call myself again\n";
-            return get_time();
+            return $self->get_time();
         }
 
     }
@@ -229,7 +238,11 @@ sub get_time() {
     $title .= $msg_desc if $msg_desc ne '';
 
     # and to add more context we need to read ahead (read all messages)
-    $_ = <$fh> or return undef;
+    $_ = <$fh>;
+    if (not $_) {
+        print STDERR "[SetupAPI] No more lines to parse.\n" if $self->{'debug'};
+        return undef;
+    }
     while (/^#/) {
 
         # msg format

@@ -102,7 +102,7 @@ sub get_time() {
 
     # get the filehandle and read the next line
     my $fh = $self->{'file'};
-    my $line = <$fh> or return undef;
+    my $line = <$fh>;
     $line =~ s/\s+/ /g;
 
     # empty lines, skip them
