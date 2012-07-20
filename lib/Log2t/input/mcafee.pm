@@ -203,7 +203,7 @@ sub get_time {
         $line = <$fh>;
         if (not $line) {
             print STDERR "[MCAFEE] Unable to read in the next line, may have some trouble with parsing.\n";
-            return \%t_line;
+            return undef;
         }
     }
 

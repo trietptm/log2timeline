@@ -115,7 +115,7 @@ sub get_time {
     my $line = <$fh>;
     if (not $line) {
       print STDERR "[OPENVPN] Warning: unable to read in a line.\n";
-      return \%t_line;
+      return undef;
     }
 
     # check for an emtpy line

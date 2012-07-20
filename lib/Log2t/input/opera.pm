@@ -195,7 +195,7 @@ sub get_time {
         my $line = <$fh>;
         if (not $line) {
             print STDERR "[OPERA] Unable to read in a new line.\n";
-            return \%t_line;
+            return undef;
         }
 
         # Title

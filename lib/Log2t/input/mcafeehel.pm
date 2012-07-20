@@ -234,7 +234,7 @@ sub get_time {
     my $line = <$fh>;
     if (not $line) {
         print STDERR "[MCAFEEHEL] Unable to read in line.\n";
-        return \%t_line;
+        return undef;
     }
 
     #remove any newlines
