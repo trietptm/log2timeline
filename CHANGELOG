@@ -6,8 +6,9 @@ Version 0.65
   - [LS_QUARANTINE] Fixed a minor bug in the get_time routine, if a database occurs it is caught by an eval sentence.
   - [TEST] Added few more tests.
   - [MOST INPUT MODULES] Changed the line:
-        my $line = <$fh> or return undef;
-    in most input modules.
+          my $line = <$fh> or return undef;
+      in most input modules.
+  - [WIN library] Added few more transformations of Windows stored time zones into a "olson" ones understood by DateTime.
 
 Version 0.64 (11/06/2012)
   - [TESTSUITE] Added the first version of a test suite to the tool.

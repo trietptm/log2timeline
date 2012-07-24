@@ -402,7 +402,7 @@ sub _parse_timestamp {
 
         $text .=
             $r_line[1] . ' ('
-          . $r_line[0]
+          . decode('utf-8', $r_line[0])
           . ').  Total bytes received : '
           . $r_line[3]
           . ' (total: '
