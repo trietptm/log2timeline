@@ -9,6 +9,7 @@ Version 0.65
           my $line = <$fh> or return undef;
       in most input modules.
   - [WIN library] Added few more transformations of Windows stored time zones into a "olson" ones understood by DateTime.
+  - [CHROME input] Fixed a small unicode bug in the "File Downloaded" section.
 
 Version 0.64 (11/06/2012)
   - [TESTSUITE] Added the first version of a test suite to the tool.

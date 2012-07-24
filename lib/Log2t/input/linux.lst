@@ -4,11 +4,8 @@ pcap
 syslog
 generic_linux
 proftpd_xferlog
-<<<<<<< HEAD
 chrome
 safari
 firefox3
-=======
 selinux
 utmp
->>>>>>> deb975554e0b27b096f54b63a06f1afdbb2cb9a2
