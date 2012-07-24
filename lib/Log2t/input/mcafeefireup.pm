@@ -159,7 +159,7 @@ sub get_time() {
     # get the filehandle and read the next line
     my $fh = $self->{'file'};
     my $line = <$fh>;
-    return \%t_line if not $line;
+    return undef if not $line;
 
 # check if we read in only a newline, if so, read the next line (and keep doing this until EOF or !\n)
     while ($line eq "\n") { $line = <$fh>; }
