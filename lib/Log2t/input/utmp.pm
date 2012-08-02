@@ -230,171 +230,181 @@ sub get_time() {
 
     # an utmp record entry
     my $entry;
+    my $entry_size = 0;
 
-    open(UTMPFH, "<", ${ $self->{'name'} });
-    binmode(UTMPFH);
+    binmode($self->{'file'});
 
-    while (read(UTMPFH, $entry, $self->{'ut_size'})) {
+    while ($entry_size = read($self->{'file'}, $entry, $self->{'ut_size'})) {
         my $short = '';
         my $desc  = '';
 
+        if ($entry_size != $self->{'ut_size'}) {
+            print STDERR
+              "ERROR reading entry: expected $self->{'ut_size'} bytes, got $entry_size\n";
+            next;
+        }
+
         my (
-            $utType, $pid,       $utLine, $utId,   $utUser, $utHost, $exTerm,
-            $exExit, $utSession, $tvSec,  $tvUsec, $utAddr, $unused
+            $ut_type, $pid,        $ut_line, $utId,    $ut_user, $ut_host, $ex_term,
+            $ex_exit, $ut_session, $tv_sec,  $tv_usec, $ut_addr, $unused
            ) = unpack($self->{'unpack_template'}, $entry);
 
-        if (1 == $utType) {
+        if ($ut_type == 1) {
 
             # RunLevel
             # conservative check
-            if ($utUser ne 'runlevel' and $utUser ne 'shutdown') {
+            if ($ut_user ne 'runlevel' and $ut_user ne 'shutdown') {
                 print STDERR
-                  "ERROR (skip entry): RunLevel but user '$utUser' is not [runlevel|shutdown]!\n";
+                  "ERROR (skip entry): RunLevel but user 'ut_user' is not [runlevel|shutdown]!\n";
                 next;
             }
 
             # shutdown!
-            if ($utLine eq '~' and $utUser eq 'shutdown') {
+            if ($ut_line eq '~' and $ut_user eq 'shutdown') {
                 $short = 'SHUTDOWN';
                 for my $key (keys %TTY) {
-                    my $delta    = $tvSec - $TTY{$key}[1];
-                    my $deltaMin = int($delta / 60);
-                    my $deltaSec = $delta % 60;
-                    $desc .= "user=$TTY{$key}[0] line=$key DOWN session=$deltaMin:$deltaSec; ";
+                    my $delta     = $tv_sec - $TTY{$key}[1];
+                    my $delta_min = int($delta / 60);
+                    my $delta_sec = $delta % 60;
+                    $desc .= "user=$TTY{$key}[0] line=$key DOWN session=$delta_min:$delta_sec; ";
                 }
                 %TTY = ();
             }
-            if ($utUser eq 'runlevel') {
+            if ($ut_user eq 'runlevel') {
                 if (not $self->{'detailed'}) {
                     print STDERR
-                      "Skip entry (no detailed input) ut_type=$utType ut_user=$utUser ut_line=$utLine\n";
+                      "Skip entry (no detailed input) ut_type=$ut_type ut_user=$ut_user ut_line=$ut_line\n";
                     next;
                 }
             }
         }
-        elsif (2 == $utType) {
+        elsif ($ut_type == 2) {
 
             # BootTime
-            if ($utUser ne 'reboot') {
-                print STDERR "ERROR (skip entry): BootTime but user '$utUser' is not [reboot]!\n";
+            if ($ut_user ne 'reboot') {
+                print STDERR "ERROR (skip entry): BootTime but user '$ut_user' is not [reboot]!\n";
                 next;
             }
-            if ($utLine eq '~' and $utUser eq 'reboot') {
+            if ($ut_line eq '~' and $ut_user eq 'reboot') {
                 $short = 'BOOTING';
 
                 # ideally we should not have users logged in during boot time!
                 # It happens (depending on log file) that some users never logged out..
                 # To avoid ut_line conflicting errors logged users are PURGED out
                 for my $key (keys %TTY) {
-                    my $delta    = $tvSec - $TTY{$key}[1];
-                    my $deltaMin = int($delta / 60);
-                    my $deltaSec = $delta % 60;
-                    $desc .= "user=$TTY{$key}[0] line=$key PURGED session=$deltaMin:$deltaSec; ";
+                    my $delta     = $tv_sec - $TTY{$key}[1];
+                    my $delta_min = int($delta / 60);
+                    my $delta_sec = $delta % 60;
+                    $desc .= "user=$TTY{$key}[0] line=$key PURGED session=$delta_min:$delta_sec; ";
                 }
                 %TTY = ();
             }
         }
-        elsif (3 == $utType or 4 == $utType) {
+        elsif ($ut_type == 3 or $ut_type == 4) {
 
             #NewTime,OldTime
             # TBR TODO missing samples here
+            print STDERR
+              "NOTICE (skip entry): system time changed but not implemented (contact authors)!\n";
         }
-        elsif (5 == $utType) {
+        elsif ($ut_type == 5) {
 
             #Init
+            print STDERR "NOTICE (skip entry): Init operation skipped!\n";
         }
-        elsif (6 == $utType) {
+        elsif ($ut_type == 6) {
 
             #Login
-            if ($utHost eq '' and $utUser eq 'LOGIN') {
+            if ($ut_host eq '' and $ut_user eq 'LOGIN') {
                 if (not $self->{'detailed'}) {
                     print STDERR
-                      "Skip entry (no detailed input) ut_type=$utType ut_user=$utUser ut_line=$utLine\n";
+                      "Skip entry (no detailed input) ut_type=$ut_type ut_user=$ut_user ut_line=$ut_line\n";
                     next;
                 }
             }
         }
-        elsif (7 == $utType) {
+        elsif ($ut_type == 7) {
 
             #User Process
             $short = 'LOGIN ';
-            my $key = $utLine;
+            my $key = $ut_line;
             if ($TTY{$key}) {
                 print STDERR
-                  "ERROR (skip entry): '$utUser' logged on '$utLine' used by $TTY{$key}[0]!\n";
+                  "ERROR (skip entry): '$ut_user' logged on '$ut_line' used by $TTY{$key}[0]!\n";
                 next;
             }
-            $TTY{$key} = [ "$utUser\@$utHost", $tvSec ];
-            $desc = "user=$utUser\@$utHost logged in on line=$key; ";
+            $TTY{$key} = [ "$ut_user\@$ut_host", $tv_sec ];
+            $desc = "user=$ut_user\@$ut_host logged in on line=$key; ";
             $desc .= 'now=';
             for $key (keys %TTY) { $desc .= "$TTY{$key}[0]_$key "; }
         }
-        elsif (8 == $utType) {
+        elsif ($ut_type == 8) {
 
             #Process End
             $short = 'LOGOUT';
-            my $key = $utLine;
+            my $key = $ut_line;
             if ($TTY{$key}) {
                 if ($TTY{$key}[1] == 0) {
                     print STDERR "ERROR '$key' never logged in ???!\n";
                     next;
                 }
-                my $delta    = $tvSec - $TTY{$key}[1];
-                my $deltaMin = int($delta / 60);
-                my $deltaSec = $delta % 60;
+                my $delta     = $tv_sec - $TTY{$key}[1];
+                my $delta_min = int($delta / 60);
+                my $delta_sec = $delta % 60;
                 $desc =
-                  "user=$TTY{$key}[0] logged out from line=$key session=$deltaMin:$deltaSec; ";
+                  "user=$TTY{$key}[0] logged out from line=$key session=$delta_min:$delta_sec; ";
                 delete $TTY{$key};
                 $desc .= 'now=';
                 for $key (keys %TTY) { $desc .= "$TTY{$key}[0]_$key "; }
             }
             else {
-                if ($utHost eq '' and $utUser eq '') {
+                if ($ut_host eq '' and $ut_user eq '') {
                     if (not $self->{'detailed'}) {
                         print STDERR
-                          "Skip entry (no detailed input) ut_type=$utType ut_user=$utUser ut_line=$utLine\n";
+                          "Skip entry (no detailed input) ut_type=$ut_type ut_user=$ut_user ut_line=$ut_line\n";
                         next;
                     }
                 }
-                else { $desc = "user='$utUser' on line='$utLine' logged out WITHOUT login; "; }
+                else { $desc = "user='$ut_user' on line='$ut_line' logged out WITHOUT login; "; }
             }
         }
-        elsif (9 == $utType) {
+        elsif ($ut_type == 9) {
 
             #Accounting
+            print STDERR "NOTICE (skip entry): Accounting operation skipped!\n";
         }
         else {
-            print STDERR "ERROR: Unexpected ut_type '$utType'!\n";
+            print STDERR "ERROR: Unexpected ut_type '$ut_type'!\n";
+            next;
         }
 
         if ($self->{'is_btmp'}) {
             %TTY   = ();
             $short = "FAILED ";
-            $desc  = "user=$utUser\@$utHost login failed on line=$utLine; ";
+            $desc  = "user=$ut_user\@$ut_host login failed on line=$ut_line; ";
         }
 
-        my $utTypeString = $self->{'ut_types'}->{$utType};
-        $utTypeString = "unknown" unless defined $utTypeString;
-        my $ipv4String = join ".", map { (($utAddr >> 8 * ($_)) & 0xFF) } 0 .. 3;
-        my $srcType = "$short";
-        $srcType = "Failed Login" if ($self->{'is_btmp'});
+        my $ut_type_string = $self->{'ut_types'}->{$ut_type};
+        $ut_type_string = "unknown" unless defined $ut_type_string;
+        my $ipv4_string = join ".", map { (($ut_addr >> 8 * ($_)) & 0xFF) } 0 .. 3;
+        my $src_type = "$short";
+        $src_type = "Failed Login" if ($self->{'is_btmp'});
 
         $t_lines{ $t_counter++ } = {
-            'time'   => { 0 => { 'value' => $tvSec, 'type' => 'Time Written', 'legacy' => 15 } },
+            'time'   => { 0 => { 'value' => $tv_sec, 'type' => 'Time Written', 'legacy' => 15 } },
             'desc'   => $desc,
             'short'  => $short,
             'source' => 'LOG',
-            'sourcetype' => "$srcType",
+            'sourcetype' => "$src_type",
             'version'    => 2,
 
             # TBR TODO perhaps it's better to remove 'host' since it refers eventually
             # to the remote host connecting (es: ssh, telnet)...
-            'extra' => { 'user' => $utUser, 'host' => $utHost, 'terminal' => $utLine }
+            'extra' => { 'user' => $ut_user, 'host' => $ut_host, 'terminal' => $ut_line }
                                    };
 
-        #$nameString  = "[$desc] $note type=$utTypeString line=$utLine user=$utUser ";
+        #$nameString  = "[$desc] $note type=$ut_type_string line=$ut_line user=$ut_user ";
     }
-    close(UTMPFH);
     return \%t_lines;
 }
 
@@ -468,16 +478,18 @@ sub verify() {
     }
 
     # size check
-    $file_size = (stat($self->{'name'}))[7];
-    if ($file_size % $self->{'ut_size'}) {
-        $return{'msg'} = "Wrong file size ($file_size not multiple of $self->{'ut_size'})";
+    $file_size = (stat($file_name))[7];
+    if ($file_size < $self->{'ut_size'}) {
+        $return{'msg'} = "File size '$file_size' is less than a single entry ($self->{'ut_size'}))";
         return \%return;
+    }
+    if ($file_size % $self->{'ut_size'}) {
+        print STDERR "WARNING: file size $file_size not multiple of $self->{'ut_size'}\n";
     }
 
     # ut_type check
     eval {
-        open(IF, $self->{'name'});
-        binmode(IF);
+        binmode($self->{'file'});
 
         my $ofs = 0;
         Log2t::BinRead::set_endian(LITTLE_E);
@@ -492,11 +504,11 @@ sub verify() {
         else {
             $return{'msg'} = "Unmanaged utmp type $ut_type in first entry";
         }
-        close(IF);
 
         # this last check is not related to the processed file but
         # it's a defensive check to be sure that what we will unpack
-        # it's waht we assume to be
+        # it's what we assume to be
+        # TBR TODO move those lines in the testing phase!
         my $ut_template_size = length(pack($self->{'unpack_template'}, ()));
         if ($ut_template_size != $self->{'ut_size'}) {
             $return{'msg'} =
@@ -505,7 +517,6 @@ sub verify() {
         }
     };
     if ($@) {
-        close(IF);
         $return{'success'} = 0;
         $return{'msg'}     = "Unable to process file ($@)";
         return \%return;
