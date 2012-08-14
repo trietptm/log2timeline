@@ -117,7 +117,15 @@ sub get_info($) {
 
     # start reading the registry
     my $reg      = Parse::Win32Registry->new($reg_file);
-    my $root_key = $reg->get_root_key;
+    my $root_key;
+    eval {
+        $root_key = $reg->get_root_key;
+    };
+    if ($@) {
+        print STDERR "[PreProcessor] Unable to retrieve the root key in the registry file $reg_file\n";
+        print STDERR "[PreProcessor] Error message: $@\n";
+        return 0;
+    }
 
     # code from cmpnaname, part of regripper, written by H. Carvey
     my $key;
@@ -181,8 +189,15 @@ sub get_info($) {
 
     # get the default system browser
     if (-f $reg_file2) {
-        $reg                         = Parse::Win32Registry->new($reg_file2);
-        $root_key                    = $reg->get_root_key;
+        $reg = Parse::Win32Registry->new($reg_file2);
+        eval {
+            $root_key = $reg->get_root_key;
+        };
+        if ($@) {
+            print STDERR "[PreProcessor] Unable to get the root key in the registry file: $reg_file\n";
+            print STDERR "[PreProcessor] Error message: $@\n";
+            return 0;
+        }
         $l2t->{'defbrowser'}->{'os'} = '';
 
         eval {
