@@ -108,7 +108,15 @@ sub get_info($) {
 
         # start reading the registry
         my $reg      = Parse::Win32Registry->new($user_files{$user});
-        my $root_key = $reg->get_root_key;
+        my $root_key;
+        eval {
+            $root_key = $reg->get_root_key;
+        };
+        if ($@) {
+            print STDERR "[PreProcessing] There was an error while trying to extract browser information for user: $user (" . $user_files{$user} . ")\n";
+            print STDERR "[PreProcessing] Error message: $@\n";
+            next;
+        }
 
 # we are getting the default browser for each user.... , code gotten from defbrowser.pl written by H. Carvey
 
