@@ -240,7 +240,7 @@ sub get_time {
                     . '] was executed - run count ['
                     . $runcount
                     . '], full path: ['
-                    . $path . ']',
+                    . $path . ']' . $text,
                   'short'      => $self->{'files'}->{$key} . ': ' . $exe . ' was executed',
                   'source'     => 'PRE',
                   'sourcetype' => $st . ' Prefetch',

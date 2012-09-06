@@ -102,7 +102,13 @@ sub init {
 
     # open the file (or return 0 if unable)
     # a variable to store a "mork" object, or a reference to the parsed information
-    $self->{'mork'} = File::Mork->new(${ $self->{'name'} }, verbose => $self->{'debug'});
+    eval {
+        $self->{'mork'} = File::Mork->new(${ $self->{'name'} }, verbose => $self->{'debug'});
+    };
+    if($@) {
+        print STDERR "Error while parsing Mork database: $@\n";
+        return 0;
+    }
 
     unless ($self->{'mork'}) {
         print STDERR "Error while parsing ("
