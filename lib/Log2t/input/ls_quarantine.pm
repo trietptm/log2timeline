@@ -122,6 +122,9 @@ ORDER BY Epoch";
 
     eval {
         $sth    = $self->{'vdb'}->prepare($sql);
+        if (not $sth) {
+            return \%ret_lines;
+        }
         $result = $sth->execute();
     };
     if ($@) {
