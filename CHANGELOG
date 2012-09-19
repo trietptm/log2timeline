@@ -1,4 +1,6 @@
 Version 0.65
+  - [UTMP input] New input module parsing utmp/wtmp files in Linux, written by Francesco Picasso.
+  - [SELINUX input] New input module parsing SELinux audit files in Linux, written by Francesco Picasso.
   - [l2t_process] Renamed to l2t_process_old, being replaced by l2t_process.py from l2t-tools.
   - [EVTX Library] Fixed a small bug in the code, causing some EVTX file parsing to fail.
   - [Altiris input] Fixed a small bug when the date is malformed.
