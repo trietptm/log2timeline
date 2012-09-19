@@ -1,4 +1,6 @@
 Version 0.65
+  - [l2t_process] Renamed to l2t_process_old, being replaced by l2t_process.py from l2t-tools.
+  - [EVTX Library] Fixed a small bug in the code, causing some EVTX file parsing to fail.
   - [Altiris input] Fixed a small bug when the date is malformed.
   - [Log2Timeline library] Fixed few bugs:
       - Small error in the format sort, caused oxml to sometimes be skipped in processing.
@@ -10,6 +12,9 @@ Version 0.65
       in most input modules.
   - [WIN library] Added few more transformations of Windows stored time zones into a "olson" ones understood by DateTime.
   - [CHROME input] Fixed a small unicode bug in the "File Downloaded" section.
+  - [faersluskra2timalina] Added a new frontend to the tool, exact copy of log2timeline, except all parameters in Icelandic... kinda
+   Aprils fool joke, except not in April.. so enjoy.
+  - [timescanner tool] Removed this frontend from the Makefile since it serves no purpose (as in no longer part of the automatic installation).
 
 Version 0.64 (11/06/2012)
   - [TESTSUITE] Added the first version of a test suite to the tool.

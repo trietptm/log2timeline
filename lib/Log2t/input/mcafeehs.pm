@@ -39,7 +39,6 @@ use Log2t::Time;     # for time manipulations
 
 #use Log2t:Win;    # for few Windows related operations, GUID translations, etc..
 #use Log2t:WinReg;  # to recover deleted information from registry
-use Switch;
 use vars qw($VERSION @ISA);
 
 # inherit the base input module, or the super class.
@@ -47,6 +46,26 @@ use vars qw($VERSION @ISA);
 
 # version number
 $VERSION = '0.1';
+
+my %REACTION_LEVEL= (
+    '0' => 'Invalid',
+    '1' => 'None',
+    '2' => 'Log',
+    '3' => 'Deny',
+    '4' => 'Kill',
+    '5' => 'Kill Terminal',
+    '6' => 'Kill User',
+    '9' => 'Prevent by kill',
+    '10' => 'Create exception',
+);
+
+my %SEVERITY_LEVEL = (
+    '0' => 'Disabled',
+    '1' => 'Info',
+    '2' => 'Low',
+    '3' => 'Medium',
+    '4' => 'High'
+);
 
 # by default these are the global varibles that get passed to the module
 # by the engine.
@@ -166,38 +185,20 @@ sub end() {
 
 # return a readable string for a given integer reaction
 sub ReturnReaction {
-    my $reactionLevel = shift(@_);
+    my $reaction_level = shift(@_);
 
-    switch ($reactionLevel) {
-        case (0)  { return "Invalid"; }
-        case (1)  { return "None"; }
-        case (2)  { return "Log"; }
-        case (3)  { return "Deny"; }
-        case (4)  { return "Kill"; }
-        case (5)  { return "Kill Terminal"; }
-        case (6)  { return "Kill User"; }
-        case (9)  { return "Prevent by kill"; }
-        case (10) { return "Create exception"; }
-        default   { return $reactionLevel; }
-    }
+    return $REACTION_LEVEL{$reaction_level} if exists $REACTION_LEVEL{$reaction_level};
 
-    return "Unknown";
+    return "Unknown [Level $reaction_level]";
 }
 
 # return a readable string for a given integer severity
 sub ReturnSeverity {
-    my $severityLevel = shift(@_);
+    my $severity_level = shift(@_);
 
-    switch ($severityLevel) {
-        case (0) { return "Disabled"; }
-        case (1) { return "Info"; }
-        case (2) { return "Low"; }
-        case (3) { return "Medium"; }
-        case (4) { return "High"; }
-        default  { return $severityLevel; }
-    }
+    return $SEVERITY_LEVEL{$severity_level} if exists $SEVERITY_LEVEL{$severity_level};
 
-    return "Unknown";
+    return "Unknown [Level $severity_level]";
 }
 
 #  get_time

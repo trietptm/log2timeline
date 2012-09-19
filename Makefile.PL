@@ -69,6 +69,6 @@ WriteMakefile(
   },
   'VERSION_FROM' => 'lib/Log2t/Common.pm', # finds $VERSION
   'LICENSE' => 'gpl',  
-  'EXE_FILES' => [ 'log2timeline', 'timescanner', 'l2t_process', 'faersluskra2timalina' ],  
+  'EXE_FILES' => [ 'log2timeline', 'l2t_process_old.pl', 'faersluskra2timalina' ],  
   'INSTALLSCRIPT' => '/usr/local/bin/'
 );

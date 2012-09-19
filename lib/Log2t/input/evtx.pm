@@ -231,7 +231,16 @@ sub get_time {
     #$temp =~ s/\&/::amb::/g;
     #$temp =~ tr/[]()!/ /;
 
-    $xml_parsed = $xml->parse_string($temp);
+    $xml_parsed = '';
+    eval {
+        $xml_parsed = $xml->parse_string($temp);
+    };
+    if ($@) {
+        # we had an error.
+        print STDERR "[EVTX] Error while parsing an entry, error message: $@\n";
+        print STDERR "[EVTX] Error came up while parsing file: " . ${ $self->{'name'} } . "\n";
+        return \%t_line;
+    }
 
     # now we need to parse the XML structure
     $prop       = $xml_parsed->getDocumentElement();

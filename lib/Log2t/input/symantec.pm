@@ -37,13 +37,42 @@ use Log2t::BinRead;  # to work with binary files (during verification all files 
 use Log2t::Common ':binary';
 
 use vars qw($VERSION @ISA);
-use Switch;
 
 # inherit the base input module, or the super class.
 @ISA = ("Log2t::base::input");
 
 # version number
 $VERSION = '0.1';
+
+my %CAT_LEVEL = (
+    '1' => 'Infection',
+    '2' => 'Summary',
+    '3' => 'Pattern',
+    '4' => 'Security'
+);
+
+my %ACTION_LEVEL = (
+    '1' => 'Quarantined',
+    '2' => 'Renamed',
+    '3' => 'Deleted',
+    '4' => 'Left alone',
+    '5' => 'Cleaned',
+    '6' => "Cleaned or macros delted",
+    '7' => "Saved file",
+    '8' => "Left alone",
+    '9' => "Moved to backup location",
+    '10' => "Renamed backup file",
+    '11' => "Undo action in Quarantine View",
+    '12' => "Write protected or lack of permissions - Unable to act on file",
+    '13' => "Backed up file",
+    '14' => "Pending analysis",
+    '15' => "First action was partially successful; second action was Leave Alone",
+    '16' => "A process needs to be terminated to remove a risk",
+    '17' => "Prevent a risk from being logged or a user interface from being displayed",
+    '18' => "Performing a request to restart the computer",
+    '19' => "Shows as Cleaned by Deletion in the Risk History in the UI and the Logs in the SSC",
+    '20' => "Auto-Protect prevented a file from being created; reported \"Access denied\""
+);
 
 #  new
 # this is the constructor for the subroutine.
@@ -117,54 +146,19 @@ sub end() {
 }
 
 sub ReturnCategory {
-    my $catlevel = shift(@_);
+    my $cat_level = shift(@_);
 
-    switch ($catlevel) {
-        case (1) { return "Infection"; }
-        case (2) { return "Summary"; }
-        case (3) { return "Pattern"; }
-        case (4) { return "Security"; }
-        default  { return $catlevel; }
-    }
+    return $CAT_LEVEL{$cat_level} if exists $CAT_LEVEL{$cat_level};
 
-    return "Unknown";
+    return "Unknown [Level $cat_level]";
 }
 
 sub ReturnAction {
-    my $catlevel = shift(@_);
+    my $return_level = shift(@_);
 
-    switch ($catlevel) {
-        case (1)  { return "Quarantined"; }
-        case (2)  { return "Renamed"; }
-        case (3)  { return "Deleted"; }
-        case (4)  { return "Left alone"; }
-        case (5)  { return "Cleaned"; }
-        case (6)  { return "Cleaned or macros delted"; }
-        case (7)  { return "Saved file"; }
-        case (8)  { return "Left alone"; }
-        case (9)  { return "Moved to backup location"; }
-        case (10) { return "Renamed backup file"; }
-        case (11) { return "Undo action in Quarantine View"; }
-        case (12) { return "Write protected or lack of permissions - Unable to act on file"; }
-        case (13) { return "Backed up file"; }
-        case (14) { return "Pending analysis"; }
-        case (15) { return "First action was partially successful; second action was Leave Alone"; }
-        case (16) { return "A process needs to be terminated to remove a risk"; }
-        case (17) {
-            return "Prevent a risk from being logged or a user interface from being displayed";
-        }
-        case (18) { return "Performing a request to restart the computer"; }
-        case (19) {
-            return
-              "Shows as Cleaned by Deletion in the Risk History in the UI and the Logs in the SSC";
-        }
-        case (20) {
-            return "Auto-Protect prevented a file from being created; reported \"Access denied\"";
-        }
-        default { return $catlevel; }
-    }
+    return $ACTION_LEVEL{$return_level} if exists $ACTION_LEVEL{$return_level};
 
-    return "Unknown";
+    return "Unknown [Level $return_level]";
 }
 
 #  get_time

@@ -102,7 +102,7 @@ sub new_variant {
 	} elsif ($type == 0x0d) {
 		$variant = Parse::Evtx2::VariantType::Type0x0d->new($C, $S, $Len);
 	} elsif ($type == 0x0e) {
-		$variant = Parse::Evtx22::VariantType::Type0x0e->new($C, $S, $Len, $Ctx);
+		$variant = Parse::Evtx2::VariantType::Type0x0e->new($C, $S, $Len, $Ctx);
 	} elsif ($type == 0x0f) {
 		$variant = Parse::Evtx2::VariantType::Type0x0f->new($C, $S, $Len);
 	} elsif ($type == 0x10) {

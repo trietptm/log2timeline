@@ -118,14 +118,14 @@ Getopt::Long::Configure("no_ignore_case");
 # read options
 GetOptions(
            "timamismunur=s"      => \$time_offset,
-           "texti=s"         => \$textfield,
+           "fortexti=s"         => \$textfield,
            "fjolordur+"    => \$debug,
-           "uppfaera!"    => \$check,
+           "uppfaersla!"    => \$check,
            "utreikningur!"  => \$digest,
-           "snid|s=s"  => \$format_file,
-           "Utgafa!"    => \$show_version,
-           "x!"          => \$detail,
-           "nafn=s"      => \$hostname,
+           "inntaksmat=s"  => \$format_file,
+           "utgafa!"    => \$show_version,
+           "fljotkeyrsla!"          => \$detail,
+           "velarnafn=s"      => \$hostname,
            "utgangur=s"    => \$output_file,
            "skrifa=s"     => \$out_file,
            "faersluskra=s"       => \$log_file,
@@ -135,7 +135,7 @@ GetOptions(
            "timabelti=s"      => \$timezone,
            "Timabelti=s"      => \$out_timezone,
            "undanskilja=s"   => \$exclude,
-           "bradabirgda|b=s"    => \$temp_file,
+           "bradabirgda=s"    => \$temp_file,
            "breytur=s"      => \@input_arguments,
            "hjalp|?!"     => \$print_help
           ) or pod2usage(2);
