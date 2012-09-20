@@ -14,23 +14,14 @@
 # The script also holds some methods that are used in more than one format file (instead of repeating
 # the code)
 #
-# The specification for the TLN body file format can be found here:
-#  http://windowsir.blogspot.com/2010/02/timeline-analysisdo-we-need-standard.html
-#
-# The specification of the body file can be found here (the mactime body file):
-#  http://wiki.sleuthkit.org/index.php?title=Body_file
-#
 # As said before this is the main script, it parses all arguments as well as to call other
 # scripts needed to parse the actual log files. The parsing of log files is done in a so
 # called format file, where each format file provides a method to parse different log format.
 #
-# This script then gets the output from the format file, and uses it to print out a bodyfile
-# that can be used in TSK (default behaviour)
-#
 # Author: Kristinn Gudjonsson
-# Date : 20/05/10
+# Date : 19/09/12
 #
-# Copyright 2009-2011 Kristinn Gudjonsson (kristinn ( a t ) log2timeline (d o t) net)
+# Copyright 2009-2012 Kristinn Gudjonsson (kristinn ( a t ) log2timeline (d o t) net)
 #
 #  This file is part of log2timeline.
 #
@@ -47,8 +38,6 @@
 #    You should have received a copy of the GNU General Public License
 #    along with log2timeline.  If not, see <http://www.gnu.org/licenses/>.
 #
-# Uses method Win2Unix written by A. Schuster and C. Barta from ptfinder.pl
-# Copyright (c) 2009 by Andreas Schuster and Csaba Barta.
 
 use strict;
 
@@ -492,87 +481,87 @@ B<faersluskrar2timaline> [OPTIONS] [-f FORMAT] [-z TIMEZONE] [-o OUTPUT MODULE] 
 
 =over 8
 
-=item B<-timamismunur TIME>
+=item B<-timamismunur TIMI>
 
-Time skew of original machine. The format of the variable TIME is: X | Xs | Xm | Xh, where X is a integer and s represents seconds, m minutes and h hours (default behaviour is seconds)
+Timamismunur maeldur i sekundum fra rettum tima og theim sem er skradur a upprunalegri vel. Snidid a breytunni TIMI er: X | Xs | Xm | Xh, thar sem X er heiltala og s merkir sekundur, h klukkutima og m minutur. Sjalfgefin hegdun er samt ad tulka toluna sem sekundur.
 
-=item B<-texti TEXT>
+=item B<-fortexti TEXTI>
 
-Prepend the filename with the B<TEXT>.  That is B<TEXT> is a string that is prepended in front of the file name to provide a path.  Examples are -m C: to prepend the C:/ in front of each file name to indicate the partition the file came from.
+Skella textanum B<TEXTI> fyrir framan hverja linu. Thad er ad segja B<TEXTI> er strengur sem er skeytt fyrir framan skraarnafn a hverri skra til ad vista heilstaedari skraarnafn. Til daemis ad nota "-m C:" til ad skeyta textanum "C:/" fyrir framan hvert skraarnafn til ad gefa til kynna ad um se ad raeda skrain komi fra C: drifi vidkomandi tolvu.
 
-=item B<-s|-snid MODULE(s)/LIST>
+=item B<-inntaksmat INNTAK/LISTI>
 
-Use the following log file format to parse the content of the file. Use -s list to see the list of supported log files.  Omitting this options make B<faersluskra2timaline> attempt to guess the format.
+Nota eftirfarandi inntak eda vidbot til ad kryfja innihald skraar. Haegt ad nota "-inntaksmat list" til ad sja lista yfir allar studdar vidbaetur. Sjalfgefin hegdun a tolinu er ad lata B<faersluskrar2timalina> reyna ad giska a skraarformid (thad er ad segja ad reyna allar vidbaeturnar thangad til ad einhverri tekst ad kryfja skranna).
 
-=item B<-uppfaera>
+=item B<-uppfaersla>
 
-Check the latest available version of B<faersluskra2timalina> and compare it to current version (use to check if there is an available update)
+Athuga med nyjustu utgafu af B<faersluskra2timalina> og bera saman vid nuverandi utgafa (notad til ad athuga hvort thu sert keyrandi nyjustu utgafuna).
 
-=item B<-nafn HOST>
+=item B<-velarnafn NAFN>
 
-Define the host name that the information is extracted from.
+Skilgreina velarnafnid a velinni sem upplysingarnar koma fra.
 
 =item B<-utgangur FORMAT>
 
-Use the following output format.  By default B<faersluskra2timalina> uses the CSV output.  To see a list of all available output formats, use -o list
+Nota vidkomandi utgangssnid. Sjalfgefin hegdun hja <faersluskra2timalina> er ad nota CSV utgangssnid. Til ad sja lista yfir oll tiltaek snid skal nota "-utgangur list".
 
 =item B<-smaatridi>
 
-Some input modules have the capability to include very detailed amount of information (such as MFT, setupapi and prefetch). This switch will instruct modules to include those details in the timeline, so for instance to tell the MFT module to include the $FN timestamps, or the prefetch one to include loaded DLLs.
+Sumar inntaksvidbaetur geta gefid fra ser talsvert itarleg skilabod um hvad se ad gerast, t.d. MFT, setupapi og prefetch. Thessar upplysingar geta verid full itarlegar og ordid til thess ad haegja a rannsokn og thvi er slokkt a theim sjalfgefid. Til ad fa thessar upplysingar inn i uttakid tharf thvi ad notast vid thennan valmoguleika. Thetta segir t.d MFT inntaksvidbotinni ad baeta vid $FN timastimplum, og Prefetch inntakinu ad setja inn nofn a reklum, o.s.frv.
 
-=item B<-skrifa FILENAME>
+=item B<-skrifa SKRAARNAFN>
 
-Specify a file to write output to (otherwise STDOUT will be chosen).
+Skilgreina skra til ad skrifa uttakid i (ef ekki tilgreint verdur prentad beint ut a skja, STDOUT).
 
-=item B<-timabelti TIMEZONE>
+=item B<-timabelti TIMABELTI>
 
-This option defines the timezone that was used on the computer that the log files belonged to.  The default value for this variable is the local timezone of the computer B<faersluskra2timalina> is run on. There is an option to define -z list to get a list of all available timezones.
+Thessi valmoguleiki er til thess aetladur ad tilgreina hvada timabelti skrarnar a tolvunni sem er verid ad rannsaka voru vistadar i. Sjalfgefna valid a thessari breytu er ad notast vid timabeltid a tolvu thess sem er ad framkvaema rannsoknina. Til ad fa lista yfir oll studd timabelti skal notast vid "-timabelti list".
 
-=item B<-Timabelti TIMEZONE>
+=item B<-Timabelti TIMABELTI>
 
-This option defines the timezone that is used in the output module of the tool. The default value for this variable is the same value that is defined in the -z option or the timezone of the host. This option is used so that output modules can output in a different timezone than the host is in, for instance to output in UTC even though the timezone of the host is in another timezone.
+Thennan valmoguleika er haegt ad nota til ad uttakid se birt med odru timabelti en thad sem er a tolvunni sem er verid ad rannsaka. Sjalfgefna valid a tolinu er ad nota sama timabelti i uttaki og er notad sem inntak (gildid a tolvunni/gognunum sem er verid ad skoda). Thad er thvi haegt ad nota thetta til ad fa uttakid allt birt t.d. med UTC timabeltinu, thratt fyrir ad gognin hafi verid vistud med odru timabelti.
 
-=item B<-b|-bradabirgda DIR>
+=item B<-bradabirgda DIR>
 
-This option defines the temporary directory the tool uses. By default the front-end does not set the temporary directory, but allows the engine to automatically detect it. This option therefore overwrites the default temporary directory location.
+Valmoguleiki til ad skilgreina bradabirgdamoppuna sem tolid notast vid. Sjalfgefin hegdun er ad notast vid styriskferfaskilgreinda bradabirgdamoppu, sem velin greinir eftir thvi hvada styrikerfi er notast vid. Hins vegar er haegt ad yfirskrifa tha hegdun med thessum valmoguleika.
 
-The engine checks the operating system in question, if it is Windows, it will try to determine the temporary path based on the Win32::API (so this might fail on 64-bit systems, perhaps better to use this option to set it manually on those systems). Otherwise it will use /tmp/ as the temporary directory (should work on *NIX systems).
+T.d. ef velin er keyrd a Windows styrikerfinu tha er gerd tilraun til ad greina stadsetningu fyrir bradabirgdaskrar med adstod Win32::API (gaeti thvi klikkad a 64-bita kerfum). Annars er notast vid moppuna /tmp/ (aetti ad virka a ollum *NIX kerfum).
 
-=item B<-faersluskra FILENAME>
+=item B<-faersluskra SKRAARNAFN>
 
-Specify a file to write error and information messages from the B<faersluskra2timalina> to a file, otherwise STDERR will be used.
+Skilgreinir skra til ad skrifa allar villur og aflusunarskilabod fra B<faersluskra2timalina> i, ef ekki skilgreint er notast vid sjalfgefna villuuttakkid STDERR.
 
 =item B<-utreikingur>
 
-If this option is used then a MD5 sum is calculated for the file and stored in the timestamp object
+Ef thessi valmoguleiki er notadur er MD5 summa reiknud ut fyrir allar skrar og geymd med timastimpilshlutnum. Taka skal thad fram ad thetta virkar ekki vel i sumum inntaksvidbotum eins og MFT, sem setur MD5 summuna fyrir $MFT skranna i stad thess ad reikna hana ut fyrir hverja og eina skra sem er verid ad visa i.
 
-=item B<-x>
+=item B<-fljotkeyrsla>
 
-Make B<faersluskra2timalina> skip some more detailed tests to see if a file truly is in the correct input module.  The tool should work faster with this option, however it might miss some files.
+Ef thessi valmoguleiki er notadur tha sleppir B<faersluskra2timalina> tho nokkrum profum til ad akvarda hvort ad skra se i raun veru kryfjanleg af inntaksvidbot. Tolid aetti ad keyra hradar en a moti kemur hugsanlega ad missa af nokkrum skram, thad er likurnar a folskum skilgreingum eykst.
 
-=item B<-undanskilja LIST>
+=item B<-undanskilja LISTI>
 
-A comma separated list of files to exclude from the scan.  If a particular file has caused the tool to crash or not work, or you simply want to exclude some documents from the scan it is possible to exclude some 
+Listi af skram eda slodum sem a ad undanskilja fra krufningu, skilgreindar med kommu. Ef ad tilgreind skra hefur ollid thvi ad tolid hrynur ead virkar ekki er haegt ad undanskilja thad fra keyrslunni og thar af leidandi ad na ad kryfja hugsanlega fleiri skrar.
 
 =item B<-endurkvaema>
 
-This option makes B<faersluskra2timalina> work in a recursive way, the same behaviour as timescanner.
+EF thessi valmoguleiki er notadur tha fer B<faersluskra2timalina> i endurkvaeman ham i stad thess ad kryfja einstaka skrar.
 
 =item B<-forvinnsla>
 
-If B<faersluskra2timalina> is working in recursive mode (-r) it is possible to use the -p option to run a set of pre-processors agains the image file.  Preprocessors are modules that search through the suspect drive and extract needed information that can be used in other modules, such as hostname, etc.
+Ef ad  B<faersluskra2timalina> er stillt i endurkvaeman ham (-endurkvaema) er moguleigt ad notast vid -forvinnsla valmoguleikann til ad lata tolid byrja a thvi ad forvinna drifid. Tha eru keyrdar forvinnsluvidbaetur sem safna saman upplysingum um drifid sem eru svo notadar a seinni stigum keyrslunnar.
 
-=item B<-smaatridi> 
+=item B<-fjolordur> 
 
-Add debugging information. Possible to use with -smaatridi -smaatridi to increase some error messages. 
+Baeta vid aflusunarupplysingum. Haegt ad notast vid moguleikann tvisvar sinnum, -fjolordur -fjolordur til ad fa enn frekari upplysingar.
 
-=item B<-Utgafa>
+=item B<-utgafa>
 
-Display the version number
+Birta utgafunumer tolsins.
 
 =item B<-h|-hjalp|-?>
 
-Display this help message
+Birta thessa hjalp.
 
 =back
 
@@ -587,142 +576,6 @@ As noted above the default output mechanism is in a CSV file format, which can b
 The tool is build using multiple so called input modules.  Each of those input modules provide a single format that can be parsed, whether that is a log file or a directory containing some files that need to be parsed.
 
 The purpose of the tool is to provide a single tool to parse various artifacts that are either produced by the suspsect operating system or other systems that might have some logs retaining to the investigation.
-
-=head1  EXAMPLES
-
-=over 8
-
-=item B<faersluskra2timalina> -f list
-
-Print a list of all available format files.
-
-=item B<faersluskra2timalina> -f firefox3 -z EST5EDT -w /tmp/bodyfile places.sqlite -- -u JOE 2> /tmp/body.log
-
-Use the Firefox 3 history parser to parse a places.sqlite file that contains history information.  Prepened the output with information about the user that owned the file, in this case the user JOE owned this history file.  The output, which is in the TLN format will be written to the file body, while all log messages are written to the file body.log (STDERR is redirected to a file)
-
-=item B<faersluskra2timalina> -z local -f squid -s 2h access.log > squid.body
-
-Parses an access log file from Squid to produce a body file that is output into the file squid.body.  Two hours are added to each time in the timeline to correct the time settings of the log file that is parsed.
-
-=item B<faersluskra2timalina> -z GMT -f prefetch WINDOWS/Prefetch >> case.body
-
-Parses the content of the Windows Prefetch directory and adds the timeline to the already available case.body timeline.
-
-=item B<faersluskra2timalina> -f recycler -z local -o sqlite -w /tmp/rec.sql RECYCLER/S-1-5-21-..../
-
-Parses the content of the INFO2 file, found inside each recycle bin and prints out information into a SQLite database (/tmp/rec.sql).
-
-=item B<faersluskra2timalina> -z local -f winxp -r -p /mnt/analyze
-
-Make B<faersluskra2timalina> recursively go through the mount point /mnt/analyze using the available input modules that are stored inside the winxp list file (those that are relevant to a Windows XP machine).  Before running the recursive scan the pre-processing modules are ran against the image to gather information from it.
-
-=back
-
-=head1 RETURN VALUE   
-
-=over 8
-
-=item B<0> 
-
-Successful program execution
-
-=item B<1> 
-
-Wrong usage of the B<faersluskra2timalina> program.  Possibly omitting the -f parameter or a file name to parse.
-
-=item B<12> 
-
-Problem loading the format file.  Format file not found, not correctly formed or otherwise unable to parse the format file.
-
-=item B<13> 
-
-Problem loading the output file.  Output file not found, not correctly formed or otherwise unable to parse the content of the output file.
-
-=item B<14> 
-
-Unable to verify the log file.  That is the format file is unable to verify that the log file is of the correct format.
- 
-=item B<15> 
-
-Unable to open the log file.  Perhaps because you don't have permission to read the content of the log file.
-
-=item B<20> 
-
-Problem writing to output file.
-
-=item B<45> 
-
-The supplied timezone does not exist.
-
-=back
-
-=head1 BUGS 
-
-As of now there are no known bugs, and when bugs are either discovered or reported they are fixed as soon as possible
-and made available in the nightly builds.  
-
-If you find a bug in the tool, please start by downloading the latest build (nightly builds) available at 
-the Google code site: https://code.google.com/p/log2timeline (use git to get the latest build).
-If the bug hasn't been fixed  please report the problem to Kristinn Gudjonsson (bugs ( a t ) log2timeline ( d o t ) net.
-
-There are few known limitations though:
-
-+ The LSO (.sol) input module isn't able to properly parse every .sol file it finds.  The payload of a .sol file is
-encoded using Action Message Format from Adobe.  There are two versions of AMF, AMF0 and AMF3.  The vast majority of
-.sol files is encoded using the AMF0, however there are some that use AMF3.  The current version of the sol parser
-only works against AMF0, however a version that supports AMF3 should be released in not so distant future.
-
-+ There have also been reports about B<faersluskra2timalina> not properly clean temporary files after completing it's run.  
-This behaviour involves the input modules for Chrome and Firefox history.  If the input module detects a database that
-is being locked, it copies the database to a temporary location to be able to connect and properly parse the file.  After
-it has completed the parsing it will try to delete the temporary file using the Perl function unlink.  If you do have this
-problem please notify the author to see if we can figure this out together and fix the problem.
-
-=head1 HISTORY
-
-For a full history of releases please refer to the changelog. This list only provides a brief high level overview of the first
-few releases, it is no longer maintained. Full changelog can be found on the tool's code site (https://code.google.com/p/log2timeline)
-and in the CHANGELOG that comes with the source.
-
-=over 8 
-
-=item v0.1b Initial release.
-
-=item v0.11b (20/07/2009) Mostly few bug fixes.
-
-=item v0.12b (31.07.2009) New features implemented, refining of code.
-
-=item v0.20b (04.08.2009) Bug fixes, changes in the structure and new input modules introduced.
-
-=item v0.21b (07.08.2009) Bug fixes, changes in the structure and new input modules introduced.
-
-=item v0.22b (10.08.2009) New input modules.
-
-=item v0.30b (02/09/09) Changes to the structure, first release of a GUI, bug fixes and common libraries used.
-
-=item v0.31b (07/09/09) New modules, new front-end timescanner introduced.  Small bug fixes.
-
-=item v0.32b (10/09/09) Bug fixes, new input modules as well as libraries. Version checking implemented.
-
-=item v0.33b (15/09/09) Bug fixes.
-
-=item v0.40 (25/11/09) Changes in the structure, timestamps normalized to UTC.  Bug fixes, improvements in modules, new input modules.
-
-=item v0.41 (15/01/10) New input modules, bug fixes, improvements of older modules, new update mechansim introduced.
-
-=item 0.42 (05/03/10) New input modules (pdf,mcafee), bug fixes, improvements of older modules and the main tool
-
-=item 0.50 (30/06/10) New timestamp object introduced, every module updated along with front-ends, bug fixes and improvements
-
-=item 0.51 (14/12/2010) New input modules alongside several bug fixes.
-
-=item 0.52 (05/04/2011) New input modules alongside several bug fixes.
-
-=item 0.60 (05/06/2011) Core redesign of the tool, moving the engine to a separate library and several other changes.
-
-=item 0.60+ not described here any more... list kept for legacy reasons.
-
-=back 
 
 =head1 AUTHOR
 

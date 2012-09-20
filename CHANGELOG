@@ -14,8 +14,12 @@ Version 0.65
       in most input modules.
   - [WIN library] Added few more transformations of Windows stored time zones into a "olson" ones understood by DateTime.
   - [CHROME input] Fixed a small unicode bug in the "File Downloaded" section.
+  - [CHROME/FIREFOX3/SKYPE_SQL/LS_QUARANTINE input] All SQLite modules changed:
+      - Now the database is copied to a tmp location before parsing, since trying to parse them from a read-only medium can 
+      cause problems.
   - [faersluskra2timalina] Added a new frontend to the tool, exact copy of log2timeline, except all parameters in Icelandic... kinda
-   Aprils fool joke, except not in April.. so enjoy.
+   Aprils fool joke, except not in April.. so enjoy (bonus points for those that manage to figure out how to use it WITHOUT using Google
+   translate).
   - [timescanner tool] Removed this frontend from the Makefile since it serves no purpose (as in no longer part of the automatic installation).
 
 Version 0.64 (11/06/2012)
