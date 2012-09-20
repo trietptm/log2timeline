@@ -624,17 +624,6 @@ sub verify {
     # save the original file name
     $self->{'filename'} = ${ $self->{'name'} };
 
-    # check if this is a quick test (default) or a detailed one
-    #unless( $self->{'quick'} )
-    #{
-    #  # check the first bit, it has to match the magic value before proceeding
-    #  seek($self->{'file'},0,0);
-    #  read($self->{'file'},$temp,1);
-    #
-    #  $return{'msg'} = 'Wrong magic value';
-    #  return \%return unless $temp eq 'S';
-    #}
-
     # read the first few bits, see if it matches signature
     for (my $i = 0; $i < 15; $i++) {
         seek($self->{'file'}, $i, 0);
@@ -649,57 +638,47 @@ sub verify {
     if ($line eq $magic) {
 
         # we know that this is a SQLite database, but is it a Firefox3 database?
+        # We will copy it to a temp location and then try to parse it.
+        eval {
+            my $msg = undef;
 
-        # start by checking if we have a database journal as well (or other read-only attributes)
-        if (   -f ${ $self->{'name'} } . "-journal"
-            or -f ${ $self->{'name'} } . "-shm"
-            or -f ${ $self->{'name'} } . "-wal")
-        {
-            eval {
-                my $msg = undef;
+            # create a new variable to store the temp location
+            $temp = int(rand(100));
+            $temp = $self->{'temp'} . $self->{'sep'} . 'tmp_ff.' . $temp . 'v.db';
 
-                # create a new variable to store the temp location
-                $temp = int(rand(100));
-                $temp = $self->{'temp'} . $self->{'sep'} . 'tmp_ff.' . $temp . 'v.db';
+            $return{'msg'}     = 'Unable to copy the file to a temporary folder';
+            $return{'success'} = 0;
 
-                $return{'msg'}     = 'Unable to copy the file to a temporary folder';
-                $return{'success'} = 0;
+            # we need to copy the file to a temp location and start again
+            copy(${ $self->{'name'} }, $temp) or $msg = 'unable to copy database file. ';
 
-                # we need to copy the file to a temp location and start again
-                copy(${ $self->{'name'} }, $temp) or $msg = 'unable to copy database file. ';
-
-#copy( ${$self->{'name'}} . "-journal", $temp . "-journal" ) or $msg .=  'unable to copy journal file to temporary directory';
-
-  # we are trying to copy temporary data, and if the msg variable is defined, then we have a problem
-                if (defined $msg) {
-                    $return{'msg'} =
-                      'Error while trying to verify, unable to verify.  The error is: ' . $msg;
-                    $return{'success'} = 0;
-                    return \%return;
-                }
-
-                #print STDERR "[Firefox] Created a temp file $temp from $db\n";
-
-                ${ $self->{'name'} } = $temp;
-                $self->{'db_lock'} = 1;    # indicate that we need to delete the lock file
-            };
-            if ($@) {
-                $return{'success'} = 0;
+            # we are trying to copy temporary data, and if the msg variable is defined, then we have a problem
+            if (defined $msg) {
                 $return{'msg'} =
-                    'Database is locked and unable to copy to a temporary location (' 
-                  . $temp
-                  . '). Error given: '
-                  . $@;
-
+                  'Error while trying to verify, unable to verify.  The error is: ' . $msg;
+                $return{'success'} = 0;
                 return \%return;
             }
+
+
+            ${ $self->{'name'} } = $temp;
+            $self->{'db_lock'} = 1;    # indicate that we need to delete the lock file
+        };
+        if ($@) {
+            $return{'success'} = 0;
+            $return{'msg'} =
+                'Database is locked and unable to copy to a temporary location (' 
+              . $temp
+              . '). Error given: '
+              . $@;
+
+            return \%return;
         }
 
         # set a temp variable to 0 (assume we don't have a FF3.5 database)
         $temp = 0;
 
         eval {
-
             # connect to the database
             $self->{'vdb'} = DBI->connect("dbi:SQLite:dbname=" . ${ $self->{'name'} }, "", "")
               or ($temp = 1);

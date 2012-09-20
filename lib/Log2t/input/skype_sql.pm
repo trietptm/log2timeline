@@ -546,27 +546,24 @@ sub verify {
     }
 
     # we know that this is a SQLite database, but is it a Skype one?
-    # start by checking if we have a database journal as well
     my $tmp_path = '';
-    if (-f ${ $self->{'name'} } . "-journal") {
-        eval {
-            # create a new variable to store the temp location
-            my $rand_int = int(rand(100));
-            $tmp_path = '/tmp/tmp_ch.' . $rand_int . 'v.db';
+    eval {
+        # create a new variable to store the temp location
+        my $rand_int = int(rand(100));
+        $tmp_path = '/tmp/tmp_ch.' . $rand_int . 'v.db';
 
-            # we need to copy the file to a temp location and start again
-            copy(${ $self->{'name'} }, $tmp_path) || ($return{'success'} = 0);
-            copy(${ $self->{'name'} } . "-journal", $tmp_path . "-journal")
-              || ($return{'success'} = 0);
+        # we need to copy the file to a temp location and start again
+        copy(${ $self->{'name'} }, $tmp_path) || ($return{'success'} = 0);
+        copy(${ $self->{'name'} } . "-journal", $tmp_path . "-journal")
+          || ($return{'success'} = 0);
 
-            ${ $self->{'name'} } = $tmp_path;
-            $self->{'db_lock'} = 1;    # indicate that we need to delete the lock file
-        };
-        if ($@) {
-            $return{'success'} = 0;
-            $return{'msg'} =
-              'Database is locked and unable to copy to a temporary location (' . $tmp_path . ')';
-        }
+        ${ $self->{'name'} } = $tmp_path;
+        $self->{'db_lock'} = 1;    # indicate that we need to delete the lock file
+    };
+    if ($@) {
+        $return{'success'} = 0;
+        $return{'msg'} =
+          'Database is locked and unable to copy to a temporary location (' . $tmp_path . ')';
     }
 
     # assume we have the correct DB structure

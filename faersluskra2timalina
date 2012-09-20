@@ -6,17 +6,8 @@
 # front-end, with parameters and tool name directly translated to Icelandic (a request from
 # a co-worker that really wanted to have the CLI more complicated to navigate).
 #
-# The default behaviour of the tool is to outpt in a CSV format.
-#
-# This script serves as the front-end for the program and it's purpose is to
-# read all parameters, find and load the appropriate format file, a perl script that is designed
-# to read a particular file format, and print the information found in the file in a body format.
-# The script also holds some methods that are used in more than one format file (instead of repeating
-# the code)
-#
-# As said before this is the main script, it parses all arguments as well as to call other
-# scripts needed to parse the actual log files. The parsing of log files is done in a so
-# called format file, where each format file provides a method to parse different log format.
+# So this is version is dedicated to you Benji..  finally your dream of a pure Icelandic forensic
+# tool has become a reality.
 #
 # Author: Kristinn Gudjonsson
 # Date : 19/09/12
@@ -569,13 +560,11 @@ Better description can be read in the man page of the program (man B<faersluskra
 
 =head1  DESCRIPTION
 
-B<faersluskra2timalina> takes a log file (or a directory) and parses it to produce a body file that can be imported into other tools for timeline analysis.  The tool has both a modular based approach to the input file as well as the output file.  The current version supports exporting the timeline in a several different body formats.  B<faersluskra2timalina> is build as a series of scripts, this one being the front-end, which uses other scripts to actually parse the log files (called format files). The tool is build to be easily extended for anyone that wants to create a new format or an output file.
+Finally, finally we have an all Icelandic forensic command line utility that can be used to produce super timelines. And now to switch over to Icelandic:
 
-As noted above the default output mechanism is in a CSV file format, which can be easily imported into spreadsheet applications, and parsed by the tool B<l2t_process>.  The output format can be easily changed with the -o parameter.  The output module can be set to output in a body format that needs to be imported into another tool for human readable format, or it can be implemented to print the timeline directly in a human readable format.
+B<faersluskra2timalina> er framendi a B<log2timeline>, tol til ad draga ut faerslur sem eru tengjanlegar vid timastimpla sem fyrirfinnast i ymsum skram vidsvegar um hin ymsu styrikerfi. Utgangur tolsins er skra sem inniheldur alla timastimpla sem hafa verid dregnir ut, sjalfgefin hegdun er ad vista tha i textaformi, en audbreytanlegt med uttaksvidbotum.
 
-The tool is build using multiple so called input modules.  Each of those input modules provide a single format that can be parsed, whether that is a log file or a directory containing some files that need to be parsed.
-
-The purpose of the tool is to provide a single tool to parse various artifacts that are either produced by the suspsect operating system or other systems that might have some logs retaining to the investigation.
+Tilgangur tolsins er sa sami og B<log2timeline>, serstaklega thar sem thetta er sama tolid, bara lengri skipanalina og erfidari notkun, en hun er a islensku, thvi ylhyra tungumali, tileinkad Benji, sem atti thann draum heitast ad geta notad alislenskt tol i sinum stafraenu rannsoknum.
 
 =head1 AUTHOR
 

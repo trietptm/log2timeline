@@ -601,28 +601,24 @@ sub verify {
         # we know that this is a SQLite database, but is it a Firefox3 database?
 
         # start by checking if we have a database journal as well
-        if (-f ${ $self->{'name'} } . "-journal") {
-            eval {
+        eval {
+            # create a new variable to store the temp location
+            $temp = int(rand(100));
+            $temp = $self->{'temp'} . $self->{'sep'} . 'tmp_ch.' . $temp . 'v.db';
 
-                # create a new variable to store the temp location
-                $temp = int(rand(100));
-                $temp = $self->{'temp'} . $self->{'sep'} . 'tmp_ch.' . $temp . 'v.db';
+            # we need to copy the file to a temp location and start again
+            copy(${ $self->{'name'} }, $temp) || ($return{'success'} = 0);
+            copy(${ $self->{'name'} } . "-journal", $temp . "-journal")
+              || ($return{'success'} = 0);
 
-                # we need to copy the file to a temp location and start again
-                copy(${ $self->{'name'} }, $temp) || ($return{'success'} = 0);
-                copy(${ $self->{'name'} } . "-journal", $temp . "-journal")
-                  || ($return{'success'} = 0);
 
-                #print STDERR "[CHROME] Created a temp file $temp from $db \n";
-
-                ${ $self->{'name'} } = $temp;
-                $self->{'db_lock'} = 1;    # indicate that we need to delete the lock file
-            };
-            if ($@) {
-                $return{'success'} = 0;
-                $return{'msg'} =
-                  'Database is locked and unable to copy to a temporary location (' . $temp . ')';
-            }
+            ${ $self->{'name'} } = $temp;
+            $self->{'db_lock'} = 1;    # indicate that we need to delete the lock file
+        };
+        if ($@) {
+            $return{'success'} = 0;
+            $return{'msg'} =
+              'Database is locked and unable to copy to a temporary location (' . $temp . ')';
         }
 
         # set a temp variable to 0 (assume we don't have a FF3.5 database)
