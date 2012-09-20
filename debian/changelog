@@ -1,3 +1,9 @@
+log2timeline-perl (0.65-2) precise natty hardy maverick karmic lucid; urgency=low
+
+  * Tiny bug fixes, making sure SQLite modules work.
+
+ -- Kristinn Gudjonsson <kristinn@log2timeline.net>  Thu, 20 Sep 2012 9:47:23 -0800
+
 log2timeline-perl (0.65-1) precise natty hardy maverick karmic lucid; urgency=low
 
   * Mostly bug fixes.
