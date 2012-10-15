@@ -500,7 +500,7 @@ sub _parse_timestamp {
         'source'     => 'WEBHIST',
         'sourcetype' => 'Chrome History',
         'version'    => 2,
-        'extra' => { 'user' => $self->{'username'}, 'size' => $size }
+        'extra' => { 'user' => $self->{'username'}, 'size' => $size, 'filename' => $self->{'filename'} }
               ) if $r_true;
 
     # check the existence of a default browser for this particular user

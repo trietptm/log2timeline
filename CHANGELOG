@@ -1,4 +1,4 @@
-Version 0.65
+Version 0.65 (25/09/2012)
   - [UTMP input] New input module parsing utmp/wtmp files in Linux, written by Francesco Picasso.
   - [SELINUX input] New input module parsing SELinux audit files in Linux, written by Francesco Picasso.
   - [l2t_process] Renamed to l2t_process_old, being replaced by l2t_process.py from l2t-tools.

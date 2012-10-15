@@ -543,7 +543,7 @@ sub _parse_timestamp {
                'source'     => 'WEBHIST',
                'sourcetype' => 'Firefox 3 history',
                'version'    => 2,
-               'extra'      => { 'user' => $self->{'username'} }
+               'extra'      => { 'user' => $self->{'username'}, 'filename' => $self->{'filename'} }
               );
 
     # check the existence of a default browser for this particular user
@@ -689,9 +689,6 @@ sub verify {
                 $return{'msg'}     = 'Unable to connect to the database';
                 return \%return;
             }
-
-            # check if this is real Firefox database
-            #$vsth = $vdb->prepare( 'SELECT id FROM moz_places LIMIT 1' ) or ($temp = 0);
 
             # get a list of all available talbes
             $vsth = $self->{'vdb'}->prepare("SELECT name FROM sqlite_master WHERE type='table'")
