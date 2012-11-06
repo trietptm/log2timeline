@@ -308,7 +308,7 @@ pod2usage( {
 mkdir $store_point unless -d $store_point;
 
 # create the timeline file
-open( TF, '>' . $store_point . '/' . $file_name . '_bodyfile.txt' ) or die( 'Unable to create the bodyfile ' . $store_point . '/' . $file_name . '_bodyfile.txt, not enough access rights?');
+open( TF, '>:utf8',  $store_point . '/' . $file_name . '_bodyfile.txt' ) or die( 'Unable to create the bodyfile ' . $store_point . '/' . $file_name . '_bodyfile.txt, not enough access rights?');
 
 # check the type
 $type = 'win7' if $is_win_7;
