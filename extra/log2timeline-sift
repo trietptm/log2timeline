@@ -42,6 +42,7 @@ use strict;
 use Getopt::Long;	# for parameter parsing
 use Pod::Usage;         # for man and help messages
 use AppConfig qw/:argcount :expand/;            # To read the configuration file
+use bigint;
 
 use vars qw/$VERSION/;
 
@@ -62,6 +63,7 @@ my $check = undef;		# variable used for storing output of shell commands
 my $time_zone = 'local';	# the timezone used
 my $type = 'winxp';		# the type of modules to use
 my $is_win_7 = 0;		# are we talking about a Windows 7 image or Windows XP?
+my $mft_detail = 0;
 
 # other parameters
 
@@ -83,6 +85,7 @@ GetOptions(
 	"config|c=s"=>\$config_file,
 	"os=s" => \$type,
 	"win7!" => \$is_win_7,
+	"detail!" => \$mft_detail,
 	"zone=s" => \$time_zone,
         "help|?!"=>\$print_help
 ) or pod2usage( 2 );
@@ -236,7 +239,7 @@ if ( $check eq '' )
 					if ( ($check le $max) and ( $check ge 1 ) )
 					{
 						# all OK
-						$mount_extra_options = sprintf ",offset=%d", $parts{$check} * 512;
+						$mount_extra_options = sprintf ",offset=%s", $parts{$check} * 512;
 						# add the offset to the icat tool
 						$image_options = ' -o ' . $parts{$check} . ' ';
 
@@ -350,6 +353,7 @@ else
 		'append' => 0,			# we are appending to an output file, instead of writing a new one
 		'time_zone' => $time_zone,	# the time zone of the image
 		'preprocess' => 0, 		# turn on pre-processing modules 
+		'detailed_time' => $mft_detail
 	) or die( 'unable to start log2timeline');
 	
 	# since we need to do this in two parts, let's indicate that we are about to append
@@ -373,6 +377,7 @@ my $l2t_all = Log2Timeline->new(
 	'append' => $append_status,	# we might need to append (depending on the need to parse the MFT) 
 	'time_zone' => $time_zone,	# the time zone of the image
 	'preprocess' => 1, 		# turn on pre-processing modules 
+	'detailed_time' => $mft_detail
 ) or die( 'unable to start log2timeline');
 
 
