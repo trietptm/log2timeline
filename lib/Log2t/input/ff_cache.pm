@@ -119,9 +119,7 @@ sub init {
     my $self = shift;
 
     # Try really hard to get a user name
-    unless (defined($self->{'username'})) {
-        $self->{'username'} = Log2t::Common::get_username_from_path(${ $self->{'name'} });
-    }
+    $self->{'username'} = Log2t::Common::get_username_from_path(${ $self->{'name'} });
 
     return 1;
 }

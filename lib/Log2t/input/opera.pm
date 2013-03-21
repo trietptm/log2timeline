@@ -112,12 +112,8 @@ sub init {
     my ($propertylist, $property);
     my (@properties,   @relationships);
 
-    # check if we need to "guess" the username of the user
-    if ($self->{'username'} eq 'unknown') {
-
-        # check the current working directory and try to guess the username
-        $self->{'username'} = Log2t::Common::get_username_from_path(${ $self->{'name'} });
-    }
+    # check the current working directory and try to guess the username
+    $self->{'username'} = Log2t::Common::get_username_from_path(${ $self->{'name'} });
 
     # check the type, we might have to read the file
     if ($self->{'type'} eq DIRECT_HISTORY) {
