@@ -552,7 +552,6 @@ Which is used to define the username of the user that ownes the history file or 
 # @return An array containing an integer and a string.  The integer indicates a success or failure and the
 #       string is the error message (if the file is not correctly formed)
 sub verify {
-
     # define an array to keep
     my %return;
     my $line;

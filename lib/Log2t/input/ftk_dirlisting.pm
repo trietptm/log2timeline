@@ -37,6 +37,8 @@ use Log2t::base::input;    # the SUPER class or parent
 use Log2t::Common ':binary';
 use Log2t::Time;           # to manipulate time
 
+use Encode;
+
 #use Log2t::Win;  # Windows specific information
 #use Log2t::Numbers;  # to manipulate numbers
 use Log2t::BinRead;    # methods to read binary files (it is preferable to always load this library)
@@ -140,7 +142,7 @@ sub get_time {
         return \%t_line;
     }
 
-    $text = $info{'path'};
+    $text = enocde('utf-16', $info{'path'});
     $text .= ' (file deleted)' if $info{'del'} =~ m/yes/i;
 
     # content of the timestamp object t_line
