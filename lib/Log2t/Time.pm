@@ -136,6 +136,13 @@ sub getNanoWinFileTime($$) {
     return ($time - 11644473600 * 1e7) % 1e7;
 }
 
+sub getWebKitTime($) {
+    my $webkit_time = shift;
+
+    my $time_offset = 11644473600;
+    return $webkit_time - $time_offset;
+}
+
 =head2 C<Dos2Unix>
 
 Taken from the dos2unixtime function from the tsk3/fs/fatfs_meta.c file from The Sleuthkit.

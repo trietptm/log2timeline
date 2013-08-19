@@ -116,7 +116,7 @@ sub get_time {
 
     # Construct the SQL statement to extract the needed data
     $sql =
-      "SELECT LSQuarantineTimestamp+978328800 AS Epoch, LSQuarantineAgentName AS Agent, LSQuarantineOriginURLString AS URL, LSQuarantineDataURLString AS Data
+      "SELECT LSQuarantineTimestamp+978307200 AS Epoch, LSQuarantineAgentName AS Agent, LSQuarantineOriginURLString AS URL, LSQuarantineDataURLString AS Data
 FROM LSQuarantineEvent
 ORDER BY Epoch";
 

@@ -199,6 +199,7 @@ sub init() {
 
     # boolean values that are used to determine the existance of tables
     #  $self->{'table_downloads'} = 0;
+    #  $self->{'table_downloads_legacy'} = 0;
     #  $self->{'table_visits'} = 0;
     #  $self->{'table_urls'} = 0;
 
@@ -299,6 +300,8 @@ sub get_time {
         print STDERR "[Chrome] Table urls does NOT exist\n" unless $self->{'table_urls'};
         print STDERR "[Chrome] Table downloads exists\n" if $self->{'table_downloads'};
         print STDERR "[Chrome] Table downloads does NOT exist\n" unless $self->{'table_downloads'};
+        print STDERR "[Chrome] Table [legacy] downloads exists\n" if $self->{'table_downloads_legacy'};
+        print STDERR "[Chrome] Table [legacy] downloads does NOT exists\n" unless $self->{'table_downloads_legacy'};
     }
 
     # Construct the SQL statement to extract the needed data
@@ -323,10 +326,30 @@ ORDER BY visits.visit_time
         }
     }
 
-    if ($self->{'table_downloads'}) {
+    if ($self->{'table_downloads_legacy'}) {
         $sql = "
 SELECT full_path, url, start_time, received_bytes, total_bytes,state FROM downloads
     ";
+
+        $sth    = $self->{'vdb'}->prepare($sql);
+        $result = $sth->execute();
+
+        # load the result into an array
+        while (@dump = $sth->fetchrow_array()) {
+            $self->{'r_type'} = 'download_legacy';
+            $self->{'r_line'} = [@dump];
+
+            $ret_lines{ $ret_index++ } = $self->_parse_timestamp;
+        }
+    }
+
+    if ($self->{'table_downloads'}) {
+        $sql = "
+SELECT downloads.id AS id, downloads.start_time, downloads.target_path, downloads_url_chains.url, downloads.received_bytes, downloads.total_bytes
+FROM downloads, downloads_url_chains
+WHERE
+  downloads.id = downloads_url_chains.id
+        ";
 
         $sth    = $self->{'vdb'}->prepare($sql);
         $result = $sth->execute();
@@ -397,7 +420,7 @@ sub _parse_timestamp {
     #print STDERR "PARSING A LINE OF TYPE $r_type\n";
 
     # now we need to check the "type" of record
-    if ($self->{'r_type'} eq 'download') {
+    if ($self->{'r_type'} eq 'download_legacy') {
         $type = 'File downloaded';
 
         $text .=
@@ -411,6 +434,21 @@ sub _parse_timestamp {
         $size = $r_line[4];
 
         # indicate that we have a valid type
+        $r_true = 1;
+    }
+    elsif ($self->{'r_type'} eq 'download') {
+        $type = 'File downloaded';
+
+        $text .=
+            $r_line[3] . ' ('
+          . decode('utf-8', $r_line[2])
+          . '). Total bytes received : '
+          . $r_line[4]
+          . ' (total: '
+          . $r_line[5] . ')';
+        $size = $r_line[5];
+        $date = Log2t::Time::getWebKitTime($r_line[2]);
+
         $r_true = 1;
     }
     elsif ($self->{'r_type'} eq 'url') {
@@ -569,6 +607,7 @@ sub verify {
     $self->{'table_urls'}      = 0;
     $self->{'table_visits'}    = 0;
     $self->{'table_downloads'} = 0;
+    $self->{'table_downloads_legacy'} = 0;
 
     return \%return unless -f ${ $self->{'name'} };
 
@@ -637,7 +676,7 @@ sub verify {
             }
 
             # get a list of all available talbes
-            $vsth = $self->{'vdb'}->prepare("SELECT name FROM sqlite_master WHERE type='table'")
+            $vsth = $self->{'vdb'}->prepare("SELECT name, sql FROM sqlite_master WHERE type='table'")
               or die ('not the correct database schema');
 
             # execute the query
@@ -646,7 +685,6 @@ sub verify {
 
             # check if we have a moz_places table
             while (@words = $vsth->fetchrow_array()) {
-
                 # check for moz_places
                 #print STDERR "RESULT IS " . $words[0] . "\n";
                 $temp = 1 if $words[0] eq 'visits';
@@ -654,7 +692,13 @@ sub verify {
                 # check for existance of all tables
                 $self->{'table_visits'}    = 1 if $words[0] eq 'visits';
                 $self->{'table_urls'}      = 1 if $words[0] eq 'urls';
-                $self->{'table_downloads'} = 1 if $words[0] eq 'downloads';
+                if ($words[0] eq 'downloads') {
+                    if ( $words[1] =~ m/current_path/ ) {
+                        $self->{'table_downloads'} = 1;
+                    } else {
+                        $self->{'table_downloads_legacy'} = 1;
+                    }
+                }
             }
 
             # check if temp is set
