@@ -18,3 +18,6 @@ Description: A framework to for timeline creation and analysis.
  operating systems.  The framework then outputs the timeline information
  in the chosen output format that can then be viewed using already
  existing timeline analysis tools, or other tools to inspect the timeline.
+ This is the legacy Perl version that has been completely rewritten. Please
+ consider installing the newly enhanced Python version, available at
+ http://plaso.kiddaland.net.

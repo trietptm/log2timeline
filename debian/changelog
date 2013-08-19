@@ -1,3 +1,10 @@
+log2timeline-perl (0.65-3) precise natty hardy maverick karmic lucid; urgency=low
+
+  * Several bug fixes.
+  * Renaming of the main executable to log2timeline_legacy
+
+ -- Kristinn Gudjonsson <kristinn@log2timeline.net>  Mon, 19 aug 2013 10:15:25 -0700
+
 log2timeline-perl (0.65-2) precise natty hardy maverick karmic lucid; urgency=low
 
   * Tiny bug fixes, making sure SQLite modules work.

@@ -1,3 +1,9 @@
+Version 0.66
+  - Few bugfixes. Chrome download db schema changed, LS Quarantine was off by few hours. FTK dirlisting modules had some issues.
+  - [LOG2TIMELINE-SIFT] Few additions added by Hiroshi Suzuki.
+  - [log2timeline] Renamed to log2timeline_legacy.
+  - [log2timeline] A simple script that removes itself added that's name is log2timeline, a poor man's uninstall script.
+
 Version 0.65 (25/09/2012)
   - [UTMP input] New input module parsing utmp/wtmp files in Linux, written by Francesco Picasso.
   - [SELINUX input] New input module parsing SELinux audit files in Linux, written by Francesco Picasso.

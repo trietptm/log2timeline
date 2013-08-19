@@ -24,7 +24,7 @@ use ExtUtils::MakeMaker;
 
 WriteMakefile(
   'NAME'  => 'Log2t',
-  'ABSTRACT' => 'An automatic tool to extract super timelines from files',
+  'ABSTRACT' => 'An automatic tool to extract super timelines from files. This is the Perl legacy version.',
   'AUTHOR' => 'kristinn@log2timeline.net',
   'PREREQ_PM' => {
     # require the following libraries 
@@ -69,6 +69,6 @@ WriteMakefile(
   },
   'VERSION_FROM' => 'lib/Log2t/Common.pm', # finds $VERSION
   'LICENSE' => 'gpl',  
-  'EXE_FILES' => [ 'log2timeline', 'l2t_process_old.pl', 'faersluskra2timalina' ],  
+  'EXE_FILES' => [ 'log2timeline', 'log2timeline_legacy', 'l2t_process_old.pl', 'faersluskra2timalina' ],  
   'INSTALLSCRIPT' => '/usr/local/bin/'
 );
