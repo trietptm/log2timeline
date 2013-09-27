@@ -47,6 +47,7 @@ use Log2t::Common ':binary';
 use Log2t::BinRead;        # methods to read binary files
 
 #use Log2t::Network;  # information about network traffic
+use Encode;
 
 # define the VERSION variable
 use vars qw($VERSION @ISA);
@@ -379,17 +380,13 @@ sub _parseRec {
         $rec{sid} = "unknown";
     }
 
-    # Get strings from event record
-    my $strs = substr($data, $rec{str_ofs}, $rec{data_ofs} - $rec{str_ofs});
+    # Get strings from event record.
+    my $strs = decode('utf16le', substr($data, $rec{str_ofs}, $rec{data_ofs} - $rec{str_ofs}));
     my @str = split(/\x00\x00/, $strs, $rec{num_str});
 
     # added by Kristinn
     my $i = 0;
     foreach (@str) {
-
-# start by fixing the string, that is to remove the "unicode" aspect, convert to ASCII the simple way
-        s/\x00//g;
-
         # and now to test if we have a KB article
         while (/KB(\d{6,8})/g) {
 

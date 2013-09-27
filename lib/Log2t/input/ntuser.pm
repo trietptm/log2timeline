@@ -813,6 +813,7 @@ sub _read_shell_utf($$$) {
         $c = substr($$v, $$ofs, 2);
         $$ofs += 2;
 
+        # TODO: Look at this utf-8 encode, need to fix that (not "proper").
         printf STDERR "[ShellBag] 0x%x - UTF 0x%x [%s]\n", $$ofs, unpack("U", $c),
           encode('utf-8', $c)
           if $self->{'debug'};
@@ -824,7 +825,7 @@ sub _read_shell_utf($$$) {
         next unless $s;
 
         # add to the UTF-8 string
-        $string .= encode('utf-8', $c);
+        $string .= decode('utf16le', $c);
     }
 
     return $string;
@@ -1022,6 +1023,7 @@ sub _preprocess_shell($$) {
                         $c = substr($v, $ofs, 2);
                         $ofs += 2;
 
+                        # TODO: Fix this decode message.
                         printf STDERR "[ShellBag] 0x%x - UTF 0x%x [%s]\n", $ofs,
                           decode('utf-8', $c), $c
                           if $self->{'debug'};
@@ -1033,8 +1035,8 @@ sub _preprocess_shell($$) {
 
                         next unless $s;
 
-                        # add to the UTF-8 string
-                        $name{'utf'} .= decode('utf-8', $c);
+                        # add to the UTF-16 string
+                        $name{'utf'} .= decode('utf16le', $c);
                     }
 
                     $name{'folder_a'} = $text{'a'};
@@ -1356,9 +1358,9 @@ sub _parse_lvm() {
 
     # get the value
     my $first = substr $mru{'MRUList'}, 0, 1;
-    my ($file, $dir) = split(/\00\00/, $mru{$first}, 2);
-    $file =~ s/\00//g;
-    $dir  =~ s/\00//g;
+    my ($file, $dir) = split(/\00\00/, decode('utf16le', $mru{$first}), 2);
+    $file = encode('utf-8', $file);
+    $dir = encode('utf-8', $dir);
 
     $text  = 'Most recently opened file in Windows (in an "Open" dialog): ' . $dir . ' -> ' . $file;
     $title = 'File opened: ' . $dir . ' -> ' . $file;
@@ -1639,8 +1641,7 @@ sub _getRDValues {
             }
             else {
                 my $file = (split(/\00\00/, $data))[0];
-                $file =~ s/\00//g;
-                $rdvals{$name} = $file;
+                $rdvals{$name} = encode('utf-8', decode('utf16le', $file."\00\00"));
             }
         }
         return %rdvals;
@@ -1690,7 +1691,7 @@ sub _parse_rd() {
                 'Recently opened file of extension: ' 
               . $name
               . ' - value: '
-              . encode('utf-8', $rdvals{$first});
+              . $rdvals{$first};
         }
         else {
             print STDERR
@@ -1701,7 +1702,7 @@ sub _parse_rd() {
         }
 
         # end of recentdocs.pl code
-        $title = $text;
+        $title = decode('utf-8', $text);
 
         # content of array t_line ([optional])
         # %t_line {        #       time
@@ -1729,8 +1730,8 @@ sub _parse_rd() {
         # create the t_line variable
         $self->{'container'}->{ $self->{'cont_index'}++ } = {
             'time' => { 0 => { 'value' => $time_value, 'type' => $t . ' opened', 'legacy' => 15 } },
-            'desc'       => $text,
-            'short'      => $title,
+            'desc'       => encode('utf-8', $text),
+            'short'      => encode('utf-8', $title),
             'source'     => 'REG',
             'sourcetype' => 'RecentDocs key',
             'version'    => 2,

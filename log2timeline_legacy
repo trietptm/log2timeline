@@ -471,9 +471,7 @@ sub print_line($) {
     my $line = shift;
 
     # print to the file in question
-    print MYFILE encode('utf8', $line);
-
-    #print MYFILE $line;
+    print MYFILE $line;
 }
 
 __END__

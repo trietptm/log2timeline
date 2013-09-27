@@ -31,6 +31,7 @@ package Log2t::output::csv;
 use strict;
 use Getopt::Long;    # read parameters
 use Log2t::Time;     # for time stuff
+use Encode;
 
 my $version = "0.7";
 
@@ -195,13 +196,10 @@ sub print_line() {
                 $text .= $t_line->{'extra'}->{'host'} . '::comma::';
             }
 
-            $text .=
-                $t_line->{'short'}
-              . '::comma::'
-              . $t_line->{'desc'}
-              . '::comma::'
-              . $t_line->{'version'}
-              . '::comma::';
+            $text = encode('utf-8', $text)
+              . $t_line->{'short'} . '::comma::'
+              . $t_line->{'desc'} . '::comma::'
+              . $t_line->{'version'} . '::comma::';
 
             # and for the filename
             $t_line->{'extra'}->{'filename'} =~ s/::comma::/-/g;
