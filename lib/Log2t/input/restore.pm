@@ -35,7 +35,7 @@ use strict;
 use Log2t::base::input;    # the SUPER class or parent
 use Fcntl ':mode';         # for permission reading
 
-#use Encode;
+use Encode;
 use Log2t::Time;
 use vars qw($VERSION @ISA);
 
@@ -288,7 +288,6 @@ sub _read_rpfile() {
 
     # define variables needed
     my @name;
-    my $nafn;
     my $i;    # a buffer
     my $offset;
     my $tag;
@@ -336,13 +335,7 @@ sub _read_rpfile() {
         $offset += 2;
     }
 
-    # now we have the entire name, let's input it into an array
-    $nafn = join('', @name);
-
-    # and remove unnecessary information from it
-    $nafn =~ s/\00//g;
-
-    $return{'name'} = $nafn;
+    $return{'name'} = decode('utf16le', join('', @name));
 
     # read the date value
     seek(FILE, -0x8, 2);
