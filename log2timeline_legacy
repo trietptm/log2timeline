@@ -369,6 +369,7 @@ print STDERR "Starting to parse using input modules(s): [$format_file] \n";
 # prepare the output file
 if ($out_file eq 'STDOUT') {
     open(MYFILE, ">-");
+    binmode STDOUT, ":utf8";
 }
 else {
 
@@ -377,6 +378,7 @@ else {
 
     # we are redirecting to a file
     open(MYFILE, '>>' . $out_file);
+    binmode MYFILE, ":utf8";
 }
 
 # start by fixing the settings
@@ -437,6 +439,7 @@ if ($file_exists) {
 
         # open the file up again and print the previous content - header
         open(MYFILE, '>' . $out_file);
+        binmode(MYFILE, ":utf8");
         print MYFILE @content;
     }
 }
