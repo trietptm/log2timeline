@@ -45,7 +45,7 @@ use constant {
 our @EXPORT_OK = ('LITTLE_E', 'BIG_E');
 our %EXPORT_TAGS = (binary => [ 'LITTLE_E', 'BIG_E' ]);
 
-$VERSION = "0.65";
+$VERSION = "0.66";
 
 # create a variable for nightly builds
 my $n_date    = '20120724';

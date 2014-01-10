@@ -10,6 +10,7 @@ my $base_path = 'test_data/';
 my $number_of_tests = 0;
 my @READ_TIME = undef;
 
+# Base: 1366579063 - Apr 21 21:17:43 2013
 # test a 100 sec offset to the normal (+100)
 my $l2t = Log2Timeline->new(
     'file'          => $base_path . '/syslog.txt',
@@ -31,7 +32,7 @@ my $l2t = Log2Timeline->new(
 
 $l2t->start;
 
-ok($READ_TIME[1] == 1335043163, 'Using 100sec offset.');
+ok($READ_TIME[1] == 1366579163, "Using 100sec offset. $READ_TIME[1]");
 $number_of_tests++;
 
 # resetting the test suite
@@ -59,7 +60,7 @@ $l2t = Log2Timeline->new(
 
 $l2t->start;
 
-ok($READ_TIME[1] == 1335042963, 'Using negative 100 as the offset');
+ok($READ_TIME[1] == 1366578963, 'Using negative 100 as the offset');
 $number_of_tests++;
 
 # resetting the test suite
@@ -87,7 +88,7 @@ $l2t = Log2Timeline->new(
 
 $l2t->start;
 
-ok($READ_TIME[1] == 1335057463, 'Using 4h as the offset');
+ok($READ_TIME[1] == 1366593463, 'Using 4h as the offset');
 $number_of_tests++;
 
 

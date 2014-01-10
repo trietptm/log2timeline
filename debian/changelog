@@ -1,17 +1,23 @@
-log2timeline-perl (0.65-3) precise natty hardy maverick karmic lucid; urgency=low
+log2timeline-perl (0.66-1ubuntu1) precise; urgency=low
+
+  * Release version 0.66, minor bug fixes since version 0.65.
+
+ -- Kristinn Gudjonsson <kristinn@log2timeline.net>  Fri, 10 Jan 2014 13:28:44 -0800
+
+log2timeline-perl (0.65-3) precise; urgency=low
 
   * Several bug fixes.
   * Renaming of the main executable to log2timeline_legacy
 
  -- Kristinn Gudjonsson <kristinn@log2timeline.net>  Mon, 19 aug 2013 10:15:25 -0700
 
-log2timeline-perl (0.65-2) precise natty hardy maverick karmic lucid; urgency=low
+log2timeline-perl (0.65-2) precise; urgency=low
 
   * Tiny bug fixes, making sure SQLite modules work.
 
  -- Kristinn Gudjonsson <kristinn@log2timeline.net>  Thu, 20 Sep 2012 9:47:23 -0800
 
-log2timeline-perl (0.65-1) precise natty hardy maverick karmic lucid; urgency=low
+log2timeline-perl (0.65-1) precise; urgency=low
 
   * Mostly bug fixes.
   * Some new stuff to (see full CHANGELOG for details).
@@ -19,7 +25,7 @@ log2timeline-perl (0.65-1) precise natty hardy maverick karmic lucid; urgency=lo
 
  -- Kristinn Gudjonsson <kristinn@log2timeline.net>  Fri, 3 Aug 2012 20:34:09 -0700
 
-log2timeline-perl (0.64-1) natty hardy maverick karmic lucid; urgency=low
+log2timeline-perl (0.64-1) precise; urgency=low
 
   * Added a basic testing infrastructure.
   * Added a new module to parse the LSQuarantineEvents SQLite db on Mac OS X.
@@ -27,43 +33,43 @@ log2timeline-perl (0.64-1) natty hardy maverick karmic lucid; urgency=low
 
  -- Kristinn Gudjonsson <kristinn@log2timeline.net>  Fri, 18 May 2012 13:30:24 -0800
 
-log2timeline-perl (0.63-3) natty hardy maverick karmic lucid; urgency=low
+log2timeline-perl (0.63-3) lucid; urgency=low
 
   * Fixed a small bug in the iehistory module. 
 
  -- Kristinn Gudjonsson <kristinn@log2timeline.net>  Tue, 11 Apr 2012 11:43:56 -0800
 
-log2timeline-perl (0.63-2) natty hardy maverick karmic lucid; urgency=low
+log2timeline-perl (0.63-2) lucid; urgency=low
 
   * Fixed a small bug in the main engine that slipped through the cracks and got into the release.
 
  -- Kristinn Gudjonsson <kristinn@log2timeline.net>  Tue, 10 Apr 2012 15:33:12 -0800
 
-log2timeline-perl (0.63-1) natty hardy maverick karmic lucid; urgency=low
+log2timeline-perl (0.63-1) lucid; urgency=low
 
   * Mostly bug fixes, one new output module though. 
 
  -- Kristinn Gudjonsson <kristinn@log2timeline.net>  Mon, 09 Apr 2012 20:35:12 -0800
 
-log2timeline-perl (0.62-4) natty hardy maverick karmic lucid; urgency=low
+log2timeline-perl (0.62-4) lucid; urgency=low
 
   * Changed the default behavior of the mft input module (not print FN timestamps)
 
  -- Kristinn Gudjonsson <kristinn@log2timeline.net>  Mon, 28 Nov 2011 11:32:02 +0000
 
-log2timeline-perl (0.62-3) natty hardy maverick karmic lucid; urgency=low
+log2timeline-perl (0.62-3) lucid; urgency=low
 
   * Fixed a small bug, a typo that caused the tool not to work at all. 
 
  -- Kristinn Gudjonsson <kristinn@log2timeline.net>  Wed, 24 Nov 2011 08:46:22 +0000
 
-log2timeline-perl (0.62-2) natty hardy maverick karmic lucid; urgency=low
+log2timeline-perl (0.62-2) lucid; urgency=low
 
   * Fixed a small bug that caused the tool to only parse the mft in some cases 
 
  -- Kristinn Gudjonsson <kristinn@log2timeline.net>  Wed, 24 Nov 2011 08:16:22 +0000
 
-log2timeline-perl (0.62-1) natty hardy maverick karmic lucid; urgency=low
+log2timeline-perl (0.62-1) lucid; urgency=low
 
   * Three new input modules
   * Small changes to the tool itself, couple of enhancements
@@ -71,7 +77,7 @@ log2timeline-perl (0.62-1) natty hardy maverick karmic lucid; urgency=low
 
  -- Kristinn Gudjonsson <kristinn@log2timeline.net>  Wed, 23 Nov 2011 07:49:52 +0000
 
-log2timeline-perl (0.61-1) natty hardy maverick karmic lucid; urgency=low
+log2timeline-perl (0.61-1) lucid; urgency=low
 
   * Added few new modules, see changelog for further details
   * Small changes to the tool itself, couple of enhancements
@@ -81,14 +87,14 @@ log2timeline-perl (0.61-1) natty hardy maverick karmic lucid; urgency=low
 
  -- Kristinn Gudjonsson <kristinn@log2timeline.net>  Wed, 24 Aug 2011 20:35:15 +0000
 
-log2timeline-perl (0.60-1) natty hardy maverick karmic lucid; urgency=low
+log2timeline-perl (0.60-1) lucid; urgency=low
 
   * Small updates, see changelog for further details
   * Added a natty repository (11.04)
 
  -- Kristinn Gudjonsson <kristinn@log2timeline.net>  Tue, 21 Jun 2011 12:31:29 +0000
 
-log2timeline-perl (0.60) unstable hardy maverick karmic lucid; urgency=low
+log2timeline-perl (0.60) lucid; urgency=low
 
   * 0.60 Complete rewrite of the core engine with the associated changes to the input modules.  See full changelog for additional information.
   * 0.52 Added few more input modules and l2t_process.  Please see the full changelog for additional information.

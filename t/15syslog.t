@@ -11,6 +11,7 @@ my $number_of_tests = 0;
 my @READ_TIME = undef;
 my @READ_DESC = undef;
 
+# Base: 1366579063 - Apr 21 21:17:43 2013
 # test both zones set to UTC
 my $l2t = Log2Timeline->new(
     'file'          => $base_path . '/syslog.txt',
@@ -32,7 +33,7 @@ my $l2t = Log2Timeline->new(
 
 $l2t->start;
 
-ok($READ_TIME[1] == 1335043063, 'Reading file using UTC as both input and output');
+ok($READ_TIME[1] == 1366579063, 'Reading file using UTC as both input and output');
 $number_of_tests++;
 
 my $text = '[somepid[102]] log event on [MYmachineNAME] : "There was a bug in the process, causing malfunction in the built-up queue. "';
@@ -66,7 +67,8 @@ $l2t = Log2Timeline->new(
 
 $l2t->start;
 
-ok($READ_TIME[1] == 1335068263, 'Reading file using PST8PDT as input and UTC as output');
+# Base UTC - 1366579063 - 8 hour difference - 
+ok($READ_TIME[1] == 1366604263, 'Reading file using PST8PDT as input and UTC as output');
 $number_of_tests++;
 
 # we need this function since we use the RAW output option of l2t
