@@ -1,3 +1,15 @@
+log2timeline-perl (0.66-1ubuntu3) precise; urgency=low
+
+  * Fixing an issue in the control file.
+
+ -- Kristinn Gudjonsson <kristinn@log2timeline.net>  Mon, 13 Jan 2014 14:19:15 -0800
+
+log2timeline-perl (0.66-1ubuntu2) precise; urgency=low
+
+  * Missing a dependency (for build purposes).
+
+ -- Kristinn Gudjonsson <kristinn@log2timeline.net>  Mon, 13 Jan 2014 14:03:20 -0800
+
 log2timeline-perl (0.66-1ubuntu1) precise; urgency=low
 
   * Release version 0.66, minor bug fixes since version 0.65.
