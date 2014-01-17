@@ -1,3 +1,9 @@
+log2timeline-perl (0.66-1ubuntu4) precise; urgency=low
+
+  * Removing Bash completion from package to make it work with 64 bit platform.
+
+ -- Kristinn Gudjonsson <kristinn@log2timeline.net>  Wed, 15 Jan 2014 10:17:00 -0800
+
 log2timeline-perl (0.66-1ubuntu3) precise; urgency=low
 
   * Fixing an issue in the control file.

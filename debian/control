@@ -2,14 +2,14 @@ Source: log2timeline-perl
 Section: perl
 Priority: optional
 Build-Depends: debhelper (>= 7)
-Build-Depends-Indep: perl, libdatetime-perl, libnet-pcap-perl, libarchive-any-perl|libarchive-zip-perl, libxml-libxml-perl, libdbi-perl, libhtml-scrubber-perl, libimage-exiftool-perl, libgtk2-perl, libglib-perl, libcarp-assert-perl, libdbd-sqlite3-perl, libdigest-crc-perl, libversion-perl, libdate-manip-perl, perl-modules, libdata-hexify-perl, libnetpacket-perl, libparse-win32registry-perl, libfile-mork-perl, libdatetime-format-strptime-perl, libmac-propertylist-perl, libxml-entities-perl, libwww-perl, libjson-xs-perl, bash-completion
+Build-Depends-Indep: perl, libdatetime-perl, libnet-pcap-perl, libarchive-any-perl|libarchive-zip-perl, libxml-libxml-perl, libdbi-perl, libhtml-scrubber-perl, libimage-exiftool-perl, libgtk2-perl, libglib-perl, libcarp-assert-perl, libdbd-sqlite3-perl, libdigest-crc-perl, libversion-perl, libdate-manip-perl, perl-modules, libdata-hexify-perl, libnetpacket-perl, libparse-win32registry-perl, libfile-mork-perl, libdatetime-format-strptime-perl, libmac-propertylist-perl, libxml-entities-perl, libwww-perl, libjson-xs-perl
 Maintainer: Kristinn Gudjonsson <kristinn@log2timeline.net>
 Standards-Version: 3.8.4
 Homepage: http://log2timeline.net
 
 Package: log2timeline-perl
 Architecture: any
-Depends: ${perl:Depends}, ${misc:Depends}, libdatetime-perl, libnet-pcap-perl, libarchive-any-perl|libarchive-zip-perl, libxml-libxml-perl, libdbi-perl, libhtml-scrubber-perl, libimage-exiftool-perl, libgtk2-perl, libglib-perl, libcarp-assert-perl, libdbd-sqlite3-perl, libdigest-crc-perl, libversion-perl, libdate-manip-perl, perl-modules, libdata-hexify-perl, libnetpacket-perl, libparse-win32registry-perl, libfile-mork-perl, libdatetime-format-strptime-perl, libmac-propertylist-perl, libxml-entities-perl, libwww-perl, libjson-xs-perl, bash-completion
+Depends: ${perl:Depends}, ${misc:Depends}, libdatetime-perl, libnet-pcap-perl, libarchive-any-perl|libarchive-zip-perl, libxml-libxml-perl, libdbi-perl, libhtml-scrubber-perl, libimage-exiftool-perl, libgtk2-perl, libglib-perl, libcarp-assert-perl, libdbd-sqlite3-perl, libdigest-crc-perl, libversion-perl, libdate-manip-perl, perl-modules, libdata-hexify-perl, libnetpacket-perl, libparse-win32registry-perl, libfile-mork-perl, libdatetime-format-strptime-perl, libmac-propertylist-perl, libxml-entities-perl, libwww-perl, libjson-xs-perl
 Suggests: sleuthkit 
 Recommends: l2t-tools
 Description: A framework to for timeline creation and analysis.

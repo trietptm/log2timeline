@@ -929,11 +929,6 @@ sub start($) {
         $self->_run_preprocess;
     }
 
-    # set the output timezone
-    ($self->{'out_time_zone'}, $self->{'short_out_time_zone'}) =
-      $self->_set_timezone($self->{'out_time_zone'}, 1);
-    return 0 unless $self->{'out_time_zone'};
-
     # set the timezone
     ($self->{'time_zone'}, $self->{'short_time_zone'}) =
       $self->_set_timezone($self->{'time_zone'}, 0);
@@ -2032,6 +2027,11 @@ sub _load_output() {
     my $self = shift;
 
     print STDERR "Loading output module: " . $self->{output} . "\n";
+
+    # set the output timezone
+    ($self->{'out_time_zone'}, $self->{'short_out_time_zone'}) =
+      $self->_set_timezone($self->{'out_time_zone'}, 1);
+    return 0 unless $self->{'out_time_zone'};
 
     eval {
         $self->{'out_mod'} = 'Log2t::output::' . $self->{output};
